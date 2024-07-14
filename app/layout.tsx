@@ -1,6 +1,16 @@
+import "@/app/globals.css";
+import Navbar from "@/components/Navbar";
+import Providers from "@/components/Providers";
+import { Toaster } from "@/components/ui/toaster";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import "./globals.css";
+import localFont from 'next/font/local'
+
+
+// Font files can be colocated inside of `pages`
+const myFont = localFont({
+  src: "../public/font/Rubik/Rubik-VariableFont_wght.ttf",
+});
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -11,12 +21,23 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
+  authModal,
 }: Readonly<{
   children: React.ReactNode;
+  authModal: React.ReactNode;
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <Providers>
+        <div className={myFont.className}>
+          <div className="relative dark:bg-background dark:text-primary-foreground antialiased min-h-screen flex flex-col sm:flex-row w-full">
+            <Navbar />
+            {authModal}
+            <main className="flex-1">{children}</main>
+          </div>
+        </div>
+        <Toaster />
+      </Providers>
     </html>
   );
 }
