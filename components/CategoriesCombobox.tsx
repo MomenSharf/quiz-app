@@ -31,7 +31,7 @@ export function CategoriesCombobox({
   setCategory: React.Dispatch<React.SetStateAction<string>>;
 }) {
   const [open, setOpen] = React.useState(false);
-  const [value, setValue] = React.useState("");
+  const [value, setValue] = React.useState(category);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>

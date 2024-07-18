@@ -1,24 +1,43 @@
 "use server";
 
-import { Quiz } from "@prisma/client";
-import { getCurrentUser } from "../auth";
-import { QuizValidtion } from "../validations/Quiz";
+import { UTApi } from "uploadthing/server";
+import { db } from "../db";
+import { QuestionValidtionType } from "../validations/Quiz";
 
-type createQuizParams = {
-  userId: string;
-  quiz: Quiz;
-  pathname: string;
-};
+const utapi = new UTApi();
 
-export const createQuiz = async ({ userId, quiz, pathname }: createQuizParams) => {
-
+export async function createQuiz(
+  quiz: any,
+  questions: QuestionValidtionType[]
+) {
   try {
+    const quizCreated = await db.quiz.create({
+      data: quiz,
+    });
 
-    const {} = QuizValidtion.parse(quiz)
+    questions.forEach(async (question) => {
+      await db.question.create({
+        data: {
+          quizId: quizCreated.id,
+          ...question,
+        },
+      });
+    });
 
+    return quizCreated;
   } catch (error) {
-    console.log(error);
+    console.log({
+      error: error
+    });
   }
+}
 
-  
+export const deleteImages = async (images: string[]) => {
+  try {
+    await utapi.deleteFiles(images);
+  } catch (error) {
+    console.log({
+      error: error
+    });
+  }
 };

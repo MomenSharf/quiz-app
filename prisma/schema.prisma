@@ -34,18 +34,18 @@ model Quiz {
   id         String       @id @default(cuid())
   title      String
   description String?
+  imageUrl String
   questions  Question[]
   progress   Progress[]
   likes      Like[]
   score      Score[]
   bookmarked Bookmarked[]
 
-  stickers String[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  category   Category
+  category   String
   difficulty Difficulty
 
   author   User   @relation(fields: [authorId], references: [id])
@@ -55,30 +55,20 @@ model Quiz {
 model Question {
   id       String     @id @default(cuid())
   text     String
-  image    String?
-  options  Answer[]
+  imageUrl    String?
+  correctOption String
+  optionTow String
+  optionThree String
+  optionFour String
+
   progress Progress[]
 
-  questionType QuestionType
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   quiz   Quiz   @relation(fields: [quizId], references: [id])
   quizId String
-}
-
-model Answer {
-  id        String  @id @default(cuid())
-  text      String
-  isCorrect Boolean
-  order     Int?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  question   Question @relation(fields: [questionId], references: [id])
-  questionId String
 }
 
 model Progress {
@@ -106,16 +96,15 @@ model Score {
   progress   Progress @relation(fields: [progressId], references: [id])
   progressId String
 
+  score Int
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@id([userId, quizId, progressId])
 }
 
-enum QuestionType {
-  FILL_BLANKS
-  PICK_ANSWER
-}
+
 
 enum Difficulty {
   EASY
@@ -141,47 +130,7 @@ model Bookmarked {
   @@id([userId, quizId])
 }
 
-enum Category {
-  MATH
-  SPORT
-  ART
-  GEOGRAPHY
-  PROGRAMMING
-  SCIENCE
-  CARS
-  FOOD
-  ANIMALS
-  NATURE
-  TECHNOLOGY
-  HISTORY
-  LITERATURE
-  POLITICS
-  SPACE
-  HEALTH
-  FASHION
-  LANGUAGES
-  TRAVEL
-  CULTURE
-  ECONOMICS
-  BUSINESS
-  MYTHOLOGY
-  ARCHITECTURE
-  PSYCHOLOGY
-  EDUCATION
-  PHILOSOPHY
-  ENVIRONMENT
-  SOCIOLOGY
-  RELIGION
-  ENGINEERING
-  MEDIA
-  GAMES
-  LAW
-  MATHEMATICS
-  DESIGN
-  ANTHROPOLOGY
-  ASTRONOMY
-  CHEMISTRY
-}
+
 
 model Account {
   userId            String

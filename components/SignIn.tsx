@@ -30,31 +30,6 @@ export default function SignIn({ type }: { type: "signIn" | "signUp" }) {
           </CardDescription>
 
           <UserAuthForm className="py-3" />
-          {/* <CardFooter className="justify-center p-0">
-            {type === "signIn" ? (
-              <a
-                href="/sign-up"
-                className={cn(
-                  buttonVariants({ variant: "link" }),
-                  "font-extralight"
-                )}
-              >
-                Aleardy have an accunt, sign up
-                <ArrowRight className="w-4 h-4 ml-2" />
-              </a>
-            ) : (
-              <a
-                href="/sign-in"
-                className={cn(
-                  buttonVariants({ variant: "link" }),
-                  "font-extralight"
-                )}
-              >
-                You {"don't"} have account sign in
-                <ArrowRight className="w-4 h-4 ml-2" />
-              </a>
-            )}
-          </CardFooter> */}
         </CardContent>
       </Card>
     </main>

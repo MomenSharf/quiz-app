@@ -1,71 +1,95 @@
 "use client";
+import { cn } from "@/lib/utils";
 import {
   QuestionValidtionType,
-  QuizValidtionType,
+  QuizValidtionType
 } from "@/lib/validations/Quiz";
-import { useState } from "react";
-import QuizInfoForm from "./QuizInfoForm";
-import { cn } from "@/lib/utils";
-import PickAnswerForm from "./pickAnswerForm/PickAnswerForm";
 import { useLocalStorage } from "@uidotdev/usehooks";
+import { useState } from "react";
+import PickAnswerForm from "./pickAnswerForm/PickAnswerForm";
+import QuizInfoForm from "./QuizInfoForm";
+import CreateStatus from "./pickAnswerForm/CreateStatus";
 
 type Props = {
   type: "CREATE" | "UPDATE";
+  userId: string;
 };
 
-function CreateQuizForm({ type }: Props) {
+function CreateQuizForm({ type, userId }: Props) {
   const [step, setStep] = useLocalStorage("form-step", 0);
 
-  const [quizInfo, setQuizInfo] = useLocalStorage<QuizValidtionType | null>(
+  const [quizInfo, setQuizInfo] = useLocalStorage<QuizValidtionType>(
     "quiz-info",
-    null
+    {
+      title: '',
+      numberOfQuestions: 5,
+      imageUrl: undefined,
+      category: '',
+      description: '',
+      difficulty: 'EASY',
+      questions: []
+    }
   );
 
-  const [questions, setQuetions] = useLocalStorage<QuestionValidtionType[]>(
-    "form-questions",
+  const [questions, setQuestions] = useLocalStorage<QuestionValidtionType[]>(
+    "questions",
     []
   );
 
-  // const { startUpload } = useUploadThing("imageUploader");
+  const [files, setFiles] = useState<Record<number, File>>({});
 
-  // async function onSubmit(values: z.infer<typeof QuizValidtion>) {
-  //   let uploadedImageUrl = values.imageUrl;
+  const setQuestion = (value: QuestionValidtionType, index: number) => {
+    const newQ = questions;
+    if (newQ.length >= index) {
+      newQ[index] = value;
+    } else {
+      newQ.push(value);
+    }
+    setQuestions(newQ);
 
-  //   if (files.length > 0) {
-  //     const uploadedImages = await startUpload(files);
+    setStep((prev) => prev + 1);
+  };
 
-  //     if (!uploadedImages) {
-  //       return toast({
-  //         description: "Uploading images failed, try again",
-  //         variant: "destructive",
-  //       });
-  //     }
+  // if(quizInfo.title.length <= 0)  setStep(0);
+  // if(questions.length < step)  setStep(questions.length);
 
-  //     uploadedImageUrl = uploadedImages[0].url;
-  //   }
-  // }
-
-  if (step === 0 || !quizInfo) {
-    return <QuizInfoForm setQuizInfo={setQuizInfo} setStep={setStep} />;
-  }
-
-  const length = quizInfo?.numberOfQuestions + 1;
-
+  const length = quizInfo.numberOfQuestions;
   return (
     <div>
+      <div className={cn({ hidden: step != 0 })}>
+        <QuizInfoForm
+          quizInfo={quizInfo}
+          setQuizInfo={setQuizInfo}
+          files={files}
+          setFiles={setFiles}
+          setStep={setStep}
+          userId={userId}
+        />
+      </div>
       {Array.from({ length }, (_, i) => i).map((_, i) => {
-        console.log(i);
-
         return (
-          <div key={i} className={cn({ hidden: step !== i })}>
+          <div key={i} className={cn({ hidden: step !== i + 1 })}>
             <PickAnswerForm
-              questions={questions}
-              setQuestions={setQuetions}
-              step={step}
+              setQuestion={setQuestion}
+              question={questions[i]}
+              index={i}
+              files={files}
+              setFiles={setFiles}
+              setStep={setStep}
+              numberOfQuestions={length}
             />
           </div>
         );
       })}
+      <div className={cn({ hidden: step <= quizInfo.numberOfQuestions })}>
+        <CreateStatus 
+        files={files}
+        questions={questions}
+        userId={userId}
+        quizInfo={quizInfo}
+        setStep={setStep}
+        />
+      </div>
     </div>
   );
 }
