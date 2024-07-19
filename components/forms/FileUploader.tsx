@@ -58,7 +58,7 @@ export function FileUploader({
   return (
     <div
       {...getRootProps()}
-      className="flex flex-col justify-start h-72 cursor-pointer overflow-hidden rounded-lg bg-grey-50"
+      className="flex flex-col justify-start cursor-pointer overflow-hidden rounded-lg bg-grey-50"
     >
       <input
         {...getInputProps()}
@@ -67,7 +67,7 @@ export function FileUploader({
 
       {image ? (
         <div className="relative">
-          <div className="flex w-full max-h-72 flex-1 justify-center items-center relative border">
+          <div className="flex w-full flex-1 justify-center items-center relative border">
             <img
               src={image}
               alt="image"

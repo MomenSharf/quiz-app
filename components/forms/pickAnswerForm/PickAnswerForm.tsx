@@ -86,7 +86,6 @@ function PickAnswerForm({
 
   return (
     <Form {...form}>
-      <div className="font-semibold text-lg">Question {index + 1}</div>
       <form
         className="mt-2 flex flex-col  justify-start gap-5 "
         onSubmit={form.handleSubmit(onSubmit)}
@@ -107,7 +106,7 @@ function PickAnswerForm({
                       <Star className=" text-red-500 w-2 h-2 ml-1" />
                     </FormLabel>
                   )}
-                  <FormControl className="h-72">
+                  <FormControl className="">
                     <FileUploader
                       setFiles={setFiles}
                       files={files}

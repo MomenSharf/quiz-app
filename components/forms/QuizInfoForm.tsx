@@ -60,7 +60,7 @@ function QuizInfoForm({
   return (
     <Form {...form}>
       <form
-        className="mt-10 flex flex-col  justify-start gap-5"
+        className="mt-5 flex flex-col  justify-start gap-5"
         onSubmit={form.handleSubmit(onSubmit)}
       >
         <FormField
@@ -114,7 +114,7 @@ function QuizInfoForm({
               <FormItem className="flex w-full flex-col gap-3">
                 <FormControl>
                   <Textarea
-                    className="resize-none h-full"
+                    className="h-full max-h-72 w-full resize-none"
                     placeholder="Descrption..."
                     {...field}
                   />

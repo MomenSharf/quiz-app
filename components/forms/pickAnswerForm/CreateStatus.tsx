@@ -150,7 +150,6 @@ export default function CreateStatus({
       if (quizCreated) {
         setIsCreatingQuiz(false);
         setIsCreatingSuccess(true);
-        setStep(0);
         setQuestions([]);
         setQuizInfo({
           title: "",

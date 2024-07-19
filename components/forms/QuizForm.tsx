@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import PickAnswerForm from "./pickAnswerForm/PickAnswerForm";
 import QuizInfoForm from "./QuizInfoForm";
 import CreateStatus from "./pickAnswerForm/CreateStatus";
+import QuizFormProgress from "./QuizFormProgress";
 
 type Props = {
   type: "CREATE" | "UPDATE";
@@ -37,7 +38,6 @@ function CreateQuizForm({ type, userId }: Props) {
   );
 
   const [files, setFiles] = useState<Record<number, File>>({});
-  console.log(files);
 
   const setQuestion = (value: QuestionValidtionType, index: number) => {
     const newQ = questions;
@@ -57,6 +57,7 @@ function CreateQuizForm({ type, userId }: Props) {
     }
   }, [quizInfo, questions, setQuestions]);
 
+
   useEffect(() => {
     const newFiles = files;
     Object.entries(files).forEach(([index, _]) => {
@@ -69,7 +70,13 @@ function CreateQuizForm({ type, userId }: Props) {
 
   const length = quizInfo.numberOfQuestions;
   return (
-    <div>
+    <div className="flex flex-col">
+      <div className={cn({ hidden: step <= 0 })}>
+        <QuizFormProgress
+          numberOfQuestions={quizInfo.numberOfQuestions}
+          step={step}
+        />
+      </div>
       <div className={cn({ hidden: step != 0 })}>
         <QuizInfoForm
           quizInfo={quizInfo}
