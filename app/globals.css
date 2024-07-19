@@ -422,6 +422,12 @@
   }
 }
 
+.apper {
+  animation: apper 300 ease-in-out;
+}
+
+
+
 :rotot {
   --background: #ffffff;
   --foreground: #1a1a1a;

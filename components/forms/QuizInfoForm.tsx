@@ -15,7 +15,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 
 import { QuizValidtion, QuizValidtionType } from "@/lib/validations/Quiz";
-import { Star } from "lucide-react";
+import { ArrowBigRightDash, Star } from "lucide-react";
 import { Dispatch, SetStateAction, useState } from "react";
 import { CategoriesCombobox } from "../CategoriesCombobox";
 import { Input } from "../ui/input";
@@ -24,14 +24,21 @@ import { FileUploader } from "./FileUploader";
 interface QuizFormProps {
   quizInfo: QuizValidtionType | null;
   setQuizInfo: Dispatch<SetStateAction<QuizValidtionType>>;
-  files: Record<number, File>
+  files: Record<number, File>;
   setFiles: Dispatch<SetStateAction<Record<number, File>>>;
   setStep: Dispatch<SetStateAction<number>>;
-  userId: string
+  userId: string;
 }
 
-function QuizInfoForm({ quizInfo, setQuizInfo, setStep, setFiles, files, userId }: QuizFormProps) {
-  const [image, setImage] = useState('')
+function QuizInfoForm({
+  quizInfo,
+  setQuizInfo,
+  setStep,
+  setFiles,
+  files,
+  userId,
+}: QuizFormProps) {
+  const [image, setImage] = useState("");
   const [category, setCategory] = useState<string>("");
 
   const form = useForm<QuizValidtionType>({
@@ -41,7 +48,7 @@ function QuizInfoForm({ quizInfo, setQuizInfo, setStep, setFiles, files, userId 
       description: quizInfo ? quizInfo.description : "",
       imageUrl: quizInfo ? quizInfo.imageUrl : "",
       numberOfQuestions: quizInfo ? quizInfo.numberOfQuestions : 5,
-      category: quizInfo ? quizInfo.category  : ""
+      category: quizInfo ? quizInfo.category : "",
     },
   });
 
@@ -89,7 +96,7 @@ function QuizInfoForm({ quizInfo, setQuizInfo, setStep, setFiles, files, userId 
                 <FormControl>
                   <CategoriesCombobox
                     onFieldChange={field.onChange}
-                    category={quizInfo ? quizInfo.category : undefined} 
+                    category={quizInfo ? quizInfo.category : undefined}
                     setCategory={setCategory}
                   />
                 </FormControl>
@@ -129,7 +136,7 @@ function QuizInfoForm({ quizInfo, setQuizInfo, setStep, setFiles, files, userId 
                   </FormLabel>
                   <FormControl className="h-72">
                     <FileUploader
-                 files={files}
+                      files={files}
                       image={image}
                       setImage={setImage}
                       setFiles={setFiles}
@@ -144,11 +151,12 @@ function QuizInfoForm({ quizInfo, setQuizInfo, setStep, setFiles, files, userId 
         </div>
         <Button
           type="submit"
-          size="lg"
+          size="icon"
+          variant='outline'
           disabled={form.formState.isSubmitting}
           className="button col-span-2 self-end"
         >
-          Next
+          <ArrowBigRightDash className="w-5 h-5" />
         </Button>
       </form>
     </Form>

@@ -5,13 +5,13 @@ import {
 } from "@/lib/validations/Quiz";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { toast } from "@/components/ui/use-toast";
 import {
-  createQuiz as createQuizPrisma,
-  deleteImages,
+  createQuiz as createQuizPrisma
 } from "@/lib/actions/quiz.actions";
-import Image from "next/image";
+import { cn } from "@/lib/utils";
 import {
   ArrowBigLeftDash,
   ArrowRight,
@@ -21,9 +21,9 @@ import {
   Loader2,
   X,
 } from "lucide-react";
-import { Button, buttonVariants } from "@/components/ui/button";
+import Image from "next/image";
 import Link from "next/link";
-import { cn } from "@/lib/utils";
+import { useRouter } from "next/navigation";
 
 type CreateDialogProps = {
   quizInfo: QuizValidtionType | null;
@@ -31,6 +31,8 @@ type CreateDialogProps = {
   files: Record<number, File>;
   userId: string;
   setStep: Dispatch<SetStateAction<number>>;
+  setQuestions: Dispatch<SetStateAction<QuestionValidtionType[]>>;
+  setQuizInfo: Dispatch<SetStateAction<QuizValidtionType>>;
 };
 export default function CreateStatus({
   quizInfo,
@@ -38,6 +40,8 @@ export default function CreateStatus({
   questions,
   userId,
   setStep,
+  setQuizInfo,
+  setQuestions,
 }: CreateDialogProps) {
   const [imagesUploading, setImageUploading] = useState<
     Record<
@@ -56,6 +60,8 @@ export default function CreateStatus({
   const [isCreatingQuiz, setIsCreatingQuiz] = useState(false);
   const [isCreatingSuccess, setIsCreatingSuccess] = useState(false);
 
+  const router = useRouter()
+
   const { startUpload } = useUploadThing("imageUploader");
 
   const uplaodImages = async () => {
@@ -63,16 +69,6 @@ export default function CreateStatus({
 
     Object.entries(imagesUploading).map(async (e, i) => {
       const [index, image] = e;
-
-      // if (image.url) {
-      //   console.log('in');
-        
-      //   try {
-      //     await deleteImages([image.url]);
-      //   } catch (err) {
-      //     console.log(err);
-      //   }
-      // }
 
       setImageUploading((prev) => ({
         ...prev,
@@ -99,7 +95,7 @@ export default function CreateStatus({
 
         if (i >= Object.entries(imagesUploading).length - 1) {
           setIsUploading(false);
-          // setiIuploadingSuccess(true);
+          setiIuploadingSuccess(true);
         }
       } else {
         setImageUploading((prev) => ({
@@ -154,6 +150,17 @@ export default function CreateStatus({
       if (quizCreated) {
         setIsCreatingQuiz(false);
         setIsCreatingSuccess(true);
+        setStep(0);
+        setQuestions([]);
+        setQuizInfo({
+          title: "",
+          numberOfQuestions: 5,
+          imageUrl: undefined,
+          category: "",
+          description: "",
+          difficulty: "EASY",
+          questions: [],
+        });
       } else {
         toast({
           description: "Failed to create quiz, try again",
@@ -167,6 +174,8 @@ export default function CreateStatus({
       });
     }
   };
+
+
 
   useEffect(() => {
     if (Object.entries(files).length == 0) {
@@ -185,7 +194,11 @@ export default function CreateStatus({
         }))
       );
     }
+
+    
   }, [files]);
+
+
 
   return (
     <div className="w-full h-full flex flex-col gap-5 justify-center items-center">
@@ -277,10 +290,7 @@ export default function CreateStatus({
                 )}
               </Button>
             ) : (
-              <Link
-                href="/profile"
-                className={cn(buttonVariants({ variant: "outline" }))}
-              >
+              <Link href='/profile' className={cn(buttonVariants({variant: "outline"}))}>
                 Profile <ArrowRight className="w-4 h-5 ml-1" />
               </Link>
             )}

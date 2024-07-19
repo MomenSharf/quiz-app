@@ -21,7 +21,7 @@ export const QuizValidtion = z.object({
   questions: z.array(QuestionValidtion).default([]),
   numberOfQuestions: z.coerce
     .number()
-    .gte(2, "Must be more than one question")
+    .gte(1, "Must be at leset one question")
     .lte(10, "Must be less than 10 questions"),
   category: z.string(),
   difficulty: z.enum(["EASY", "MEDIUM", "HARD"]).default("EASY"),

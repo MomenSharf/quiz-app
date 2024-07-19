@@ -2,10 +2,10 @@
 import { cn } from "@/lib/utils";
 import {
   QuestionValidtionType,
-  QuizValidtionType
+  QuizValidtionType,
 } from "@/lib/validations/Quiz";
 import { useLocalStorage } from "@uidotdev/usehooks";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PickAnswerForm from "./pickAnswerForm/PickAnswerForm";
 import QuizInfoForm from "./QuizInfoForm";
 import CreateStatus from "./pickAnswerForm/CreateStatus";
@@ -21,13 +21,13 @@ function CreateQuizForm({ type, userId }: Props) {
   const [quizInfo, setQuizInfo] = useLocalStorage<QuizValidtionType>(
     "quiz-info",
     {
-      title: '',
+      title: "",
       numberOfQuestions: 5,
       imageUrl: undefined,
-      category: '',
-      description: '',
-      difficulty: 'EASY',
-      questions: []
+      category: "",
+      description: "",
+      difficulty: "EASY",
+      questions: [],
     }
   );
 
@@ -37,6 +37,7 @@ function CreateQuizForm({ type, userId }: Props) {
   );
 
   const [files, setFiles] = useState<Record<number, File>>({});
+  console.log(files);
 
   const setQuestion = (value: QuestionValidtionType, index: number) => {
     const newQ = questions;
@@ -50,8 +51,21 @@ function CreateQuizForm({ type, userId }: Props) {
     setStep((prev) => prev + 1);
   };
 
-  // if(quizInfo.title.length <= 0)  setStep(0);
-  // if(questions.length < step)  setStep(questions.length);
+  useEffect(() => {
+    if (questions.length > quizInfo.numberOfQuestions) {
+      setQuestions((prev) => prev.slice(0, quizInfo.numberOfQuestions));
+    }
+  }, [quizInfo, questions, setQuestions]);
+
+  useEffect(() => {
+    const newFiles = files;
+    Object.entries(files).forEach(([index, _]) => {
+      if (parseInt(index) > quizInfo.numberOfQuestions)
+        delete newFiles[parseInt(index)];
+    });
+
+    setFiles(newFiles);
+  }, [questions, files, quizInfo]);
 
   const length = quizInfo.numberOfQuestions;
   return (
@@ -82,12 +96,14 @@ function CreateQuizForm({ type, userId }: Props) {
         );
       })}
       <div className={cn({ hidden: step <= quizInfo.numberOfQuestions })}>
-        <CreateStatus 
-        files={files}
-        questions={questions}
-        userId={userId}
-        quizInfo={quizInfo}
-        setStep={setStep}
+        <CreateStatus
+          files={files}
+          questions={questions}
+          userId={userId}
+          quizInfo={quizInfo}
+          setStep={setStep}
+          setQuestions={setQuestions}
+          setQuizInfo={setQuizInfo}
         />
       </div>
     </div>
