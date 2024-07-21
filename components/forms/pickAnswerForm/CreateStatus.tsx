@@ -23,7 +23,6 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 
 type CreateDialogProps = {
   quizInfo: QuizValidtionType | null;
@@ -33,6 +32,7 @@ type CreateDialogProps = {
   setStep: Dispatch<SetStateAction<number>>;
   setQuestions: Dispatch<SetStateAction<QuestionValidtionType[]>>;
   setQuizInfo: Dispatch<SetStateAction<QuizValidtionType>>;
+  setIsAllSuccess: Dispatch<SetStateAction<boolean>>;
 };
 export default function CreateStatus({
   quizInfo,
@@ -42,6 +42,7 @@ export default function CreateStatus({
   setStep,
   setQuizInfo,
   setQuestions,
+  setIsAllSuccess
 }: CreateDialogProps) {
   const [imagesUploading, setImageUploading] = useState<
     Record<
@@ -60,7 +61,6 @@ export default function CreateStatus({
   const [isCreatingQuiz, setIsCreatingQuiz] = useState(false);
   const [isCreatingSuccess, setIsCreatingSuccess] = useState(false);
 
-  const router = useRouter()
 
   const { startUpload } = useUploadThing("imageUploader");
 
@@ -150,10 +150,12 @@ export default function CreateStatus({
       if (quizCreated) {
         setIsCreatingQuiz(false);
         setIsCreatingSuccess(true);
+        setIsAllSuccess(true)
+        setStep(0)
         setQuestions([]);
         setQuizInfo({
           title: "",
-          numberOfQuestions: 5,
+          numberOfQuestions: 1,
           imageUrl: undefined,
           category: "",
           description: "",
@@ -165,6 +167,7 @@ export default function CreateStatus({
           description: "Failed to create quiz, try again",
           variant: "destructive",
         });
+        setIsCreatingQuiz(false)
       }
     } catch (error) {
       toast({

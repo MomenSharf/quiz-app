@@ -23,7 +23,7 @@ export const QuizValidtion = z.object({
     .number()
     .gte(1, "Must be at leset one question")
     .lte(10, "Must be less than 10 questions"),
-  category: z.string(),
+  categories: z.string().array(),
   difficulty: z.enum(["EASY", "MEDIUM", "HARD"]),
 });
 
