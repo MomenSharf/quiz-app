@@ -9,37 +9,43 @@ import {
   FormControl,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
 
+import { cn } from "@/lib/utils";
 import { QuizValidtion, QuizValidtionType } from "@/lib/validations/Quiz";
-import { ArrowBigRightDash, Star } from "lucide-react";
+import { ArrowBigRightDash, CheckCircle, RotateCcw, Save } from "lucide-react";
 import { Dispatch, SetStateAction, useState } from "react";
-import { CategoriesCombobox } from "../CategoriesCombobox";
 import { Input } from "../ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
 import { FileUploader } from "./FileUploader";
+import { toast } from "sonner";
 
 interface QuizFormProps {
   quizInfo: QuizValidtionType | null;
   setQuizInfo: Dispatch<SetStateAction<QuizValidtionType>>;
   files: Record<number, File>;
   setFiles: Dispatch<SetStateAction<Record<number, File>>>;
-  setStep: Dispatch<SetStateAction<number>>;
+  setTab: Dispatch<SetStateAction<"INFO" | "QUESTIONS" | "STATUS">>;
   userId: string;
 }
 
 function QuizInfoForm({
   quizInfo,
   setQuizInfo,
-  setStep,
+  setTab,
   setFiles,
   files,
   userId,
 }: QuizFormProps) {
   const [image, setImage] = useState("");
-  const [category, setCategory] = useState<string>("");
 
   const form = useForm<QuizValidtionType>({
     resolver: zodResolver(QuizValidtion),
@@ -49,77 +55,117 @@ function QuizInfoForm({
       imageUrl: quizInfo ? quizInfo.imageUrl : "",
       numberOfQuestions: quizInfo ? quizInfo.numberOfQuestions : 5,
       category: quizInfo ? quizInfo.category : "",
+      difficulty: quizInfo ? quizInfo.difficulty : undefined,
     },
   });
 
-  function onSubmit(values: QuizValidtionType) {
+  const onSubmit = (values: QuizValidtionType) => {
     setQuizInfo(values);
-    setStep(1);
-  }
+    toast(
+      <>
+        <span className="w-full">Chenges saved</span>{" "}
+        <CheckCircle className="w-5 h-5 text-green-500" />
+      </>
+    );
+  };
 
+  console.log(form.formState.errors);
   return (
     <Form {...form}>
       <form
-        className="mt-5 flex flex-col  justify-start gap-5"
+        className="mt-5 flex flex-col  justify-start gap-3 transition-all"
         onSubmit={form.handleSubmit(onSubmit)}
       >
-        <FormField
-          control={form.control}
-          name="title"
-          render={({ field }) => (
-            <FormItem className="flex w-full flex-col gap-3 flex-1">
-              <FormControl>
-                <Input placeholder="Title..." {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <div className="flex gap-5">
+        <div className="flex justify-between">
+          <Button
+            type="button"
+            size="icon"
+            onClick={() => form.reset()}
+            variant="outline"
+          >
+            <RotateCcw className="w-4 h-4" />
+          </Button>
+          <Button
+            type="submit"
+            size="icon"
+            variant="outline"
+            disabled={form.formState.isSubmitting}
+            className="button col-span-2 self-end"
+          >
+            <Save className="w-5 h-5" />
+          </Button>
+        </div>
+        <div className="flex gap-3">
           <FormField
             control={form.control}
-            name="numberOfQuestions"
+            name="title"
             render={({ field }) => (
-              <FormItem className="flex w-full flex-col gap-3 flex-1">
+              <FormItem className="space-y-1 flex w-full flex-col flex-1">
                 <FormControl>
-                  <Input type="number" {...field} />
+                  <Input
+                    placeholder="Title..."
+                    className={cn("transition-all", {
+                      "border-destructive bg-[hsl(var(--destructive)_/_10%)]":
+                        form.getFieldState("title").error,
+                    })}
+                    {...field}
+                  />
                 </FormControl>
-                <FormMessage />
+                <FormMessage className="text-xs font-extralight mt-0" />
               </FormItem>
             )}
           />
           <FormField
             control={form.control}
-            name="category"
+            name="difficulty"
             render={({ field }) => (
               <FormItem>
-                <FormControl>
-                  <CategoriesCombobox
-                    onFieldChange={field.onChange}
-                    category={quizInfo ? quizInfo.category : undefined}
-                    setCategory={setCategory}
-                  />
-                </FormControl>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Difficulty" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem className="cursor-pointer" value="EASY">
+                      Easy
+                    </SelectItem>
+                    <SelectItem className="cursor-pointer" value="Medium">
+                      Medium
+                    </SelectItem>
+                    <SelectItem className="cursor-pointer" value="HARD">
+                      Hard
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
                 <FormMessage />
               </FormItem>
             )}
           />
         </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 ">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           <FormField
             control={form.control}
             name="description"
             render={({ field }) => (
-              <FormItem className="flex w-full flex-col gap-3">
+              <FormItem className="space-y-1 flex w-full flex-col">
                 <FormControl>
                   <Textarea
-                    className="h-full max-h-72 w-full resize-none"
                     placeholder="Descrption..."
+                    className={cn(
+                      "h-full max-h-72 w-full resize-none transition-all",
+                      {
+                        "border-destructive bg-[hsl(var(--destructive)_/_10%)]":
+                          form.getFieldState("description").error,
+                      }
+                    )}
                     {...field}
                   />
                 </FormControl>
-                <FormMessage />
+                <FormMessage className="text-xs font-extralight mt-0" />
               </FormItem>
             )}
           />
@@ -130,10 +176,6 @@ function QuizInfoForm({
               name="imageUrl"
               render={({ field }) => (
                 <FormItem className="w-full">
-                  <FormLabel htmlFor="image" className="flex items-start">
-                    Image optional{" "}
-                    <Star className=" text-red-500 w-2 h-2 ml-1" />
-                  </FormLabel>
                   <FormControl className="h-72">
                     <FileUploader
                       files={files}
@@ -149,15 +191,6 @@ function QuizInfoForm({
             />
           </div>
         </div>
-        <Button
-          type="submit"
-          size="icon"
-          variant='outline'
-          disabled={form.formState.isSubmitting}
-          className="button col-span-2 self-end"
-        >
-          <ArrowBigRightDash className="w-5 h-5" />
-        </Button>
       </form>
     </Form>
   );

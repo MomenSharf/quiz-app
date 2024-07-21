@@ -2,6 +2,7 @@ import "@/app/globals.css";
 import Navbar from "@/components/Navbar";
 import Providers from "@/components/Providers";
 import { Toaster } from "@/components/ui/toaster";
+import { Toaster as Sonner } from "@/components/ui/sonner"
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import localFont from 'next/font/local'
@@ -36,7 +37,8 @@ export default function RootLayout({
             <main className="flex-1">{children}</main>
           </div>
         </div>
-        <Toaster />
+        <Toaster />  
+        <Sonner />  
       </Providers>
     </html>
   );

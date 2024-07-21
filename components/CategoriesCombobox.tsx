@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Check, ChevronsUpDown } from "lucide-react";
+import { Check, ChevronsUpDown, Scroll } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -20,15 +20,14 @@ import {
 } from "@/components/ui/popover";
 
 import { categoriesWithLabel } from "@/constants";
+import { ScrollArea } from "./ui/scroll-area";
 
 export function CategoriesCombobox({
   onFieldChange,
   category,
-  setCategory,
 }: {
-  onFieldChange: (category: string) => void
-  category: string | undefined
-  setCategory: React.Dispatch<React.SetStateAction<string>>;
+  onFieldChange: (category: string) => void;
+  category: string | undefined;
 }) {
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState(category);
@@ -40,7 +39,7 @@ export function CategoriesCombobox({
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="sm:min-w-[110px] justify-between"
+          className="justify-between w-full"
         >
           {value
             ? categoriesWithLabel.find((category) => category.value === value)
@@ -52,28 +51,30 @@ export function CategoriesCombobox({
       <PopoverContent className="w-[200px] p-0">
         <Command>
           <CommandInput placeholder="Search category..." />
-          <CommandEmpty>No framework found.</CommandEmpty>
-          <CommandList>
-            {categoriesWithLabel.map((category) => (
-              <CommandItem
-                key={category.value}
-                value={category.value}
-                onSelect={(currentValue) => {
-                  setValue(currentValue === value ? "" : currentValue);
-                  onFieldChange(currentValue);
-                  setOpen(false);
-                }}
-              >
-                <Check
-                  className={cn(
-                    "mr-2 h-4 w-4",
-                    value === category.value ? "opacity-100" : "opacity-0"
-                  )}
-                />
-                {category.label}
-              </CommandItem>
-            ))}
-          </CommandList>
+          <ScrollArea>
+            <CommandEmpty>No category found.</CommandEmpty>
+            <CommandList>
+              {categoriesWithLabel.map((category) => (
+                <CommandItem
+                  key={category.value}
+                  value={category.value}
+                  onSelect={(currentValue) => {
+                    setValue(currentValue === value ? "" : currentValue);
+                    onFieldChange(currentValue);
+                    setOpen(false);
+                  }}
+                >
+                  <Check
+                    className={cn(
+                      "mr-2 h-4 w-4",
+                      value === category.value ? "opacity-100" : "opacity-0"
+                    )}
+                  />
+                  {category.label}
+                </CommandItem>
+              ))}
+            </CommandList>
+          </ScrollArea>
         </Command>
       </PopoverContent>
     </Popover>

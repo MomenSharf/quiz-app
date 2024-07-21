@@ -45,7 +45,7 @@ model Quiz {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  category   String
+  categories  String[]
   difficulty Difficulty
 
   author   User   @relation(fields: [authorId], references: [id])

@@ -11,8 +11,7 @@ async function page() {
 
   // const id = 'fadsfa'
 
-  return <div className="container mb-5">
-    <h1 className="text-2xl mt-3 font-semibold">Create Quiz</h1>
+  return <div className="container">
     <QuizForm type="CREATE" userId={session.user.id}/>
   </div>;
 }

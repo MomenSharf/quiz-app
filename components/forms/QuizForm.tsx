@@ -10,6 +10,7 @@ import PickAnswerForm from "./pickAnswerForm/PickAnswerForm";
 import QuizInfoForm from "./QuizInfoForm";
 import CreateStatus from "./pickAnswerForm/CreateStatus";
 import QuizFormProgress from "./QuizFormProgress";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 
 type Props = {
   type: "CREATE" | "UPDATE";
@@ -17,6 +18,11 @@ type Props = {
 };
 
 function CreateQuizForm({ type, userId }: Props) {
+  const [tab, setTab] = useLocalStorage<"INFO" | "QUESTIONS" | "STATUS">(
+    "form-tab",
+    "INFO"
+  );
+
   const [step, setStep] = useLocalStorage("form-step", 0);
 
   const [quizInfo, setQuizInfo] = useLocalStorage<QuizValidtionType>(
@@ -57,7 +63,6 @@ function CreateQuizForm({ type, userId }: Props) {
     }
   }, [quizInfo, questions, setQuestions]);
 
-
   useEffect(() => {
     const newFiles = files;
     Object.entries(files).forEach(([index, _]) => {
@@ -69,40 +74,64 @@ function CreateQuizForm({ type, userId }: Props) {
   }, [questions, files, quizInfo]);
 
   const length = quizInfo.numberOfQuestions;
+
   return (
-    <div className="flex flex-col">
-      <div className={cn({ hidden: step <= 0 })}>
-        <QuizFormProgress
-          numberOfQuestions={quizInfo.numberOfQuestions}
-          step={step}
-        />
-      </div>
-      <div className={cn({ hidden: step != 0 })}>
+    <Tabs defaultValue={tab} className="w-full mt-3">
+      <TabsList className="w-full justify-stretch">
+        <TabsTrigger
+          value="INFO"
+          className="basis-1/3 transition-all"
+          onClick={() => setTab("INFO")}
+        >
+          info
+        </TabsTrigger>
+        <TabsTrigger
+          value="QUESTIONS"
+          className="basis-1/3 transition-all"
+          onClick={() => setTab("QUESTIONS")}
+        >
+          Questions
+        </TabsTrigger>
+        <TabsTrigger
+          value="STATUS"
+          className="basis-1/3 transition-all"
+          onClick={() => setTab("STATUS")}
+        >
+          Status
+        </TabsTrigger>
+      </TabsList>
+      <TabsContent value="INFO">
         <QuizInfoForm
           quizInfo={quizInfo}
           setQuizInfo={setQuizInfo}
           files={files}
           setFiles={setFiles}
-          setStep={setStep}
+          setTab={setTab}
           userId={userId}
         />
-      </div>
-      {Array.from({ length }, (_, i) => i).map((_, i) => {
-        return (
-          <div key={i} className={cn({ hidden: step !== i + 1 })}>
-            <PickAnswerForm
-              setQuestion={setQuestion}
-              question={questions[i]}
-              index={i}
-              files={files}
-              setFiles={setFiles}
-              setStep={setStep}
-              numberOfQuestions={length}
-            />
-          </div>
-        );
-      })}
-      <div className={cn({ hidden: step <= quizInfo.numberOfQuestions })}>
+      </TabsContent>
+      <TabsContent value="QUESTIONS">
+        <QuizFormProgress
+          numberOfQuestions={quizInfo.numberOfQuestions}
+          step={step}
+        />
+        {Array.from({ length }, (_, i) => i).map((_, i) => {
+          return (
+            <div key={i} className={cn({ hidden: step !== i })}>
+              <PickAnswerForm
+                setQuestion={setQuestion}
+                question={questions[i]}
+                index={i}
+                files={files}
+                setFiles={setFiles}
+                setStep={setStep}
+                numberOfQuestions={length}
+              />
+            </div>
+          );
+        })}
+      </TabsContent>
+      <TabsContent value="STATUS">
         <CreateStatus
           files={files}
           questions={questions}
@@ -112,8 +141,52 @@ function CreateQuizForm({ type, userId }: Props) {
           setQuestions={setQuestions}
           setQuizInfo={setQuizInfo}
         />
-      </div>
-    </div>
+      </TabsContent>
+    </Tabs>
+    // <div className="flex flex-col">
+    //   <div className={cn({ hidden: step <= 0 })}>
+    //     <QuizFormProgress
+    //       numberOfQuestions={quizInfo.numberOfQuestions}
+    //       step={step}
+    //     />
+    //   </div>
+    //   <div className={cn({ hidden: step != 0 })}>
+    //     <QuizInfoForm
+    //       quizInfo={quizInfo}
+    //       setQuizInfo={setQuizInfo}
+    //       files={files}
+    //       setFiles={setFiles}
+    //       setStep={setStep}
+    //       userId={userId}
+    //     />
+    //   </div>
+    //   {Array.from({ length }, (_, i) => i).map((_, i) => {
+    //     return (
+    //       <div key={i} className={cn({ hidden: step !== i + 1 })}>
+    //         <PickAnswerForm
+    //           setQuestion={setQuestion}
+    //           question={questions[i]}
+    //           index={i}
+    //           files={files}
+    //           setFiles={setFiles}
+    //           setStep={setStep}
+    //           numberOfQuestions={length}
+    //         />
+    //       </div>
+    //     );
+    //   })}
+    //   <div className={cn({ hidden: step <= quizInfo.numberOfQuestions })}>
+    //     <CreateStatus
+    //       files={files}
+    //       questions={questions}
+    //       userId={userId}
+    //       quizInfo={quizInfo}
+    //       setStep={setStep}
+    //       setQuestions={setQuestions}
+    //       setQuizInfo={setQuizInfo}
+    //     />
+    //   </div>
+    // </div>
   );
 }
 

@@ -1,15 +1,14 @@
 "use client";
 
-import { useCallback, Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useCallback } from "react";
 // import type { FileWithPath } from '@uploadthing/react'
 import { useDropzone } from "@uploadthing/react/hooks";
 import { generateClientDropzoneAccept } from "uploadthing/client";
 
 import { Button } from "@/components/ui/button";
 import { convertFileToUrl } from "@/lib/utils";
-import Image from "next/image";
+import { ImageUp, Star, Trash } from "lucide-react";
 import { toast } from "../ui/use-toast";
-import { Trash } from "lucide-react";
 
 type FileUploaderProps = {
   setFiles: Dispatch<SetStateAction<Record<number, File>>>;
@@ -92,18 +91,17 @@ export function FileUploader({
           {/* <div className='absolute left-1/2 -top-1/2 -translate-x-1/2 -translate-y-1/2'> replec</div> */}
         </div>
       ) : (
-        <div className="flex justify-center items-center flex-col py-5 border">
-          <Image
-            src="/images/upload.svg"
-            width={50}
-            height={50}
-            alt="file upload"
+        <div className="flex justify-center items-center flex-col py-5 border-2 border-dashed bg-[hsl(var(--primary)_/_5%)] box-content">
+          <ImageUp className="w-10 h-10 text-muted-foreground"
           />
-          <h3 className="mb-2 mt-2 text-muted-foreground">Drag photo here</h3>
-          <p className="p-medium-12 mb-4 text-muted-foreground">
+          <h3 className=" flex text-muted-foreground tx-sm">
+          Image optional
+          <Star className=" text-red-500 w-2 h-2 ml-1" />
+          </h3>
+          <p className="text-xs mb-4 text-muted-foreground">
             SVG, PNG, JPG
           </p>
-          <Button type="button" className="rounded-full">
+          <Button type="button" size='sm' className="rounded-full">
             Select from computer
           </Button>
         </div>

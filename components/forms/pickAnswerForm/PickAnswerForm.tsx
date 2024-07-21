@@ -411,7 +411,7 @@ function PickAnswerForm({
             <ArrowBigLeftDash className="w-5 h-5" />
           </Button>
           <Button size="icon" onClick={() => form.reset()} variant="outline">
-            <RotateCcw className="w-4 h-5" />
+            <RotateCcw className="w-5 h-5" />
           </Button>
             <Button
               type="submit"
