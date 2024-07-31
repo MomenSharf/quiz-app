@@ -20,7 +20,7 @@ model User {
   // Optional for WebAuthn support
   Authenticator Authenticator[]
 
-  quizes     Quiz[]
+  quizzes    Quiz[]
   likes      Like[]
   bookmarked Bookmarked[]
   Progress   Progress[]
@@ -31,38 +31,43 @@ model User {
 }
 
 model Quiz {
-  id         String       @id @default(cuid())
-  title      String
-  description String?
-  imageUrl String
-  questions  Question[]
+  id          String     @id @default(cuid())
+  title       String
+  description String
+  imageUrl    String?
+  questions   Question[]
+  categories  String[]
+  difficulty  Difficulty
+  visibility Visibility @default(PUBLIC)
+
   progress   Progress[]
   likes      Like[]
   score      Score[]
   bookmarked Bookmarked[]
 
-
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
-  categories  String[]
-  difficulty Difficulty
 
   author   User   @relation(fields: [authorId], references: [id])
   authorId String
 }
+enum Visibility {
+  PUBLIC
+  PRIVATE
+}
 
 model Question {
-  id       String     @id @default(cuid())
-  text     String
-  imageUrl    String?
-  correctOption String
-  optionTow String
-  optionThree String
-  optionFour String
+  id             String       @id @default(cuid())
+  type           QuestionType
+  question       String
+  options        Option[]
+  correctAnswer  String? // For single-choice and multiple-choice
+  correctAnswers String[] // For multiple-choice
+  order          String[] // For order questions
+  codeSnippet    String? // For code questions
+  imageUrl       String? // For picture-choice questionscture
 
   progress Progress[]
-
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -71,11 +76,35 @@ model Question {
   quizId String
 }
 
+model Option {
+  id         Int      @id @default(autoincrement())
+  questionId String
+  label      String
+  question   Question @relation(fields: [questionId], references: [id])
+}
+
+enum QuestionType {
+  UNSPECIFIED
+  SINGLE_CHOICE
+  MULTIPLE_CHOICE
+  TRUE_FALSE
+  FILL_IN_THE_BLANK
+  SHORT_ANSWER
+  LONG_ANSWER
+  MATCHING
+  ORDER
+  RANKING
+  PICTURE_CHOICE
+  DRAG_AND_DROP
+  INTERACTIVE
+  CODE
+}
+
 model Progress {
   id    String   @id @default(cuid())
   score Score[]
   timer DateTime @default(now())
-  tries Int @default(5)
+  tries Int      @default(5)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -104,8 +133,6 @@ model Score {
   @@id([userId, quizId, progressId])
 }
 
-
-
 enum Difficulty {
   EASY
   MEDIUM
@@ -129,8 +156,6 @@ model Bookmarked {
 
   @@id([userId, quizId])
 }
-
-
 
 model Account {
   userId            String

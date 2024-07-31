@@ -5,7 +5,8 @@
 @layer base {
   /* violet */
   :root {
-    --background: 0 0% 100%;
+    /* --background: 216deg 50% 96.08%; */
+    --background: 216deg 50% 96.08%;
     --foreground: 224 71.4% 4.1%;
     --card: 0 0% 100%;
     --card-foreground: 224 71.4% 4.1%;
@@ -26,11 +27,14 @@
     --ring: 262.1 83.3% 57.8%;
     --radius: 0.5rem;
 
-    --main-bg: #f2f2f2;
-    --nav-bar: #373b53;
+    --main-bg: hsl(216deg 50% 96.08%);
+    --navbar: #282e3e;
+    --navbar-item-active: #161c28;
+    --table-shadow: 0 25px 20px -20px rgba(0, 0, 0, 0.2);
   }
 
   .dark {
+    --background: 224 71.4% 4.1%;
     --background: 224 71.4% 4.1%;
     --foreground: 210 20% 98%;
     --card: 224 71.4% 4.1%;
@@ -54,7 +58,7 @@
 
   /* slate */
   [data-theme-color="slate"] {
-    --background: 0 0% 100%;
+    --background: 216deg 50% 96.08%;
     --foreground: 222.2 84% 4.9%;
     --card: 0 0% 100%;
     --card-foreground: 222.2 84% 4.9%;
@@ -99,7 +103,7 @@
 
   /* zinc  */
   [data-theme-color="zinc"] {
-    --background: 0 0% 100%;
+    --background: 216deg 50% 96.08%;
     --foreground: 240 10% 3.9%;
     --card: 0 0% 100%;
     --card-foreground: 240 10% 3.9%;
@@ -144,7 +148,7 @@
 
   /* red */
   [data-theme-color="red"] {
-    --background: 0 0% 100%;
+    --background: 216deg 50% 96.08%;
     --foreground: 0 0% 3.9%;
     --card: 0 0% 100%;
     --card-foreground: 0 0% 3.9%;
@@ -189,7 +193,7 @@
 
   /* rose */
   [data-theme-color="rose"] {
-    --background: 0 0% 100%;
+    --background: 216deg 50% 96.08%;
     --foreground: 240 10% 3.9%;
     --card: 0 0% 100%;
     --card-foreground: 240 10% 3.9%;
@@ -234,7 +238,7 @@
 
   /* orange */
   [data-theme-color="orange"] {
-    --background: 0 0% 100%;
+    --background: 216deg 50% 96.08%;
     --foreground: 20 14.3% 4.1%;
     --card: 0 0% 100%;
     --card-foreground: 20 14.3% 4.1%;
@@ -279,7 +283,7 @@
 
   /* green  */
   [data-theme-color="green"] {
-    --background: 0 0% 100%;
+    --background: 216deg 50% 96.08%;
     --foreground: 240 10% 3.9%;
     --card: 0 0% 100%;
     --card-foreground: 240 10% 3.9%;
@@ -324,7 +328,7 @@
 
   /* blue  */
   [data-theme-color="blue"] {
-    --background: 0 0% 100%;
+    --background: 216deg 50% 96.08%;
     --foreground: 222.2 84% 4.9%;
     --card: 0 0% 100%;
     --card-foreground: 222.2 84% 4.9%;
@@ -369,7 +373,7 @@
 
   /* yellow  */
   [data-theme-color="yellow"] {
-    --background: 0 0% 100%;
+    --background: 216deg 50% 96.08%;
     --foreground: 20 14.3% 4.1%;
     --card: 0 0% 100%;
     --card-foreground: 20 14.3% 4.1%;
@@ -422,11 +426,63 @@
   }
 }
 
+
 .apper {
   animation: apper 300 ease-in-out;
 }
 
+.loader {
+  color: hsl(var(--primary));
+  font-size: 45px;
+  text-indent: -9999em;
+  overflow: hidden;
+  width: 1em;
+  height: 1em;
+  border-radius: 50%;
+  position: relative;
+  transform: translateZ(0);
+  animation: mltShdSpin 1.7s infinite ease, round 1.7s infinite ease;
+}
 
+@keyframes mltShdSpin {
+  0% {
+    box-shadow: 0 -0.83em 0 -0.4em,
+    0 -0.83em 0 -0.42em, 0 -0.83em 0 -0.44em,
+    0 -0.83em 0 -0.46em, 0 -0.83em 0 -0.477em;
+  }
+  5%,
+  95% {
+    box-shadow: 0 -0.83em 0 -0.4em, 
+    0 -0.83em 0 -0.42em, 0 -0.83em 0 -0.44em, 
+    0 -0.83em 0 -0.46em, 0 -0.83em 0 -0.477em;
+  }
+  10%,
+  59% {
+    box-shadow: 0 -0.83em 0 -0.4em, 
+    -0.087em -0.825em 0 -0.42em, -0.173em -0.812em 0 -0.44em, 
+    -0.256em -0.789em 0 -0.46em, -0.297em -0.775em 0 -0.477em;
+  }
+  20% {
+    box-shadow: 0 -0.83em 0 -0.4em, -0.338em -0.758em 0 -0.42em,
+     -0.555em -0.617em 0 -0.44em, -0.671em -0.488em 0 -0.46em, 
+     -0.749em -0.34em 0 -0.477em;
+  }
+  38% {
+    box-shadow: 0 -0.83em 0 -0.4em, -0.377em -0.74em 0 -0.42em,
+     -0.645em -0.522em 0 -0.44em, -0.775em -0.297em 0 -0.46em, 
+     -0.82em -0.09em 0 -0.477em;
+  }
+  100% {
+    box-shadow: 0 -0.83em 0 -0.4em, 0 -0.83em 0 -0.42em, 
+    0 -0.83em 0 -0.44em, 0 -0.83em 0 -0.46em, 0 -0.83em 0 -0.477em;
+  }
+}
+
+@keyframes round {
+  0% { transform: rotate(0deg) }
+  100% { transform: rotate(360deg) }
+}
+ 
 
 :rotot {
   --background: #ffffff;

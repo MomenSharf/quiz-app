@@ -1,57 +1,185 @@
-"use client";
-import { ThemeState } from "@/types/theme";
-import { createContext, ReactNode, useReducer } from "react";
-
-type ThemeActions =
-  | { type: "SET_THEME"; payload: ThemeState | null }
-  | { type: "SET_MODE"; payload: ThemeState | null }
-  | { type: "TOGGLED_MODE"; payload: ThemeState | null };
-
-interface ThemeContextType {
-  state: ThemeState;
-  dispatch: React.Dispatch<ThemeActions>;
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
-export const ThemeContext = createContext<ThemeContextType | undefined>(
-  undefined
-);
+generator client {
+  provider = "prisma-client-js"
+}
 
-const ThemeReducer = (state: ThemeState, actions: ThemeActions): ThemeState => {
-  switch (actions.type) {
-    case "SET_THEME":
-      return {
-        ...state,
-        theme: actions.payload ? actions.payload.theme : state.theme,
-      };
-    case "SET_MODE":
-      return {
-        ...state,
-        mode: actions.payload ? actions.payload.mode : state.mode,
-      };
-    case "TOGGLED_MODE":
-      return {
-        ...state,
-        mode: state.mode === "light" ? "dark" : "light",
-      };
+model User {
+  id            String          @id @default(cuid())
+  name          String?
+  email         String          @unique
+  emailVerified DateTime?
+  image         String?
+  accounts      Account[]
+  sessions      Session[]
+  username      String?         @unique
+  // Optional for WebAuthn support
+  Authenticator Authenticator[]
 
-    default:
-      return state;
-  }
-};
+  quizzes     Quiz[]
+  likes      Like[]
+  bookmarked Bookmarked[]
+  Progress   Progress[]
+  scores     Score[]
 
-const initialState: ThemeState = {
-  theme: "violet",
-  mode: "light",
-};
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
 
-export const ThemeContextProvider = ({ children }: { children: ReactNode }) => {
-  const [state, dispatch] = useReducer(ThemeReducer, initialState);
+model Quiz {
+  id         String       @id @default(cuid())
+  title      String
+  description String
+  imageUrl String
+  questions  Question[]
+  categories  String[]
+  difficulty Difficulty
 
-  return (
-    <ThemeContext.Provider value={{ state, dispatch }}>
-      <div data-theme-color={state.theme} className="transition-colors">
-        <div className={state.mode}>{children}</div>
-      </div>
-    </ThemeContext.Provider>
-  );
-};
+  progress   Progress[]
+  likes      Like[]
+  score      Score[]
+  bookmarked Bookmarked[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+
+  author   User   @relation(fields: [authorId], references: [id])
+  authorId String
+}
+
+model Question {
+  id       String     @id @default(cuid())
+  text     String
+  imageUrl    String?
+  options Json
+
+  progress Progress[]
+
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  quiz   Quiz   @relation(fields: [quizId], references: [id])
+  quizId String
+}
+
+model Progress {
+  id    String   @id @default(cuid())
+  score Score[]
+  timer DateTime @default(now())
+  tries Int @default(5)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user              User      @relation(fields: [userId], references: [id])
+  userId            String
+  quiz              Quiz      @relation(fields: [quizId], references: [id])
+  quizId            String
+  question          Question? @relation(fields: [currentQuestionId], references: [id])
+  currentQuestionId String
+}
+
+model Score {
+  user       User     @relation(fields: [userId], references: [id])
+  userId     String
+  quiz       Quiz     @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  quizId     String
+  progress   Progress @relation(fields: [progressId], references: [id])
+  progressId String
+
+  score Int
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@id([userId, quizId, progressId])
+}
+
+
+
+enum Difficulty {
+  EASY
+  MEDIUM
+  HARD
+}
+
+model Like {
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+  quiz   Quiz   @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  quizId String
+
+  @@id([userId, quizId])
+}
+
+model Bookmarked {
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+  quiz   Quiz   @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  quizId String
+
+  @@id([userId, quizId])
+}
+
+
+
+model Account {
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([provider, providerAccountId])
+}
+
+model Session {
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model VerificationToken {
+  identifier String
+  token      String
+  expires    DateTime
+
+  @@id([identifier, token])
+}
+
+// Optional for WebAuthn support
+model Authenticator {
+  credentialID         String  @unique
+  userId               String
+  providerAccountId    String
+  credentialPublicKey  String
+  counter              Int
+  credentialDeviceType String
+  credentialBackedUp   Boolean
+  transports           String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([userId, credentialID])
+}

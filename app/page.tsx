@@ -9,18 +9,8 @@ export default function Home() {
   
 
   return (
-    <main>
-      <Link href='/quiz/create' className={buttonVariants()}
-      onClick={() => {
-        toast({
-          title: "Error",
-          description: "There was an error logging in with Google",
-          variant: "destructive",
-        });
-      }}
-      >
-        dd
-      </Link>
-    </main>
+    <div>
+    
+    </div>
   );
 }

@@ -4,6 +4,8 @@ import { getCurrentUser } from "@/lib/auth";
 import { SessionProvider } from "next-auth/react";
 import { FC, ReactNode } from "react";
 
+
+
 interface LayoutProps {
   children: ReactNode;
 }

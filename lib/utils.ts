@@ -1,7 +1,16 @@
-import { type ClassValue, clsx } from 'clsx'
+import { type ClassValue, clsx } from 'clsx';
+import { formatDistanceToNow } from 'date-fns';
 
-import { twMerge } from 'tailwind-merge'
-import qs from 'query-string'
+import qs from 'query-string';
+import { twMerge } from 'tailwind-merge';
+
+export function formatTimeAgo(date: Date | string): string {
+  if (typeof date === 'string') {
+    date = new Date(date);
+  }
+  
+  return formatDistanceToNow(date, { addSuffix: true });
+}
 
 
 export type UrlQueryParams = {

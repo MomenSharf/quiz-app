@@ -1,19 +1,10 @@
 import "@/app/globals.css";
-import Navbar from "@/components/Navbar";
+import Header from "@/components/Layout/Header";
+import Sidebar from "@/components/Layout/Sidebar";
 import Providers from "@/components/Providers";
+import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner"
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import localFont from 'next/font/local'
-
-
-// Font files can be colocated inside of `pages`
-const myFont = localFont({
-  src: "../public/font/Rubik/Rubik-VariableFont_wght.ttf",
-});
-
-const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -30,15 +21,16 @@ export default function RootLayout({
   return (
     <html lang="en">
       <Providers>
-        <div className={myFont.className}>
-          <div className="relative dark:bg-background dark:text-primary-foreground antialiased min-h-screen flex flex-col sm:flex-row w-full">
-            <Navbar />
-            {authModal}
+        <div className="relative dark:bg-background dark:text-primary-foreground antialiased min-h-screen flex flex-col w-full">
+          <Header />
+          {authModal}
+          <div className="flex-1 flex">
+            <Sidebar />
             <main className="flex-1">{children}</main>
           </div>
         </div>
-        <Toaster />  
-        <Sonner />  
+        <Toaster />
+        <Sonner />
       </Providers>
     </html>
   );

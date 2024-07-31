@@ -4,6 +4,12 @@ import { createContext, ReactNode, useContext, useReducer } from "react";
 import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
 import { extractRouterConfig } from "uploadthing/server";
 import { ourFileRouter } from "@/app/api/uploadthing/core";
+import { cn } from "@/lib/utils";
+
+import { Nunito } from "next/font/google";
+
+
+const nunito = Nunito({ subsets: ["latin"] });
 
 type ThemeActions =
   | { type: "SET_THEME"; payload: ThemeState | null }
@@ -52,7 +58,7 @@ export const ThemeContextProvider = ({ children }: { children: ReactNode }) => {
 
   return (
     <ThemeContext.Provider value={{ state, dispatch }}>
-      <body data-theme-color={state.theme} className={state.mode}>
+      <body data-theme-color={state.theme} className={cn(state.mode,nunito.className,'bg-[var(--main-bg)]')}>
       <NextSSRPlugin
           /**
            * The `extractRouterConfig` will extract **only** the route configs

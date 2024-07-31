@@ -1,13 +1,18 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {images: {
-  domains: ['utfs.io'],
-  remotePatterns: [
-    {
-      protocol: 'https',
-      hostname: 'utfs.io',
-      port: ''
-    }
-  ]
-}};
+import dotenv from "dotenv";
+dotenv.config();
+
+const nextConfig = {
+  images: {
+    domains: ["utfs.io"],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "utfs.io",
+        port: "",
+      },
+    ],
+  },
+};
 
 export default nextConfig;
