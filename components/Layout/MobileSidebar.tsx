@@ -1,25 +1,21 @@
 "use client";
 import { Button, buttonVariants } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
   Sheet,
   SheetClose,
   SheetContent,
-  SheetDescription,
   SheetFooter,
   SheetHeader,
-  SheetTitle,
-  SheetTrigger,
+  SheetTrigger
 } from "@/components/ui/sheet";
-import { Menu } from "lucide-react";
-import { UserAvatarImage } from "../User/UserAvatar";
+import { DescktopSideBarItems } from "@/constants";
+import { cn } from "@/lib/utils";
 import { User } from "@prisma/client";
-import { MobileSideBarItems } from "@/constants";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { cn } from "@/lib/utils";
 import SignOut from "../Auth/SignOut";
+import { Icons } from "../icons";
+import { UserAvatarImage } from "../User/UserAvatar";
 type MobileSideBarProps = {
   user: Pick<User, "image" | "email" | "name">;
   isLoggedIn: boolean;
@@ -33,9 +29,9 @@ export default function MobileSideBar({
 
   return (
     <Sheet>
-      <SheetTrigger asChild className="md:hidden mx-2">
-        <Button variant="outline" size="icon">
-          <Menu className="w-5 h-5 " />
+      <SheetTrigger asChild className="sm:hidden mx-2">
+        <Button variant="ghost" size="icon">
+          <Icons.menu className="w-5 h-5 stroke-foreground" />
         </Button>
       </SheetTrigger>
       <SheetContent
@@ -67,7 +63,7 @@ export default function MobileSideBar({
           )}
         </SheetHeader>
         <div className="flex-1 flex flex-col gap-3 w-full py-3 px-1">
-          {MobileSideBarItems.map((item) => {
+          {DescktopSideBarItems.map((item) => {
             return (
               <SheetClose key={item.label} asChild>
                 <Link

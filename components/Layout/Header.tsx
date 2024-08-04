@@ -1,19 +1,17 @@
 import { getCurrentUser } from "@/lib/auth";
 import Logo from "./Logo";
 
+import { cn } from "@/lib/utils";
 import Link from "next/link";
-import Palette from "../Theme/Palette";
-import ThemeMode from "../Theme/ThemeMode";
+import { buttonVariants } from "../ui/button";
 import { UserAvatar } from "../User/UserAvatar";
-import { Triangle } from "lucide-react";
-import { Button } from "../ui/button";
 import MobileSideBar from "./MobileSidebar";
 
 export default async function Header() {
   const session = await getCurrentUser();
 
   return (
-    <header className="w-full flex  bg-card  justify-between items-center gap-4 overflow-hidden shadow-sm">
+    <header className="w-full flex bg-card justify-between items-center gap-4 overflow-hidden shadow-sm">
       <MobileSideBar
         user={{
           email: session?.user.email || '', 
@@ -25,20 +23,20 @@ export default async function Header() {
       <Link href="/" className="cursor-pointer">
         <Logo />
       </Link>
-      <div className="hidden md:flex justify-center items-center px-3">
+      <div className="hidden sm:flex justify-center items-center px-3">
         {session?.user ? (
           <UserAvatar
             isLoggedIn={!!session?.user}
             user={{
               name: session?.user.name || null,
+              email: session?.user.email || '',
               image: session?.user.image || null,
             }}
-            className="w-10 h-10"
           />
         ) : (
-          <Button size="sm" className="text-xs rounded-full px-5">
+          <Link href='/login'  className={cn(buttonVariants({size: "sm"}),"text-xs rounded-full px-5")}>
             SIGN UP NEW
-          </Button>
+          </Link>
         )}
       </div>
     </header>

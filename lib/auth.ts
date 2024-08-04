@@ -1,16 +1,21 @@
-import { db } from '@/lib/db'
-import { PrismaAdapter } from '@next-auth/prisma-adapter'
-import { nanoid } from 'nanoid'
-import { NextAuthOptions, getServerSession } from 'next-auth'
-import GoogleProvider from 'next-auth/providers/google'
+import { db } from "@/lib/db";
+import { PrismaAdapter } from "@next-auth/prisma-adapter";
+import { nanoid } from "nanoid";
+import { NextAuthOptions, getServerSession } from "next-auth";
+import GoogleProvider from "next-auth/providers/google";
+import FacebookProvider from "next-auth/providers/facebook";
+import CredentialsProvider from "next-auth/providers/credentials";
+import bcrypt from 'bcrypt'
+
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(db),
   session: {
-    strategy: 'jwt',
+    strategy: "jwt",
   },
   pages: {
-    signIn: '/sign-in',
+    signIn: "/login",
+
   },
   secret: process.env.AUTH_SECRET,
   providers: [
@@ -18,18 +23,50 @@ export const authOptions: NextAuthOptions = {
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
     }),
+    FacebookProvider({
+      clientId: process.env.FACEBOOK_CLIENT_ID!,
+      clientSecret: process.env.FACEBOOK_CLIENT_SECRET!,
+    }),
+    CredentialsProvider({
+      name: "Credentials",
+      credentials: {
+        email: { label: "Email", type: "email" },
+        password: { label: "Password", type: "password" },
+      },
+      async authorize(credentials) {
+        // Check if user exists
+        const user = await db.user.findUnique({
+          where: { email: credentials?.email },
+        });
+
+        if (!user || !user.password) {
+          throw new Error("No user found");
+        }
+
+        if(!credentials?.password) {
+          throw new Error('missing password')
+        }
+
+        const isValid = await bcrypt.compare(credentials?.password, user.password);
+        if (!isValid) {
+          throw new Error("Invalid password");
+        }
+
+        return { id: user.id, name: user.name, email: user.email };
+      },
+    })
   ],
   callbacks: {
     async session({ token, session }) {
       if (token) {
-        session.user.id = token.id
-        session.user.name = token.name
-        session.user.email = token.email
-        session.user.image = token.picture
-        session.user.username = token.username
+        session.user.id = token.id;
+        session.user.name = token.name;
+        session.user.email = token.email;
+        session.user.image = token.picture;
+        session.user.username = token.username;
       }
 
-      return session
+      return session;
     },
 
     async jwt({ token, user }) {
@@ -37,13 +74,11 @@ export const authOptions: NextAuthOptions = {
         where: {
           email: token.email!,
         },
-      })
-
-      
+      });
 
       if (!dbUser) {
-        token.id = user!.id
-        return token
+        token.id = user!.id;
+        return token;
       }
 
       if (!dbUser.username) {
@@ -54,7 +89,7 @@ export const authOptions: NextAuthOptions = {
           data: {
             username: nanoid(10),
           },
-        })
+        });
       }
 
       return {
@@ -63,14 +98,12 @@ export const authOptions: NextAuthOptions = {
         email: dbUser.email,
         picture: dbUser.image,
         username: dbUser.username,
-      }
+      };
     },
     redirect() {
-      return '/'
+      return "/";
     },
-  
   },
+};
 
-}
-
-export const getCurrentUser = () => getServerSession(authOptions)
+export const getCurrentUser = () => getServerSession(authOptions);

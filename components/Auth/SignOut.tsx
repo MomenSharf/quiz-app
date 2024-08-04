@@ -3,9 +3,10 @@
 import { Button, ButtonProps } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { cn } from "@/lib/utils";
-import { Loader2, LogOut } from "lucide-react";
+import { LogOut } from "lucide-react";
 import { signOut } from "next-auth/react";
 import * as React from "react";
+import { Icons } from "../icons";
 
 type SignOutProps = ButtonProps & {
   text?: string;
@@ -35,7 +36,7 @@ export default function SignOut({ text, iconClassName, ...props }: SignOutProps)
   return (
     <Button disabled={isLoading} onClick={loginWithGoogle} {...props}>
       {isLoading ? (
-        <Loader2 className={cn("animate-spin mr-1 w-4 h-4", iconClassName)} />
+        <Icons.Loader className={cn("animate-spin mr-1 w-4 h-4 stroke-primary-foreground", iconClassName)} />
       ) : (
         <LogOut
           className={cn("mr-2 h-4 w-4 text-destructive", iconClassName)}

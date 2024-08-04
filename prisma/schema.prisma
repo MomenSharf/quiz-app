@@ -9,17 +9,21 @@ generator client {
 }
 
 model User {
-  id            String          @id @default(cuid())
+  id            String       @id @default(cuid())
   name          String?
-  email         String          @unique
+  email         String       @unique
   emailVerified DateTime?
   image         String?
   accounts      Account[]
   sessions      Session[]
-  username      String?         @unique
+  username      String?      @unique
+  password      String?
+  ResetTokens   ResetToken[]
+
   // Optional for WebAuthn support
   Authenticator Authenticator[]
 
+  folders     Folder[]
   quizzes    Quiz[]
   likes      Like[]
   bookmarked Bookmarked[]
@@ -30,6 +34,33 @@ model User {
   updatedAt DateTime @updatedAt
 }
 
+model Folder {
+  id    String @id @default(cuid())
+  title String
+
+  subfolders Folder[] @relation("Subfolders")
+
+  quizzes Quiz[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user     User    @relation(fields: [userId], references: [id])
+  userId   String
+
+  parentId String?
+  parent   Folder? @relation("Subfolders", fields: [parentId], references: [id])
+}
+
+model ResetToken {
+  id        Int      @id @default(autoincrement())
+  token     String   @unique
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  expiresAt DateTime
+}
+
 model Quiz {
   id          String     @id @default(cuid())
   title       String
@@ -38,7 +69,7 @@ model Quiz {
   questions   Question[]
   categories  String[]
   difficulty  Difficulty
-  visibility Visibility @default(PUBLIC)
+  visibility  Visibility @default(PUBLIC)
 
   progress   Progress[]
   likes      Like[]
@@ -48,9 +79,12 @@ model Quiz {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  author   User   @relation(fields: [authorId], references: [id])
-  authorId String
+  user     User    @relation(fields: [userId], references: [id])
+  userId   String
+  folder   Folder? @relation(fields: [folderId], references: [id])
+  folderId String?
 }
+
 enum Visibility {
   PUBLIC
   PRIVATE

@@ -1,59 +1,35 @@
 import {
-  CircleArrowDown,
-  Cloud,
   Copy,
-  CreditCard,
-  EllipsisVertical,
   ExternalLink,
-  Github,
-  Keyboard,
-  LifeBuoy,
-  LogOut,
-  Mail,
-  MessageSquare,
   PenLine,
   Play,
-  Plus,
-  PlusCircle,
-  RotateCcw,
-  Settings,
-  Share,
-  User,
-  UserPlus,
-  Users,
+  RotateCcw
 } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuPortal,
   DropdownMenuSeparator,
-  DropdownMenuShortcut,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
-  DropdownMenuTrigger,
+  DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 import { Quiz } from "@prisma/client";
 import DeleteQuizButton from "./DeleteQuizButton";
-import QuizGalleryItemDrawer from "./QuizGalleryItemDrawer";
 
-type QuizGalleryItemMenuProps = {
+type QuizGalleryQuizMenuProps = {
   trigger: JSX.Element;
   contentPostionClasses: string;
   quiz: Pick<Quiz, "id" | "title">;
 };
 
-export default function QuizGalleryItemMenu({
+export default function QuizGalleryQuizMenu({
   trigger,
   contentPostionClasses,
   quiz,
-}: QuizGalleryItemMenuProps) {
+}: QuizGalleryQuizMenuProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>{trigger}</DropdownMenuTrigger>
@@ -92,12 +68,13 @@ export default function QuizGalleryItemMenu({
         </DropdownMenuGroup>
         <DropdownMenuGroup>
           <DropdownMenuSeparator />
-          <DropdownMenuItem className="p-0 transition-all">
+          <DropdownMenuItem className="p-0 transition-all" onClick={(e) => e.preventDefault()}>
+            
             <DeleteQuizButton
               variant="ghost"
               text="Delete"
               pathname="/my-quizzes"
-              quizzesIds={[quiz.id]}
+              titleIds={[{title: quiz.title, id: quiz.id}]}
               className="flex gap-1 w-full text-destructive bg-transparent hover:bg-destructive hover:text-destructive-foreground"
             />
           </DropdownMenuItem>

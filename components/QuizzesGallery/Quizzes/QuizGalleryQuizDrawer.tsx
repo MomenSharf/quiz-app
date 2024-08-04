@@ -1,6 +1,7 @@
 import * as React from "react";
 import {
   Copy,
+  DoorClosed,
   ExternalLink,
   Minus,
   PenLine,
@@ -24,17 +25,16 @@ import {
 } from "@/components/ui/drawer";
 import { Quiz } from "@prisma/client";
 import DeleteQuizButton from "./DeleteQuizButton";
-import { Separator } from "./ui/separator";
 
-type QuizGalleryItemDrawerProps = {
+type QuizGalleryQuizDrawerProps = {
   trigger: JSX.Element;
   quiz: Pick<Quiz, "id" | "title">;
 };
 
-export default function QuizGalleryItemDrawer({
+export default function QuizGalleryQuizDrawer({
   quiz,
   trigger,
-}: QuizGalleryItemDrawerProps) {
+}: QuizGalleryQuizDrawerProps) {
   return (
     <Drawer>
       <DrawerTrigger asChild>{trigger}</DrawerTrigger>
@@ -91,7 +91,7 @@ export default function QuizGalleryItemDrawer({
           </div>
           <DrawerFooter>
             <DeleteQuizButton
-              quizzesIds={[quiz.id]}
+              titleIds={[{title: quiz.title, id: quiz.id}]}
               pathname="pathname"
               text="Delete"
               className="flex gap-2 text-lg"

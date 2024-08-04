@@ -1,11 +1,11 @@
+import { toggleQuizVisibility } from "@/lib/actions/quiz.actions";
+import { cn } from "@/lib/utils";
 import { QuizWithQuestions } from "@/types";
-import { Quiz, Visibility } from "@prisma/client";
-import { Globe, Loader2, Lock, WholeWord } from "lucide-react";
+import { Globe, Lock } from "lucide-react";
+import { useState } from "react";
+import { Icons } from "./icons";
 import { Button } from "./ui/button";
 import { toast } from "./ui/use-toast";
-import { useOptimistic, useState } from "react";
-import { cn } from "@/lib/utils";
-import { toggleQuizVisibility } from "@/lib/actions/quiz.actions";
 
 type VisibilityButtonProps = {
   quiz: Pick<QuizWithQuestions, "id" | "visibility">;
@@ -67,7 +67,7 @@ export default function VisibilityButton({
         className={cn("bg-[var(--main-bg)] rounded-full", className)}
       >
         {isLoading ? (
-          <Loader2 className={cn("w-3 h-3 animate-spin", iconclassName)} />
+          <Icons.Loader className={cn("w-3 h-3 animate-spin stroke-foreground", iconclassName)} />
         ) : state === "PRIVATE" ? (
           <Lock className={cn("w-3 h-3", iconclassName)} />
         ) : (

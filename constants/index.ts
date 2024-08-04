@@ -157,28 +157,28 @@ export const categoriesWithLabel = [
 import { Icons } from "@/components/icons";
 import { User } from "lucide-react";
 
-export const MobileSideBarItems = [
-  {
-    route: "/",
-    label: "Home",
-    icon: Icons.home, // Replace with actual SVG icon component or path
-  },
-  {
-    route: "/my-quizzes",
-    label: "My Quizzes",
-    icon: Icons.myQuizzes, // Replace with actual SVG icon component or path
-  },
-  {
-    route: "/quizzes",
-    label: "Quizzes",
-    icon: Icons.quizzes, // Replace with actual SVG icon component or path
-  },
-  {
-    route: "/profile",
-    label: "Profile",
-    icon: Icons.profile  , // Replace with actual SVG icon component or path
-  },
-];
+//   {
+//     route: "/",
+//     label: "Home",
+//     icon: Icons.home, // Replace with actual SVG icon component or path
+//   },
+
+//   {
+//     route: "/my-quizzes",
+//     label: "My Quizzes",
+//     icon: Icons.myQuizzes, // Replace with actual SVG icon component or path
+//   },
+//   {
+//     route: "/quizzes",
+//     label: "Quizzes",
+//     icon: Icons.quizzes, // Replace with actual SVG icon component or path
+//   },
+//   {
+//     route: "/profile",
+//     label: "Profile",
+//     icon: Icons.profile  , // Replace with actual SVG icon component or path
+//   },
+// ];
 export const DescktopSideBarItems = [
   {
     route: "/",
@@ -186,7 +186,12 @@ export const DescktopSideBarItems = [
     icon: Icons.home, // Replace with actual SVG icon component or path
   },
   {
-    route: "/my-quizzes",
+    route: "/dashboard",
+    label: "Dashboard",
+    icon: Icons.dashboard, // Replace with actual SVG icon component or path
+  },
+  {
+    route: "/quizzes",
     label: "My Quizzes",
     icon: Icons.myQuizzes, // Replace with actual SVG icon component or path
   },
@@ -194,5 +199,25 @@ export const DescktopSideBarItems = [
     route: "/quizzes",
     label: "Quizzes",
     icon: Icons.quizzes, // Replace with actual SVG icon component or path
+  },
+  {
+    route: "/settings",
+    label: "Settings",
+    icon: Icons.settings, // Replace with actual SVG icon component or path
+  },
+  {
+    route: "/profile",
+    label: "Profile",
+    icon: Icons.profile  , // Replace with actual SVG icon component or path
+  },
+  {
+    route: "/bookmarked",
+    label: "Bookmarked",
+    icon: Icons.bookmark  , // Replace with actual SVG icon component or path
+  },
+  {
+    route: "/notifications",
+    label: "Notifications",
+    icon: Icons.notification  , // Replace with actual SVG icon component or path
   },
 ];

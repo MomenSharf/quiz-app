@@ -1,31 +1,36 @@
 "use client";
+import { Icons } from "@/components/icons";
+import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/use-toast";
-import { cn } from "@/lib/utils";
-import { Loader2, Plus } from "lucide-react";
-import React, { useState } from "react";
-import { Button } from "../ui/button";
 import { newQuiz } from "@/lib/actions/quiz.actions";
-import { redirect, useRouter } from "next/navigation";
+import { cn } from "@/lib/utils";
+import { Plus } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+
 
 type NewQuizButtonProps = {
   className?: string;
   userId: string;
+  folderId? : string 
   pathname: string;
 };
 
 export default function NewQuizButton({
   className,
-  userId,
+  folderId,
   pathname,
 }: NewQuizButtonProps) {
   const [isLoading, setIsLoading] = useState(false);
+  console.log(folderId);
+  
   const router = useRouter();
 
   const createNewQuiz = async () => {
     setIsLoading(true);
 
     try {
-      const quizId = await newQuiz(userId, pathname);
+      const quizId = await newQuiz(pathname, folderId);
 
       if (quizId) {
         // router.push(`/quizzes/${quizId}`);
@@ -50,13 +55,13 @@ export default function NewQuizButton({
   return (
     <Button
       disabled={isLoading}
-      className={cn("px-5 flex items-center gap-1", className)}
+      className={cn("px-5 flex items-center gap-1 ", className)}
       onClick={createNewQuiz}
     >
       {isLoading ? (
-        <Loader2 className="w-5 h-5 animate-spin" />
+        <Icons.Loader  className="w-4 h-4 animate-spin stroke-primary-foreground" />
       ) : (
-        <Plus className="w-5 h-5" />
+        <Plus className="w-4 h-4" />
       )}
       New Quiz
     </Button>

@@ -9,7 +9,7 @@ import { useEffect, useState } from "react";
 import QuizFormProgress from "./QuizFormProgress";
 import QuizInfoForm from "./Forms/QuizInfoForm/QuizInfoForm";
 import PickAnswerForm from "./Forms/PickAnswerForm/PickAnswerForm";
-import CreateStatus from "../CreateStatus";
+// import CreateStatus from "../CreateStatus";
 import {
   Accordion,
   AccordionContent,
@@ -155,7 +155,7 @@ export default function QuizForm({ type, userId }: Props) {
         type="button"
         onClick={() => {}}
         >
-       Save
+          {/* <CreateStatus files={files} questions={questions}  quizInfo={quizInfo}  */}
       </Button>
         </div>
     </Accordion>

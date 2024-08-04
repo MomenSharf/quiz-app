@@ -21,7 +21,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <Providers>
-        <div className="relative dark:bg-background dark:text-primary-foreground antialiased min-h-screen flex flex-col w-full">
+        <div className="flex flex-col relative dark:bg-background dark:text-primary-foreground antialiased min-h-screen">
           <Header />
           {authModal}
           <div className="flex-1 flex">

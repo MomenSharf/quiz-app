@@ -15,7 +15,6 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 
 import { cn } from "@/lib/utils";
-import { QuizValidtion, QuizValidtionType } from "@/lib/validations/Quiz";
 import { ArrowBigRightDash, RotateCcw, Save } from "lucide-react";
 import { Dispatch, SetStateAction, useState } from "react";
 import { Input } from "@/components/ui/input";
