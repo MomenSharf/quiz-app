@@ -15,7 +15,7 @@ export default function QuizGalleryFolder({
   return (
     <div className="max-w-full flex gap-1 sm:gap-3 items-center bg-card rounded-md  hover:shadow-md transition-all duration-200">
       <Link
-        href={`/quizzes/folders/${folder.id}`}
+        href={`/dashboard/folders/${folder.id}`}
         className="p-3  flex-1 max-w-full flex gap-1"
       >
         <div className="flex items-center gap-2">

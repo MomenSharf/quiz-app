@@ -6,18 +6,20 @@ import Link from "next/link";
 import { buttonVariants } from "../ui/button";
 import { UserAvatar } from "../User/UserAvatar";
 import MobileSideBar from "./MobileSidebar";
+import ThemeMode from "../Theme/ThemeMode";
+import Palette from "../Theme/Palette";
 
 export default async function Header() {
   const session = await getCurrentUser();
 
   return (
-    <header className="w-full flex bg-card justify-between items-center gap-4 overflow-hidden shadow-sm">
+    <header className="w-full flex bg-card justify-between items-center gap-3 overflow-hidden shadow-sm">
       <MobileSideBar
         user={{
-          email: session?.user.email || '', 
+          email: session?.user.email || "",
           image: session?.user.image || null,
           name: session?.user.name || null,
-        } }
+        }}
         isLoggedIn={!!session?.user}
       />
       <Link href="/" className="cursor-pointer">
@@ -25,18 +27,29 @@ export default async function Header() {
       </Link>
       <div className="hidden sm:flex justify-center items-center px-3">
         {session?.user ? (
-          <UserAvatar
-            isLoggedIn={!!session?.user}
-            user={{
-              name: session?.user.name || null,
-              email: session?.user.email || '',
-              image: session?.user.image || null,
-            }}
-          />
+          <>
+            <UserAvatar
+              isLoggedIn={!!session?.user}
+              user={{
+                name: session?.user.name || null,
+                email: session?.user.email || "",
+                image: session?.user.image || null,
+              }}
+            />
+          </>
         ) : (
-          <Link href='/login'  className={cn(buttonVariants({size: "sm"}),"text-xs rounded-full px-5")}>
-            SIGN UP NEW
-          </Link>
+          <>
+
+            <Link
+              href="/login"
+              className={cn(
+                buttonVariants({ size: "sm" }),
+                "text-xs rounded-full px-5"
+              )}
+            >
+              SIGN UP NEW
+            </Link>
+          </>
         )}
       </div>
     </header>

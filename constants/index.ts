@@ -192,11 +192,6 @@ export const DescktopSideBarItems = [
   },
   {
     route: "/quizzes",
-    label: "My Quizzes",
-    icon: Icons.myQuizzes, // Replace with actual SVG icon component or path
-  },
-  {
-    route: "/quizzes",
     label: "Quizzes",
     icon: Icons.quizzes, // Replace with actual SVG icon component or path
   },
@@ -221,3 +216,16 @@ export const DescktopSideBarItems = [
     icon: Icons.notification  , // Replace with actual SVG icon component or path
   },
 ];
+
+const pastelColors = {
+  violet: 'hsl(262, 83%, 95%)',
+  red: 'hsl(0, 100%, 95%)',
+  orange: 'hsl(30, 100%, 95%)',
+  rose: 'hsl(340, 100%, 95%)',
+  green: 'hsl(120, 60%, 95%)',
+  blue: 'hsl(220, 100%, 95%)',
+  yellow: 'hsl(60, 100%, 95%)',
+  slate: 'hsl(210, 20%, 95%)',
+  zinc: 'hsl(0, 0%, 90%)' // A soft pastel gray "zinc"
+
+}

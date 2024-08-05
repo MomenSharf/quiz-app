@@ -31,12 +31,12 @@ export default async function page() {
           <div className="flex gap-3">
             <NewQuizButton
               userId={session.user.id}
-              className="w-fit rounded-full"
+              className="w-fit"
               pathname="/my-quizzes"
             />
             <NewFolderButton
               userId={session.user.id}
-              className="w-fit rounded-full"
+              className="w-fit"
               pathname="/my-quizzes"
             />
           </div>

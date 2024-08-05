@@ -58,7 +58,7 @@ export const ThemeContextProvider = ({ children }: { children: ReactNode }) => {
 
   return (
     <ThemeContext.Provider value={{ state, dispatch }}>
-      <body data-theme-color={state.theme} className={cn(state.mode,nunito.className,'bg-[var(--main-bg)]')}>
+      <body data-theme-color={state.theme} className={cn(state.mode,nunito.className,'')}>
       <NextSSRPlugin
           /**
            * The `extractRouterConfig` will extract **only** the route configs

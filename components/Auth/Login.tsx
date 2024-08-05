@@ -316,7 +316,7 @@ export default function Login({ type }: { type: "register" | "login" }) {
           </form>
         </Form>
       )}
-      <div className="relative w-full h-px bg-border">
+      <div className="relative w-full h-px bg-border my-1">
         <span className="absolute left-1/2 -translate-x-1/2 -top-1/2 -translate-y-1/2 p-2 bg-card rounded-full text-muted-foreground">
           Or
         </span>

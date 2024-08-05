@@ -64,18 +64,11 @@ export default function QuizGalleryQuiz({
         </label>
       </div>
       <Link
-        href={`/quizzes/${quiz.id}`}
+        href={`/dashboard/${quiz.id}`}
         className="py-3 flex-1 max-w-full flex gap-1"
       >
         <div className="flex items-center gap-2">
-          {/* <div className="object-contain rounded-md overflow-hidden min-w-[60px]">
-            <Image
-              src={quiz.imageUrl ? quiz.imageUrl : "/assets/images/gg.png"}
-              alt={"quiz"}
-              width={100}
-              height={60}
-            />
-          </div> */}
+
           <div className="h-full flex justify-center items-center object-contain rounded-md overflow-hidden min-w-16 sm:min-w-20 bg-[hsl(var(--primary)_/_10%)] ">
             <Icons.quizzes className="w-7 h-7 fill-primary" />
           </div> 

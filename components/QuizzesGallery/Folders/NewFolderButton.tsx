@@ -92,10 +92,10 @@ export default function NewFolderButton({
       <DialogTrigger asChild>
         <Button
           type="button"
-          variant="outline"
+          variant='white'
           disabled={isLoading}
           className={cn(
-            "px-5 flex items-center gap-1 stroke-foreground",
+            "px-5 flex items-center gap-1 text-foreground",
             className
           )}
         >

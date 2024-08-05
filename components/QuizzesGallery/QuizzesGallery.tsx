@@ -52,7 +52,7 @@ export default function QuizzesGallery({
             variant={
               quizzesChecked.length >= quizzes.length && quizzes.length !== 0
                 ? "default"
-                : "outline"
+                : "white"
             }
           >
             <ListChecks
