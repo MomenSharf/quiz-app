@@ -64,7 +64,7 @@ export default function QuizGalleryQuiz({
         </label>
       </div>
       <Link
-        href={`/dashboard/${quiz.id}`}
+        href={`/quizzes/${quiz.id}`}
         className="py-3 flex-1 max-w-full flex gap-1"
       >
         <div className="flex items-center gap-2">

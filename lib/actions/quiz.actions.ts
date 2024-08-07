@@ -100,13 +100,14 @@ export const getQuiz = async (quizId: string) => {
       select: {
         id: true,
         title: true,
+        description: true,
         imageUrl: true,
         difficulty: true,
         visibility: true,
-        createdAt: true,
-        updatedAt: true,
-        questions: true,
         categories: true,
+        updatedAt: true,
+        createdAt: true,
+        questions: true,
         user: {
           select: {
             email: true,
@@ -114,6 +115,7 @@ export const getQuiz = async (quizId: string) => {
             image: true,            
           }
         }
+
       },
     });
 

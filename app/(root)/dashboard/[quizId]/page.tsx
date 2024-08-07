@@ -1,6 +1,6 @@
 import { getQuiz } from '@/lib/actions/quiz.actions'
 import { getCurrentUser } from '@/lib/auth';
-import { redirect } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 import React from 'react'
 
 export default async function page({
@@ -16,7 +16,10 @@ export default async function page({
   
   const quiz = await getQuiz(quizId)
 
-  console.log(quiz);
+  if(!quiz) {
+    return notFound()
+  }
+
   
   return (
     <div>

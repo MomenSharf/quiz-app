@@ -23,12 +23,8 @@ model User {
   // Optional for WebAuthn support
   Authenticator Authenticator[]
 
-  folders     Folder[]
-  quizzes    Quiz[]
-  likes      Like[]
-  bookmarked Bookmarked[]
-  Progress   Progress[]
-  scores     Score[]
+  folders Folder[]
+  quizzes Quiz[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -45,8 +41,8 @@ model Folder {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  user     User    @relation(fields: [userId], references: [id])
-  userId   String
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
 
   parentId String?
   parent   Folder? @relation("Subfolders", fields: [parentId], references: [id])
@@ -71,11 +67,6 @@ model Quiz {
   difficulty  Difficulty
   visibility  Visibility @default(PUBLIC)
 
-  progress   Progress[]
-  likes      Like[]
-  score      Score[]
-  bookmarked Bookmarked[]
-
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -85,40 +76,35 @@ model Quiz {
   folderId String?
 }
 
+model Question {
+  id             String       @id @default(cuid())
+  type           QuestionType
+  question       String
+  options        String[] // Optional, used for multipleChoice, matching, pictureChoice
+  correctAnswer  String // Optional, used for singleChoice, fillInTheBlank, shortAnswer, longAnswer, interactive, code
+  correctAnswers String[] // Optional, used for multipleChoice
+  correctOrder   String[] // Optional, used for order
+  items          Item[] // Optional, used for dragAndDrop, ranking
+  codeSnippet    String // Optional, used for code
+  quizId         String
+  quiz           Quiz         @relation(fields: [quizId], references: [id])
+}
+
+model Item {
+  id              String   @id @default(cuid())
+  item            String
+  match           String? // Optional, used for matching
+  correctPosition Int? // Optional, used for dragAndDrop
+  questionId      String
+  question        Question @relation(fields: [questionId], references: [id])
+}
+
 enum Visibility {
   PUBLIC
   PRIVATE
 }
 
-model Question {
-  id             String       @id @default(cuid())
-  type           QuestionType
-  question       String
-  options        Option[]
-  correctAnswer  String? // For single-choice and multiple-choice
-  correctAnswers String[] // For multiple-choice
-  order          String[] // For order questions
-  codeSnippet    String? // For code questions
-  imageUrl       String? // For picture-choice questionscture
-
-  progress Progress[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  quiz   Quiz   @relation(fields: [quizId], references: [id])
-  quizId String
-}
-
-model Option {
-  id         Int      @id @default(autoincrement())
-  questionId String
-  label      String
-  question   Question @relation(fields: [questionId], references: [id])
-}
-
 enum QuestionType {
-  UNSPECIFIED
   SINGLE_CHOICE
   MULTIPLE_CHOICE
   TRUE_FALSE
@@ -134,38 +120,38 @@ enum QuestionType {
   CODE
 }
 
-model Progress {
-  id    String   @id @default(cuid())
-  score Score[]
-  timer DateTime @default(now())
-  tries Int      @default(5)
+// model Progress {
+//   id    String   @id @default(cuid())
+//   score Score[]
+//   timer DateTime @default(now())
+//   tries Int      @default(5)
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
 
-  user              User      @relation(fields: [userId], references: [id])
-  userId            String
-  quiz              Quiz      @relation(fields: [quizId], references: [id])
-  quizId            String
-  question          Question? @relation(fields: [currentQuestionId], references: [id])
-  currentQuestionId String
-}
+//   user              User      @relation(fields: [userId], references: [id])
+//   userId            String
+//   quiz              Quiz      @relation(fields: [quizId], references: [id])
+//   quizId            String
+//   question          Question? @relation(fields: [currentQuestionId], references: [id])
+//   currentQuestionId String
+// }
 
-model Score {
-  user       User     @relation(fields: [userId], references: [id])
-  userId     String
-  quiz       Quiz     @relation(fields: [quizId], references: [id], onDelete: Cascade)
-  quizId     String
-  progress   Progress @relation(fields: [progressId], references: [id])
-  progressId String
+// model Score {
+//   user       User     @relation(fields: [userId], references: [id])
+//   userId     String
+//   quiz       Quiz     @relation(fields: [quizId], references: [id], onDelete: Cascade)
+//   quizId     String
+//   progress   Progress @relation(fields: [progressId], references: [id])
+//   progressId String
 
-  score Int
+//   score Int
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
 
-  @@id([userId, quizId, progressId])
-}
+//   @@id([userId, quizId, progressId])
+// }
 
 enum Difficulty {
   EASY
@@ -173,23 +159,23 @@ enum Difficulty {
   HARD
 }
 
-model Like {
-  user   User   @relation(fields: [userId], references: [id])
-  userId String
-  quiz   Quiz   @relation(fields: [quizId], references: [id], onDelete: Cascade)
-  quizId String
+// model Like {
+//   user   User   @relation(fields: [userId], references: [id])
+//   userId String
+//   quiz   Quiz   @relation(fields: [quizId], references: [id], onDelete: Cascade)
+//   quizId String
 
-  @@id([userId, quizId])
-}
+//   @@id([userId, quizId])
+// }
 
-model Bookmarked {
-  user   User   @relation(fields: [userId], references: [id])
-  userId String
-  quiz   Quiz   @relation(fields: [quizId], references: [id], onDelete: Cascade)
-  quizId String
+// model Bookmarked {
+//   user   User   @relation(fields: [userId], references: [id])
+//   userId String
+//   quiz   Quiz   @relation(fields: [quizId], references: [id], onDelete: Cascade)
+//   quizId String
 
-  @@id([userId, quizId])
-}
+//   @@id([userId, quizId])
+// }
 
 model Account {
   userId            String

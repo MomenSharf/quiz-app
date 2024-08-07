@@ -28,6 +28,16 @@
     --ring: 262.1 83.3% 57.8%;
     --radius: 0.5rem;
 
+    --pastel-violet: hsl(262, 83%, 95%);
+  --pastel-red: hsl(0, 100%, 95%);
+  --pastel-orange: hsl(30, 100%, 95%);
+  --pastel-rose: hsl(340, 100%, 95%);
+  --pastel-green: hsl(120, 60%, 95%);
+  --pastel-blue: hsl(220, 100%, 95%);
+  --pastel-yellow: hsl(60, 100%, 95%);
+  --pastel-slate: hsl(210, 20%, 95%);
+  --pastel-zinc: hsl(0, 0%, 90%);
+
     --main-bg: hsl(216deg 50% 96.08%);
     --navbar: #282e3e;
     --navbar-item-active: #161c28;
@@ -428,7 +438,9 @@
 .bg-gradient {
   background-color: #8EC5FC;
 background-image: linear-gradient(62deg, #8EC5FC 0%, #E0C3FC 100%);
-
+}
+.root-background-white {
+  --background: 0, 0%, 100%;
 }
 
 .apper {

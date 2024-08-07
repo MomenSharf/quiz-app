@@ -11,6 +11,13 @@ export function formatTimeAgo(date: Date | string): string {
   
   return formatDistanceToNow(date, { addSuffix: true });
 }
+export const debounce = (func: Function, delay: number) => {
+  let timeout: NodeJS.Timeout;
+  return (...args: any[]) => {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => func(...args), delay);
+  };
+};
 
 
 export type UrlQueryParams = {

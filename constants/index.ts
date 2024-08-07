@@ -156,6 +156,7 @@ export const categoriesWithLabel = [
 
 import { Icons } from "@/components/icons";
 import { User } from "lucide-react";
+import { Difficulty, QuestionType, Visibility } from "@prisma/client";
 
 //   {
 //     route: "/",
@@ -217,7 +218,7 @@ export const DescktopSideBarItems = [
   },
 ];
 
-const pastelColors = {
+export const pastelColors = {
   violet: 'hsl(262, 83%, 95%)',
   red: 'hsl(0, 100%, 95%)',
   orange: 'hsl(30, 100%, 95%)',
@@ -227,5 +228,25 @@ const pastelColors = {
   yellow: 'hsl(60, 100%, 95%)',
   slate: 'hsl(210, 20%, 95%)',
   zinc: 'hsl(0, 0%, 90%)' // A soft pastel gray "zinc"
-
 }
+
+export const QuestionTypes: QuestionType[] = [
+  "SINGLE_CHOICE",
+  "MULTIPLE_CHOICE",
+  "TRUE_FALSE",
+  "FILL_IN_THE_BLANK",
+  "SHORT_ANSWER",
+  "LONG_ANSWER",
+  "MATCHING",
+  "ORDER",
+  "RANKING",
+  "PICTURE_CHOICE",
+  "DRAG_AND_DROP",
+  "INTERACTIVE",
+  "CODE",
+] as const;
+// export type QuestionType = typeof QuestionTypes[number]
+
+export const VisibilityOptions = ["PUBLIC", "PRIVATE"] as const;
+
+export const DifficultyLevels = ["EASY", "MEDIUM", "HARD"] as const;

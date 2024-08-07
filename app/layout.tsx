@@ -15,18 +15,11 @@ export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
-  authModal: React.ReactNode;
 }>) {
   return (
     <html lang="en">
       <Providers>
-        <div className="flex flex-col relative  antialiased min-h-screen">
-          <Header />
-          <div className="flex-1 flex " style={{backgroundImage: 'url(/)'}}>
-            <Sidebar />
-            <main className="flex-1">{children}</main>
-          </div>
-        </div>
+        {children}
         <Toaster />
         <Sonner />
       </Providers>
