@@ -95,7 +95,7 @@ export default function Login({ type }: { type: "register" | "login" }) {
           description: newUser.message,
         });
 
-        router.push("/");
+        router.push("/login");
       } else {
         toast({
           title: "Error",

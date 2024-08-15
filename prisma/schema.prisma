@@ -1,7 +1,7 @@
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  // directUrl = env("DIRECT_URL")
 }
 
 generator client {
@@ -62,10 +62,10 @@ model Quiz {
   title       String
   description String
   imageUrl    String?
-  questions   Question[]
   categories  String[]
   difficulty  Difficulty
   visibility  Visibility @default(PUBLIC)
+  questions   Question[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -77,27 +77,29 @@ model Quiz {
 }
 
 model Question {
-  id             String       @id @default(cuid())
-  type           QuestionType
-  question       String
-  options        String[] // Optional, used for multipleChoice, matching, pictureChoice
-  correctAnswer  String // Optional, used for singleChoice, fillInTheBlank, shortAnswer, longAnswer, interactive, code
-  correctAnswers String[] // Optional, used for multipleChoice
-  correctOrder   String[] // Optional, used for order
-  items          Item[] // Optional, used for dragAndDrop, ranking
-  codeSnippet    String // Optional, used for code
-  quizId         String
-  quiz           Quiz         @relation(fields: [quizId], references: [id])
+  id      String       @id @default(cuid())
+  content Json
+  // type    QuestionType
+  // question       String
+  // options        String[] // Optional, used for multipleChoice, matching, pictureChoice
+  // correctAnswer  String // Optional, used for singleChoice, fillInTheBlank, shortAnswer, longAnswer, interactive, code
+  // correctAnswers String[] // Optional, used for multipleChoice
+  // correctOrder   String[] // Optional, used for order
+  // items          Item[] // Optional, used for dragAndDrop, ranking
+  // codeSnippet    String // Optional, used for code
+  // Item    Item[]
+  quizId  String
+  quiz    Quiz         @relation(fields: [quizId], references: [id])
 }
 
-model Item {
-  id              String   @id @default(cuid())
-  item            String
-  match           String? // Optional, used for matching
-  correctPosition Int? // Optional, used for dragAndDrop
-  questionId      String
-  question        Question @relation(fields: [questionId], references: [id])
-}
+// model Item {
+//   id              String   @id @default(cuid())
+//   item            String
+//   match           String? // Optional, used for matching
+//   correctPosition Int? // Optional, used for dragAndDrop
+//   questionId      String
+//   question        Question @relation(fields: [questionId], references: [id])
+// }
 
 enum Visibility {
   PUBLIC

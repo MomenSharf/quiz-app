@@ -1,5 +1,15 @@
 import { Folder, Question, Quiz, User } from "@prisma/client";
 
+export type updataQuiz = Pick<
+  Quiz,
+  | "title"
+  | "description"
+  | "imageUrl"
+  | "difficulty"
+  | "visibility"
+  | "categories"
+>;
+
 export type QuizGalleryWithQuestionsCount = Pick<
   Quiz,
   | "id"
@@ -19,17 +29,16 @@ export type EditorQuiz = Pick<
   | "id"
   | "title"
   | "description"
-  | "imageUrl"
+  | "categories"
   | "difficulty"
   | "visibility"
+  | "imageUrl"
   | "createdAt"
   | "updatedAt"
-  | "categories"
 > & {
   questions: Question[];
-  user: Pick<User, "email" | "name" | "image">;
+  user: User;
 };
-
 
 export type FolderGalleryWithQuizzesCount = Pick<
   Folder,

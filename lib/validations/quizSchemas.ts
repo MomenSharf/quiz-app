@@ -1,5 +1,9 @@
-import { z } from "zod";
-import { QuestionTypes, VisibilityOptions, DifficultyLevels } from "@/constants"; // Adjust the import path as necessary
+import { string, z } from "zod";
+import {
+  QuestionTypes,
+  VisibilityOptions,
+  DifficultyLevels,
+} from "@/constants"; // Adjust the import path as necessary
 
 // Define schemas for different question types
 
@@ -9,7 +13,6 @@ const singleChoiceSchema = z.object({
   options: z.array(z.string()).min(2, "At least two options are required"),
   correctAnswer: z.string().min(1, "Correct answer is required"),
 });
-
 
 const multipleChoiceSchema = z.object({
   type: z.literal(QuestionTypes[1]),
@@ -112,21 +115,24 @@ const codeSchema = z.object({
 });
 
 // Define the union schema
-const questionSchema = z.union([
-  singleChoiceSchema,
-  multipleChoiceSchema,
-  trueFalseSchema,
-  fillInTheBlankSchema,
-  shortAnswerSchema,
-  longAnswerSchema,
-  matchingSchema,
-  orderSchema,
-  rankingSchema,
-  pictureChoiceSchema,
-  dragAndDropSchema,
-  interactiveSchema,
-  codeSchema,
-]);
+const questionSchema = z.object({
+  id: z.string().optional(),
+  content: z.union([
+    singleChoiceSchema,
+    multipleChoiceSchema,
+    trueFalseSchema,
+    fillInTheBlankSchema,
+    shortAnswerSchema,
+    longAnswerSchema,
+    matchingSchema,
+    orderSchema,
+    rankingSchema,
+    pictureChoiceSchema,
+    dragAndDropSchema,
+    interactiveSchema,
+    codeSchema,
+  ]),
+});
 
 export const quizSchema = z.object({
   title: z.string().min(1, "Title is required"),
@@ -135,7 +141,9 @@ export const quizSchema = z.object({
   categories: z.array(z.string()),
   visibility: z.enum(VisibilityOptions),
   difficulty: z.enum(DifficultyLevels),
-  questions: z.array(singleChoiceSchema).min(1, "At least one question is required"),
+  questions: z
+    .array(questionSchema)
+    .min(1, "At least one question is required"),
 });
 
 export const folderSchema = z.object({
@@ -144,5 +152,4 @@ export const folderSchema = z.object({
 
 export type folderSchemaType = z.infer<typeof folderSchema>;
 export type quizSchemaType = z.infer<typeof quizSchema>;
-
-
+export type questionSchemaType = z.infer<typeof questionSchema>;

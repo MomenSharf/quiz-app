@@ -5,14 +5,65 @@ import { db } from "../db";
 import { QuestionValidtionType } from "../validations/Quiz";
 import { QuestionsDefaultValues } from "@/constants";
 import { revalidatePath, revalidateTag } from "next/cache";
-import { Folder, Quiz } from "@prisma/client";
-import { FolderPathSegment } from "@/types";
+import { Folder, Question, Quiz } from "@prisma/client";
+import { FolderPathSegment, updataQuiz } from "@/types";
 import { getCurrentUser } from "../auth";
 import { redirect } from "next/navigation";
+import { questionSchemaType } from "../validations/quizSchemas";
 
 const utapi = new UTApi();
 
+export const saveQuiz = async (
+  quizId: string,
+  quiz: updataQuiz,
+  questions: questionSchemaType[]
+) => {
+  const session = await getCurrentUser();
 
+  if (!session) {
+    throw new Error("Unauthorized: User is not logged in.");
+  }
+  try {
+    const quizzes = await db.quiz.update({
+      where: {
+        id: quizId,
+      },
+      data: {
+        ...quiz,
+      },
+    });
+
+    const questionsCreated = questions.map(async (question) => {
+      const content = JSON.stringify(question);
+      const dbQuestion = await db.question.findFirst({
+        where: {
+          quizId,
+        },
+      });
+      if (dbQuestion && question.id) {
+        await db.question.update({
+          where: {
+            id: question.id,
+          },
+          data: {
+            content,
+          },
+        });
+      } else {
+        await db.question.create({
+          data: {
+            quizId,
+            content,
+          },
+        });
+      }
+    });
+
+    return quizzes;
+  } catch (error) {
+    throw new Error("An errore happen");
+  }
+};
 
 // Get
 export const getGalleryQuizzes = async () => {
@@ -57,7 +108,7 @@ export const getGalleryFolders = async () => {
 
   if (!session) {
     throw new Error("Unauthorized: User is not logged in.");
-  } 
+  }
 
   try {
     const folders = await db.folder.findMany({
@@ -95,7 +146,7 @@ export const getQuiz = async (quizId: string) => {
     const quiz = await db.quiz.findUnique({
       where: {
         id: quizId,
-        userId: session.user.id
+        userId: session.user.id,
       },
       select: {
         id: true,
@@ -108,14 +159,7 @@ export const getQuiz = async (quizId: string) => {
         updatedAt: true,
         createdAt: true,
         questions: true,
-        user: {
-          select: {
-            email: true,
-            name: true,
-            image: true,            
-          }
-        }
-
+        user: true
       },
     });
 
@@ -129,7 +173,7 @@ export const getFolder = async (folderId: string) => {
 
   if (!session) {
     throw new Error("Unauthorized: User is not logged in.");
-  } 
+  }
 
   try {
     const folder = await db.folder.findUnique({
@@ -179,10 +223,7 @@ export const getFolder = async (folderId: string) => {
 };
 
 // New
-export const newQuiz = async (
-  pathname: string,
-  folderId?: string
-) => {
+export const newQuiz = async (pathname: string, folderId?: string) => {
   const session = await getCurrentUser();
 
   if (!session) {
@@ -252,7 +293,7 @@ export const deleteQuizzes = async (quizzesIds: string[], pathname: string) => {
         id: {
           in: quizzesIds,
         },
-        userId: session.user.id
+        userId: session.user.id,
       },
     });
 
@@ -265,7 +306,10 @@ export const deleteQuizzes = async (quizzesIds: string[], pathname: string) => {
   }
 };
 
-export async function deleteFolderAndSubfolders(folderId: string, pathname: string) {
+export async function deleteFolderAndSubfolders(
+  folderId: string,
+  pathname: string
+) {
   const session = await getCurrentUser();
 
   if (!session) {
@@ -291,10 +335,10 @@ export async function deleteFolderAndSubfolders(folderId: string, pathname: stri
 
       // Delete the folder itself
       const folder = await db.folder.delete({
-        where: { id , userId: session.user.id},
+        where: { id, userId: session.user.id },
       });
 
-      return folder.id
+      return folder.id;
     } catch (error) {
       console.error(`Error deleting folder with id ${id}:`, error);
       throw error; // Rethrow the error to handle it in the outer scope
@@ -305,14 +349,16 @@ export async function deleteFolderAndSubfolders(folderId: string, pathname: stri
     // Start the deletion process
     const id = await deleteSubfolders(folderId);
 
-    revalidateTag(pathname)
-    return id
+    revalidateTag(pathname);
+    return id;
   } catch (error) {
-    console.error(`Error deleting folder and subfolders for id ${folderId}:`, error);
+    console.error(
+      `Error deleting folder and subfolders for id ${folderId}:`,
+      error
+    );
     // Handle the error (e.g., rollback transaction, notify user, etc.)
   }
 }
-
 
 // Visibility
 export const toggleQuizVisibility = async (
@@ -329,7 +375,7 @@ export const toggleQuizVisibility = async (
     const updatedQuiz = await db.quiz.update({
       where: {
         id: quizId,
-        userId: session.user.id
+        userId: session.user.id,
       },
       data: {
         visibility: visibility === "PRIVATE" ? "PUBLIC" : "PRIVATE",
@@ -344,9 +390,9 @@ export const toggleQuizVisibility = async (
   }
 };
 
-
-
-export async function getFolderPath(folderId: string): Promise<FolderPathSegment[]> {
+export async function getFolderPath(
+  folderId: string
+): Promise<FolderPathSegment[]> {
   const getPathRecursive = async (id: string): Promise<FolderPathSegment[]> => {
     const session = await getCurrentUser();
 
@@ -356,7 +402,7 @@ export async function getFolderPath(folderId: string): Promise<FolderPathSegment
     try {
       // Fetch the folder by id
       const folder = await db.folder.findUnique({
-        where: { id , userId: session.user.id},
+        where: { id, userId: session.user.id },
         select: {
           title: true,
           parentId: true,
@@ -386,7 +432,6 @@ export async function getFolderPath(folderId: string): Promise<FolderPathSegment
   // Start the path retrieval process
   return await getPathRecursive(folderId);
 }
-
 
 export const deleteImages = async (images: string[]) => {
   try {

@@ -1,6 +1,6 @@
 import { toggleQuizVisibility } from "@/lib/actions/quiz.actions";
 import { cn } from "@/lib/utils";
-import { QuizWithQuestions } from "@/types";
+import { QuizGalleryWithQuestionsCount } from "@/types";
 import { Globe, Lock } from "lucide-react";
 import { useState } from "react";
 import { Icons } from "./icons";
@@ -8,7 +8,7 @@ import { Button } from "./ui/button";
 import { toast } from "./ui/use-toast";
 
 type VisibilityButtonProps = {
-  quiz: Pick<QuizWithQuestions, "id" | "visibility">;
+  quiz: Pick<QuizGalleryWithQuestionsCount, "id" | "visibility">;
   iconclassName?: string;
   className?: string;
   pathname: string;

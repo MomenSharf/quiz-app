@@ -1,16 +1,19 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
-import EditorHeader from "./EditorHeader";
-import { Quiz } from "@prisma/client";
-import { EditorQuiz } from "@/types";
-import { z } from "zod";
-import { useForm } from "react-hook-form";
-import { quizSchema, quizSchemaType } from "@/lib/validations/quizSchemas";
+import { saveQuiz } from "@/lib/actions/quiz.actions";
+import {
+  questionSchemaType,
+  quizSchema,
+  quizSchemaType,
+} from "@/lib/validations/quizSchemas";
+import { EditorQuiz, updataQuiz } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { useDebouncedCallback } from "use-debounce";
 import { Form } from "../ui/form";
-import { debounce } from "@/lib/utils";
-import { toast } from "../ui/use-toast";
+import EditorHeader from "./EditorHeader";
 
 type EditorProps = {
   quiz: EditorQuiz;
@@ -26,20 +29,85 @@ export default function Editor({ quiz }: EditorProps) {
       visibility: quiz.visibility,
       categories: quiz.categories,
       difficulty: quiz.difficulty,
-      questions: quiz.questions,
+      questions: quiz.questions.map((question) => ({
+        id: question.id,
+        content: question.content,
+      })) as questionSchemaType[],
     },
   });
 
-  const debouncedSave = useRef(debounce(async (data: quizSchemaType) => {
-    // await saveQuizData(data); // Call your API to save data
-  }, 1000)).current;
+  const [saveState, setSaveState] = useState<"GOOD" | "BAD" | "WAITING">(
+    "GOOD"
+  );
+  const isSaving = useRef(false);
 
+  const watch = form.watch();
 
-  const onSubmit = async () => {
-    toast({
-      description:'goooood'
-    })
-  };
+  const saveQuizFun = useCallback(async () => {
+    const data = form.getValues();
+    const quizData: updataQuiz = {
+      categories: data.categories,
+      title: data.title,
+      description: data.description,
+      difficulty: data.difficulty,
+      imageUrl: data.imageUrl || null,
+      visibility: data.visibility,
+    };
+
+    try {
+      // if (saveState !== "WAITING") {
+      //   setSaveState("WAITING");
+      // }
+      if (!isSaving.current) {
+        isSaving.current = true;
+        setSaveState("WAITING");
+      }
+
+      const prismaQuiz = await saveQuiz(quiz.id, quizData, data.questions);
+
+      if (prismaQuiz) {
+        setSaveState("GOOD");
+      } else {
+        setSaveState("BAD");
+      }
+    } catch (error: any) {
+      toast("An Error Occurred");
+      setSaveState("BAD");
+    } finally {
+      isSaving.current = false;
+    }
+  }, [form, quiz.id]);
+
+  const debounceSaveData = useDebouncedCallback(() => {
+    if (!isSaving.current) {
+      saveQuizFun();
+    }
+  }, 1000);
+
+  useEffect(() => {
+    const subscription = form.watch((value, { name }) => {
+      if (
+        name && // Guard clause to check if name is defined
+        (name === "title" ||
+          name === "description" ||
+          name === "imageUrl" ||
+          name === "visibility" ||
+          name === "categories" ||
+          name === "difficulty" ||
+          name.startsWith("questions"))
+      ) {
+        debounceSaveData();
+      }
+    });
+
+    return () => {
+      if (typeof subscription.unsubscribe === "function") {
+        subscription.unsubscribe();
+      }
+    };
+  }, [form.watch, debounceSaveData, form]);
+
+  const onSubmit = async () => {};
 
   return (
     <Form {...form}>
@@ -48,14 +116,10 @@ export default function Editor({ quiz }: EditorProps) {
         onSubmit={form.handleSubmit(onSubmit)}
       >
         <div className="sm:col-span-2">
-          <EditorHeader
-            quiz={{ title: quiz.title }}
-            form={form}
-
-          />
+          <EditorHeader form={form} saveState={saveState} />
         </div>
         <div className="bg-blue-500 ">2</div>
-        <div className="bg-orange-500">3</div>
+        <div className="bg-orange-500">{saveState}</div>
       </form>
     </Form>
   );

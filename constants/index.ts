@@ -3,6 +3,8 @@ import {
   QuizValidtionType,
 } from "@/lib/validations/Quiz";
 import { Theme_colors as colorsType } from "@/types/theme";
+import { Icons } from "@/components/icons";
+
 
 
 
@@ -154,9 +156,7 @@ export const categoriesWithLabel = [
   { value: "chemistry", label: "Chemistry" },
 ];
 
-import { Icons } from "@/components/icons";
-import { User } from "lucide-react";
-import { Difficulty, QuestionType, Visibility } from "@prisma/client";
+
 
 //   {
 //     route: "/",
@@ -230,7 +230,7 @@ export const pastelColors = {
   zinc: 'hsl(0, 0%, 90%)' // A soft pastel gray "zinc"
 }
 
-export const QuestionTypes: QuestionType[] = [
+export const QuestionTypes = [
   "SINGLE_CHOICE",
   "MULTIPLE_CHOICE",
   "TRUE_FALSE",
