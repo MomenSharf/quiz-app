@@ -4,28 +4,10 @@ import {
 } from "@/lib/validations/Quiz";
 import { Theme_colors as colorsType } from "@/types/theme";
 import { Icons } from "@/components/icons";
+import { EnumValues } from "zod";
+import { Radio, CheckCircle, XCircle, Edit, PenTool, AlignLeft, AlignCenter, Camera, Move, Code, Circle, LucideProps } from 'lucide-react';
 
 
-
-
-
-export const QuestionsDefaultValues: QuestionValidtionType = {
-  text: "",
-  imageUrl: undefined,
-  options: [
-    { text: "", isCorrect: false },
-    { text: "", isCorrect: false },
-  ],
-};
-
-export const QuizDefaultValues: QuizValidtionType = {
-  title: "",
-  imageUrl: undefined,
-  categories: [],
-  description: "",
-  difficulty: "EASY",
-  questions: [QuestionsDefaultValues],
-};
 
 export const NumberWords: {
   [key: number]: string;
@@ -156,30 +138,6 @@ export const categoriesWithLabel = [
   { value: "chemistry", label: "Chemistry" },
 ];
 
-
-
-//   {
-//     route: "/",
-//     label: "Home",
-//     icon: Icons.home, // Replace with actual SVG icon component or path
-//   },
-
-//   {
-//     route: "/my-quizzes",
-//     label: "My Quizzes",
-//     icon: Icons.myQuizzes, // Replace with actual SVG icon component or path
-//   },
-//   {
-//     route: "/quizzes",
-//     label: "Quizzes",
-//     icon: Icons.quizzes, // Replace with actual SVG icon component or path
-//   },
-//   {
-//     route: "/profile",
-//     label: "Profile",
-//     icon: Icons.profile  , // Replace with actual SVG icon component or path
-//   },
-// ];
 export const DescktopSideBarItems = [
   {
     route: "/",
@@ -204,31 +162,31 @@ export const DescktopSideBarItems = [
   {
     route: "/profile",
     label: "Profile",
-    icon: Icons.profile  , // Replace with actual SVG icon component or path
+    icon: Icons.profile, // Replace with actual SVG icon component or path
   },
   {
     route: "/bookmarked",
     label: "Bookmarked",
-    icon: Icons.bookmark  , // Replace with actual SVG icon component or path
+    icon: Icons.bookmark, // Replace with actual SVG icon component or path
   },
   {
     route: "/notifications",
     label: "Notifications",
-    icon: Icons.notification  , // Replace with actual SVG icon component or path
+    icon: Icons.notification, // Replace with actual SVG icon component or path
   },
 ];
 
 export const pastelColors = {
-  violet: 'hsl(262, 83%, 95%)',
-  red: 'hsl(0, 100%, 95%)',
-  orange: 'hsl(30, 100%, 95%)',
-  rose: 'hsl(340, 100%, 95%)',
-  green: 'hsl(120, 60%, 95%)',
-  blue: 'hsl(220, 100%, 95%)',
-  yellow: 'hsl(60, 100%, 95%)',
-  slate: 'hsl(210, 20%, 95%)',
-  zinc: 'hsl(0, 0%, 90%)' // A soft pastel gray "zinc"
-}
+  violet: "hsl(262, 83%, 95%)",
+  red: "hsl(0, 100%, 95%)",
+  orange: "hsl(30, 100%, 95%)",
+  rose: "hsl(340, 100%, 95%)",
+  green: "hsl(120, 60%, 95%)",
+  blue: "hsl(220, 100%, 95%)",
+  yellow: "hsl(60, 100%, 95%)",
+  slate: "hsl(210, 20%, 95%)",
+  zinc: "hsl(0, 0%, 90%)", // A soft pastel gray "zinc"
+};
 
 export const QuestionTypes = [
   "SINGLE_CHOICE",
@@ -242,11 +200,85 @@ export const QuestionTypes = [
   "RANKING",
   "PICTURE_CHOICE",
   "DRAG_AND_DROP",
-  "INTERACTIVE",
+  // "INTERACTIVE",
   "CODE",
+  "UNSELECTED",
 ] as const;
-// export type QuestionType = typeof QuestionTypes[number]
 
 export const VisibilityOptions = ["PUBLIC", "PRIVATE"] as const;
 
 export const DifficultyLevels = ["EASY", "MEDIUM", "HARD"] as const;
+
+export const QuestionTypesWithLabelAndIcons: {
+  value: (typeof QuestionTypes)[number];
+  label: string;
+  icon: (props: LucideProps) => JSX.Element;
+}[] = [
+  {
+    value: "SINGLE_CHOICE" ,
+    label: "Single Choice",
+    icon: Icons.checkSquare,
+  },
+  {
+    value: "MULTIPLE_CHOICE" ,
+    label: "Multiple Choice",
+    icon: Icons.checkList,
+  },
+  {
+    value: "TRUE_FALSE" ,
+    label: "True/False",
+    icon: Icons.trueFalse,
+  },
+  {
+    value: "FILL_IN_THE_BLANK" ,
+    label: "Fill in the Blank",
+    icon: Icons.write,
+  },
+  {
+    value: "SHORT_ANSWER" ,
+    label: "Short Answer",
+    icon: Icons.write,
+  },
+  {
+    value: "LONG_ANSWER" ,
+    label: "Long Answer",
+    icon: Icons.write,
+  },
+  {
+    value: "MATCHING" ,
+    label: "Matching",
+    icon: Icons.match,
+  },
+  {
+    value: "ORDER" ,
+    label: "Order",
+    icon: Icons.reorder,
+  },
+  {
+    value: "RANKING" ,
+    label: "Ranking",
+    icon: Icons.ranking,
+  },
+  {
+    value: "PICTURE_CHOICE" ,
+    label: "Picture Choice",
+    icon: Icons.picture,
+  },
+  {
+    value: "DRAG_AND_DROP" ,
+    label: "Drag and Drop",
+    icon: Icons.Move,
+  },
+  // {
+  //   value: "INTERACTIVE" ,
+  //   label: "Interactive",
+  //   icon: Icons.Circle,
+  // },
+  {
+    value: "CODE" ,
+    label: "Code",
+    icon: Icons.code,
+  },
+  
+];
+

@@ -22,12 +22,12 @@ export default function NewQuizButton({
   pathname,
 }: NewQuizButtonProps) {
   const [isLoading, setIsLoading] = useState(false);
-  console.log(folderId);
   
   const router = useRouter();
 
   const createNewQuiz = async () => {
     setIsLoading(true);
+    
 
     try {
       const quizId = await newQuiz(pathname, folderId);

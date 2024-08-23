@@ -46,7 +46,7 @@ export default function QuizGalleryQuiz({
         <label htmlFor={quiz.id} className="">
           <Checkbox
             id={quiz.id}
-            checked={quizzesChecked.map(e => e.id).includes(quiz.id)}
+            checked={quizzesChecked.map((e) => e.id).includes(quiz.id)}
             onCheckedChange={(checkedState) => {
               if (checkedState) {
                 setQuizzesChecked((prev) => [
@@ -68,12 +68,11 @@ export default function QuizGalleryQuiz({
         className="py-3 flex-1 max-w-full flex gap-1"
       >
         <div className="flex items-center gap-2">
-
           <div className="h-full flex justify-center items-center object-contain rounded-md overflow-hidden min-w-16 sm:min-w-20 bg-[hsl(var(--primary)_/_10%)] ">
             <Icons.quizzes className="w-7 h-7 fill-primary" />
-          </div> 
+          </div>
           <div className="flex flex-col gap-1">
-            <p className="max-w-full truncate font-medium hover:text-primary transition-colors">
+            <p className="font-medium hover:text-primary transition-colors truncate max-w-40">
               {quiz.title}
             </p>
             <div

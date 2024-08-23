@@ -9,6 +9,8 @@ import { getGalleryFolders, getGalleryQuizzes } from "@/lib/actions/quiz.actions
 import { getCurrentUser } from "@/lib/auth";
 import { redirect } from "next/navigation";
 
+
+
 export default async function page() {
   const session = await getCurrentUser();
 

@@ -44,7 +44,6 @@ export default function NewFolderButton({
 }: NewQuizButtonProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  console.log(folderId);
   
 
   const router = useRouter();

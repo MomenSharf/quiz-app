@@ -13,7 +13,7 @@ export default async function Header() {
   const session = await getCurrentUser();
 
   return (
-    <header className="w-full flex bg-card justify-between items-center gap-3 overflow-hidden shadow-sm">
+    <header className="w-full flex bg-card justify-between items-center gap-3 shadow-sm">
       <MobileSideBar
         user={{
           email: session?.user.email || "",

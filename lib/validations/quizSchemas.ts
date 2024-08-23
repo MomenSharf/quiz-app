@@ -1,4 +1,4 @@
-import { string, z } from "zod";
+import { number, string, z } from "zod";
 import {
   QuestionTypes,
   VisibilityOptions,
@@ -9,6 +9,7 @@ import {
 
 const singleChoiceSchema = z.object({
   type: z.literal(QuestionTypes[0]),
+  questionOrder: z.number(),
   question: z.string().min(1, "Question is required"),
   options: z.array(z.string()).min(2, "At least two options are required"),
   correctAnswer: z.string().min(1, "Correct answer is required"),
@@ -16,6 +17,8 @@ const singleChoiceSchema = z.object({
 
 const multipleChoiceSchema = z.object({
   type: z.literal(QuestionTypes[1]),
+  questionOrder: z.number(),
+
   question: z.string().min(1, "Question is required"),
   options: z.array(z.string()).min(2, "At least two options are required"),
   correctAnswers: z
@@ -25,30 +28,45 @@ const multipleChoiceSchema = z.object({
 
 const trueFalseSchema = z.object({
   type: z.literal(QuestionTypes[2]),
+  
+  questionOrder: z.number(),
+
   question: z.string().min(1, "Question is required"),
   correctAnswer: z.union([z.literal("true"), z.literal("false")]),
 });
 
 const fillInTheBlankSchema = z.object({
   type: z.literal(QuestionTypes[3]),
+  questionOrder: z.number(),
+
+
   question: z.string().min(1, "Question is required"),
   correctAnswer: z.string().min(1, "Correct answer is required"),
 });
 
 const shortAnswerSchema = z.object({
   type: z.literal(QuestionTypes[4]),
+  
+  questionOrder: z.number(),
+
   question: z.string().min(1, "Question is required"),
   correctAnswer: z.string().min(1, "Correct answer is required"),
 });
 
 const longAnswerSchema = z.object({
   type: z.literal(QuestionTypes[5]),
+  questionOrder: z.number(),
+
+
   question: z.string().min(1, "Question is required"),
   correctAnswer: z.string().min(1, "Correct answer is required"),
 });
 
 const matchingSchema = z.object({
   type: z.literal(QuestionTypes[6]),
+  questionOrder: z.number(),
+
+
   question: z.string().min(1, "Question is required"),
   options: z
     .array(
@@ -60,14 +78,20 @@ const matchingSchema = z.object({
     .min(2, "At least two pairs are required"),
 });
 
-const orderSchema = z.object({
+const questionOrderSchema = z.object({
   type: z.literal(QuestionTypes[7]),
+  questionOrder: z.number(),
+
+
   question: z.string().min(1, "Question is required"),
-  correctOrder: z.array(z.string()).min(1, "At least one item is required"),
+  correctquestionOrder: z.array(z.string()).min(1, "At least one item is required"),
 });
 
 const rankingSchema = z.object({
   type: z.literal(QuestionTypes[8]),
+  questionOrder: z.number(),
+
+
   question: z.string().min(1, "Question is required"),
   items: z.array(z.string()).min(2, "At least two items are required"),
   correctRanking: z.array(z.string()).min(2, "Correct ranking is required"),
@@ -75,6 +99,9 @@ const rankingSchema = z.object({
 
 const pictureChoiceSchema = z.object({
   type: z.literal(QuestionTypes[9]),
+  
+  questionOrder: z.number(),
+
   question: z.string().min(1, "Question is required"),
   options: z
     .array(
@@ -89,6 +116,9 @@ const pictureChoiceSchema = z.object({
 
 const dragAndDropSchema = z.object({
   type: z.literal(QuestionTypes[10]),
+  
+  questionOrder: z.number(),
+
   question: z.string().min(1, "Question is required"),
   items: z
     .array(
@@ -100,23 +130,35 @@ const dragAndDropSchema = z.object({
     .min(2, "At least two items are required"),
 });
 
-const interactiveSchema = z.object({
-  type: z.literal(QuestionTypes[11]),
-  question: z.string().min(1, "Question is required"),
-  correctAnswer: z.string().min(1, "Correct answer is required"),
-  // Define additional fields based on the interactive element used
-});
+// const interactiveSchema = z.object({
+//   type: z.literal(QuestionTypes[11]),
+//   questionOrder: z.number(),
+
+
+//   question: z.string().min(1, "Question is required"),
+//   correctAnswer: z.string().min(1, "Correct answer is required"),
+//   // Define additional fields based on the interactive element used
+// });
 
 const codeSchema = z.object({
   type: z.literal(QuestionTypes[12]),
+  
+  questionOrder: z.number(),
+
   question: z.string().min(1, "Question is required"),
   codeSnippet: z.string().min(1, "Code snippet is required"),
   correctAnswer: z.string().min(1, "Correct answer is required"),
 });
+const unselectedSchema = z.object({
+  
+  questionOrder: z.number(),
+
+  type: z.literal(QuestionTypes[13]),
+});
 
 // Define the union schema
 const questionSchema = z.object({
-  id: z.string().optional(),
+  id: z.string(),
   content: z.union([
     singleChoiceSchema,
     multipleChoiceSchema,
@@ -125,12 +167,13 @@ const questionSchema = z.object({
     shortAnswerSchema,
     longAnswerSchema,
     matchingSchema,
-    orderSchema,
+    questionOrderSchema,
     rankingSchema,
     pictureChoiceSchema,
     dragAndDropSchema,
-    interactiveSchema,
+    // interactiveSchema,
     codeSchema,
+    unselectedSchema
   ]),
 });
 

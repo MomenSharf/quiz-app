@@ -1,5 +1,7 @@
+import { QuestionTypes } from "@/constants";
 import { Folder, Question, Quiz, User } from "@prisma/client";
 
+export type QuestionType = (typeof QuestionTypes)[number]
 export type updataQuiz = Pick<
   Quiz,
   | "title"

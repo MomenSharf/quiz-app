@@ -107,6 +107,7 @@ enum Visibility {
 }
 
 enum QuestionType {
+  UNSELECTED
   SINGLE_CHOICE
   MULTIPLE_CHOICE
   TRUE_FALSE

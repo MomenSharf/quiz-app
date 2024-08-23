@@ -1,15 +1,11 @@
 "use client";
-import { ThemeState } from "@/types/theme";
-import { createContext, ReactNode, useContext, useReducer } from "react";
-import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
-import { extractRouterConfig } from "uploadthing/server";
-import { ourFileRouter } from "@/app/api/uploadthing/core";
 import { cn } from "@/lib/utils";
+import { ThemeState } from "@/types/theme";
+import { Nunito_Sans } from "next/font/google";
+import { createContext, ReactNode, useContext, useReducer } from "react";
 
-import { Nunito } from "next/font/google";
 
-
-const nunito = Nunito({ subsets: ["latin"] });
+const nunito = Nunito_Sans({ subsets: ["latin"] });
 
 type ThemeActions =
   | { type: "SET_THEME"; payload: ThemeState | null }
@@ -59,15 +55,7 @@ export const ThemeContextProvider = ({ children }: { children: ReactNode }) => {
   return (
     <ThemeContext.Provider value={{ state, dispatch }}>
       <body data-theme-color={state.theme} className={cn(state.mode,nunito.className,'min-h-screen')}>
-      <NextSSRPlugin
-          /**
-           * The `extractRouterConfig` will extract **only** the route configs
-           * from the router to prevent additional information from being
-           * leaked to the client. The data passed to the client is the same
-           * as if you were to fetch `/api/uploadthing` directly.
-           */
-          routerConfig={extractRouterConfig(ourFileRouter)}
-        />
+     
         {children}
       </body>
     </ThemeContext.Provider>

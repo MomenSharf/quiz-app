@@ -3,13 +3,13 @@
 import { UTApi } from "uploadthing/server";
 import { db } from "../db";
 import { QuestionValidtionType } from "../validations/Quiz";
-import { QuestionsDefaultValues } from "@/constants";
 import { revalidatePath, revalidateTag } from "next/cache";
 import { Folder, Question, Quiz } from "@prisma/client";
 import { FolderPathSegment, updataQuiz } from "@/types";
 import { getCurrentUser } from "../auth";
 import { redirect } from "next/navigation";
 import { questionSchemaType } from "../validations/quizSchemas";
+import { unstable_noStore as noStore } from "next/cache";
 
 const utapi = new UTApi();
 
@@ -34,29 +34,44 @@ export const saveQuiz = async (
     });
 
     const questionsCreated = questions.map(async (question) => {
-      const content = JSON.stringify(question);
-      const dbQuestion = await db.question.findFirst({
+      //   // const content = JSON.stringify(question);
+      //   const dbQuestion = await db.question.findFirst({
+      //     where: {
+      //       quizId,
+      //     },
+      //   });
+      //   if (dbQuestion && question.id) {
+      //     await db.question.update({
+      //       where: {
+      //         id: question.id,
+      //       },
+      //       data: {
+      //         content: question.content,
+      //         order: question.order
+      //       },
+      //     });
+      //   } else {
+      //     await db.question.create({
+      //       data: {
+      //         quizId,
+      //         content: question.content,
+      //         order: question.order
+
+      //       },
+      //     });
+      //   }
+      await db.question.upsert({
         where: {
+          id: question.id,
+        },
+        create: {
           quizId,
+          content: question.content,
+        },
+        update: {
+          content: question.content,
         },
       });
-      if (dbQuestion && question.id) {
-        await db.question.update({
-          where: {
-            id: question.id,
-          },
-          data: {
-            content,
-          },
-        });
-      } else {
-        await db.question.create({
-          data: {
-            quizId,
-            content,
-          },
-        });
-      }
     });
 
     return quizzes;
@@ -74,6 +89,7 @@ export const getGalleryQuizzes = async () => {
   }
 
   try {
+    noStore();
     const quizzes = await db.quiz.findMany({
       where: {
         userId: session.user.id,
@@ -111,6 +127,7 @@ export const getGalleryFolders = async () => {
   }
 
   try {
+    noStore();
     const folders = await db.folder.findMany({
       where: {
         userId: session.user.id,
@@ -159,7 +176,7 @@ export const getQuiz = async (quizId: string) => {
         updatedAt: true,
         createdAt: true,
         questions: true,
-        user: true
+        user: true,
       },
     });
 
@@ -349,7 +366,7 @@ export async function deleteFolderAndSubfolders(
     // Start the deletion process
     const id = await deleteSubfolders(folderId);
 
-    revalidateTag(pathname);
+    revalidatePath(pathname);
     return id;
   } catch (error) {
     console.error(
@@ -442,3 +459,12 @@ export const deleteImages = async (images: string[]) => {
     });
   }
 };
+
+export async function revalidatePathInServer(pathname: string) {
+  try {
+    revalidatePath(pathname);
+  } catch (error) {
+    console.error("Failed to revalidate path:", error);
+    throw new Error("Revalidation failed");
+  }
+}
