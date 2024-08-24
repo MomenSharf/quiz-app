@@ -21,7 +21,6 @@ export default function QuestionTypes({
             variant="outline"
             className={cn("py-10", {
               "border-ring bg-accent": type === item.value,
-              
             })}
             onClick={() => setQuestionType(item.value)}
           >
@@ -41,6 +40,7 @@ export default function QuestionTypes({
           </Button>
         );
       })}
+      
     </div>
   );
 }

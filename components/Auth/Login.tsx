@@ -118,7 +118,6 @@ export default function Login({ type }: { type: "register" | "login" }) {
       ...values,
     });
 
-    console.log(result?.ok);
     if (result?.error) {
       toast({
         title: "Error",

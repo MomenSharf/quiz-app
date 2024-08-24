@@ -4,81 +4,19 @@ import { UTApi } from "uploadthing/server";
 import { db } from "../db";
 import { QuestionValidtionType } from "../validations/Quiz";
 import { revalidatePath, revalidateTag } from "next/cache";
-import { Folder, Question, Quiz } from "@prisma/client";
+import { Folder, Question, QuestionType, Quiz } from "@prisma/client";
 import { FolderPathSegment, updataQuiz } from "@/types";
 import { getCurrentUser } from "../auth";
 import { redirect } from "next/navigation";
-import { questionSchemaType } from "../validations/quizSchemas";
+import {
+  questionSchemaType,
+  quizSchema,
+  quizSchemaType,
+} from "../validations/quizSchemas";
 import { unstable_noStore as noStore } from "next/cache";
+import { OrderDefault } from "@/constants/defaultValues";
 
 const utapi = new UTApi();
-
-export const saveQuiz = async (
-  quizId: string,
-  quiz: updataQuiz,
-  questions: questionSchemaType[]
-) => {
-  const session = await getCurrentUser();
-
-  if (!session) {
-    throw new Error("Unauthorized: User is not logged in.");
-  }
-  try {
-    const quizzes = await db.quiz.update({
-      where: {
-        id: quizId,
-      },
-      data: {
-        ...quiz,
-      },
-    });
-
-    const questionsCreated = questions.map(async (question) => {
-      //   // const content = JSON.stringify(question);
-      //   const dbQuestion = await db.question.findFirst({
-      //     where: {
-      //       quizId,
-      //     },
-      //   });
-      //   if (dbQuestion && question.id) {
-      //     await db.question.update({
-      //       where: {
-      //         id: question.id,
-      //       },
-      //       data: {
-      //         content: question.content,
-      //         order: question.order
-      //       },
-      //     });
-      //   } else {
-      //     await db.question.create({
-      //       data: {
-      //         quizId,
-      //         content: question.content,
-      //         order: question.order
-
-      //       },
-      //     });
-      //   }
-      await db.question.upsert({
-        where: {
-          id: question.id,
-        },
-        create: {
-          quizId,
-          content: question.content,
-        },
-        update: {
-          content: question.content,
-        },
-      });
-    });
-
-    return quizzes;
-  } catch (error) {
-    throw new Error("An errore happen");
-  }
-};
 
 // Get
 export const getGalleryQuizzes = async () => {
@@ -256,6 +194,12 @@ export const newQuiz = async (pathname: string, folderId?: string) => {
         description: "",
         categories: [],
         difficulty: "EASY",
+        questions: {
+          create: {
+            type: "UNSELECTED",
+            questionOrder: 1,
+          },
+        },
       },
     });
 
@@ -297,6 +241,68 @@ export const newFolder = async (
   }
 };
 
+// Updata
+export const saveQuiz = async (
+  quizId: string,
+  data: quizSchemaType,
+  pathname: string
+) => {
+  const session = await getCurrentUser();
+
+  if (!session) {
+    throw new Error("Unauthorized: User is not logged in.");
+  }
+  try {
+    const quizData = {
+      categories: data.categories,
+      title: data.title,
+      description: data.description,
+      difficulty: data.difficulty,
+      imageUrl: data.imageUrl || null,
+      visibility: data.visibility,
+    };
+    const questions = data.questions;
+
+    const quiz = await db.quiz.update({
+      where: {
+        id: quizId,
+      },
+      data: {
+        ...quizData,
+        questions: {
+          deleteMany: {},
+          createMany: {
+            data: questions,
+          },
+        },
+      },
+    });
+
+    // const questionOperations = questions.map(question => {
+    //   if (question.id) {
+    //     // Update existing question
+    //     return db.question.update({
+    //       where: { id: question.id },
+    //       data: question,
+    //     });
+    //   } else {
+    //     // Create new question
+    //     return db.question.create({
+    //       data: question,
+    //     });
+    //   }
+    // });
+    if (quiz) {
+      revalidatePath(pathname);
+      return quiz;
+    } else {
+      throw new Error("An errore happened");
+    }
+  } catch (error) {
+    throw new Error("An errore happened");
+  }
+};
+
 // Delete
 export const deleteQuizzes = async (quizzesIds: string[], pathname: string) => {
   const session = await getCurrentUser();
@@ -322,7 +328,6 @@ export const deleteQuizzes = async (quizzesIds: string[], pathname: string) => {
     throw new Error("Quiz not Deleted, try again");
   }
 };
-
 export async function deleteFolderAndSubfolders(
   folderId: string,
   pathname: string

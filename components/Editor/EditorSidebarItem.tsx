@@ -1,3 +1,4 @@
+
 import * as React from "react";
 import { useMotionValue, Reorder } from "framer-motion";
 import { questionSchemaType } from "@/lib/validations/quizSchemas";
@@ -24,17 +25,15 @@ export default function EditorSidebarItem({
 }: EditorSidebarItemProps) {
   const y = useMotionValue(0);
   const Icon = QuestionTypesWithLabelAndIcons.find(
-    (e) => e.value === question.content.type
+    (e) => e.value === question.type
   )?.icon;
 
   return (
     <Reorder.Item value={question} id={question.id} style={{ y }}>
       <div
-        key={question.id || index}
-        // variant="outline"
-        // size="icon"
+        key={question.id}
         className={cn(buttonVariants({size: "icon", variant:"outline"}),"py-10 w-full min-w-20 min-h-20 relative hover:border-ring hover:bg-background", {
-          "border-ring bg-accent": currentQuestion === index,
+          "border-ring bg-accent hover:bg-accent": currentQuestion === index,
         })}
         onClick={() => setCurrentQuestion(index)}
       >
@@ -46,7 +45,7 @@ export default function EditorSidebarItem({
           />
         )}
         <span className="absolute top-1 left-1 text-muted-foreground text-xs">
-          {index}
+          {question.questionOrder + 1}
         </span>
         {/* <Badge className="opacity-0 group-hover:opacity-100 transition-opacity absolute top-1 right-1"></Badge> */}
         <div className=" absolute top-1 right-1">

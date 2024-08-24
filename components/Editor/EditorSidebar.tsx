@@ -10,6 +10,9 @@ import { Reorder } from "framer-motion";
 import EditorSidebarItem from "./EditorSidebarItem";
 import useScreenDimensions from "@/hooks/useScreenDimensions";
 import { setQuarter } from "date-fns";
+import { revalidatePath } from "next/cache";
+import { usePathname } from "next/navigation";
+import { revalidatePathInServer } from "@/lib/actions/quiz.actions";
 type EditorSidebarProps = {
   headerRef: RefObject<HTMLDivElement>;
   sidebarRef: RefObject<HTMLDivElement>;
@@ -27,21 +30,15 @@ export default function EditorSidebar({
 }: EditorSidebarProps) {
   const questions = form.getValues("questions");
   const dimensions = useScreenDimensions();
-  console.log(questions);
-  
 
   const newQuetion = async () => {
-     form.setValue("questions", [
-      ...questions,
-      {
-        id: questions.length.toString(),
-        content: {
-          type: "UNSELECTED",
-          questionOrder: questions.length,
-        },
-      },
-    ]);
-    setCurrentQuestion(questions.length)
+    const newQuestions: questionSchemaType[] = questions;
+    newQuestions.push({
+      type: "UNSELECTED",
+      questionOrder: questions.length,
+    });
+    form.setValue("questions", newQuestions);
+    setCurrentQuestion(questions.length - 1);
   };
 
   return (
@@ -64,10 +61,7 @@ export default function EditorSidebar({
               "questions",
               questions.map((question, i) => ({
                 ...question,
-                content: {
-                  ...question.content,
-                  questionOrder: i,
-                },
+                questionOrder: i,
               }))
             )
           }
@@ -87,8 +81,12 @@ export default function EditorSidebar({
           ))}
         </Reorder.Group>
         <div className="border-l sm:border-t sm:border-l-0 p-3">
-          <Button variant="outline" onClick={newQuetion} className="py-10 w-full min-w-20 min-h-20 relative hover:border-ring hover:bg-background">
-            <Plus className="w-4 h-4 text-muted-foreground"  />
+          <Button
+            variant="outline"
+            onClick={newQuetion}
+            className="py-10 w-full min-w-20 min-h-20 relative hover:border-ring hover:bg-background"
+          >
+            <Plus className="w-4 h-4 text-muted-foreground" />
           </Button>
         </div>
       </div>

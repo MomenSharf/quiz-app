@@ -77,20 +77,28 @@ model Quiz {
 }
 
 model Question {
-  id      String       @id @default(cuid())
-  content Json
-  // type    QuestionType
-  // question       String
-  // options        String[] // Optional, used for multipleChoice, matching, pictureChoice
-  // correctAnswer  String // Optional, used for singleChoice, fillInTheBlank, shortAnswer, longAnswer, interactive, code
-  // correctAnswers String[] // Optional, used for multipleChoice
-  // correctOrder   String[] // Optional, used for order
-  // items          Item[] // Optional, used for dragAndDrop, ranking
-  // codeSnippet    String // Optional, used for code
-  // Item    Item[]
-  quizId  String
-  quiz    Quiz         @relation(fields: [quizId], references: [id])
+  id             String       @id @default(cuid())
+  type           QuestionType
+  questionOrder  Int
+  question       String?
+  options        String[] // Optional, used for multipleChoice, matching, pictureChoice
+  correctAnswer  String? // Optional, used for singleChoice, fillInTheBlank, shortAnswer, longAnswer, interactive, code
+  correctAnswers String[] // Optional, used for multipleChoice
+  pairs Json[]          
+  correctOrder   String[] // Optional, used for order
+  imagesOptions Json[]          
+  codeSnippet    String? // Optional, used for code
+  quizId         String
+  quiz           Quiz         @relation(fields: [quizId], references: [id])
 }
+
+// model Pairs {
+//   id         String  @id @default(cuid())
+//   item       String
+//   match      String? // Optional, used for
+//   questionId String
+//   question        Question @relation(fields: [questionId], references: [id]) matching
+// }
 
 // model Item {
 //   id              String   @id @default(cuid())
@@ -113,14 +121,11 @@ enum QuestionType {
   TRUE_FALSE
   FILL_IN_THE_BLANK
   SHORT_ANSWER
-  LONG_ANSWER
-  MATCHING
+  MATCHING_PAIRS
   ORDER
-  RANKING
-  PICTURE_CHOICE
-  DRAG_AND_DROP
-  INTERACTIVE
+  PICK_IMAGE
   CODE
+
 }
 
 // model Progress {

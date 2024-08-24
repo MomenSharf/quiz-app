@@ -5,9 +5,21 @@ import {
 import { Theme_colors as colorsType } from "@/types/theme";
 import { Icons } from "@/components/icons";
 import { EnumValues } from "zod";
-import { Radio, CheckCircle, XCircle, Edit, PenTool, AlignLeft, AlignCenter, Camera, Move, Code, Circle, LucideProps } from 'lucide-react';
-
-
+import {
+  Radio,
+  CheckCircle,
+  XCircle,
+  Edit,
+  PenTool,
+  AlignLeft,
+  AlignCenter,
+  Camera,
+  Move,
+  Code,
+  Circle,
+  LucideProps,
+} from "lucide-react";
+import { QuestionType } from "@prisma/client";
 
 export const NumberWords: {
   [key: number]: string;
@@ -188,21 +200,21 @@ export const pastelColors = {
   zinc: "hsl(0, 0%, 90%)", // A soft pastel gray "zinc"
 };
 
-export const QuestionTypes = [
+export const QuestionTypes: QuestionType[] = [
+  "UNSELECTED",
   "SINGLE_CHOICE",
   "MULTIPLE_CHOICE",
   "TRUE_FALSE",
   "FILL_IN_THE_BLANK",
   "SHORT_ANSWER",
-  "LONG_ANSWER",
-  "MATCHING",
+  "MATCHING_PAIRS",
   "ORDER",
-  "RANKING",
-  "PICTURE_CHOICE",
-  "DRAG_AND_DROP",
-  // "INTERACTIVE",
+  "PICK_IMAGE",
   "CODE",
-  "UNSELECTED",
+  // "LONG_ANSWER",
+  // "RANKING",
+  // "DRAG_AND_DROP",
+  // "INTERACTIVE",
 ] as const;
 
 export const VisibilityOptions = ["PUBLIC", "PRIVATE"] as const;
@@ -215,70 +227,53 @@ export const QuestionTypesWithLabelAndIcons: {
   icon: (props: LucideProps) => JSX.Element;
 }[] = [
   {
-    value: "SINGLE_CHOICE" ,
+    value: "SINGLE_CHOICE",
     label: "Single Choice",
     icon: Icons.checkSquare,
   },
   {
-    value: "MULTIPLE_CHOICE" ,
+    value: "MULTIPLE_CHOICE",
     label: "Multiple Choice",
     icon: Icons.checkList,
   },
   {
-    value: "TRUE_FALSE" ,
+    value: "TRUE_FALSE",
     label: "True/False",
     icon: Icons.trueFalse,
   },
   {
-    value: "FILL_IN_THE_BLANK" ,
+    value: "FILL_IN_THE_BLANK",
     label: "Fill in the Blank",
     icon: Icons.write,
   },
   {
-    value: "SHORT_ANSWER" ,
+    value: "SHORT_ANSWER",
     label: "Short Answer",
     icon: Icons.write,
   },
+  // {
+  //   value: "LONG_ANSWER" ,
+  //   label: "Long Answer",
+  //   icon: Icons.write,
+  // },
   {
-    value: "LONG_ANSWER" ,
-    label: "Long Answer",
-    icon: Icons.write,
-  },
-  {
-    value: "MATCHING" ,
+    value: "MATCHING_PAIRS",
     label: "Matching",
     icon: Icons.match,
   },
   {
-    value: "ORDER" ,
+    value: "ORDER",
     label: "Order",
     icon: Icons.reorder,
   },
   {
-    value: "RANKING" ,
-    label: "Ranking",
-    icon: Icons.ranking,
-  },
-  {
-    value: "PICTURE_CHOICE" ,
+    value: "PICK_IMAGE",
     label: "Picture Choice",
     icon: Icons.picture,
   },
   {
-    value: "DRAG_AND_DROP" ,
-    label: "Drag and Drop",
-    icon: Icons.Move,
-  },
-  // {
-  //   value: "INTERACTIVE" ,
-  //   label: "Interactive",
-  //   icon: Icons.Circle,
-  // },
-  {
-    value: "CODE" ,
+    value: "CODE",
     label: "Code",
     icon: Icons.code,
   },
-  
 ];
-

@@ -1,67 +1,98 @@
-"use client";
-import { DescktopSideBarItems } from "@/constants";
-import { cn } from "@/lib/utils";
-import { ChevronRight } from "lucide-react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { RefObject, useState } from "react";
-type EditorLeftbarProps = {
-headerRef: RefObject<HTMLDivElement>;
+
+import React, { Dispatch, RefObject, SetStateAction, useEffect } from "react";
+import { Button } from "../ui/button";
+import { Plus } from "lucide-react";
+import { UseFormReturn } from "react-hook-form";
+import {
+  questionSchemaType,
+  quizSchemaType,
+} from "@/lib/validations/quizSchemas";
+import { Reorder } from "framer-motion";
+import EditorSidebarItem from "./EditorSidebarItem";
+import useScreenDimensions from "@/hooks/useScreenDimensions";
+import { setQuarter } from "date-fns";
+type EditorSidebarProps = {
+  headerRef: RefObject<HTMLDivElement>;
+  sidebarRef: RefObject<HTMLDivElement>;
+  form: UseFormReturn<quizSchemaType>;
+  currentQuestion: number;
+  setCurrentQuestion: Dispatch<SetStateAction<number>>;
 };
 
-export default function EditorLeftbar({ headerRef }: EditorLeftbarProps) {
-  const pathname = usePathname();
-  const [state, setStat] = useState<"collapsed" | "expanded">("collapsed");
+export default function EditorSidebar({
+  headerRef,
+  sidebarRef,
+  form,
+  currentQuestion,
+  setCurrentQuestion,
+}: EditorSidebarProps) {
+  const questions = form.getValues("questions");
+  const dimensions = useScreenDimensions();
+  console.log(questions);
+  
+
+  const newQuetion = async () => {
+     form.setValue("questions", [
+      ...questions,
+      {
+        id: questions.length.toString(),
+        content: {
+          type: "UNSELECTED",
+          questionOrder: questions.length,
+        },
+      },
+    ]);
+    setCurrentQuestion(questions.length)
+  };
 
   return (
     <div
-      className="relative hidden sm:flex flex-col w-14"
+      className="border-t sm:border-t-0 sm:border-r flex flex-col  bg-background"
+      ref={sidebarRef}
       style={{
-        height: `calc(100vh - ${headerRef.current?.offsetHeight || 50}px`,
+        height: `${
+          dimensions.width >= 640
+            ? `calc(100vh - ${headerRef.current?.offsetHeight || 50}px`
+            : "auto"
+        }`,
       }}
     >
-      <nav
-        // onMouseEnter={() => setStat("expanded")}
-        // onMouseLeave={() => setStat("collapsed")}
-        data-state={state}
-        // bg-[var(--navbar)]
-        className="group bg-[var(--navbar)] py-2 z-10 h-full w-14 data-[state=expanded]:w-[13rem] border-r bg-dash-sidebar border-default data-[state=expanded]:shadow-xl transition-width duration-200 hide-scrollbar flex flex-col justify-start overflow-y-auto scrollbar-hide"
-        // className="flex group fixed bg-[var(--navbar)] pb-2 pt-5 z-10 min-h-screen w-14 data-[state=expanded]:w-[13rem] data-[state=expanded]:shadow-xl transition-width duration-200 flex-col justify-between overflow-auto"
-      >
-        <div className=" top-3 -right-5 h-10 flex justify-center items-center bg-red-500">
-          <ChevronRight className="w-5 h-5" />
+      <div className="flex sm:flex-col max-w-screen-sm overflow-y-auto ">
+        <Reorder.Group
+          axis={dimensions.width >= 640 ? "y" : "x"}
+          onReorder={(questions) =>
+            form.setValue(
+              "questions",
+              questions.map((question, i) => ({
+                ...question,
+                content: {
+                  ...question.content,
+                  questionOrder: i,
+                },
+              }))
+            )
+          }
+          values={questions}
+          style={{ height: 250, border: "1px solid black", overflowY: "auto" }}
+          layoutScroll
+          className="p-3 flex-1 !border-none flex sm:flex-col gap-2 !h-auto overflow-x-auto overflow-y-auto"
+        >
+          {questions.map((question, i) => (
+            <EditorSidebarItem
+              key={question.id}
+              question={question}
+              index={i}
+              currentQuestion={currentQuestion}
+              setCurrentQuestion={setCurrentQuestion}
+            />
+          ))}
+        </Reorder.Group>
+        <div className="border-l sm:border-t sm:border-l-0 p-3">
+          <Button variant="outline" onClick={newQuetion} className="py-10 w-full min-w-20 min-h-20 relative hover:border-ring hover:bg-background">
+            <Plus className="w-4 h-4 text-muted-foreground"  />
+          </Button>
         </div>
-        <ul className="flex flex-col gap-y-1 justify-start px-2 relative">
-          {DescktopSideBarItems.map((item) => {
-            return (
-              <Link
-                href={item.route}
-                key={item.label}
-                className="relative h-10 w-10 group-data-[state=expanded]:w-full transition-all duration-200 flex items-center rounded group-data-[state=collapsed]:justify-center group-data-[state=expanded]:-space-x-2 hover:bg-[var(--navbar-item-active)] group/item shad"
-              >
-                <span className="absolute left-0 top-0 flex rounded h-10 w-10 items-center justify-center  transition-colors">
-                  {
-                    <item.icon
-                      className={cn(
-                        "w-5 h-5 text-primary-foreground fill-primary-foreground group-hover/item:fill-primary",
-                        {
-                          "fill-primary":
-                            pathname === item.route &&
-                            pathname.startsWith(item.route),
-                        }
-                      )}
-                    />
-                  }
-                </span>
-                <span className="min-w-[128px] text-sm text-primary-foreground absolute left-7 group-data-[state=expanded]:left-12 opacity-0 group-data-[state=expanded]:opacity-100 transition-all">
-                  {item.label}
-                </span>
-              </Link>
-            );
-          })}
-        </ul>
-        
-      </nav>
+      </div>
     </div>
   );
 }

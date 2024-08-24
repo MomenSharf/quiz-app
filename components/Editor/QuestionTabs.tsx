@@ -27,11 +27,11 @@ export default function QuestionTabs({
   form,
   index,
 }: QuestionTabsProps) {
-  const isSelected = question.content.type !== "UNSELECTED";
+  const isSelected = question.type !== "UNSELECTED";
   const dimensions = useScreenDimensions();
 
   const setQuestionType = (type: QuestionType) =>
-    form.setValue(`questions.${index}.content.type`, type);
+    form.setValue(`questions.${index}.type`, type);
   return (
     <Tabs
       defaultValue="type"
@@ -77,10 +77,11 @@ export default function QuestionTabs({
         </TabsTrigger>
       </TabsList>
       <TabsContent value="type" className="overflow-auto">
-        <QuestionTypes
-          type={question.content.type}
+        {/* <QuestionTypes
+          type={question.type}
           setQuestionType={setQuestionType}
-        />
+        /> */}
+        {question.id}
       </TabsContent>
       <TabsContent value="content">Conntent</TabsContent>
       <TabsContent value="design">Design</TabsContent>
