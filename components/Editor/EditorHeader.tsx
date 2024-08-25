@@ -4,7 +4,13 @@ import { quizSchemaType } from "@/lib/validations/quizSchemas";
 import { ArrowLeft, Redo, Redo2, Undo, Undo2, X } from "lucide-react";
 import { revalidatePath } from "next/cache";
 import { useRouter } from "next/navigation";
-import { MutableRefObject, RefObject, useEffect, useState } from "react";
+import {
+  MutableRefObject,
+  RefObject,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 import { UseFormReturn } from "react-hook-form";
 import { Icons } from "../icons";
 import { Button } from "../ui/button";
@@ -15,29 +21,25 @@ import { toast } from "sonner";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 import { TooltipArrow } from "@radix-ui/react-tooltip";
 import { Badge } from "../ui/badge";
+import { useEditorContext } from "./EditorContext";
 
 type EditorHeaderPros = {
-  // quiz: Pick<Quiz, "title">;
-  form: UseFormReturn<quizSchemaType>;
-  saveState: "GOOD" | "BAD" | "WAITING" | "OFFLINE";
-  historyIndex: MutableRefObject<number>;
-  headerRef: RefObject<HTMLDivElement>;
-  formsArray: quizSchemaType[];
-  undoFunction: () => void;
-  redoFunction: () => void;
+  quizId: string;
 };
 
-export default function EditorHeader({
-  form,
-  saveState,
-  historyIndex,
-  formsArray,
-  headerRef,
-  undoFunction,
-  redoFunction,
-}: EditorHeaderPros) {
-  const [isEditingTitle, setIsEditingTitle] = useState(false);
+export default function EditorHeader() {
+  // const [isEditingTitle, setIsEditingTitle] = useState(false);
+  const {
+    dispatch,
+    form,
+    state,
+    headerRef,
+    historyIndex,
+    undoFunction,
+    redoFunction,
+  } = useEditorContext();
 
+  const { saveState, historyArray, isEditingTitle } = state;
   const router = useRouter();
 
   const handleRevalidateAndBack = async () => {
@@ -85,7 +87,7 @@ export default function EditorHeader({
                   {...field}
                   onBlur={(e) => {
                     field.onBlur();
-                    setIsEditingTitle(false);
+                    dispatch({ type: "SET_IS_EDITING_TITLE", payload: false });
                     if (!e.target.value) {
                       form.setValue("title", "My New Quiz");
                     }
@@ -98,7 +100,9 @@ export default function EditorHeader({
           <Button
             variant="outline"
             className="border-transparent hover:border-input font-semibold hover:bg-transparent cursor-text"
-            onClick={() => setIsEditingTitle(true)}
+            onClick={() =>
+              dispatch({ type: "SET_IS_EDITING_TITLE", payload: true })
+            }
           >
             <span className="truncate max-w-40">{form.getValues("title")}</span>
           </Button>
@@ -163,6 +167,7 @@ export default function EditorHeader({
           <TooltipTrigger asChild>
             <div className="inline-block">
               <Button
+                type="button"
                 onClick={undoFunction}
                 disabled={historyIndex.current === 0 || saveState === "WAITING"}
                 size="icon"
@@ -187,9 +192,10 @@ export default function EditorHeader({
           <TooltipTrigger asChild>
             <div className="inline-block">
               <Button
+                type="button"
                 onClick={redoFunction}
                 disabled={
-                  historyIndex.current === formsArray.length - 1 ||
+                  historyIndex.current === historyArray.length - 1 ||
                   saveState === "WAITING"
                 }
                 size="icon"

@@ -9,7 +9,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-import { COLORS, Theme_colors } from "@/constants";
+import { THEME_COLORS } from "@/constants";
 import { Button } from "../ui/button";
 
 export default function Palette() {
@@ -46,7 +46,7 @@ export default function Palette() {
             Theme Color
           </DropdownMenuLabel>
           <div className="grid grid-cols-3 p-3">
-            {Theme_colors.map((color) => {
+            {THEME_COLORS.map((color) => {
               return (
                 <Button
                   key={color.id}

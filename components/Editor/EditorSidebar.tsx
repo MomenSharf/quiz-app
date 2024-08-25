@@ -13,21 +13,15 @@ import { setQuarter } from "date-fns";
 import { revalidatePath } from "next/cache";
 import { usePathname } from "next/navigation";
 import { revalidatePathInServer } from "@/lib/actions/quiz.actions";
-type EditorSidebarProps = {
-  headerRef: RefObject<HTMLDivElement>;
-  sidebarRef: RefObject<HTMLDivElement>;
-  form: UseFormReturn<quizSchemaType>;
-  currentQuestion: number;
-  setCurrentQuestion: Dispatch<SetStateAction<number>>;
-};
+import { UNSAVED_ID_PREFIX } from "@/constants";
+import { useEditorContext } from "./EditorContext";
 
-export default function EditorSidebar({
-  headerRef,
-  sidebarRef,
-  form,
-  currentQuestion,
-  setCurrentQuestion,
-}: EditorSidebarProps) {
+export default function EditorSidebar() {
+
+  const { dispatch, form, state, headerRef, sidebarRef } = useEditorContext();
+
+  const { saveState, historyArray, isEditingTitle } = state;
+
   const questions = form.getValues("questions");
   const dimensions = useScreenDimensions();
 
@@ -36,9 +30,11 @@ export default function EditorSidebar({
     newQuestions.push({
       type: "UNSELECTED",
       questionOrder: questions.length,
+      id: `${UNSAVED_ID_PREFIX}${crypto.randomUUID()}`
     });
     form.setValue("questions", newQuestions);
-    setCurrentQuestion(questions.length - 1);
+    dispatch({type: 'SET_CURRENT_QUESTION', payload: questions.length -1 })
+    // setCurrentQuestion(questions.length - 1);
   };
 
   return (
@@ -53,7 +49,7 @@ export default function EditorSidebar({
         }`,
       }}
     >
-      <div className="flex sm:flex-col max-w-screen-sm overflow-y-auto ">
+      <div className="flex sm:flex-col max-w-screen-sm overflow-y-auto">
         <Reorder.Group
           axis={dimensions.width >= 640 ? "y" : "x"}
           onReorder={(questions) =>
@@ -75,8 +71,8 @@ export default function EditorSidebar({
               key={question.id}
               question={question}
               index={i}
-              currentQuestion={currentQuestion}
-              setCurrentQuestion={setCurrentQuestion}
+              // currentQuestion={currentQuestion}
+              // setCurrentQuestion={setCurrentQuestion}
             />
           ))}
         </Reorder.Group>

@@ -1,37 +1,23 @@
 "use client";
 
-import React, { Dispatch, RefObject, SetStateAction, useMemo } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useLocalStorage } from "@uidotdev/usehooks";
-import { Button } from "../ui/button";
-import {
-  questionSchemaType,
-  quizSchemaType,
-} from "@/lib/validations/quizSchemas";
 import useScreenDimensions from "@/hooks/useScreenDimensions";
+import {
+  questionSchemaType
+} from "@/lib/validations/quizSchemas";
+import { useEditorContext } from "./EditorContext";
 import QuestionTypes from "./QuestionTypes";
-import { UseFormReturn } from "react-hook-form";
-import { QuestionType } from "@/types";
 type QuestionTabsProps = {
   question: questionSchemaType;
-  headerRef: RefObject<HTMLDivElement>;
-  sidebarRef: RefObject<HTMLDivElement>;
-  form: UseFormReturn<quizSchemaType>;
   index: number;
 };
 
-export default function QuestionTabs({
-  question,
-  headerRef,
-  sidebarRef,
-  form,
-  index,
-}: QuestionTabsProps) {
+export default function QuestionTabs({ question, index }: QuestionTabsProps) {
   const isSelected = question.type !== "UNSELECTED";
   const dimensions = useScreenDimensions();
 
-  const setQuestionType = (type: QuestionType) =>
-    form.setValue(`questions.${index}.type`, type);
+  const { sidebarRef, headerRef } = useEditorContext();
+
   return (
     <Tabs
       defaultValue="type"
@@ -77,11 +63,7 @@ export default function QuestionTabs({
         </TabsTrigger>
       </TabsList>
       <TabsContent value="type" className="overflow-auto">
-        {/* <QuestionTypes
-          type={question.type}
-          setQuestionType={setQuestionType}
-        /> */}
-        {question.id}
+        <QuestionTypes type={question.type} index={index} />
       </TabsContent>
       <TabsContent value="content">Conntent</TabsContent>
       <TabsContent value="design">Design</TabsContent>

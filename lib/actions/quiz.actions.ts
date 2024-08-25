@@ -15,6 +15,7 @@ import {
 } from "../validations/quizSchemas";
 import { unstable_noStore as noStore } from "next/cache";
 import { OrderDefault } from "@/constants/defaultValues";
+import { UNSAVED_ID_PREFIX } from "@/constants";
 
 const utapi = new UTApi();
 
@@ -261,7 +262,16 @@ export const saveQuiz = async (
       imageUrl: data.imageUrl || null,
       visibility: data.visibility,
     };
-    const questions = data.questions;
+    const questions = data.questions.map((question) => {
+      if (question.id?.startsWith(UNSAVED_ID_PREFIX)) {
+        return {
+          ...question,
+          id: undefined,
+        };
+      } else {
+        return question;
+      }
+    });
 
     const quiz = await db.quiz.update({
       where: {

@@ -8,7 +8,7 @@ import {
   SheetHeader,
   SheetTrigger
 } from "@/components/ui/sheet";
-import { DescktopSideBarItems } from "@/constants";
+import { DESKTOP_SIDEBAR_ITEMS } from "@/constants";
 import { cn } from "@/lib/utils";
 import { User } from "@prisma/client";
 import Link from "next/link";
@@ -63,7 +63,7 @@ export default function MobileSideBar({
           )}
         </SheetHeader>
         <div className="flex-1 flex flex-col gap-3 w-full py-3 px-1">
-          {DescktopSideBarItems.map((item) => {
+          {DESKTOP_SIDEBAR_ITEMS.map((item) => {
             return (
               <SheetClose key={item.label} asChild>
                 <Link

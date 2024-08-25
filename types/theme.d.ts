@@ -1,4 +1,4 @@
-export type Theme_colors =
+export type THEME_COLORS =
   | "zinc"
   | "slate"
   | "red"
@@ -8,11 +8,10 @@ export type Theme_colors =
   | "blue"
   | "yellow"
   | "violet";
-  
+
 export type Theme_mode = "dark" | "light";
 
 export type ThemeState = {
-  theme: Theme_colors;
+  theme: THEME_COLORS;
   mode: Theme_mode;
 };
-

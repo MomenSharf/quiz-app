@@ -1,6 +1,6 @@
 import { number, string, z } from "zod";
-import { VisibilityOptions, DifficultyLevels } from "@/constants"; // Adjust the import path as necessary
 import { QuestionType } from "@prisma/client";
+import { DIFFICULTY_LEVELS, VISIBILITY_OPTIONS } from "@/constants";
 
 // Define schemas for different question types
 
@@ -108,8 +108,8 @@ export const quizSchema = z.object({
   description: z.string().min(1, "Description is required"),
   imageUrl: z.string().optional(),
   categories: z.array(z.string()),
-  visibility: z.enum(VisibilityOptions),
-  difficulty: z.enum(DifficultyLevels),
+  visibility: z.enum(VISIBILITY_OPTIONS),
+  difficulty: z.enum(DIFFICULTY_LEVELS),
   questions: z
     .array(
       z.union([
