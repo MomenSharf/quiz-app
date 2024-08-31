@@ -1,18 +1,4 @@
-import { QuestionType } from "@prisma/client";
-import React, {
-  createContext,
-  useContext,
-  useReducer,
-  ReactNode,
-  MutableRefObject,
-  useRef,
-  RefObject,
-  useMemo,
-  useCallback,
-  useEffect,
-} from "react";
-import { DebouncedState, useDebouncedCallback } from "use-debounce";
-import { z } from "zod";
+import { saveQuiz } from "@/lib/actions/quiz.actions";
 import {
   codeSchema,
   fillInTheBlankSchema,
@@ -20,26 +6,42 @@ import {
   multipleChoiceSchema,
   pickImageSchema,
   questionOrderSchema,
-  questionSchemaType,
   quizSchema,
   quizSchemaType,
   shortAnswerSchema,
   singleChoiceSchema,
   trueFalseSchema,
-  unselectedSchema,
+  unselectedSchema
 } from "@/lib/validations/quizSchemas";
-import { EditorQuiz } from "@/types";
-import { useForm, UseFormReturn } from "react-hook-form";
+import {  EditorQuiz } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { saveQuiz } from "@/lib/actions/quiz.actions";
+import { QuestionType } from "@prisma/client";
+import React, {
+  createContext,
+  MutableRefObject,
+  ReactNode,
+  RefObject,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useReducer,
+  useRef,
+} from "react";
+import { useForm, UseFormReturn } from "react-hook-form";
+import { DebouncedState, useDebouncedCallback } from "use-debounce";
+import { z } from "zod";
 
 // Define the state shape
 interface EditorState {
   saveState: "GOOD" | "BAD" | "WAITING" | "OFFLINE";
   historyArray: quizSchemaType[];
   currentQuestion: number;
+  currentQuestionTab: string
   isEditingTitle: boolean;
   isOnline: boolean;
+  isImageEditorOpenWithFiles: { isOpen: boolean; files?: File[], questionIndex?: number, url?: string };
+  isQuestionImageManagerTabsOpen: boolean;
 }
 
 // Define action types
@@ -51,7 +53,14 @@ type EditorAction =
     }
   | { type: "SET_IS_EDITING_TITLE"; payload: boolean }
   | { type: "SET_CURRENT_QUESTION"; payload: number }
-  | { type: "SET_IS_UNDO_OR_REDO"; payload: boolean };
+  | { type: "SET_IS_UNDO_OR_REDO"; payload: boolean }
+  | { type: "SET_IS_QUESTION_IMAGE_MANAGER_TABS_OPEN"; payload: boolean }
+  | { type: "SET_CURRENT_QUESTION_TAB"; payload: string }
+  | {
+      type: "SET_IS_IMAGE_EDITOR_OPEN";
+      payload: { isOpen: boolean; files?: File[], questionIndex?: number, url?: string };
+      
+    };
 
 // Define the context type
 interface EditorContextType {
@@ -74,6 +83,9 @@ const initialState: EditorState = {
   currentQuestion: 0,
   isEditingTitle: false,
   isOnline: true,
+  isImageEditorOpenWithFiles: { isOpen: false },
+  isQuestionImageManagerTabsOpen: false,
+  currentQuestionTab: 'content'
 };
 
 // Reducer function to handle state updates
@@ -96,6 +108,12 @@ const editorReducer = (
       return { ...state, isEditingTitle: action.payload };
     case "SET_CURRENT_QUESTION":
       return { ...state, currentQuestion: action.payload };
+    case "SET_CURRENT_QUESTION_TAB":
+      return { ...state, currentQuestionTab: action.payload };
+    case "SET_IS_IMAGE_EDITOR_OPEN":
+      return { ...state, isImageEditorOpenWithFiles: action.payload };
+    case "SET_IS_QUESTION_IMAGE_MANAGER_TABS_OPEN":
+      return { ...state, isQuestionImageManagerTabsOpen: action.payload };
     default:
       return state;
   }
@@ -144,6 +162,7 @@ export const EditorProvider = ({
                 id: question.id,
                 type: question.type,
                 questionOrder: question.questionOrder,
+                imageUrl: question.imageUrl,
                 question: question.question ?? "",
                 options: question.options ?? [],
                 correctAnswer: question.correctAnswer ?? "",
@@ -154,6 +173,7 @@ export const EditorProvider = ({
                 id: question.id,
                 type: question.type,
                 questionOrder: question.questionOrder,
+                imageUrl: question.imageUrl,
                 question: question.question ?? "",
                 options: question.options ?? [],
                 correctAnswers: question.correctAnswers ?? [],
@@ -164,6 +184,7 @@ export const EditorProvider = ({
                 id: question.id,
                 type: question.type,
                 questionOrder: question.questionOrder,
+                imageUrl: question.imageUrl,
                 question: question.question ?? "",
                 correctAnswer: (question.correctAnswer ?? "true") as
                   | "true"
@@ -175,6 +196,7 @@ export const EditorProvider = ({
                 id: question.id,
                 type: question.type,
                 questionOrder: question.questionOrder,
+                imageUrl: question.imageUrl,
                 question: question.question ?? "",
                 correctAnswer: question.correctAnswer ?? "",
               } as z.infer<typeof fillInTheBlankSchema>;
@@ -184,6 +206,7 @@ export const EditorProvider = ({
                 id: question.id,
                 type: question.type,
                 questionOrder: question.questionOrder,
+                imageUrl: question.imageUrl,
                 question: question.question ?? "",
                 correctAnswer: question.correctAnswer ?? "",
               } as z.infer<typeof shortAnswerSchema>;
@@ -193,6 +216,7 @@ export const EditorProvider = ({
                 id: question.id,
                 type: question.type,
                 questionOrder: question.questionOrder,
+                imageUrl: question.imageUrl,
                 question: question.question ?? "",
                 pairs: question.pairs ?? [],
               } as z.infer<typeof matchingPairsSchema>;
@@ -202,6 +226,7 @@ export const EditorProvider = ({
                 id: question.id,
                 type: question.type,
                 questionOrder: question.questionOrder,
+                imageUrl: question.imageUrl,
                 question: question.question ?? "",
                 correctOrder: question.correctOrder ?? [],
               } as z.infer<typeof questionOrderSchema>;
@@ -211,6 +236,7 @@ export const EditorProvider = ({
                 id: question.id,
                 type: question.type,
                 questionOrder: question.questionOrder,
+                imageUrl: question.imageUrl,
                 question: question.question ?? "",
                 imagesOptions: question.imagesOptions ?? [],
                 correctAnswer: question.correctAnswer ?? "",
@@ -221,6 +247,7 @@ export const EditorProvider = ({
                 id: question.id,
                 type: question.type,
                 questionOrder: question.questionOrder,
+                imageUrl: question.imageUrl,
                 question: question.question ?? "",
                 codeSnippet: question.codeSnippet ?? "",
                 correctAnswer: question.correctAnswer ?? "",
@@ -249,7 +276,8 @@ export const EditorProvider = ({
       type: "SET_HISTORY_ARRAY",
       payload: { quiz: initialValue, historyIndex: historyIndex.current },
     });
-  }, [initialValue]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const saveQuizFun = useCallback(
     async (isReseting: boolean) => {
@@ -262,14 +290,14 @@ export const EditorProvider = ({
 
         if (prismaQuiz) {
           dispatch({ type: "SET_SAVE_SATAT", payload: "GOOD" });
-          
-          if (!isReseting) {            
+
+          if (!isReseting) {
             historyIndex.current = historyIndex.current + 1;
             dispatch({
               type: "SET_HISTORY_ARRAY",
               payload: { historyIndex: historyIndex.current, quiz: data },
             });
-          } 
+          }
         } else {
           dispatch({ type: "SET_SAVE_SATAT", payload: "BAD" });
         }
@@ -286,20 +314,18 @@ export const EditorProvider = ({
   const undoFunction = useCallback(() => {
     if (historyIndex.current > 0) {
       historyIndex.current = historyIndex.current - 1;
-      isUndoOrRedo.current = true
+      isUndoOrRedo.current = true;
       form.reset(historyArray[historyIndex.current]);
-        debounceSaveData(true);
-    
+      debounceSaveData(true);
     }
   }, [debounceSaveData, form, historyArray]);
 
   const redoFunction = useCallback(() => {
-    if (historyIndex.current < historyArray.length ) {
+    if (historyIndex.current < historyArray.length) {
       historyIndex.current = historyIndex.current + 1;
-      isUndoOrRedo.current = true
+      isUndoOrRedo.current = true;
       form.reset(historyArray[historyIndex.current]);
-        debounceSaveData(true);
-      
+      debounceSaveData(true);
     }
   }, [debounceSaveData, form, historyArray]);
 

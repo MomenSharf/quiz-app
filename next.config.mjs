@@ -4,7 +4,11 @@ dotenv.config();
 
 const nextConfig = {
   images: {
-    domains: ["utfs.io"],
+    domains: [
+      "utfs.io",
+      "giphy.com",
+      "media.giphy.com",
+    ],
     remotePatterns: [
       {
         protocol: "https",

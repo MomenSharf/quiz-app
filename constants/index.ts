@@ -242,3 +242,4 @@ export const QUESTION_TYPES_WITH_LABEL_AND_ICONS: {
     icon: Icons.code,
   },
 ];
+

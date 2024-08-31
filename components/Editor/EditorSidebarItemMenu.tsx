@@ -1,9 +1,14 @@
 import {
+  ArrowLeftRight,
   Copy,
+  CopyPlus,
   ExternalLink,
   PenLine,
   Play,
-  RotateCcw
+  RotateCcw,
+  RotateCw,
+  Trash,
+  Trash2,
 } from "lucide-react";
 
 import {
@@ -13,71 +18,119 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuTrigger
+  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 import { Quiz } from "@prisma/client";
+import { Butterfly_Kids } from "next/font/google";
+import { Button, buttonVariants } from "../ui/button";
+import { useEditorContext } from "./EditorContext";
+import { questionSchemaType } from "@/lib/validations/quizSchemas";
+import { UNSAVED_ID_PREFIX } from "@/constants";
+import { MouseEvent } from "react";
 
 type EditorSidebarItemMenuProps = {
   trigger: JSX.Element;
-  index: number
+  question: questionSchemaType;
   contentPostionClasses?: string;
-  // quiz: Pick<Quiz, "id" | "title">;
 };
 
 export default function EditorSidebarItemMenu({
   trigger,
   contentPostionClasses,
-  // quiz,
-  index
+  question,
 }: EditorSidebarItemMenuProps) {
+  const {
+    dispatch,
+    state: { currentQuestion },
+    form: { setValue, getValues },
+  } = useEditorContext();
+
+  const questions = getValues("questions");
+  const duplicateQuestion = (
+    e: MouseEvent<HTMLDivElement, globalThis.MouseEvent>
+  ) => {
+    e.stopPropagation();
+    setValue("questions", [
+      ...questions,
+      {
+        ...question,
+        questionOrder: questions.length,
+        id: `${UNSAVED_ID_PREFIX}${crypto.randomUUID()}`,
+      },
+    ]);
+    dispatch({
+      type: "SET_CURRENT_QUESTION",
+      payload: questions.length,
+    });
+  };
+
+  const deleteQuestion = (
+    e: MouseEvent<HTMLDivElement, globalThis.MouseEvent>
+  ) => {
+    e.stopPropagation();
+    setValue(
+      "questions",
+      questions
+        .filter((e) => e.id !== question.id)
+        .map((e, i) => ({
+          ...e,
+          questionOrder: i,
+        }))
+    );
+
+    if (currentQuestion === 0) {
+      dispatch({ type: "SET_CURRENT_QUESTION", payload: 0 });
+    } else {
+      dispatch({
+        type: "SET_CURRENT_QUESTION",
+        payload: currentQuestion - 1,
+      });
+    }
+  };
+
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild >{trigger}</DropdownMenuTrigger>
+      <DropdownMenuTrigger asChild>{trigger}</DropdownMenuTrigger>
       <DropdownMenuContent
         className={cn(
           contentPostionClasses,
-          "relative w-40 text-muted-foreground"
+          "relative w-40 text-muted-foreground text-sm"
         )}
       >
-        <DropdownMenuLabel>Question {index + 1}</DropdownMenuLabel>
-        <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem className="text-primary hover:text-primary flex gap-2">
-            <Play className="w-5 h-5 fill-primary" />
-            <span className="font-semibold">Preview</span>
-          </DropdownMenuItem>
-          <DropdownMenuItem className=" flex gap-2">
-            <PenLine className="w-5 h-5" />
-            <span className="font-semibold">Rename</span>
-          </DropdownMenuItem>
-          <DropdownMenuItem className=" flex gap-2">
-            <ExternalLink className="w-5 h-5" />
-            <span className="font-semibold">Shere</span>
-          </DropdownMenuItem>
-        </DropdownMenuGroup>
-        <DropdownMenuGroup>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem className=" flex gap-2">
-            <RotateCcw className="w-5 h-5" />
-            <span className="font-semibold">Reset</span>
-          </DropdownMenuItem>
-          <DropdownMenuItem className=" flex gap-2">
-            <Copy className="w-5 h-5" />
+          <DropdownMenuItem
+            className="flex gap-2 cursor-pointer"
+            onClick={duplicateQuestion}
+          >
+            <CopyPlus className="w-4 h-4" />
             <span className="font-semibold">Duplicate</span>
           </DropdownMenuItem>
+          <DropdownMenuItem className="flex gap-2 cursor-pointer">
+            <PenLine className="w-4 h-4" />
+            <span className="font-semibold">Copy to...</span>
+          </DropdownMenuItem>
+          <DropdownMenuItem className="flex gap-2 cursor-pointer">
+            <RotateCw className="w-4 h-4" />
+            <span className="font-semibold">Reset</span>
+          </DropdownMenuItem>
+          <DropdownMenuItem className="flex gap-2 cursor-pointer">
+            <ArrowLeftRight className="w-4 h-4" />
+            <span className="font-semibold">Rearrange...</span>
+          </DropdownMenuItem>
         </DropdownMenuGroup>
+
         <DropdownMenuGroup>
           <DropdownMenuSeparator />
-          <DropdownMenuItem className="p-0 transition-all" onClick={(e) => e.preventDefault()}>
-            
-            {/* <DeleteQuizButton
-              variant="ghost"
-              text="Delete"
-              pathname="/my-quizzes"
-              titleIds={[{title: quiz.title, id: quiz.id}]}
-              className="flex gap-1 w-full text-destructive bg-transparent hover:bg-destructive hover:text-destructive-foreground"
-            /> */}
+          <DropdownMenuItem
+            className={cn(
+              "justify-start items-center gap-1 w-full text-destructive hover:!bg-destructive hover:!text-destructive-foreground cursor-pointer"
+            )}
+            onClick={deleteQuestion}
+            disabled={questions.length <= 1}
+          >
+            <Trash className="w-4 h-4" />
+            Delete
           </DropdownMenuItem>
         </DropdownMenuGroup>
       </DropdownMenuContent>

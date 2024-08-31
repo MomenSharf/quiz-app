@@ -14,6 +14,7 @@ export const singleChoiceSchema = z.object({
   id: z.string().optional(),
   type: z.literal(QuestionType.SINGLE_CHOICE),
   questionOrder: z.number(),
+  imageUrl: z.string().url("Invalid URL").optional(),
   question: z.string().min(1, "Question is required"),
   options: z.array(z.string()).min(2, "At least two options are required"),
   correctAnswer: z.string().min(1, "Correct answer is required"),
@@ -23,6 +24,7 @@ export const multipleChoiceSchema = z.object({
   id: z.string().optional(),
   type: z.literal(QuestionType.MULTIPLE_CHOICE),
   questionOrder: z.number(),
+  imageUrl: z.string().url("Invalid URL").optional(),
   question: z.string().min(1, "Question is required"),
   options: z.array(z.string()).min(2, "At least two options are required"),
   correctAnswers: z
@@ -33,6 +35,7 @@ export const multipleChoiceSchema = z.object({
 export const trueFalseSchema = z.object({
   id: z.string().optional(),
   type: z.literal(QuestionType.TRUE_FALSE),
+  imageUrl: z.string().url("Invalid URL").optional(),
   questionOrder: z.number(),
   question: z.string().min(1, "Question is required"),
   correctAnswer: z.union([z.literal("true"), z.literal("false")]),
@@ -42,6 +45,7 @@ export const fillInTheBlankSchema = z.object({
   id: z.string().optional(),
   type: z.literal(QuestionType.FILL_IN_THE_BLANK),
   questionOrder: z.number(),
+  imageUrl: z.string().url("Invalid URL").optional(),
   question: z.string().min(1, "Question is required"),
   correctAnswer: z.string().min(1, "Correct answer is required"),
 });
@@ -50,6 +54,7 @@ export const shortAnswerSchema = z.object({
   id: z.string().optional(),
   type: z.literal(QuestionType.SHORT_ANSWER),
   questionOrder: z.number(),
+  imageUrl: z.string().url("Invalid URL").optional(),
   question: z.string().min(1, "Question is required"),
   correctAnswer: z.string().min(1, "Correct answer is required"),
 });
@@ -58,6 +63,8 @@ export const matchingPairsSchema = z.object({
   id: z.string().optional(),
   type: z.literal(QuestionType.MATCHING_PAIRS),
   questionOrder: z.number(),
+  imageUrl: z.string().url("Invalid URL").optional(),
+
   question: z.string().min(1, "Question is required"),
   pairs: z
     .array(
@@ -73,6 +80,7 @@ export const questionOrderSchema = z.object({
   id: z.string().optional(),
   type: z.literal(QuestionType.ORDER),
   questionOrder: z.number(),
+  imageUrl: z.string().url("Invalid URL").optional(),
   question: z.string().min(1, "Question is required"),
   correctOrder: z.array(z.string()).min(1, "At least one item is required"),
 });
@@ -81,6 +89,7 @@ export const pickImageSchema = z.object({
   id: z.string().optional(),
   type: z.literal(QuestionType.PICK_IMAGE),
   questionOrder: z.number(),
+  imageUrl: z.string().url("Invalid URL").optional(),
   question: z.string().min(1, "Question is required"),
   imagesOptions: z
     .array(
@@ -97,6 +106,7 @@ export const codeSchema = z.object({
   id: z.string().optional(),
   type: z.literal(QuestionType.CODE),
   questionOrder: z.number(),
+  imageUrl: z.string().url("Invalid URL").optional(),
   question: z.string().min(1, "Question is required"),
   codeSnippet: z.string().min(1, "Code snippet is required"),
   correctAnswer: z.string().min(1, "Correct answer is required"),

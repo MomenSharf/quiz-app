@@ -17,24 +17,22 @@ import { UNSAVED_ID_PREFIX } from "@/constants";
 import { useEditorContext } from "./EditorContext";
 
 export default function EditorSidebar() {
+  const { dispatch, form : {setValue, getValues}, headerRef, sidebarRef } = useEditorContext();
 
-  const { dispatch, form, state, headerRef, sidebarRef } = useEditorContext();
 
-  const { saveState, historyArray, isEditingTitle } = state;
-
-  const questions = form.getValues("questions");
+  const questions = getValues("questions");
   const dimensions = useScreenDimensions();
 
   const newQuetion = async () => {
-    const newQuestions: questionSchemaType[] = questions;
-    newQuestions.push({
-      type: "UNSELECTED",
-      questionOrder: questions.length,
-      id: `${UNSAVED_ID_PREFIX}${crypto.randomUUID()}`
-    });
-    form.setValue("questions", newQuestions);
-    dispatch({type: 'SET_CURRENT_QUESTION', payload: questions.length -1 })
-    // setCurrentQuestion(questions.length - 1);
+    setValue("questions", [
+      ...questions,
+      {
+        type: "UNSELECTED",
+        questionOrder: questions.length,
+        id: `${UNSAVED_ID_PREFIX}${crypto.randomUUID()}`,
+      },
+    ]);
+    dispatch({ type: "SET_CURRENT_QUESTION", payload: questions.length   });
   };
 
   return (
@@ -53,7 +51,7 @@ export default function EditorSidebar() {
         <Reorder.Group
           axis={dimensions.width >= 640 ? "y" : "x"}
           onReorder={(questions) =>
-            form.setValue(
+            setValue(
               "questions",
               questions.map((question, i) => ({
                 ...question,
@@ -71,13 +69,12 @@ export default function EditorSidebar() {
               key={question.id}
               question={question}
               index={i}
-              // currentQuestion={currentQuestion}
-              // setCurrentQuestion={setCurrentQuestion}
             />
           ))}
         </Reorder.Group>
         <div className="border-l sm:border-t sm:border-l-0 p-3">
           <Button
+            type="button"
             variant="outline"
             onClick={newQuetion}
             className="py-10 w-full min-w-20 min-h-20 relative hover:border-ring hover:bg-background"

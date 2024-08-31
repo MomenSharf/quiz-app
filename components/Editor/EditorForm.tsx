@@ -1,39 +1,14 @@
 "use client";
 
-import { revalidatePathInServer, saveQuiz } from "@/lib/actions/quiz.actions";
-import {
-  codeSchema,
-  fillInTheBlankSchema,
-  matchingPairsSchema,
-  multipleChoiceSchema,
-  pickImageSchema,
-  questionOrderSchema,
-  questionSchemaType,
-  quizSchema,
-  quizSchemaType,
-  shortAnswerSchema,
-  singleChoiceSchema,
-  trueFalseSchema,
-  unselectedSchema,
-} from "@/lib/validations/quizSchemas";
-import { EditorQuiz, updataQuiz } from "@/types";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
-import { useDebouncedCallback } from "use-debounce";
+import { EditorQuiz } from "@/types";
+import { useEffect, useState } from "react";
 import { Form } from "../ui/form";
+import { MotionDiv } from "../useMotion";
+import { useEditorContext } from "./EditorContext";
 import EditorHeader from "./EditorHeader";
-import { Button } from "../ui/button";
 import EditorSidebar from "./EditorSidebar";
 import QuestionTabs from "./QuestionTabs";
-import useOnlineStatus from "@/hooks/useOnlineStatus";
-import { usePathname, useRouter } from "next/navigation";
-import { cn } from "@/lib/utils";
-import { MotionDiv } from "../useMotion";
-import { Question, QuestionType } from "@prisma/client";
-import { z } from "zod";
-import { EditorProvider, useEditorContext } from "./EditorContext";
+import { useWatch } from "react-hook-form";
 
 type EditorFormProps = {
   quiz: EditorQuiz;
@@ -41,15 +16,17 @@ type EditorFormProps = {
 export default function EditorForm({ quiz }: EditorFormProps) {
   const onSubmit = async () => {};
 
-  const {  state, form, historyIndex, debounceSaveData } =
-    useEditorContext();
+  const {
+    dispatch,
+    state: { currentQuestion },
+    form,
+    debounceSaveData,
+  } = useEditorContext();
 
-  const { currentQuestion } = state;
-
-  const watch = form.watch();
+  const { getValues, watch, control } = form;
 
   useEffect(() => {
-    const subscription = form.watch((_, { name }) => {
+    const subscription = watch((_, { name }) => {
       if (
         name && // Guard clause to check if name is defined
         (name === "title" ||
@@ -60,8 +37,8 @@ export default function EditorForm({ quiz }: EditorFormProps) {
           name === "difficulty" ||
           name.startsWith("questions"))
       ) {
+        // setForceRender((prev) => !prev)
         debounceSaveData(false);
-        
       }
     });
 
@@ -70,7 +47,16 @@ export default function EditorForm({ quiz }: EditorFormProps) {
         subscription.unsubscribe();
       }
     };
-  }, [debounceSaveData, form, quiz.id, watch]);
+  }, [debounceSaveData, quiz.id, watch, form]);
+
+  useWatch({
+    control,
+    name: "questions",
+  });
+
+  useEffect(() => {
+    dispatch({ type: "SET_CURRENT_QUESTION_TAB", payload: "content" });
+  }, [currentQuestion, dispatch]);
 
   const variants = {
     hidden: { opacity: 0 },
@@ -84,7 +70,7 @@ export default function EditorForm({ quiz }: EditorFormProps) {
         <div className="flex flex-col-reverse sm:flex-row h-full">
           <EditorSidebar />
           <div className="w-full">
-            {form.getValues().questions.map((question, i) => {
+            {getValues("questions").map((question, i) => {
               return (
                 <MotionDiv
                   variants={variants}
@@ -97,9 +83,9 @@ export default function EditorForm({ quiz }: EditorFormProps) {
                   style={{
                     display: i === currentQuestion ? "block" : "none",
                   }}
-                  key={i}
+                  key={question.id}
                 >
-                  <QuestionTabs question={question} index={i} />
+                  <QuestionTabs questionIndex={i} />
                 </MotionDiv>
               );
             })}

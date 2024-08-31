@@ -31,15 +31,14 @@ export default function EditorHeader() {
   // const [isEditingTitle, setIsEditingTitle] = useState(false);
   const {
     dispatch,
-    form,
-    state,
+    form : {setFocus, control, getValues, setValue, getFieldState}, 
+    state :  { saveState, historyArray, isEditingTitle },
     headerRef,
     historyIndex,
     undoFunction,
     redoFunction,
   } = useEditorContext();
 
-  const { saveState, historyArray, isEditingTitle } = state;
   const router = useRouter();
 
   const handleRevalidateAndBack = async () => {
@@ -49,15 +48,16 @@ export default function EditorHeader() {
 
   useEffect(() => {
     if (isEditingTitle) {
-      form.setFocus("title");
+      setFocus("title");
     }
-  }, [form, isEditingTitle]);
+  }, [setFocus, isEditingTitle]);
 
   return (
     <div
       className="bg-card flex gap-1 items-center py-1 px-0.5 border-b shadow-sm"
       ref={headerRef}
     >
+      
       <Button
         variant="ghost"
         size="icon"
@@ -69,7 +69,7 @@ export default function EditorHeader() {
       <div className="hidden md:flex">
         {isEditingTitle ? (
           <FormField
-            control={form.control}
+            control={control}
             name={`title`}
             render={({ field }) => (
               <FormItem>
@@ -78,7 +78,7 @@ export default function EditorHeader() {
                     "py-1 font-semibold",
                     {
                       "border-destructive bg-[hsl(var(--destructive)_/_10%)] focus-visible:ring-destructive":
-                        form.getFieldState("title").error,
+                      getFieldState("title").error,
                     },
                     {
                       hidden: !isEditingTitle,
@@ -89,7 +89,7 @@ export default function EditorHeader() {
                     field.onBlur();
                     dispatch({ type: "SET_IS_EDITING_TITLE", payload: false });
                     if (!e.target.value) {
-                      form.setValue("title", "My New Quiz");
+                      setValue("title", "My New Quiz");
                     }
                   }}
                 />
@@ -104,7 +104,7 @@ export default function EditorHeader() {
               dispatch({ type: "SET_IS_EDITING_TITLE", payload: true })
             }
           >
-            <span className="truncate max-w-40">{form.getValues("title")}</span>
+            <span className="truncate max-w-40">{getValues("title")}</span>
           </Button>
         )}
       </div>

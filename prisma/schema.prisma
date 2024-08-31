@@ -19,7 +19,6 @@ model User {
   username      String?      @unique
   password      String?
   ResetTokens   ResetToken[]
-
   // Optional for WebAuthn support
   Authenticator Authenticator[]
 
@@ -80,17 +79,28 @@ model Question {
   id             String       @id @default(cuid())
   type           QuestionType
   questionOrder  Int
+  imageUrl       String?
   question       String?
   options        String[] // Optional, used for multipleChoice, matching, pictureChoice
   correctAnswer  String? // Optional, used for singleChoice, fillInTheBlank, shortAnswer, longAnswer, interactive, code
   correctAnswers String[] // Optional, used for multipleChoice
-  pairs Json[]          
+  pairs          Json[]
   correctOrder   String[] // Optional, used for order
-  imagesOptions Json[]          
+  imagesOptions  Json[]
   codeSnippet    String? // Optional, used for code
   quizId         String
   quiz           Quiz         @relation(fields: [quizId], references: [id])
 }
+
+// model Image {
+//   id             String @id @default(cuid())
+//   uploadthingUrl String
+//   url            String
+//   User     User?      @relation(fields: [userId], references: [id])
+//   userId   String?
+//   Quiz     Quiz[]
+//   Question Question[]
+// }
 
 // model Pairs {
 //   id         String  @id @default(cuid())
@@ -125,7 +135,6 @@ enum QuestionType {
   ORDER
   PICK_IMAGE
   CODE
-
 }
 
 // model Progress {

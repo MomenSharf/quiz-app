@@ -18,13 +18,11 @@ interface EditorSidebarItemProps {
 export default function EditorSidebarItem({
   question,
   index,
-
 }: EditorSidebarItemProps) {
-
-  const { dispatch, state,   } = useEditorContext();
-
-  const { currentQuestion } = state;
-
+  const {
+    dispatch,
+    state: { currentQuestion },
+  } = useEditorContext();
 
   const y = useMotionValue(0);
   const Icon = QUESTION_TYPES_WITH_LABEL_AND_ICONS.find(
@@ -37,13 +35,15 @@ export default function EditorSidebarItem({
         key={question.id}
         className={cn(
           buttonVariants({ size: "icon", variant: "outline" }),
-          "py-10 w-full min-w-20 min-h-20 relative hover:border-ring hover:bg-background",
+          "py-10 w-full min-w-20 min-h-20 relative hover:border-ring hover:bg-background cursor-pointer",
           {
             "border-ring bg-accent hover:bg-accent": currentQuestion === index,
           }
         )}
-        onClick={() =>     dispatch({type: 'SET_CURRENT_QUESTION', payload: index })
-      }
+        onClick={() => {
+          if (currentQuestion !== index)
+            dispatch({ type: "SET_CURRENT_QUESTION", payload: index });
+        }}
       >
         {Icon && (
           <Icon
@@ -63,7 +63,7 @@ export default function EditorSidebarItem({
           <EditorSidebarItemMenu
             trigger={
               <Button
-                className="group px-1.5 py-0.5 h-auto rounded-full hover:bg-primary"
+                className="group px-1.5 py-0.5 h-auto rounded-full hover:bg-primary focus-visible:ring-1"
                 size="sm"
                 variant="ghost"
               >
@@ -71,7 +71,7 @@ export default function EditorSidebarItem({
               </Button>
             }
             contentPostionClasses="sm:left-20"
-            index={index}
+            question={question}
           />
         </div>
       </div>
