@@ -19,7 +19,7 @@ export default function ContentTab({questionIndex}: {questionIndex: number}) {
     case "SINGLE_CHOICE":
       return <SingleChoice questionIndex={questionIndex} />;
     default:
-      return "no type";
+      return <SingleChoice questionIndex={questionIndex} />;
       break;
   }
 }

@@ -37,6 +37,28 @@
     --pastel-slate: hsl(210, 20%, 95%);
     --pastel-zinc: hsl(0, 0%, 90%);
 
+    /* --green-dark: #377413;
+    --red: #F44336;
+    --orange: #FF9800;
+    --amber: #FFC107;
+    --light-green: #8BC34A;
+    --blue: #448AFF;
+    --blue-dark: #1565C0;
+    --teal: #009688; */
+    /* --pink-dark: #AD1457;  */
+    /* --purple-dark: #461a42; */
+
+    --green-dark: 95, 75%, 27%;
+    --red: 4, 90%, 58%;
+    --orange: 36, 100%, 50%;
+    --amber: 45, 100%, 56%;
+    --light-green: 88, 47%, 58%;
+    --blue: 219, 100%, 64%;
+    --blue-dark: 209, 84%, 36%;
+    --teal: 174, 100%, 30%;
+    --pink-dark: 333, 79%, 41%;
+    --purple-dark: 311, 49%, 19%;
+
     --main-bg: hsl(216deg 50% 96.08%);
     --navbar: #282e3e;
     --navbar-item-active: #161c28;
@@ -436,13 +458,13 @@
 @layer utilities {
   /* Hide scrollbar for Chrome, Safari and Opera */
   .no-scrollbar::-webkit-scrollbar {
-      display: none;
+    display: none;
   }
- /* Hide scrollbar for IE, Edge and Firefox */
+  /* Hide scrollbar for IE, Edge and Firefox */
   .no-scrollbar {
-      -ms-overflow-style: none;  /* IE and Edge */
-      scrollbar-width: none;  /* Firefox */
-}
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
 }
 
 ::-webkit-scrollbar {
@@ -456,8 +478,6 @@
 ::-webkit-scrollbar-thumb {
   @apply bg-primary w-3 rounded-full;
 }
-
-
 
 .bg-gradient {
   background-color: #8ec5fc;

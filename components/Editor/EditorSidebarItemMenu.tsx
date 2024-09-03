@@ -47,21 +47,23 @@ export default function EditorSidebarItemMenu({
   } = useEditorContext();
 
   const questions = getValues("questions");
+
   const duplicateQuestion = (
     e: MouseEvent<HTMLDivElement, globalThis.MouseEvent>
   ) => {
+    const id = `${UNSAVED_ID_PREFIX}${crypto.randomUUID()}`;
     e.stopPropagation();
     setValue("questions", [
       ...questions,
       {
         ...question,
         questionOrder: questions.length,
-        id: `${UNSAVED_ID_PREFIX}${crypto.randomUUID()}`,
+        id,
       },
     ]);
     dispatch({
       type: "SET_CURRENT_QUESTION",
-      payload: questions.length,
+      payload: id,
     });
   };
 
@@ -79,12 +81,12 @@ export default function EditorSidebarItemMenu({
         }))
     );
 
-    if (currentQuestion === 0) {
-      dispatch({ type: "SET_CURRENT_QUESTION", payload: 0 });
+    if (question.id === questions[0].id) {
+      dispatch({ type: "SET_CURRENT_QUESTION", payload: questions[1].id });
     } else {
       dispatch({
         type: "SET_CURRENT_QUESTION",
-        payload: currentQuestion - 1,
+        payload: questions[questions.indexOf(question) - 1].id,
       });
     }
   };
@@ -99,6 +101,10 @@ export default function EditorSidebarItemMenu({
         )}
       >
         <DropdownMenuGroup>
+          <DropdownMenuItem className="flex gap-2 cursor-pointer">
+            <RotateCw className="w-4 h-4" />
+            <span className="font-semibold">Reset</span>
+          </DropdownMenuItem>
           <DropdownMenuItem
             className="flex gap-2 cursor-pointer"
             onClick={duplicateQuestion}
@@ -109,10 +115,6 @@ export default function EditorSidebarItemMenu({
           <DropdownMenuItem className="flex gap-2 cursor-pointer">
             <PenLine className="w-4 h-4" />
             <span className="font-semibold">Copy to...</span>
-          </DropdownMenuItem>
-          <DropdownMenuItem className="flex gap-2 cursor-pointer">
-            <RotateCw className="w-4 h-4" />
-            <span className="font-semibold">Reset</span>
           </DropdownMenuItem>
           <DropdownMenuItem className="flex gap-2 cursor-pointer">
             <ArrowLeftRight className="w-4 h-4" />

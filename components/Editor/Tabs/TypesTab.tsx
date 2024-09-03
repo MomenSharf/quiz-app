@@ -4,7 +4,6 @@ import { QuestionType } from "@/types";
 import { cn } from "@/lib/utils";
 import { useEditorContext } from "../EditorContext";
 import { Button } from "@/components/ui/button";
-import { useRouter } from "next/navigation";
 type QuestionTypeProps = {
   type: QuestionType;
   questionIndex: number;
@@ -16,41 +15,42 @@ export default function TypesTab({ type, questionIndex }: QuestionTypeProps) {
     form: { setValue },
   } = useEditorContext();
 
-  const router = useRouter();
-
   return (
     <div className="p-3 grid grid-cols-[repeat(auto-fill,_minmax(7rem,1fr))] sm:grid-cols-[repeat(auto-fill,_minmax(10rem,1fr))] gap-5">
-      {QUESTION_TYPES_WITH_LABEL_AND_ICONS.map((item) => {
+      {QUESTION_TYPES_WITH_LABEL_AND_ICONS.map(({value, label, icon: Icon}) => {
         return (
           <Button
-            key={item.label}
+            key={label}
             variant="outline"
             type="button"
             className={cn("py-10", {
-              "border-ring bg-accent": type === item.value,
+              "border-ring bg-accent": type === value,
             })}
             onClick={() => {
-              if (item.value !== type)
-                setValue(`questions.${questionIndex}.type`, item.value);
+              if (value !== type)
+                setValue(`questions.${questionIndex}.type`, value);
                 dispatch({type: 'SET_CURRENT_QUESTION_TAB', payload: 'content'})
             }}
           >
             <div className=" flex flex-col gap-1 items-center justify-center">
-              <item.icon
-                key={item.label}
+              <Icon
+                key={label}
                 className={cn(
                   "w-7 h-7 fill-muted-foreground text-muted-foreground",
                   {
-                    "text-primary": type === item.value,
-                  }
+                    "text-primary": type === value,
+                    'w-10 h-10': value === 'TRUE_FALSE'
+                  },
+
                 )}
               />
               <span
                 className={cn({
-                  "text-foreground": type === item.value,
+                  "text-foreground": type === value,
+                  '-mt-2': value === 'TRUE_FALSE'
                 })}
               >
-                {item.label}
+                {label}
               </span>
             </div>
           </Button>

@@ -31,8 +31,8 @@ export default function EditorHeader() {
   // const [isEditingTitle, setIsEditingTitle] = useState(false);
   const {
     dispatch,
-    form : {setFocus, control, getValues, setValue, getFieldState}, 
-    state :  { saveState, historyArray, isEditingTitle },
+    form: { setFocus, control, getValues, setValue, getFieldState },
+    state: { saveState, historyArray, isEditingTitle },
     headerRef,
     historyIndex,
     undoFunction,
@@ -57,7 +57,6 @@ export default function EditorHeader() {
       className="bg-card flex gap-1 items-center py-1 px-0.5 border-b shadow-sm"
       ref={headerRef}
     >
-      
       <Button
         variant="ghost"
         size="icon"
@@ -67,23 +66,16 @@ export default function EditorHeader() {
         <ArrowLeft className="w-4 h-4" />
       </Button>
       <div className="hidden md:flex">
-        {isEditingTitle ? (
+        {/* {isEditingTitle ? ( */}
           <FormField
             control={control}
             name={`title`}
             render={({ field }) => (
               <FormItem>
                 <Input
-                  className={cn(
-                    "py-1 font-semibold",
-                    {
-                      "border-destructive bg-[hsl(var(--destructive)_/_10%)] focus-visible:ring-destructive":
-                      getFieldState("title").error,
-                    },
-                    {
-                      hidden: !isEditingTitle,
-                    }
-                  )}
+                  className={cn("h-9 font-semibold text-", {
+                    hidden: !isEditingTitle,
+                  })}
                   {...field}
                   onBlur={(e) => {
                     field.onBlur();
@@ -96,17 +88,21 @@ export default function EditorHeader() {
               </FormItem>
             )}
           />
-        ) : (
           <Button
             variant="outline"
-            className="border-transparent hover:border-input font-semibold hover:bg-transparent cursor-text"
+            type="button"
+            className={cn(
+              "border-transparent hover:border-input font-semibold hover:bg-transparent cursor-text",
+              {
+                hidden: isEditingTitle,
+              }
+            )}
             onClick={() =>
               dispatch({ type: "SET_IS_EDITING_TITLE", payload: true })
             }
           >
             <span className="truncate max-w-40">{getValues("title")}</span>
           </Button>
-        )}
       </div>
       <div className="flex justify-center items-center mx-1">
         <Tooltip delayDuration={100}>

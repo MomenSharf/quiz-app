@@ -1,43 +1,38 @@
-import React, { Dispatch, RefObject, SetStateAction, useEffect } from "react";
-import { Button } from "../ui/button";
-import { Plus } from "lucide-react";
-import { UseFormReturn } from "react-hook-form";
-import {
-  questionSchemaType,
-  quizSchemaType,
-} from "@/lib/validations/quizSchemas";
-import { Reorder } from "framer-motion";
-import EditorSidebarItem from "./EditorSidebarItem";
-import useScreenDimensions from "@/hooks/useScreenDimensions";
-import { setQuarter } from "date-fns";
-import { revalidatePath } from "next/cache";
-import { usePathname } from "next/navigation";
-import { revalidatePathInServer } from "@/lib/actions/quiz.actions";
 import { UNSAVED_ID_PREFIX } from "@/constants";
+import useScreenDimensions from "@/hooks/useScreenDimensions";
+import { Reorder } from "framer-motion";
+import { Plus } from "lucide-react";
+import { Button } from "../ui/button";
 import { useEditorContext } from "./EditorContext";
+import EditorSidebarItem from "./EditorSidebarItem";
 
 export default function EditorSidebar() {
-  const { dispatch, form : {setValue, getValues}, headerRef, sidebarRef } = useEditorContext();
-
+  const {
+    dispatch,
+    form: { setValue, getValues },
+    headerRef,
+    sidebarRef,
+  } = useEditorContext();
 
   const questions = getValues("questions");
   const dimensions = useScreenDimensions();
 
   const newQuetion = async () => {
+    const id = `${UNSAVED_ID_PREFIX}${crypto.randomUUID()}`;
     setValue("questions", [
       ...questions,
       {
         type: "UNSELECTED",
         questionOrder: questions.length,
-        id: `${UNSAVED_ID_PREFIX}${crypto.randomUUID()}`,
+        id,
       },
     ]);
-    dispatch({ type: "SET_CURRENT_QUESTION", payload: questions.length   });
+    dispatch({ type: "SET_CURRENT_QUESTION", payload: id });
   };
 
   return (
     <div
-      className="border-t sm:border-t-0 sm:border-r flex flex-col  bg-background"
+      className="border-t sm:border-t-0 sm:border-r flex flex-col"
       ref={sidebarRef}
       style={{
         height: `${

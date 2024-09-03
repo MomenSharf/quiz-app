@@ -24,9 +24,9 @@ export default function QuestionImageManagerTabs() {
       
     >
       <DialogTrigger asChild>
-        <div className="flex justify-center items-center border-2 border-dashed bg-primary/10 box-content min-h-36 rounded">
+        <div className="flex justify-center items-center border bg-primary/5 h-20 sm:h-44 w-full rounded">
 
-        <Button variant="outline" type="button">Add image</Button>
+        <Button type="button">Add image</Button>
         </div>
       </DialogTrigger>
       <DialogContent className="max-w-3xl h-[85vh] root-background-white flex flex-col">

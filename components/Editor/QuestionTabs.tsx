@@ -25,6 +25,7 @@ export default function QuestionTabs({ questionIndex }: QuestionTabsProps) {
   const question = getValues(`questions.${questionIndex}`);
 
   const isSelected = question.type !== "UNSELECTED";
+  
 
   return (
     <>

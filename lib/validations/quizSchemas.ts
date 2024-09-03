@@ -5,13 +5,13 @@ import { DIFFICULTY_LEVELS, VISIBILITY_OPTIONS } from "@/constants";
 // Define schemas for different question types
 
 export const unselectedSchema = z.object({
-  id: z.string().optional(),
+  id: z.string(),
   type: z.literal(QuestionType.UNSELECTED),
   questionOrder: z.number(),
 });
 
 export const singleChoiceSchema = z.object({
-  id: z.string().optional(),
+  id: z.string(),
   type: z.literal(QuestionType.SINGLE_CHOICE),
   questionOrder: z.number(),
   imageUrl: z.string().url("Invalid URL").optional(),
@@ -21,7 +21,7 @@ export const singleChoiceSchema = z.object({
 });
 
 export const multipleChoiceSchema = z.object({
-  id: z.string().optional(),
+  id: z.string(),
   type: z.literal(QuestionType.MULTIPLE_CHOICE),
   questionOrder: z.number(),
   imageUrl: z.string().url("Invalid URL").optional(),
@@ -33,7 +33,7 @@ export const multipleChoiceSchema = z.object({
 });
 
 export const trueFalseSchema = z.object({
-  id: z.string().optional(),
+  id: z.string(),
   type: z.literal(QuestionType.TRUE_FALSE),
   imageUrl: z.string().url("Invalid URL").optional(),
   questionOrder: z.number(),
@@ -42,7 +42,7 @@ export const trueFalseSchema = z.object({
 });
 
 export const fillInTheBlankSchema = z.object({
-  id: z.string().optional(),
+  id: z.string(),
   type: z.literal(QuestionType.FILL_IN_THE_BLANK),
   questionOrder: z.number(),
   imageUrl: z.string().url("Invalid URL").optional(),
@@ -51,7 +51,7 @@ export const fillInTheBlankSchema = z.object({
 });
 
 export const shortAnswerSchema = z.object({
-  id: z.string().optional(),
+  id: z.string(),
   type: z.literal(QuestionType.SHORT_ANSWER),
   questionOrder: z.number(),
   imageUrl: z.string().url("Invalid URL").optional(),
@@ -60,7 +60,7 @@ export const shortAnswerSchema = z.object({
 });
 
 export const matchingPairsSchema = z.object({
-  id: z.string().optional(),
+  id: z.string(),
   type: z.literal(QuestionType.MATCHING_PAIRS),
   questionOrder: z.number(),
   imageUrl: z.string().url("Invalid URL").optional(),
@@ -77,7 +77,7 @@ export const matchingPairsSchema = z.object({
 });
 
 export const questionOrderSchema = z.object({
-  id: z.string().optional(),
+  id: z.string(),
   type: z.literal(QuestionType.ORDER),
   questionOrder: z.number(),
   imageUrl: z.string().url("Invalid URL").optional(),
@@ -86,7 +86,7 @@ export const questionOrderSchema = z.object({
 });
 
 export const pickImageSchema = z.object({
-  id: z.string().optional(),
+  id: z.string(),
   type: z.literal(QuestionType.PICK_IMAGE),
   questionOrder: z.number(),
   imageUrl: z.string().url("Invalid URL").optional(),
@@ -103,7 +103,7 @@ export const pickImageSchema = z.object({
 });
 
 export const codeSchema = z.object({
-  id: z.string().optional(),
+  id: z.string(),
   type: z.literal(QuestionType.CODE),
   questionOrder: z.number(),
   imageUrl: z.string().url("Invalid URL").optional(),
@@ -113,7 +113,7 @@ export const codeSchema = z.object({
 });
 
 export const quizSchema = z.object({
-  id: z.string().optional(),
+  id: z.string(),
   title: z.string().min(1, "Title is required"),
   description: z.string().min(1, "Description is required"),
   imageUrl: z.string().optional(),

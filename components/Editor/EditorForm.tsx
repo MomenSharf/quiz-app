@@ -23,12 +23,12 @@ export default function EditorForm({ quiz }: EditorFormProps) {
     debounceSaveData,
   } = useEditorContext();
 
-  const { getValues, watch, control } = form;
+  const { getValues, watch, control, handleSubmit } = form;
 
   useEffect(() => {
     const subscription = watch((_, { name }) => {
       if (
-        name && // Guard clause to check if name is defined
+        name &&
         (name === "title" ||
           name === "description" ||
           name === "imageUrl" ||
@@ -37,7 +37,6 @@ export default function EditorForm({ quiz }: EditorFormProps) {
           name === "difficulty" ||
           name.startsWith("questions"))
       ) {
-        // setForceRender((prev) => !prev)
         debounceSaveData(false);
       }
     });
@@ -58,6 +57,15 @@ export default function EditorForm({ quiz }: EditorFormProps) {
     dispatch({ type: "SET_CURRENT_QUESTION_TAB", payload: "content" });
   }, [currentQuestion, dispatch]);
 
+  useEffect(() => {
+    dispatch({
+      type: "SET_CURRENT_QUESTION",
+      payload: getValues("questions.0.id"),
+    });
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const variants = {
     hidden: { opacity: 0 },
     visible: { opacity: 1 },
@@ -65,7 +73,10 @@ export default function EditorForm({ quiz }: EditorFormProps) {
 
   return (
     <Form {...form}>
-      <form className="h-screen flex flex-col root-background-white bg-background">
+      <form
+        className="h-screen flex flex-col root-background-white bg-background"
+        onSubmit={handleSubmit(onSubmit)}
+      >
         <EditorHeader />
         <div className="flex flex-col-reverse sm:flex-row h-full">
           <EditorSidebar />
@@ -76,16 +87,18 @@ export default function EditorForm({ quiz }: EditorFormProps) {
                   variants={variants}
                   initial={{ opacity: 0 }}
                   animate={
-                    i === currentQuestion ? { opacity: 1 } : { opacity: 0 }
+                    question.id === currentQuestion
+                      ? { opacity: 1 }
+                      : { opacity: 0 }
                   }
                   transition={{ duration: 0.3 }}
                   viewport={{ amount: 0 }}
                   style={{
-                    display: i === currentQuestion ? "block" : "none",
+                    display: question.id === currentQuestion ? "block" : "none",
                   }}
                   key={question.id}
                 >
-                  <QuestionTabs questionIndex={i} />
+                  <QuestionTabs questionIndex={question.questionOrder} />
                 </MotionDiv>
               );
             })}

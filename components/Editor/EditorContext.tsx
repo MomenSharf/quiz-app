@@ -36,7 +36,7 @@ import { z } from "zod";
 interface EditorState {
   saveState: "GOOD" | "BAD" | "WAITING" | "OFFLINE";
   historyArray: quizSchemaType[];
-  currentQuestion: number;
+  currentQuestion: string;
   currentQuestionTab: string
   isEditingTitle: boolean;
   isOnline: boolean;
@@ -52,8 +52,9 @@ type EditorAction =
       payload: { quiz: quizSchemaType; historyIndex: number };
     }
   | { type: "SET_IS_EDITING_TITLE"; payload: boolean }
-  | { type: "SET_CURRENT_QUESTION"; payload: number }
+  | { type: "SET_CURRENT_QUESTION"; payload: string }
   | { type: "SET_IS_UNDO_OR_REDO"; payload: boolean }
+  | { type: "SET_IS_REORDERED"; payload: boolean }
   | { type: "SET_IS_QUESTION_IMAGE_MANAGER_TABS_OPEN"; payload: boolean }
   | { type: "SET_CURRENT_QUESTION_TAB"; payload: string }
   | {
@@ -80,12 +81,12 @@ interface EditorContextType {
 const initialState: EditorState = {
   saveState: "GOOD",
   historyArray: [],
-  currentQuestion: 0,
+  currentQuestion: '',
   isEditingTitle: false,
   isOnline: true,
   isImageEditorOpenWithFiles: { isOpen: false },
   isQuestionImageManagerTabsOpen: false,
-  currentQuestionTab: 'content'
+  currentQuestionTab: 'content',
 };
 
 // Reducer function to handle state updates

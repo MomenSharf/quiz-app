@@ -38,7 +38,7 @@ export default function ImageEditor() {
       isImageEditorOpenWithFiles: { isOpen, files, url },
       currentQuestion,
     },
-    form: { setValue },
+    form: { setValue, getValues },
   } = useEditorContext();
 
   useEffect(() => {
@@ -125,10 +125,11 @@ export default function ImageEditor() {
           setIsUploading(true);
           const uploadedImage = await startUpload([file]);
           if (uploadedImage) {
-            setValue(
-              `questions.${currentQuestion}.imageUrl`,
-              uploadedImage[0].url
+            // const question = getValues('questions').find(e => e.id === currentQuestion)
+            const index = getValues("questions").findIndex(
+              (e) => e.id === currentQuestion
             );
+            setValue(`questions.${index}.imageUrl`, uploadedImage[0].url);
             dispatch({
               type: "SET_IS_IMAGE_EDITOR_OPEN",
               payload: { isOpen: false },
@@ -146,7 +147,6 @@ export default function ImageEditor() {
       imageDropQuality
     );
   };
-  console.log(url);
 
   return (
     <Dialog
@@ -156,11 +156,11 @@ export default function ImageEditor() {
       }
     >
       <DialogContent className="root-background-white max-w-xl py-4">
-        <div className="flex justify-between">
+        <div className="flex justify-between w-full">
           <p className="font-semibold">Edit</p>
         </div>
         {files || url ? (
-          <div className="flex flex-col">
+          <div className="flex flex-col w-full items-center">
             <div className="" ref={containerRef}>
               <Cropper
                 ref={cropperRef}
@@ -168,7 +168,7 @@ export default function ImageEditor() {
                   height: containerRef.current
                     ? containerRef.current?.offsetWidth * 0.75
                     : 375,
-                  width: "100%",
+                  width: '100%',
                 }}
                 initialAspectRatio={1}
                 aspectRatio={4 / 3}
@@ -183,33 +183,37 @@ export default function ImageEditor() {
                 guides={true}
               />
             </div>
-            <div className="flex justify-center pt-2">
-              <Button size="icon" variant="ghost" onClick={handleZoomIn}>
-                <ZoomIn className="w-5 h-5" />
-              </Button>
-              <Button size="icon" variant="ghost" onClick={handleZoomOut}>
-                <ZoomOut className="w-5 h-5" />
-              </Button>
-              <Separator orientation="vertical" className="mx-1" />
-              <Button size="icon" variant="ghost" onClick={handleRotateLeft}>
-                <RotateCcw className="w-5 h-5" />
-              </Button>
-              <Button size="icon" variant="ghost" onClick={handleRotateRight}>
-                <RotateCw className="w-5 h-5" />
-              </Button>
-              <Separator orientation="vertical" className="mx-1" />
-              <Button size="icon" variant="ghost" onClick={handleFlipV}>
-                <FlipVertical2 className="w-5 h-5" />
-              </Button>
-              <Button size="icon" variant="ghost" onClick={handleFlipH}>
-                <FlipHorizontal2 className="w-5 h-5" />
-              </Button>
-              <Separator orientation="vertical" className="mx-1" />
-              <Button variant="ghost" onClick={handleReset}>
-                Reset
-              </Button>
-              <Separator orientation="vertical" className="mx-1" />
-              <Button onClick={getCropData}>Save</Button>
+            <div className="flex flex-col sm:flex-row gap-1">
+              <div className="flex justify-center items-center pt-2">
+                <Button size="icon" variant="ghost" onClick={handleZoomIn}>
+                  <ZoomIn className="w-5 h-5" />
+                </Button>
+                <Button size="icon" variant="ghost" onClick={handleZoomOut}>
+                  <ZoomOut className="w-5 h-5" />
+                </Button>
+                <Separator orientation="vertical" className="mx-1" />
+                <Button size="icon" variant="ghost" onClick={handleRotateLeft}>
+                  <RotateCcw className="w-5 h-5" />
+                </Button>
+                <Button size="icon" variant="ghost" onClick={handleRotateRight}>
+                  <RotateCw className="w-5 h-5" />
+                </Button>
+                <Separator orientation="vertical" className="mx-1" />
+                <Button size="icon" variant="ghost" onClick={handleFlipV}>
+                  <FlipVertical2 className="w-5 h-5" />
+                </Button>
+                <Button size="icon" variant="ghost" onClick={handleFlipH}>
+                  <FlipHorizontal2 className="w-5 h-5" />
+                </Button>
+                <Separator orientation="vertical" className="mx-1 hidden sm:block" />
+              </div>
+              <div className="flex justify-center gap-3">
+                <Button variant="ghost" onClick={handleReset}>
+                  Reset
+                </Button>
+                <Separator orientation="vertical" className="mx-1" />
+                <Button onClick={getCropData}>Save</Button>
+              </div>
             </div>
           </div>
         ) : (

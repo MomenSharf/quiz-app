@@ -106,22 +106,24 @@ export default function Login({ type }: { type: "register" | "login" }) {
     } catch (error: any) {
       toast({
         title: "Error",
-        description: error.message,
+        description: "Something went wrong",
         variant: "destructive",
       });
+      console.log(error);
+      
+      
     }
   };
 
   const login = async (values: loginSchemaType) => {
     const result = await signIn("credentials", {
-      redirect: false,
       ...values,
     });
 
     if (result?.error) {
       toast({
         title: "Error",
-        description: result.error,
+        description: "Something went wrong",
         variant: "destructive",
       });
     }
