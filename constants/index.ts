@@ -171,8 +171,7 @@ export const PASTEL_COLORS = {
 
 export const QUESTION_TYPES: QuestionType[] = [
   "UNSELECTED",
-  "SINGLE_CHOICE",
-  "MULTIPLE_CHOICE",
+  "PICK_ANSWER",
   "TRUE_FALSE",
   "FILL_IN_THE_BLANK",
   "SHORT_ANSWER",
@@ -187,18 +186,13 @@ export const VISIBILITY_OPTIONS = ["PUBLIC", "PRIVATE"] as const;
 export const DIFFICULTY_LEVELS = ["EASY", "MEDIUM", "HARD"] as const;
 
 export const QUESTION_TYPES_WITH_LABEL_AND_ICONS: {
-  value: (typeof QUESTION_TYPES)[number];
+  value: QuestionType;
   label: string;
   icon: (props: LucideProps) => JSX.Element;
 }[] = [
   {
-    value: "SINGLE_CHOICE",
-    label: "Single Choice",
-    icon: Icons.checkSquare,
-  },
-  {
-    value: "MULTIPLE_CHOICE",
-    label: "Multiple Choice",
+    value: "PICK_ANSWER",
+    label: "Pick Answer",
     icon: Icons.checkList,
   },
   {
@@ -216,11 +210,6 @@ export const QUESTION_TYPES_WITH_LABEL_AND_ICONS: {
     label: "Short Answer",
     icon: Icons.write,
   },
-  // {
-  //   value: "LONG_ANSWER" ,
-  //   label: "Long Answer",
-  //   icon: Icons.write,
-  // },
   {
     value: "MATCHING_PAIRS",
     label: "Matching",

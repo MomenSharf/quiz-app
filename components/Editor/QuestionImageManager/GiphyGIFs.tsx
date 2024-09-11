@@ -85,7 +85,7 @@ export default function GiphyGIFs() {
     });
     dispatch({
       type: "SET_IS_IMAGE_EDITOR_OPEN",
-      payload: { isOpen: true, url, questionIndex: currentQuestion },
+      payload: { isOpen: true, url },
     });
   };
 

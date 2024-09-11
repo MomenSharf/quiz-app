@@ -20,6 +20,7 @@ export default async function page({
   if (!quiz) {
     return notFound();
   }
+  
 
   return <Editor quiz={quiz} />;
 }

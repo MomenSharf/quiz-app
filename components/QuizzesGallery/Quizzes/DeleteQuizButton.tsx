@@ -61,7 +61,7 @@ export default function DeleteQuizButton({
     } catch (error) {
       toast({
         title: "Error",
-        description: "There was an error with creating new Quiz",
+        description: "There was an error with delete Quiz",
         variant: "destructive",
       });
     } finally {

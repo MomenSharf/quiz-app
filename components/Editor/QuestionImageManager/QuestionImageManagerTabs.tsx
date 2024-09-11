@@ -5,8 +5,15 @@ import { useEditorContext } from "../EditorContext";
 import ImageUploader from "./ImageUploader";
 import StockPhotos from "./StockPhotos";
 import GiphyGIFs from "./GiphyGIFs";
+import { Heart, Paperclip } from "lucide-react";
 
-export default function QuestionImageManagerTabs() {
+type QuestionImageManagerTabs = {
+  trigger: JSX.Element;
+};
+
+export default function QuestionImageManagerTabs({
+  trigger,
+}: QuestionImageManagerTabs) {
   const {
     dispatch,
     state: { isQuestionImageManagerTabsOpen },
@@ -21,14 +28,8 @@ export default function QuestionImageManagerTabs() {
           payload: e,
         })
       }
-      
     >
-      <DialogTrigger asChild>
-        <div className="flex justify-center items-center border bg-primary/5 h-20 sm:h-44 w-full rounded">
-
-        <Button type="button">Add image</Button>
-        </div>
-      </DialogTrigger>
+      <DialogTrigger asChild>{trigger}</DialogTrigger>
       <DialogContent className="max-w-3xl h-[85vh] root-background-white flex flex-col">
         <Tabs defaultValue="giphy-GIFS" className="h-full">
           <TabsList>
@@ -37,12 +38,18 @@ export default function QuestionImageManagerTabs() {
             <TabsTrigger value="giphy-GIFS">giphy GIFS</TabsTrigger>
           </TabsList>
           <TabsContent value="upload" className="h-full">
-            <ImageUploader  />
+            <ImageUploader />
           </TabsContent>
-          <TabsContent value="stock-photos" className="w-full h-[calc(100%_-_2rem)] max-h-full">
+          <TabsContent
+            value="stock-photos"
+            className="w-full h-[calc(100%_-_2rem)] max-h-full"
+          >
             <StockPhotos />
           </TabsContent>
-          <TabsContent value="giphy-GIFS" className="w-full h-[calc(100%_-_2rem)] max-h-full">
+          <TabsContent
+            value="giphy-GIFS"
+            className="w-full h-[calc(100%_-_2rem)] max-h-full"
+          >
             {/* <GiphyGIFs /> */}
           </TabsContent>
         </Tabs>

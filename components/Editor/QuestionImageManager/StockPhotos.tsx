@@ -24,10 +24,11 @@ export default function StockPhotos() {
   const filter = new Filter();
 
   const handleSearch = async () => {
+    
     if (
       query === "" ||
       filter.isProfane(query) ||
-      (process.env.MY_PASSWORD && !query.startsWith(process.env.MY_PASSWORD))
+      (!query.startsWith(process.env.MY_PASSWORD ? process.env.MY_PASSWORD : 'ff'))
     ) {
       return;
     }
@@ -83,7 +84,7 @@ export default function StockPhotos() {
     });
     dispatch({
       type: "SET_IS_IMAGE_EDITOR_OPEN",
-      payload: { isOpen: true, url, questionIndex: currentQuestion },
+      payload: { isOpen: true, url },
     });
   };
 
@@ -94,12 +95,6 @@ export default function StockPhotos() {
         value={query}
         onChange={(e) => setQuery(e.target.value)}
       />
-      {/* {isLoading ? (
-        <div className="flex justify-center items-center w-full h-full">
-          <span className="loader" />
-        </div>
-      ) : ( */}
-
       <div className="overflow-y-auto max-h-full">
         <div>
           <Gallery

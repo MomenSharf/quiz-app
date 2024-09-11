@@ -3,19 +3,18 @@ import {
   codeSchema,
   fillInTheBlankSchema,
   matchingPairsSchema,
-  multipleChoiceSchema,
+  pickAnswerSchema,
   pickImageSchema,
   questionOrderSchema,
   quizSchema,
   quizSchemaType,
   shortAnswerSchema,
-  singleChoiceSchema,
   trueFalseSchema,
-  unselectedSchema
+  unselectedSchema,
 } from "@/lib/validations/quizSchemas";
-import {  EditorQuiz } from "@/types";
+import { EditorQuiz } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { QuestionType } from "@prisma/client";
+import { Question, QuestionType } from "@prisma/client";
 import React, {
   createContext,
   MutableRefObject,
@@ -37,10 +36,15 @@ interface EditorState {
   saveState: "GOOD" | "BAD" | "WAITING" | "OFFLINE";
   historyArray: quizSchemaType[];
   currentQuestion: string;
-  currentQuestionTab: string
+  currentQuestionTab: string;
   isEditingTitle: boolean;
   isOnline: boolean;
-  isImageEditorOpenWithFiles: { isOpen: boolean; files?: File[], questionIndex?: number, url?: string };
+  isImageEditorOpenWithFiles: {
+    isOpen: boolean;
+    files?: File[];
+    questionIndex?: number;
+    url?: string;
+  };
   isQuestionImageManagerTabsOpen: boolean;
 }
 
@@ -59,8 +63,11 @@ type EditorAction =
   | { type: "SET_CURRENT_QUESTION_TAB"; payload: string }
   | {
       type: "SET_IS_IMAGE_EDITOR_OPEN";
-      payload: { isOpen: boolean; files?: File[], questionIndex?: number, url?: string };
-      
+      payload: {
+        isOpen: boolean;
+        files?: File[];
+        url?: string;
+      };
     };
 
 // Define the context type
@@ -81,12 +88,12 @@ interface EditorContextType {
 const initialState: EditorState = {
   saveState: "GOOD",
   historyArray: [],
-  currentQuestion: '',
+  currentQuestion: "",
   isEditingTitle: false,
   isOnline: true,
   isImageEditorOpenWithFiles: { isOpen: false },
   isQuestionImageManagerTabsOpen: false,
-  currentQuestionTab: 'content',
+  currentQuestionTab: "content",
 };
 
 // Reducer function to handle state updates
@@ -144,7 +151,7 @@ export const EditorProvider = ({
       id: initialQuiz.id,
       title: initialQuiz.title,
       description: initialQuiz.description,
-      imageUrl: initialQuiz.imageUrl ?? undefined,
+      image: initialQuiz.image || undefined,
       visibility: initialQuiz.visibility,
       categories: initialQuiz.categories,
       difficulty: initialQuiz.difficulty,
@@ -158,34 +165,26 @@ export const EditorProvider = ({
                 questionOrder: question.questionOrder,
               } as z.infer<typeof unselectedSchema>;
 
-            case QuestionType.SINGLE_CHOICE:
+            case QuestionType.PICK_ANSWER:
               return {
                 id: question.id,
                 type: question.type,
                 questionOrder: question.questionOrder,
-                imageUrl: question.imageUrl,
+                image: question.image || undefined,
                 question: question.question ?? "",
-                options: question.options ?? [],
-                correctAnswer: question.correctAnswer ?? "",
-              } as z.infer<typeof singleChoiceSchema>;
-
-            case QuestionType.MULTIPLE_CHOICE:
-              return {
-                id: question.id,
-                type: question.type,
-                questionOrder: question.questionOrder,
-                imageUrl: question.imageUrl,
-                question: question.question ?? "",
-                options: question.options ?? [],
-                correctAnswers: question.correctAnswers ?? [],
-              } as z.infer<typeof multipleChoiceSchema>;
+                items: question.items.map((e) => ({
+                  id: e.id,
+                  text: e.text,
+                  isCorrect: e.isCorrect,
+                })),
+              } as z.infer<typeof pickAnswerSchema>;
 
             case QuestionType.TRUE_FALSE:
               return {
                 id: question.id,
                 type: question.type,
                 questionOrder: question.questionOrder,
-                imageUrl: question.imageUrl,
+                image: question.image || undefined,
                 question: question.question ?? "",
                 correctAnswer: (question.correctAnswer ?? "true") as
                   | "true"
@@ -197,7 +196,7 @@ export const EditorProvider = ({
                 id: question.id,
                 type: question.type,
                 questionOrder: question.questionOrder,
-                imageUrl: question.imageUrl,
+                image: question.image || undefined,
                 question: question.question ?? "",
                 correctAnswer: question.correctAnswer ?? "",
               } as z.infer<typeof fillInTheBlankSchema>;
@@ -207,7 +206,7 @@ export const EditorProvider = ({
                 id: question.id,
                 type: question.type,
                 questionOrder: question.questionOrder,
-                imageUrl: question.imageUrl,
+                image: question.image || undefined,
                 question: question.question ?? "",
                 correctAnswer: question.correctAnswer ?? "",
               } as z.infer<typeof shortAnswerSchema>;
@@ -217,9 +216,13 @@ export const EditorProvider = ({
                 id: question.id,
                 type: question.type,
                 questionOrder: question.questionOrder,
-                imageUrl: question.imageUrl,
+                image: question.image || undefined,
                 question: question.question ?? "",
-                pairs: question.pairs ?? [],
+                items: question.items.map((e) => ({
+                  id: e.id,
+                  text: e.text,
+                  match: e.match,
+                })),
               } as z.infer<typeof matchingPairsSchema>;
 
             case QuestionType.ORDER:
@@ -227,9 +230,13 @@ export const EditorProvider = ({
                 id: question.id,
                 type: question.type,
                 questionOrder: question.questionOrder,
-                imageUrl: question.imageUrl,
+                image: question.image || undefined,
                 question: question.question ?? "",
-                correctOrder: question.correctOrder ?? [],
+                items: question.items.map((e) => ({
+                  id: e.id,
+                  text: e.text,
+                  order: e.order,
+                })),
               } as z.infer<typeof questionOrderSchema>;
 
             case QuestionType.PICK_IMAGE:
@@ -237,10 +244,14 @@ export const EditorProvider = ({
                 id: question.id,
                 type: question.type,
                 questionOrder: question.questionOrder,
-                imageUrl: question.imageUrl,
+                image: question.image || undefined,
                 question: question.question ?? "",
-                imagesOptions: question.imagesOptions ?? [],
-                correctAnswer: question.correctAnswer ?? "",
+                items: question.items.map((e) => ({
+                  id: e.id,
+                  text: e.text,
+                  image: e.image,
+                  isCorrect: e.isCorrect,
+                })),
               } as z.infer<typeof pickImageSchema>;
 
             case QuestionType.CODE:
@@ -248,7 +259,7 @@ export const EditorProvider = ({
                 id: question.id,
                 type: question.type,
                 questionOrder: question.questionOrder,
-                imageUrl: question.imageUrl,
+                image: question.image || undefined,
                 question: question.question ?? "",
                 codeSnippet: question.codeSnippet ?? "",
                 correctAnswer: question.correctAnswer ?? "",
@@ -272,6 +283,8 @@ export const EditorProvider = ({
     defaultValues: initialValue,
   });
 
+  const { getValues } = form;
+
   useEffect(() => {
     dispatch({
       type: "SET_HISTORY_ARRAY",
@@ -282,8 +295,7 @@ export const EditorProvider = ({
 
   const saveQuizFun = useCallback(
     async (isReseting: boolean) => {
-      const data = form.getValues();
-
+      const data = getValues();
       try {
         dispatch({ type: "SET_SAVE_SATAT", payload: "WAITING" });
 
@@ -304,9 +316,10 @@ export const EditorProvider = ({
         }
       } catch (error: any) {
         dispatch({ type: "SET_SAVE_SATAT", payload: "BAD" });
+        console.log(error);
       }
     },
-    [form, initialQuiz.id]
+    [getValues, initialQuiz.id]
   );
   const debounceSaveData = useDebouncedCallback((isReseting: boolean) => {
     saveQuizFun(isReseting);

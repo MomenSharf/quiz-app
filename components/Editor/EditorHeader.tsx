@@ -115,7 +115,7 @@ export default function EditorHeader() {
               ) : saveState === "BAD" ? (
                 <Icons.alert className="w-6 h-6 fill-[#FFC107] stroke-background" />
               ) : (
-                <Icons.check className="w-6 h-6 fill-[#28A745]" />
+                <Icons.check className="w-6 h-6 fill-success" />
               )}
             </Button>
           </TooltipTrigger>

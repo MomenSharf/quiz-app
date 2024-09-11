@@ -1,55 +1,63 @@
 import { QUESTION_TYPES } from "@/constants";
-import { Folder, Question, Quiz, User } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 
 export type QuestionType = (typeof QUESTION_TYPES)[number];
-export type updataQuiz = Pick<
-  Quiz,
-  | "title"
-  | "description"
-  | "imageUrl"
-  | "difficulty"
-  | "visibility"
-  | "categories"
->;
 
-export type QuizGalleryWithQuestionsCount = Pick<
-  Quiz,
-  | "id"
-  | "title"
-  | "difficulty"
-  | "visibility"
-  | "imageUrl"
-  | "createdAt"
-  | "updatedAt"
-> & {
-  _count: {
-    questions: number;
+export type QuizGalleryWithQuestionsCount = Prisma.QuizGetPayload<{
+  select: {
+    id: true;
+    title: true;
+    image: true;
+    difficulty: true;
+    visibility: true;
+    createdAt: true;
+    updatedAt: true;
+    _count: {
+      select: {
+        questions: true;
+      };
+    };
   };
-};
-export type EditorQuiz = Pick<
-  Quiz,
-  | "id"
-  | "title"
-  | "description"
-  | "categories"
-  | "difficulty"
-  | "visibility"
-  | "imageUrl"
-  | "createdAt"
-  | "updatedAt"
-> & {
-  questions: Question[];
-  user: User;
-};
+}>;
 
-export type FolderGalleryWithQuizzesCount = Pick<
-  Folder,
-  "id" | "title" | "createdAt" | "updatedAt"
-> & {
-  _count: {
-    quizzes: number;
+export type EditorQuiz = Prisma.QuizGetPayload<{
+  select: {
+    id: true,
+    title: true,
+    description: true,
+    image: true,
+    difficulty: true,
+    visibility: true,
+    categories: true,
+    createdAt: true,
+    updatedAt: true,
+    questions: {
+      include: {
+        image: true,
+        items: {
+          include : {
+            image: true
+          }
+        },
+      }
+    },
+    user: true,
   };
-};
+}>;
+
+export type FolderGalleryWithQuizzesCount = Prisma.FolderGetPayload<{
+  select: {
+    id: true;
+    title: true;
+    createdAt: true;
+    updatedAt: true;
+    _count: {
+      select: {
+        quizzes: true;
+      };
+    };
+  };
+}>;
 
 export type FolderPathSegment = {
   id: string;
@@ -126,6 +134,7 @@ export type UnsplashPhoto = {
     };
   };
 };
+
 export type Photo = {
   src: string;
   srcSet?: string | string[];
@@ -352,4 +361,3 @@ export type GiphyApiResponse = {
     };
   };
 };
-

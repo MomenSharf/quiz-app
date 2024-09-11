@@ -3,7 +3,7 @@ import React from "react";
 
 export default function QuestionImage({ imageUrl }: { imageUrl: string }) {
   return (
-    <div className="flex flex-col w-full border border-primary rounded-md overflow-hidden">
+    <div className="flex flex-col w-full rounded-md overflow-hidden">
       <Image
         src={imageUrl}
         alt="question Image"

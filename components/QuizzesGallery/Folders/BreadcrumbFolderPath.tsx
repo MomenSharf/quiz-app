@@ -36,7 +36,7 @@ export default function BreadcrumbDemoFolderPath({ path, currentFolderId }: Brea
   return (
     <Breadcrumb>
       <BreadcrumbList className="text-xs font-medium ">
-      <Link href='/my-quizzes' className="hover:text-primary">MY QUIZESS
+      <Link href='/dashboard' className="hover:text-primary">MY QUIZESS
       </Link>
       <BreadcrumbSeparator />
         {path.map(({ id, title }, index) => (

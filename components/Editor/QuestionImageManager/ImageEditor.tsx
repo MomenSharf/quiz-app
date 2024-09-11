@@ -16,6 +16,7 @@ import Cropper, { ReactCropperElement } from "react-cropper";
 import { useEditorContext } from "../EditorContext";
 import { useUploadThing } from "@/lib/uploadthing";
 import { toast } from "sonner";
+import { saveImage } from "@/lib/actions/quiz.actions";
 
 export default function ImageEditor() {
   const [image, setImage] = useState("");
@@ -125,15 +126,28 @@ export default function ImageEditor() {
           setIsUploading(true);
           const uploadedImage = await startUpload([file]);
           if (uploadedImage) {
-            // const question = getValues('questions').find(e => e.id === currentQuestion)
             const index = getValues("questions").findIndex(
               (e) => e.id === currentQuestion
             );
-            setValue(`questions.${index}.imageUrl`, uploadedImage[0].url);
-            dispatch({
-              type: "SET_IS_IMAGE_EDITOR_OPEN",
-              payload: { isOpen: false },
+            const image = await saveImage({
+              uploadthingId: uploadedImage[0].customId || "",
+              url: uploadedImage[0].url,
             });
+
+            if (image) {
+              setValue(`questions.${index}.image`, {
+                id: "",
+                uploadthingId: uploadedImage[0].customId || "",
+                url: uploadedImage[0].url,
+                userId: "",
+              });
+              dispatch({
+                type: "SET_IS_IMAGE_EDITOR_OPEN",
+                payload: { isOpen: false },
+              });
+            } else {
+              toast("something wrong with save img");
+            }
           } else {
             toast("something wrong with apluading img");
           }
@@ -168,7 +182,7 @@ export default function ImageEditor() {
                   height: containerRef.current
                     ? containerRef.current?.offsetWidth * 0.75
                     : 375,
-                  width: '100%',
+                  width: "100%",
                 }}
                 initialAspectRatio={1}
                 aspectRatio={4 / 3}
@@ -205,7 +219,10 @@ export default function ImageEditor() {
                 <Button size="icon" variant="ghost" onClick={handleFlipH}>
                   <FlipHorizontal2 className="w-5 h-5" />
                 </Button>
-                <Separator orientation="vertical" className="mx-1 hidden sm:block" />
+                <Separator
+                  orientation="vertical"
+                  className="mx-1 hidden sm:block"
+                />
               </div>
               <div className="flex justify-center gap-3">
                 <Button variant="ghost" onClick={handleReset}>

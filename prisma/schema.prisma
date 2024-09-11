@@ -1,198 +1,97 @@
-datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
-  // directUrl = env("DIRECT_URL")
-}
-
 generator client {
   provider = "prisma-client-js"
 }
 
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
 model User {
-  id            String       @id @default(cuid())
+  id            String          @id @default(cuid())
   name          String?
-  email         String       @unique
+  email         String          @unique
   emailVerified DateTime?
   image         String?
-  accounts      Account[]
-  sessions      Session[]
-  username      String?      @unique
+  username      String?         @unique
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
   password      String?
-  ResetTokens   ResetToken[]
-  // Optional for WebAuthn support
+  accounts      Account[]
   Authenticator Authenticator[]
-
-  folders Folder[]
-  quizzes Quiz[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  folders       Folder[]
+  images        Image[]
+  quizzes       Quiz[]
+  sessions      Session[]
 }
 
 model Folder {
-  id    String @id @default(cuid())
-  title String
-
+  id         String   @id @default(cuid())
+  title      String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  userId     String
+  parentId   String?
+  parent     Folder?  @relation("Subfolders", fields: [parentId], references: [id], onDelete: Cascade)
   subfolders Folder[] @relation("Subfolders")
-
-  quizzes Quiz[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  user   User   @relation(fields: [userId], references: [id])
-  userId String
-
-  parentId String?
-  parent   Folder? @relation("Subfolders", fields: [parentId], references: [id])
-}
-
-model ResetToken {
-  id        Int      @id @default(autoincrement())
-  token     String   @unique
-  userId    String
-  user      User     @relation(fields: [userId], references: [id])
-  createdAt DateTime @default(now())
-  expiresAt DateTime
+  user       User     @relation(fields: [userId], references: [id])
+  quizzes    Quiz[]
 }
 
 model Quiz {
   id          String     @id @default(cuid())
   title       String
-  description String
-  imageUrl    String?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
   categories  String[]
+  description String
   difficulty  Difficulty
   visibility  Visibility @default(PUBLIC)
+  folderId    String?
+  userId      String
+  imageId     String?
   questions   Question[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  user     User    @relation(fields: [userId], references: [id])
-  userId   String
-  folder   Folder? @relation(fields: [folderId], references: [id])
-  folderId String?
+  folder      Folder?    @relation(fields: [folderId], references: [id], onDelete: Cascade)
+  image       Image?     @relation(fields: [imageId], references: [id])
+  user        User       @relation(fields: [userId], references: [id])
 }
 
 model Question {
-  id             String       @id @default(cuid())
-  type           QuestionType
-  questionOrder  Int
-  imageUrl       String?
-  question       String?
-  options        String[] // Optional, used for multipleChoice, matching, pictureChoice
-  correctAnswer  String? // Optional, used for singleChoice, fillInTheBlank, shortAnswer, longAnswer, interactive, code
-  correctAnswers String[] // Optional, used for multipleChoice
-  pairs          Json[]
-  correctOrder   String[] // Optional, used for order
-  imagesOptions  Json[]
-  codeSnippet    String? // Optional, used for code
-  quizId         String
-  quiz           Quiz         @relation(fields: [quizId], references: [id])
+  id            String       @id @default(cuid())
+  type          QuestionType
+  question      String?
+  correctAnswer String?
+  codeSnippet   String?
+  quizId        String
+  questionOrder Int
+  imageId       String?
+  items         Items[]
+  image         Image?       @relation(fields: [imageId], references: [id], onDelete: Cascade)
+  quiz          Quiz         @relation(fields: [quizId], references: [id], onDelete: Cascade)
 }
 
-// model Image {
-//   id             String @id @default(cuid())
-//   uploadthingUrl String
-//   url            String
-//   User     User?      @relation(fields: [userId], references: [id])
-//   userId   String?
-//   Quiz     Quiz[]
-//   Question Question[]
-// }
-
-// model Pairs {
-//   id         String  @id @default(cuid())
-//   item       String
-//   match      String? // Optional, used for
-//   questionId String
-//   question        Question @relation(fields: [questionId], references: [id]) matching
-// }
-
-// model Item {
-//   id              String   @id @default(cuid())
-//   item            String
-//   match           String? // Optional, used for matching
-//   correctPosition Int? // Optional, used for dragAndDrop
-//   questionId      String
-//   question        Question @relation(fields: [questionId], references: [id])
-// }
-
-enum Visibility {
-  PUBLIC
-  PRIVATE
+model Items {
+  id         String    @id @default(cuid())
+  text       String
+  match      String?
+  isCorrect  Boolean?
+  order      Int?
+  questionId String?
+  imageId    String?
+  image      Image?    @relation(fields: [imageId], references: [id], onDelete: Cascade)
+  Question   Question? @relation(fields: [questionId], references: [id], onDelete: Cascade)
 }
 
-enum QuestionType {
-  UNSELECTED
-  SINGLE_CHOICE
-  MULTIPLE_CHOICE
-  TRUE_FALSE
-  FILL_IN_THE_BLANK
-  SHORT_ANSWER
-  MATCHING_PAIRS
-  ORDER
-  PICK_IMAGE
-  CODE
+model Image {
+  id            String     @id @default(cuid())
+  uploadthingId String
+  url           String
+  userId        String?
+  User          User?      @relation(fields: [userId], references: [id])
+  items         Items[]
+  Question      Question[]
+  Quiz          Quiz[]
 }
-
-// model Progress {
-//   id    String   @id @default(cuid())
-//   score Score[]
-//   timer DateTime @default(now())
-//   tries Int      @default(5)
-
-//   createdAt DateTime @default(now())
-//   updatedAt DateTime @updatedAt
-
-//   user              User      @relation(fields: [userId], references: [id])
-//   userId            String
-//   quiz              Quiz      @relation(fields: [quizId], references: [id])
-//   quizId            String
-//   question          Question? @relation(fields: [currentQuestionId], references: [id])
-//   currentQuestionId String
-// }
-
-// model Score {
-//   user       User     @relation(fields: [userId], references: [id])
-//   userId     String
-//   quiz       Quiz     @relation(fields: [quizId], references: [id], onDelete: Cascade)
-//   quizId     String
-//   progress   Progress @relation(fields: [progressId], references: [id])
-//   progressId String
-
-//   score Int
-
-//   createdAt DateTime @default(now())
-//   updatedAt DateTime @updatedAt
-
-//   @@id([userId, quizId, progressId])
-// }
-
-enum Difficulty {
-  EASY
-  MEDIUM
-  HARD
-}
-
-// model Like {
-//   user   User   @relation(fields: [userId], references: [id])
-//   userId String
-//   quiz   Quiz   @relation(fields: [quizId], references: [id], onDelete: Cascade)
-//   quizId String
-
-//   @@id([userId, quizId])
-// }
-
-// model Bookmarked {
-//   user   User   @relation(fields: [userId], references: [id])
-//   userId String
-//   quiz   Quiz   @relation(fields: [quizId], references: [id], onDelete: Cascade)
-//   quizId String
-
-//   @@id([userId, quizId])
-// }
 
 model Account {
   userId            String
@@ -206,11 +105,9 @@ model Account {
   scope             String?
   id_token          String?
   session_state     String?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@id([provider, providerAccountId])
 }
@@ -219,10 +116,9 @@ model Session {
   sessionToken String   @unique
   userId       String
   expires      DateTime
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
 }
 
 model VerificationToken {
@@ -233,7 +129,6 @@ model VerificationToken {
   @@id([identifier, token])
 }
 
-// Optional for WebAuthn support
 model Authenticator {
   credentialID         String  @unique
   userId               String
@@ -243,8 +138,30 @@ model Authenticator {
   credentialDeviceType String
   credentialBackedUp   Boolean
   transports           String?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user                 User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@id([userId, credentialID])
+}
+
+enum Visibility {
+  PUBLIC
+  PRIVATE
+}
+
+enum QuestionType {
+  UNSELECTED
+  PICK_ANSWER
+  TRUE_FALSE
+  FILL_IN_THE_BLANK
+  SHORT_ANSWER
+  MATCHING_PAIRS
+  ORDER
+  PICK_IMAGE
+  CODE
+}
+
+enum Difficulty {
+  EASY
+  MEDIUM
+  HARD
 }

@@ -1,21 +1,29 @@
 "use server";
 
-import { UTApi } from "uploadthing/server";
-import { db } from "../db";
-import { QuestionValidtionType } from "../validations/Quiz";
-import { revalidatePath, revalidateTag } from "next/cache";
-import { Folder, Question, QuestionType, Quiz } from "@prisma/client";
-import { FolderPathSegment, updataQuiz } from "@/types";
-import { getCurrentUser } from "../auth";
+import { UNSAVED_ID_PREFIX } from "@/constants";
+import { FolderPathSegment } from "@/types";
+import { unstable_noStore as noStore, revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { UTApi } from "uploadthing/server";
+import { getCurrentUser } from "../auth";
+import { db } from "../db";
 import {
-  questionSchemaType,
+  codeSchema,
+  fillInTheBlankSchema,
+  imageSchemaType,
+  matchingPairsSchema,
+  pickAnswerSchema,
+  pickImageSchema,
+  questionOrderSchema,
   quizSchema,
   quizSchemaType,
+  shortAnswerSchema,
+  trueFalseSchema,
 } from "../validations/quizSchemas";
-import { unstable_noStore as noStore } from "next/cache";
-import { OrderDefault } from "@/constants/defaultValues";
-import { UNSAVED_ID_PREFIX } from "@/constants";
+import { Image, Items, Prisma, QuestionType, Quiz } from "@prisma/client";
+import { Item } from "@radix-ui/react-dropdown-menu";
+import { z } from "zod";
+import { url } from "inspector";
 
 const utapi = new UTApi();
 
@@ -37,7 +45,7 @@ export const getGalleryQuizzes = async () => {
       select: {
         id: true,
         title: true,
-        imageUrl: true,
+        image: true,
         difficulty: true,
         visibility: true,
         createdAt: true,
@@ -108,13 +116,22 @@ export const getQuiz = async (quizId: string) => {
         id: true,
         title: true,
         description: true,
-        imageUrl: true,
+        image: true,
         difficulty: true,
         visibility: true,
         categories: true,
-        updatedAt: true,
         createdAt: true,
-        questions: true,
+        updatedAt: true,
+        questions: {
+          include: {
+            image: true,
+            items: {
+              include: {
+                image: true,
+              },
+            },
+          },
+        },
         user: true,
       },
     });
@@ -141,7 +158,7 @@ export const getFolder = async (folderId: string) => {
           select: {
             id: true,
             title: true,
-            imageUrl: true,
+            image: true,
             difficulty: true,
             visibility: true,
             createdAt: true,
@@ -198,7 +215,7 @@ export const newQuiz = async (pathname: string, folderId?: string) => {
         questions: {
           create: {
             type: "UNSELECTED",
-            questionOrder: 1,
+            questionOrder: 0,
           },
         },
       },
@@ -253,63 +270,206 @@ export const saveQuiz = async (
   if (!session) {
     throw new Error("Unauthorized: User is not logged in.");
   }
+
   try {
     const quizData = {
       categories: data.categories,
       title: data.title,
       description: data.description,
       difficulty: data.difficulty,
-      imageUrl: data.imageUrl || null,
       visibility: data.visibility,
     };
+
     const questions = data.questions.map((question) => {
-      if (question.id?.startsWith(UNSAVED_ID_PREFIX)) {
-        return {
-          ...question,
-          id: undefined,
-        };
-      } else {
-        return question;
+      switch (question.type) {
+        case QuestionType.UNSELECTED:
+          return {
+            type: question.type,
+            questionOrder: question.questionOrder,
+          };
+
+        case QuestionType.PICK_ANSWER:
+          return {
+            type: question.type,
+            questionOrder: question.questionOrder,
+            image: {
+              create: question.image
+                ? {
+                    url: question.image.url,
+                    uploadthingId: question.image.uploadthingId,
+                  }
+                : undefined,
+            },
+            question: question.question ?? "",
+            items: {
+              create: question.items.map((e) => ({
+                text: e.text,
+                isCorrect: e.isCorrect,
+              })),
+            },
+          };
+
+        case QuestionType.TRUE_FALSE:
+          return {
+            type: question.type,
+            questionOrder: question.questionOrder,
+            image: question.image
+              ? {
+                  create: {
+                    uploadthingId: question.image?.uploadthingId,
+                    url: question.image?.url,
+                  },
+                }
+              : undefined,
+            question: question.question ?? "",
+            correctAnswer: (question.correctAnswer ?? "true") as
+              | "true"
+              | "false",
+          };
+
+        case QuestionType.FILL_IN_THE_BLANK:
+          return {
+            type: question.type,
+            questionOrder: question.questionOrder,
+            image: question.image
+              ? {
+                  create: {
+                    uploadthingId: question.image?.uploadthingId,
+                    url: question.image?.url,
+                  },
+                }
+              : undefined,
+            question: question.question ?? "",
+            correctAnswer: question.correctAnswer ?? "",
+          };
+
+        case QuestionType.SHORT_ANSWER:
+          return {
+            type: question.type,
+            questionOrder: question.questionOrder,
+            image: question.image
+              ? {
+                  create: {
+                    uploadthingId: question.image?.uploadthingId,
+                    url: question.image?.url,
+                  },
+                }
+              : undefined,
+            question: question.question ?? "",
+            correctAnswer: question.correctAnswer ?? "",
+          };
+
+        case QuestionType.MATCHING_PAIRS:
+          return {
+            type: question.type,
+            questionOrder: question.questionOrder,
+            image: question.image
+              ? {
+                  create: {
+                    uploadthingId: question.image?.uploadthingId,
+                    url: question.image?.url,
+                  },
+                }
+              : undefined,
+            question: question.question ?? "",
+            items: {
+              create: question.items.map((e) => ({
+                text: e.text,
+                match: e.match,
+              })),
+            },
+          };
+
+        case QuestionType.ORDER:
+          return {
+            type: question.type,
+            questionOrder: question.questionOrder,
+            image: question.image
+              ? {
+                  create: {
+                    uploadthingId: question.image?.uploadthingId,
+                    url: question.image?.url,
+                  },
+                }
+              : undefined,
+            question: question.question ?? "",
+            items: {
+              create: question.items.map((e) => ({
+                text: e.text,
+                order: e.order,
+              })),
+            },
+          };
+
+        case QuestionType.PICK_IMAGE:
+          return {
+            type: question.type,
+            questionOrder: question.questionOrder,
+            image: question.image
+              ? {
+                  create: {
+                    uploadthingId: question.image?.uploadthingId,
+                    url: question.image?.url,
+                  },
+                }
+              : undefined,
+            question: question.question ?? "",
+            items: {
+              create: question.items.map((e) => ({
+                text: e.text,
+                isCorrect: e.isCorrect,
+              })),
+            },
+          };
+
+        case QuestionType.CODE:
+          return {
+            type: question.type,
+            questionOrder: question.questionOrder,
+            image: question.image
+              ? {
+                  create: {
+                    uploadthingId: question.image?.uploadthingId,
+                    url: question.image?.url,
+                  },
+                }
+              : undefined,
+            question: question.question ?? "",
+            codeSnippet: question.codeSnippet ?? "",
+            correctAnswer: question.correctAnswer ?? "",
+          };
+
+        default:
+          return {
+            type: QuestionType.UNSELECTED,
+            questionOrder: 0,
+          };
       }
     });
 
     const quiz = await db.quiz.update({
       where: {
         id: quizId,
+        userId: session.user.id,
       },
       data: {
         ...quizData,
         questions: {
-          deleteMany: {},
-          createMany: {
-            data: questions,
-          },
+          deleteMany: {}, // Removes existing questions
+          create: questions,
         },
       },
     });
 
-    // const questionOperations = questions.map(question => {
-    //   if (question.id) {
-    //     // Update existing question
-    //     return db.question.update({
-    //       where: { id: question.id },
-    //       data: question,
-    //     });
-    //   } else {
-    //     // Create new question
-    //     return db.question.create({
-    //       data: question,
-    //     });
-    //   }
-    // });
     if (quiz) {
       revalidatePath(pathname);
-      return quiz;
+      return questions;
     } else {
-      throw new Error("An errore happened");
+      throw new Error("An error happened");
     }
   } catch (error) {
-    throw new Error("An errore happened");
+    console.error(error);
+    throw new Error("An error happened");
   }
 };
 
@@ -321,6 +481,8 @@ export const deleteQuizzes = async (quizzesIds: string[], pathname: string) => {
     throw new Error("Unauthorized: User is not logged in.");
   }
   try {
+    console.log(quizzesIds);
+
     const deletedQuizzes = await db.quiz.deleteMany({
       where: {
         id: {
@@ -351,19 +513,19 @@ export async function deleteFolderAndSubfolders(
   const deleteSubfolders = async (id: string) => {
     try {
       // Delete quizzes within the current folder
-      await db.quiz.deleteMany({
-        where: { folderId: id, userId: session.user.id },
-      });
+      // await db.quiz.deleteMany({
+      //   where: { folderId: id, userId: session.user.id },
+      // });
 
-      // Fetch subfolders
-      const subfolders = await db.folder.findMany({
-        where: { parentId: id, userId: session.user.id },
-      });
+      // // Fetch subfolders
+      // const subfolders = await db.folder.findMany({
+      //   where: { parentId: id, userId: session.user.id },
+      // });
 
-      // Recursively delete each subfolder
-      for (const subfolder of subfolders) {
-        await deleteSubfolders(subfolder.id); // Recursive call
-      }
+      // // Recursively delete each subfolder
+      // for (const subfolder of subfolders) {
+      //   await deleteSubfolders(subfolder.id); // Recursive call
+      // }
 
       // Delete the folder itself
       const folder = await db.folder.delete({
@@ -465,6 +627,22 @@ export async function getFolderPath(
   return await getPathRecursive(folderId);
 }
 
+export const saveImage = async (
+  image: Pick<imageSchemaType, "url" | "uploadthingId">
+) => {
+  const session = await getCurrentUser();
+
+  if (!session) {
+    throw new Error("Unauthorized: User is not logged in.");
+  }
+
+  return await db.image.create({
+    data: {
+      userId: session.user.id,
+      ...image,
+    },
+  });
+};
 export const deleteImages = async (images: string[]) => {
   try {
     await utapi.deleteFiles(images);

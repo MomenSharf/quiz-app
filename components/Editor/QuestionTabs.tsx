@@ -6,7 +6,7 @@ import { useEditorContext } from "./EditorContext";
 import ImageEditor from "./QuestionImageManager/ImageEditor";
 import ContentTab from "./Tabs/ContentTab";
 import TypesTab from "./Tabs/TypesTab";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 type QuestionTabsProps = {
   questionIndex: number;
 };
@@ -18,13 +18,16 @@ export default function QuestionTabs({ questionIndex }: QuestionTabsProps) {
     dispatch,
     sidebarRef,
     headerRef,
-    form: { getValues },
+    form: { getValues, watch },
     state: {currentQuestionTab}
   } = useEditorContext();
 
+  
   const question = getValues(`questions.${questionIndex}`);
+  if(!question) return
 
   const isSelected = question.type !== "UNSELECTED";
+
   
 
   return (

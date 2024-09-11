@@ -48,16 +48,7 @@
     /* --pink-dark: #AD1457;  */
     /* --purple-dark: #461a42; */
 
-    --green-dark: 95, 75%, 27%;
-    --red: 4, 90%, 58%;
-    --orange: 36, 100%, 50%;
-    --amber: 45, 100%, 56%;
-    --light-green: 88, 47%, 58%;
-    --blue: 219, 100%, 64%;
-    --blue-dark: 209, 84%, 36%;
-    --teal: 174, 100%, 30%;
-    --pink-dark: 333, 79%, 41%;
-    --purple-dark: 311, 49%, 19%;
+    --success : 134 61% 41%;
 
     --main-bg: hsl(216deg 50% 96.08%);
     --navbar: #282e3e;

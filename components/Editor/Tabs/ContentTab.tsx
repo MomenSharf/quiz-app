@@ -1,25 +1,11 @@
-import {
-  questionSchemaType,
-  quizSchemaType,
-} from "@/lib/validations/quizSchemas";
-import React from "react";
 import { useEditorContext } from "../EditorContext";
-import SingleChoice from "./ContentForms/SingleChoice";
+import FormContainer from "../QuestionForms/FormContainer";
+import PickAnswer from "../QuestionForms/PickAnswer";
 
-
-
-export default function ContentTab({questionIndex}: {questionIndex: number}) {
-  const {
-    form: { getValues },
-  } = useEditorContext();
-
-  const question = getValues(`questions.${questionIndex}`);
-
-  switch (question.type) {
-    case "SINGLE_CHOICE":
-      return <SingleChoice questionIndex={questionIndex} />;
-    default:
-      return <SingleChoice questionIndex={questionIndex} />;
-      break;
-  }
+export default function ContentTab({
+  questionIndex,
+}: {
+  questionIndex: number;
+}) {
+  return <FormContainer questionIndex={questionIndex} />;
 }

@@ -31,7 +31,7 @@ export default function EditorForm({ quiz }: EditorFormProps) {
         name &&
         (name === "title" ||
           name === "description" ||
-          name === "imageUrl" ||
+          name === "image" ||
           name === "visibility" ||
           name === "categories" ||
           name === "difficulty" ||
@@ -70,6 +70,8 @@ export default function EditorForm({ quiz }: EditorFormProps) {
     hidden: { opacity: 0 },
     visible: { opacity: 1 },
   };
+
+  
 
   return (
     <Form {...form}>

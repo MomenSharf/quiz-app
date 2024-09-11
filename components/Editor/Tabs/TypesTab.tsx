@@ -1,9 +1,9 @@
 import { QUESTION_TYPES_WITH_LABEL_AND_ICONS } from "@/constants";
 import React, { useState } from "react";
-import { QuestionType } from "@/types";
 import { cn } from "@/lib/utils";
 import { useEditorContext } from "../EditorContext";
 import { Button } from "@/components/ui/button";
+import { type QuestionType } from "@prisma/client";
 type QuestionTypeProps = {
   type: QuestionType;
   questionIndex: number;
@@ -28,7 +28,7 @@ export default function TypesTab({ type, questionIndex }: QuestionTypeProps) {
             })}
             onClick={() => {
               if (value !== type)
-                setValue(`questions.${questionIndex}.type`, value);
+                setValue(`questions.${questionIndex}.type`,  value);
                 dispatch({type: 'SET_CURRENT_QUESTION_TAB', payload: 'content'})
             }}
           >
