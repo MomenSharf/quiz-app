@@ -15,7 +15,7 @@ export default function ShortAnswer({
   questionIndex: number;
 }) {
   const {
-    form: { control, getValues },
+    form: { control, getValues, getFieldState },
   } = useEditorContext();
 
   const question = getValues(`questions.${questionIndex}`);
@@ -30,7 +30,12 @@ export default function ShortAnswer({
         <FormItem className="space-y-1 flex w-full flex-col">
           <FormControl>
             <Textarea
-              className="resize-none font-semibold focus:z-10 h-28 text-start"
+              className={cn("resize-none font-semibold focus:z-10 h-28 text-start", 
+                {
+                  "border-destructive bg-[hsl(var(--destructive)_/_10%)] focus-visible:ring-destructive":
+                    getFieldState(`questions.${questionIndex}.correctAnswer`).error,
+                },
+              )}
               placeholder="Answer..."
               {...field}
               value={getValues(`questions.${questionIndex}.correctAnswer`)}

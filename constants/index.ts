@@ -177,13 +177,10 @@ export const QUESTION_TYPES: QuestionType[] = [
   "SHORT_ANSWER",
   "MATCHING_PAIRS",
   "ORDER",
-  "PICK_IMAGE",
-  "CODE",
 ] as const;
 
 export const VISIBILITY_OPTIONS = ["PUBLIC", "PRIVATE"] as const;
 
-export const DIFFICULTY_LEVELS = ["EASY", "MEDIUM", "HARD"] as const;
 
 export const QUESTION_TYPES_WITH_LABEL_AND_ICONS: {
   value: QuestionType;
@@ -220,15 +217,4 @@ export const QUESTION_TYPES_WITH_LABEL_AND_ICONS: {
     label: "Order",
     icon: Icons.reorder,
   },
-  {
-    value: "PICK_IMAGE",
-    label: "Picture Choice",
-    icon: Icons.picture,
-  },
-  {
-    value: "CODE",
-    label: "Code",
-    icon: Icons.code,
-  },
 ];
-

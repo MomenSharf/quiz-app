@@ -1,19 +1,8 @@
 import { useEditorContext } from "@/components/Editor/EditorContext";
-import ImageEditor from "@/components/Editor/QuestionImageManager/ImageEditor";
-import QuestionImageManagerTabs from "@/components/Editor/QuestionImageManager/QuestionImageManagerTabs";
-import { questionSchemaType } from "@/lib/validations/quizSchemas";
-import Image from "next/image";
-import React, { useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { cn, generateId } from "@/lib/utils";
-import { GripVertical, Paperclip } from "lucide-react";
-import { Reorder, useDragControls } from "framer-motion";
-import { UNSAVED_ID_PREFIX } from "@/constants";
-import QuestionImage from "../QuestionImageManager/QuestionImage";
-import Question from "./QuestionFormsElements/Question";
-import PickAnswerOption from "./QuestionFormsElements/PickAnswerOption";
+import { Reorder } from "framer-motion";
+import { useEffect } from "react";
 import CorrectOrderItem from "./QuestionFormsElements/CorrectOrderItem";
-import { Item } from "@radix-ui/react-dropdown-menu";
 
 export default function CorrectOrder({
   questionIndex,
@@ -21,7 +10,7 @@ export default function CorrectOrder({
   questionIndex: number;
 }) {
   const {
-    form: { getValues, setValue },
+    form: { getValues, setValue, formState: {errors}, trigger },
   } = useEditorContext();
 
   const question = getValues(`questions.${questionIndex}`);
@@ -62,13 +51,14 @@ export default function CorrectOrder({
       },
     ]);
   };
+  
 
   return (
     question.items && (
       <div className="flex flex-col gap-3">
         <Reorder.Group
           axis="y"
-          onReorder={(items) => {
+          onReorder={async (items) => {
             setValue(
               `questions.${questionIndex}.items`,
               items.map((item, i) => {
@@ -78,6 +68,9 @@ export default function CorrectOrder({
                 };
               })
             );
+            if(errors.questions) {
+              await trigger()
+            }
           }}
           values={question.items}
           className="flex flex-col gap-3"

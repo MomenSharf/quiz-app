@@ -45,7 +45,6 @@ model Quiz {
   updatedAt   DateTime   @updatedAt
   categories  String[]
   description String
-  difficulty  Difficulty
   visibility  Visibility @default(PUBLIC)
   folderId    String?
   userId      String
@@ -61,7 +60,6 @@ model Question {
   type          QuestionType
   question      String?
   correctAnswer String?
-  codeSnippet   String?
   quizId        String
   questionOrder Int
   imageId       String?
@@ -76,9 +74,9 @@ model Items {
   match      String?
   isCorrect  Boolean?
   order      Int?
+  isBlank    Boolean?
   questionId String?
   imageId    String?
-  image      Image?    @relation(fields: [imageId], references: [id], onDelete: Cascade)
   Question   Question? @relation(fields: [questionId], references: [id], onDelete: Cascade)
 }
 
@@ -88,7 +86,6 @@ model Image {
   url           String
   userId        String?
   User          User?      @relation(fields: [userId], references: [id])
-  items         Items[]
   Question      Question[]
   Quiz          Quiz[]
 }
@@ -156,12 +153,6 @@ enum QuestionType {
   SHORT_ANSWER
   MATCHING_PAIRS
   ORDER
-  PICK_IMAGE
-  CODE
 }
 
-enum Difficulty {
-  EASY
-  MEDIUM
-  HARD
-}
+

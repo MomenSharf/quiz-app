@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import React from "react";
+import React, { useEffect } from "react";
 import { useEditorContext } from "../EditorContext";
 import { cn } from "@/lib/utils";
 
@@ -12,6 +12,13 @@ export default function TrueFalse({
     form: { getValues, setValue },
   } = useEditorContext();
   const question = getValues(`questions.${questionIndex}`);
+
+  useEffect(() => {
+    if (question.type !== "TRUE_FALSE") return;
+    if (!question.correctAnswer)
+      setValue(`questions.${questionIndex}.correctAnswer`, "true");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [questionIndex]);
 
   if (question.type !== "TRUE_FALSE") return;
 

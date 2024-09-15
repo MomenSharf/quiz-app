@@ -1,10 +1,8 @@
 import { saveQuiz } from "@/lib/actions/quiz.actions";
 import {
-  codeSchema,
   fillInTheBlankSchema,
   matchingPairsSchema,
   pickAnswerSchema,
-  pickImageSchema,
   questionOrderSchema,
   quizSchema,
   quizSchemaType,
@@ -154,7 +152,6 @@ export const EditorProvider = ({
       image: initialQuiz.image || undefined,
       visibility: initialQuiz.visibility,
       categories: initialQuiz.categories,
-      difficulty: initialQuiz.difficulty,
       questions: initialQuiz.questions
         .map((question) => {
           switch (question.type) {
@@ -175,7 +172,7 @@ export const EditorProvider = ({
                 items: question.items.map((e) => ({
                   id: e.id,
                   text: e.text,
-                  isCorrect: e.isCorrect,
+                  isCorrect: e.isCorrect || false,
                 })),
               } as z.infer<typeof pickAnswerSchema>;
 
@@ -198,7 +195,11 @@ export const EditorProvider = ({
                 questionOrder: question.questionOrder,
                 image: question.image || undefined,
                 question: question.question ?? "",
-                correctAnswer: question.correctAnswer ?? "",
+                items: question.items.map((e) => ({
+                  id: e.id,
+                  text: e.text,
+                  isBlank: e.isBlank,
+                })),
               } as z.infer<typeof fillInTheBlankSchema>;
 
             case QuestionType.SHORT_ANSWER:
@@ -238,32 +239,6 @@ export const EditorProvider = ({
                   order: e.order,
                 })),
               } as z.infer<typeof questionOrderSchema>;
-
-            case QuestionType.PICK_IMAGE:
-              return {
-                id: question.id,
-                type: question.type,
-                questionOrder: question.questionOrder,
-                image: question.image || undefined,
-                question: question.question ?? "",
-                items: question.items.map((e) => ({
-                  id: e.id,
-                  text: e.text,
-                  image: e.image,
-                  isCorrect: e.isCorrect,
-                })),
-              } as z.infer<typeof pickImageSchema>;
-
-            case QuestionType.CODE:
-              return {
-                id: question.id,
-                type: question.type,
-                questionOrder: question.questionOrder,
-                image: question.image || undefined,
-                question: question.question ?? "",
-                codeSnippet: question.codeSnippet ?? "",
-                correctAnswer: question.correctAnswer ?? "",
-              } as z.infer<typeof codeSchema>;
 
             default:
               return {

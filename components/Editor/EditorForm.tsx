@@ -14,7 +14,8 @@ type EditorFormProps = {
   quiz: EditorQuiz;
 };
 export default function EditorForm({ quiz }: EditorFormProps) {
-  const onSubmit = async () => {};
+  const onSubmit = async () => {console.log('fomtStat goood');
+  };
 
   const {
     dispatch,
@@ -23,7 +24,9 @@ export default function EditorForm({ quiz }: EditorFormProps) {
     debounceSaveData,
   } = useEditorContext();
 
-  const { getValues, watch, control, handleSubmit } = form;
+  const { getValues, watch, control, handleSubmit, formState: {errors} } = form;
+
+  
 
   useEffect(() => {
     const subscription = watch((_, { name }) => {

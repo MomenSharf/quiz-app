@@ -43,6 +43,8 @@ export default function CorrectOrderItem({
 
   const items = getValues(`questions.${questionIndex}.items`);
 
+
+
   
 
 
@@ -97,7 +99,7 @@ export default function CorrectOrderItem({
           size="icon"
           variant="outline"
           className="h-12 border-r-0 group/delete rounded-none border-l-0 disabled:opacity-100 focus:z-10"
-          disabled={items.length <= 1}
+          disabled={items.length <= 2}
         >
           <Trash className="w-4 h-4 group-hover/delete:text-destructive group-disabled/delete:opacity-50" />
         </Button>

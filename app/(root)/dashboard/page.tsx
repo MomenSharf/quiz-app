@@ -1,15 +1,14 @@
-
-
 import EmptyQuizzesGallery from "@/components/QuizzesGallery/EmptyQuizzesGallery";
 import NewFolderButton from "@/components/QuizzesGallery/Folders/NewFolderButton";
 import NewQuizButton from "@/components/QuizzesGallery/Quizzes/NewQuizButton";
 import QuizzesGallery from "@/components/QuizzesGallery/QuizzesGallery";
 import { Separator } from "@/components/ui/separator";
-import { getGalleryFolders, getGalleryQuizzes } from "@/lib/actions/quiz.actions";
+import {
+  getGalleryFolders,
+  getGalleryQuizzes,
+} from "@/lib/actions/quiz.actions";
 import { getCurrentUser } from "@/lib/auth";
 import { redirect } from "next/navigation";
-
-
 
 export default async function page() {
   const session = await getCurrentUser();
@@ -20,6 +19,8 @@ export default async function page() {
 
   const myQuizzes = await getGalleryQuizzes();
   const myQuizzesFolders = await getGalleryFolders();
+
+  // const [myQuizzes, myQuizzesFolders] = await Promise.all([getGalleryQuizzes, getGalleryFolders]);
 
   return (
     <div className=" h-full flex flex-col gap-3 px-2">

@@ -1,0 +1,110 @@
+import React, { useEffect, useState } from "react";
+import { useEditorContext } from "../EditorContext";
+import { Textarea } from "@/components/ui/textarea";
+import { Span } from "next/dist/trace";
+import { Button } from "@/components/ui/button";
+import { EarOff, Eye, EyeOff } from "lucide-react";
+import { input, z } from "zod";
+import { fillInTheBlankSchema } from "@/lib/validations/quizSchemas";
+
+export default function FillInTheBlanks({
+  questionIndex,
+}: {
+  questionIndex: number;
+}) {
+  const {
+    form: { getValues, setValue, watch },
+  } = useEditorContext();
+  const question = getValues(`questions.${questionIndex}`);
+
+  const [text, setText] = useState("");
+  const watchQuestion = watch(`questions.${questionIndex}.question`);
+  const specialChars =
+    /([ \t\r\f\?\!\/\@\$\>\<\*\+\-\(\)\[\]\{\}\:\;\'\"\`\|\&\^\%\,\.\s\\])/;
+  function splitString(input: string) {
+    const parts = input.split(specialChars);
+    return parts.filter((part) => part === "\n" || part.trim() !== "");
+  }
+  type ArrayItem = z.infer<typeof fillInTheBlankSchema>['items'][number];
+
+  function splitArrayByNewline(arr: ArrayItem[]): ArrayItem[][] {
+      return arr.reduce((acc: ArrayItem[][], item: ArrayItem) => {
+          if (item.text === "\n") {
+              acc.push([]);
+          } else {
+              acc[acc.length - 1].push(item);
+          }
+          return acc;
+      }, [[]]);
+  }
+
+  useEffect(() => {
+    if (question.type !== "FILL_IN_THE_BLANK") return;
+    if (question.question) {
+      setValue(
+        `questions.${questionIndex}.items`,
+        splitString(question.question).map((e, i) => {
+          return {
+            id: crypto.randomUUID(),
+            text: e,
+            isBlank:
+              question.items && question.items[i]
+                ? question.items[i].isBlank
+                : false,
+          };
+        })
+      );
+    }
+  }, [questionIndex, watchQuestion]);
+
+  const setIsBlank = (index: number) => {
+    if (question.type !== "FILL_IN_THE_BLANK") return;
+    setValue(
+      `questions.${questionIndex}.items`,
+      question.items.map((e, i) => {
+        if (index === i) {
+          return {
+            ...e,
+            isBlank: e.isBlank ? false : true,
+          };
+        } else {
+          return e;
+        }
+      })
+    );
+  };
+
+  if (question.type !== "FILL_IN_THE_BLANK") return;
+
+  
+
+  return (
+    <div>
+      <div className="flex items-end gap-3 flex-wrap mt-10">
+        {question.items &&
+          question.items.map((e, i) => {
+            if (e.text === "\n") return <div key={e.id} className="w-full"/>;
+            if (specialChars.test(e.text)) return e.text + " ";
+            if (i === 4) return <br key={e.id} />;
+            return (
+              <Button
+                type="button"
+                key={e.id}
+                variant={e.isBlank ? "default" : "outline"}
+                onClick={() => setIsBlank(i)}
+                className="gap-1"
+              >
+                <span>{e.text}</span>
+                {e.isBlank ? (
+                  <EyeOff className="w-4 h-5" />
+                ) : (
+                  <Eye className="w-4 h-4" />
+                )}
+              </Button>
+            );
+          })}
+      </div>
+      {text}
+    </div>
+  );
+}

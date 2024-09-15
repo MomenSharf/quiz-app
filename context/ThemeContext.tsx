@@ -1,11 +1,11 @@
 "use client";
 import { cn } from "@/lib/utils";
 import { ThemeState } from "@/types/theme";
-import { Nunito_Sans } from "next/font/google";
+import { Nunito } from "next/font/google";
 import { createContext, ReactNode, useContext, useReducer } from "react";
 
 
-const nunito = Nunito_Sans({ subsets: ["latin"] });
+const nunito = Nunito({ subsets: ["latin"] });
 
 type ThemeActions =
   | { type: "SET_THEME"; payload: ThemeState | null }

@@ -1,29 +1,13 @@
 "use server";
 
-import { UNSAVED_ID_PREFIX } from "@/constants";
 import { FolderPathSegment } from "@/types";
+import { QuestionType } from "@prisma/client";
 import { unstable_noStore as noStore, revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { UTApi } from "uploadthing/server";
 import { getCurrentUser } from "../auth";
 import { db } from "../db";
-import {
-  codeSchema,
-  fillInTheBlankSchema,
-  imageSchemaType,
-  matchingPairsSchema,
-  pickAnswerSchema,
-  pickImageSchema,
-  questionOrderSchema,
-  quizSchema,
-  quizSchemaType,
-  shortAnswerSchema,
-  trueFalseSchema,
-} from "../validations/quizSchemas";
-import { Image, Items, Prisma, QuestionType, Quiz } from "@prisma/client";
-import { Item } from "@radix-ui/react-dropdown-menu";
-import { z } from "zod";
-import { url } from "inspector";
+import { imageSchemaType, quizSchemaType } from "../validations/quizSchemas";
 
 const utapi = new UTApi();
 
@@ -46,7 +30,6 @@ export const getGalleryQuizzes = async () => {
         id: true,
         title: true,
         image: true,
-        difficulty: true,
         visibility: true,
         createdAt: true,
         updatedAt: true,
@@ -117,7 +100,6 @@ export const getQuiz = async (quizId: string) => {
         title: true,
         description: true,
         image: true,
-        difficulty: true,
         visibility: true,
         categories: true,
         createdAt: true,
@@ -125,11 +107,7 @@ export const getQuiz = async (quizId: string) => {
         questions: {
           include: {
             image: true,
-            items: {
-              include: {
-                image: true,
-              },
-            },
+            items: true,
           },
         },
         user: true,
@@ -159,7 +137,6 @@ export const getFolder = async (folderId: string) => {
             id: true,
             title: true,
             image: true,
-            difficulty: true,
             visibility: true,
             createdAt: true,
             updatedAt: true,
@@ -211,7 +188,6 @@ export const newQuiz = async (pathname: string, folderId?: string) => {
         title: "My new Quiz",
         description: "",
         categories: [],
-        difficulty: "EASY",
         questions: {
           create: {
             type: "UNSELECTED",
@@ -276,7 +252,6 @@ export const saveQuiz = async (
       categories: data.categories,
       title: data.title,
       description: data.description,
-      difficulty: data.difficulty,
       visibility: data.visibility,
     };
 
@@ -340,7 +315,12 @@ export const saveQuiz = async (
                 }
               : undefined,
             question: question.question ?? "",
-            correctAnswer: question.correctAnswer ?? "",
+            items: {
+              create: question.items.map((e) => ({
+                text: e.text,
+                isBlank: e.isBlank,
+              })),
+            },
           };
 
         case QuestionType.SHORT_ANSWER:
@@ -401,51 +381,13 @@ export const saveQuiz = async (
             },
           };
 
-        case QuestionType.PICK_IMAGE:
-          return {
-            type: question.type,
-            questionOrder: question.questionOrder,
-            image: question.image
-              ? {
-                  create: {
-                    uploadthingId: question.image?.uploadthingId,
-                    url: question.image?.url,
-                  },
-                }
-              : undefined,
-            question: question.question ?? "",
-            items: {
-              create: question.items.map((e) => ({
-                text: e.text,
-                isCorrect: e.isCorrect,
-              })),
-            },
-          };
-
-        case QuestionType.CODE:
-          return {
-            type: question.type,
-            questionOrder: question.questionOrder,
-            image: question.image
-              ? {
-                  create: {
-                    uploadthingId: question.image?.uploadthingId,
-                    url: question.image?.url,
-                  },
-                }
-              : undefined,
-            question: question.question ?? "",
-            codeSnippet: question.codeSnippet ?? "",
-            correctAnswer: question.correctAnswer ?? "",
-          };
-
         default:
           return {
             type: QuestionType.UNSELECTED,
             questionOrder: 0,
           };
       }
-    });
+    }).filter(question => question.type !== 'UNSELECTED');
 
     const quiz = await db.quiz.update({
       where: {

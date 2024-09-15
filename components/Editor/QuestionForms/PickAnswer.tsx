@@ -1,17 +1,10 @@
 import { useEditorContext } from "@/components/Editor/EditorContext";
-import ImageEditor from "@/components/Editor/QuestionImageManager/ImageEditor";
-import QuestionImageManagerTabs from "@/components/Editor/QuestionImageManager/QuestionImageManagerTabs";
-import { questionSchemaType } from "@/lib/validations/quizSchemas";
-import Image from "next/image";
-import React, { useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { cn, generateId } from "@/lib/utils";
-import { GripVertical, Paperclip } from "lucide-react";
-import { Reorder, useDragControls } from "framer-motion";
-import { UNSAVED_ID_PREFIX } from "@/constants";
-import QuestionImage from "../QuestionImageManager/QuestionImage";
-import Question from "./QuestionFormsElements/Question";
+import { Reorder } from "framer-motion";
+import { useEffect } from "react";
 import PickAnswerOption from "./QuestionFormsElements/PickAnswerOption";
+import ErrorSpan from "./QuestionFormsElements/ErrorSpan";
+import { FieldError } from "react-hook-form";
 
 export default function PickAnswer({
   questionIndex,
@@ -19,7 +12,13 @@ export default function PickAnswer({
   questionIndex: number;
 }) {
   const {
-    form: { getValues, setValue },
+    form: {
+      getValues,
+      setValue,
+      getFieldState,
+      formState: { errors },
+      trigger,
+    },
   } = useEditorContext();
 
   const question = getValues(`questions.${questionIndex}`);
@@ -27,33 +26,38 @@ export default function PickAnswer({
   useEffect(() => {
     if (question.type === "PICK_ANSWER") {
       if (!question.items) {
-        setValue(`questions.${questionIndex}`, {
-          ...question,
-          items: [
-            {
-              id: crypto.randomUUID(),
-              text: "",
-              isCorrect: false,
-            },
-            {
-              id: crypto.randomUUID(),
-              text: "",
-              isCorrect: false,
-            },
-            {
-              id: crypto.randomUUID(),
-              text: "",
-              isCorrect: false,
-            },
-          ],
-        });
+        setValue(`questions.${questionIndex}.items`, [
+          {
+            id: crypto.randomUUID(),
+            text: "",
+            isCorrect: false,
+          },
+          {
+            id: crypto.randomUUID(),
+            text: "",
+            isCorrect: false,
+          },
+          {
+            id: crypto.randomUUID(),
+            text: "",
+            isCorrect: false,
+          },
+        ]);
       }
     }
   }, [question, questionIndex, setValue]);
 
   if (question.type !== "PICK_ANSWER") return;
 
-  const { image } = question;
+  const oneCorrectAnswerError =
+    errors.questions &&
+    (errors.questions[questionIndex] as {
+      items: {
+        oneCorrectAnswer: FieldError;
+      };
+    });
+
+  // const
 
   const addOption = () => {
     setValue(`questions.${questionIndex}.items`, [
@@ -71,8 +75,11 @@ export default function PickAnswer({
       <div className="flex flex-col gap-3">
         <Reorder.Group
           axis="y"
-          onReorder={(items) => {
+          onReorder={async (items) => {
             setValue(`questions.${questionIndex}.items`, items);
+            if (errors.questions) {
+              await trigger();
+            }
           }}
           values={question.items}
           className="flex flex-col gap-3"
@@ -88,6 +95,7 @@ export default function PickAnswer({
             );
           })}
         </Reorder.Group>
+        <ErrorSpan error={oneCorrectAnswerError?.items.oneCorrectAnswer} />
 
         {question.items.length < 8 && (
           <Button type="button" onClick={addOption}>

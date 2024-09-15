@@ -211,6 +211,7 @@ export default function EditorHeader() {
             </Badge>
           </TooltipContent>
         </Tooltip>
+        <button type="submit">previwe</button>
       </div>
     </div>
   );

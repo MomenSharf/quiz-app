@@ -8,7 +8,6 @@ export type QuizGalleryWithQuestionsCount = Prisma.QuizGetPayload<{
     id: true;
     title: true;
     image: true;
-    difficulty: true;
     visibility: true;
     createdAt: true;
     updatedAt: true;
@@ -34,11 +33,7 @@ export type EditorQuiz = Prisma.QuizGetPayload<{
     questions: {
       include: {
         image: true,
-        items: {
-          include : {
-            image: true
-          }
-        },
+        items: true,
       }
     },
     user: true,

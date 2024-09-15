@@ -9,7 +9,12 @@ import EditorSidebarItem from "./EditorSidebarItem";
 export default function EditorSidebar() {
   const {
     dispatch,
-    form: { setValue, getValues },
+    form: {
+      setValue,
+      getValues,
+      formState: { errors },
+      trigger,
+    },
     headerRef,
     sidebarRef,
   } = useEditorContext();
@@ -45,15 +50,18 @@ export default function EditorSidebar() {
       <div className="flex sm:flex-col max-w-screen-sm overflow-y-auto">
         <Reorder.Group
           axis={dimensions.width >= 640 ? "y" : "x"}
-          onReorder={(questions) =>
+          onReorder={async (questions) => {
             setValue(
               "questions",
               questions.map((question, i) => ({
                 ...question,
                 questionOrder: i,
               }))
-            )
-          }
+            );
+            if (errors.questions) {
+              await trigger();
+            }
+          }}
           values={questions}
           style={{ height: 250, border: "1px solid black", overflowY: "auto" }}
           layoutScroll

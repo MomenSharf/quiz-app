@@ -12,7 +12,7 @@ type QuestionTypeProps = {
 export default function TypesTab({ type, questionIndex }: QuestionTypeProps) {
   const {
     dispatch,
-    form: { setValue },
+    form: { setValue, formState: {errors}, trigger, },
   } = useEditorContext();
 
   return (
@@ -26,10 +26,13 @@ export default function TypesTab({ type, questionIndex }: QuestionTypeProps) {
             className={cn("py-10", {
               "border-ring bg-accent": type === value,
             })}
-            onClick={() => {
+            onClick={async() => {
               if (value !== type)
                 setValue(`questions.${questionIndex}.type`,  value);
                 dispatch({type: 'SET_CURRENT_QUESTION_TAB', payload: 'content'})
+                if (errors.questions) {
+                  await trigger();
+                }
             }}
           >
             <div className=" flex flex-col gap-1 items-center justify-center">
@@ -38,7 +41,7 @@ export default function TypesTab({ type, questionIndex }: QuestionTypeProps) {
                 className={cn(
                   "w-7 h-7 fill-muted-foreground text-muted-foreground",
                   {
-                    "text-primary": type === value,
+                    "text-primary fill-primary": type === value,
                     'w-10 h-10': value === 'TRUE_FALSE'
                   },
 
