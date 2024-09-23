@@ -12,7 +12,7 @@ import {
 } from "@/lib/validations/quizSchemas";
 import { EditorQuiz } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Question, QuestionType } from "@prisma/client";
+import { Category, Question, QuestionType } from "@prisma/client";
 import React, {
   createContext,
   MutableRefObject,
@@ -34,6 +34,7 @@ interface EditorState {
   saveState: "GOOD" | "BAD" | "WAITING" | "OFFLINE";
   historyArray: quizSchemaType[];
   currentQuestion: string;
+  isSettingsOpen: boolean;
   currentQuestionTab: string;
   isEditingTitle: boolean;
   isOnline: boolean;
@@ -55,6 +56,7 @@ type EditorAction =
     }
   | { type: "SET_IS_EDITING_TITLE"; payload: boolean }
   | { type: "SET_CURRENT_QUESTION"; payload: string }
+  | { type: "SET_IS_SETTINGS_OPEN"; payload: boolean }
   | { type: "SET_IS_UNDO_OR_REDO"; payload: boolean }
   | { type: "SET_IS_REORDERED"; payload: boolean }
   | { type: "SET_IS_QUESTION_IMAGE_MANAGER_TABS_OPEN"; payload: boolean }
@@ -88,6 +90,7 @@ const initialState: EditorState = {
   historyArray: [],
   currentQuestion: "",
   isEditingTitle: false,
+  isSettingsOpen: false,
   isOnline: true,
   isImageEditorOpenWithFiles: { isOpen: false },
   isQuestionImageManagerTabsOpen: false,
@@ -116,6 +119,8 @@ const editorReducer = (
       return { ...state, currentQuestion: action.payload };
     case "SET_CURRENT_QUESTION_TAB":
       return { ...state, currentQuestionTab: action.payload };
+    case "SET_IS_SETTINGS_OPEN":
+      return { ...state, isSettingsOpen: action.payload };
     case "SET_IS_IMAGE_EDITOR_OPEN":
       return { ...state, isImageEditorOpenWithFiles: action.payload };
     case "SET_IS_QUESTION_IMAGE_MANAGER_TABS_OPEN":
@@ -151,7 +156,7 @@ export const EditorProvider = ({
       description: initialQuiz.description,
       image: initialQuiz.image || undefined,
       visibility: initialQuiz.visibility,
-      categories: initialQuiz.categories,
+      categories: initialQuiz.categories as Category[],
       questions: initialQuiz.questions
         .map((question) => {
           switch (question.type) {
@@ -160,6 +165,8 @@ export const EditorProvider = ({
                 id: question.id,
                 type: question.type,
                 questionOrder: question.questionOrder,
+                timeLimit: question.timeLimit,
+                points: question.points,
               } as z.infer<typeof unselectedSchema>;
 
             case QuestionType.PICK_ANSWER:
@@ -167,6 +174,8 @@ export const EditorProvider = ({
                 id: question.id,
                 type: question.type,
                 questionOrder: question.questionOrder,
+                timeLimit: question.timeLimit,
+                points: question.points,
                 image: question.image || undefined,
                 question: question.question ?? "",
                 items: question.items.map((e) => ({
@@ -181,6 +190,8 @@ export const EditorProvider = ({
                 id: question.id,
                 type: question.type,
                 questionOrder: question.questionOrder,
+                timeLimit: question.timeLimit,
+                points: question.points,
                 image: question.image || undefined,
                 question: question.question ?? "",
                 correctAnswer: (question.correctAnswer ?? "true") as
@@ -193,6 +204,8 @@ export const EditorProvider = ({
                 id: question.id,
                 type: question.type,
                 questionOrder: question.questionOrder,
+                timeLimit: question.timeLimit,
+                points: question.points,
                 image: question.image || undefined,
                 question: question.question ?? "",
                 items: question.items.map((e) => ({
@@ -207,6 +220,8 @@ export const EditorProvider = ({
                 id: question.id,
                 type: question.type,
                 questionOrder: question.questionOrder,
+                timeLimit: question.timeLimit,
+                points: question.points,
                 image: question.image || undefined,
                 question: question.question ?? "",
                 correctAnswer: question.correctAnswer ?? "",
@@ -217,6 +232,8 @@ export const EditorProvider = ({
                 id: question.id,
                 type: question.type,
                 questionOrder: question.questionOrder,
+                timeLimit: question.timeLimit,
+                points: question.points,
                 image: question.image || undefined,
                 question: question.question ?? "",
                 items: question.items.map((e) => ({
@@ -231,6 +248,8 @@ export const EditorProvider = ({
                 id: question.id,
                 type: question.type,
                 questionOrder: question.questionOrder,
+                timeLimit: question.timeLimit,
+                points: question.points,
                 image: question.image || undefined,
                 question: question.question ?? "",
                 items: question.items.map((e) => ({
@@ -245,6 +264,8 @@ export const EditorProvider = ({
                 id: question.id,
                 type: QuestionType.UNSELECTED,
                 questionOrder: question.questionOrder,
+                timeLimit: question.timeLimit,
+                points: question.points,
               } as z.infer<typeof unselectedSchema>;
           }
         })

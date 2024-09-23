@@ -1,8 +1,11 @@
-import {  VISIBILITY_OPTIONS } from "@/constants";
-import { QuestionType } from "@prisma/client";
+import { VISIBILITY_OPTIONS } from "@/constants";
+import { Category, QuestionType, Visibility } from "@prisma/client";
 import { z } from "zod";
 
 // Define schemas for different question types
+const CategoryEnum = z.enum(Object.values(Category) as [Category, ...Category[]]);
+const visibilityEnum = z.enum(Object.values(Visibility) as [Visibility, ...Visibility[]]);
+
 
 export const imageSchema = z.object({
   id: z.string(),
@@ -15,12 +18,16 @@ export const unselectedSchema = z.object({
   id: z.string(),
   type: z.literal(QuestionType.UNSELECTED),
   questionOrder: z.number(),
+  timeLimit: z.number(),
+  points: z.number(),
 });
 
 export const pickAnswerSchema = z.object({
   id: z.string(),
   type: z.literal(QuestionType.PICK_ANSWER),
   questionOrder: z.number(),
+  timeLimit: z.number(),
+  points: z.number(),
   image: imageSchema.optional(),
   question: z.string().min(1, "Question is required"),
   items: z
@@ -32,19 +39,18 @@ export const pickAnswerSchema = z.object({
       })
     )
     .min(2, "At least two options are required")
-    .refine(
-      (items) => items.find(item => item.isCorrect),
-      {
-        message: "At least one item must be marked as correct",
-        path: ["oneCorrectAnswer"],
-      }
-    ),
+    .refine((items) => items.find((item) => item.isCorrect), {
+      message: "At least one item must be marked as correct",
+      path: ["oneCorrectAnswer"],
+    }),
 });
 
 export const trueFalseSchema = z.object({
   id: z.string(),
   type: z.literal(QuestionType.TRUE_FALSE),
   questionOrder: z.number(),
+  timeLimit: z.number(),
+  points: z.number(),
   image: imageSchema.optional(),
   question: z.string().min(1, "Question is required"),
   correctAnswer: z.union([z.literal("true"), z.literal("false")]),
@@ -54,6 +60,8 @@ export const fillInTheBlankSchema = z.object({
   id: z.string(),
   type: z.literal(QuestionType.FILL_IN_THE_BLANK),
   questionOrder: z.number(),
+  timeLimit: z.number(),
+  points: z.number(),
   image: imageSchema.optional(),
   question: z.string().min(1, "Question is required"),
   items: z
@@ -64,13 +72,19 @@ export const fillInTheBlankSchema = z.object({
         isBlank: z.boolean(),
       })
     )
-    .min(2, "At least two options are required"),
+    .min(2, "At least two options are required")
+    .refine((items) => items.find((item) => item.isBlank), {
+      message: "At least one blank item",
+      path: ["oneBlank"],
+    }),
 });
 
 export const shortAnswerSchema = z.object({
   id: z.string(),
   type: z.literal(QuestionType.SHORT_ANSWER),
   questionOrder: z.number(),
+  timeLimit: z.number(),
+  points: z.number(),
   image: imageSchema.optional(),
   question: z.string().min(1, "Question is required"),
   correctAnswer: z.string().min(1, "Correct answer is required"),
@@ -80,6 +94,8 @@ export const matchingPairsSchema = z.object({
   id: z.string(),
   type: z.literal(QuestionType.MATCHING_PAIRS),
   questionOrder: z.number(),
+  timeLimit: z.number(),
+  points: z.number(),
   image: imageSchema.optional(),
   question: z.string().min(1, "Question is required"),
   items: z
@@ -97,6 +113,8 @@ export const questionOrderSchema = z.object({
   id: z.string(),
   type: z.literal(QuestionType.ORDER),
   questionOrder: z.number(),
+  timeLimit: z.number(),
+  points: z.number(),
   image: imageSchema.optional(),
   question: z.string().min(1, "Question is required"),
   items: z.array(
@@ -113,8 +131,8 @@ export const quizSchema = z.object({
   title: z.string().min(1, "Title is required"),
   description: z.string().optional(),
   image: imageSchema.optional(),
-  categories: z.array(z.string()),
-  visibility: z.enum(VISIBILITY_OPTIONS),
+  categories: z.array(CategoryEnum),
+  visibility: visibilityEnum,
   questions: z
     .array(
       z.union([

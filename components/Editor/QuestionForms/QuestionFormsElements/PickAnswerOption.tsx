@@ -21,22 +21,20 @@ import { ItemsSchemaType } from "@/lib/validations/quizSchemas";
 import { useEditorContext } from "@/components/Editor/EditorContext";
 import ErrorSpan from "./ErrorSpan";
 
-type OprionProps = InputProps & {
+type OprionProps = {
   questionIndex: number;
   itemIndex: number;
-  // deleteOption: (id: string) => void;
   item: Pick<Items, "id" | "text" | "isCorrect">;
 };
 
 export default function PickAnswerOption({
-  className,
   questionIndex,
   itemIndex,
   // deleteOption,
   item,
 }: OprionProps) {
   const {
-    form: { control, getFieldState, getValues, setValue, trigger, formState: {errors} },
+    form: { control, getFieldState, getValues, setValue, trigger },
   } = useEditorContext();
 
   const y = useMotionValue(0);
@@ -47,20 +45,15 @@ export default function PickAnswerOption({
   const setCorrectOption = () => {
     setValue(
       `questions.${questionIndex}.items.${itemIndex}.isCorrect`,
-      item.isCorrect ? false : true, 
-      {shouldValidate: true}
+      item.isCorrect ? false : true,
+      { shouldValidate: true }
     );
-    trigger(`questions.${questionIndex}.items`)
+    trigger(`questions.${questionIndex}.items`);
   };
 
   const { error } = getFieldState(
     `questions.${questionIndex}.items.${itemIndex}.text`
   );
-  const { error: error2 } = getFieldState(
-    `questions.${questionIndex}.items`
-  );
-
-  
 
   return (
     <Reorder.Item
@@ -70,7 +63,9 @@ export default function PickAnswerOption({
       animate={{ border: "1px solid var(hsl(--primary))" }}
       dragListener={false}
       dragControls={dragControls}
-      className="rounded group"
+      className={cn("rounded group relative", {
+        "mb-4": error,
+      })}
     >
       <div className="flex flex-col gap-1">
         <div className="flex">
@@ -85,11 +80,8 @@ export default function PickAnswerOption({
                       "h-12 font-semibold rounded-tr-none rounded-br-none focus:z-10",
                       {
                         "border-destructive bg-[hsl(var(--destructive)_/_10%)] focus-visible:ring-destructive":
-                          getFieldState(
-                            `questions.${questionIndex}.items.${itemIndex}.text`
-                          ).error,
-                      },
-                      className
+                          error,
+                      }
                     )}
                     placeholder={`Option ${itemIndex + 1}...`}
                     {...field}
@@ -155,8 +147,9 @@ export default function PickAnswerOption({
             <TooltipContent className="text-xs">Reorder</TooltipContent>
           </Tooltip>
         </div>
-        <ErrorSpan error={error} />
-
+        <div className="absolute -bottom-6">
+          <ErrorSpan error={error} />
+        </div>
       </div>
     </Reorder.Item>
   );

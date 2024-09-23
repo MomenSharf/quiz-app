@@ -15,10 +15,10 @@ export default function TrueFalse({
 
   useEffect(() => {
     if (question.type !== "TRUE_FALSE") return;
-    if (!question.correctAnswer)
+    
+    if (question.correctAnswer !== 'true' && question.correctAnswer !== 'false')
       setValue(`questions.${questionIndex}.correctAnswer`, "true");
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [questionIndex]);
+  }, []);
 
   if (question.type !== "TRUE_FALSE") return;
 

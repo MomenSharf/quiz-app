@@ -14,7 +14,7 @@ export default function Sidebar() {
         onMouseEnter={() => setStat("expanded")}
         onMouseLeave={() => setStat("collapsed")}
         data-state={state}
-        className="group bg-[var(--navbar)] py-2 z-10 h-full w-14 data-[state=expanded]:w-[13rem] border-r bg-dash-sidebar border-default data-[state=expanded]:shadow-xl transition-width duration-200 hide-scrollbar flex flex-col justify-between overflow-y-auto scrollbar-hide"
+        className="group bg-[var(--navbar)] py-2 z-10 h-full w-14 data-[state=expanded]:w-[13rem] data-[state=expanded]:shadow-xl transition-width duration-200 hide-scrollbar flex flex-col justify-between overflow-y-auto scrollbar-hide"
       >
         <ul className="flex flex-col gap-y-1 justify-start px-2 relative">
           {DESKTOP_SIDEBAR_ITEMS.map((item) => {

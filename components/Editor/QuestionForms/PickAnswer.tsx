@@ -15,7 +15,6 @@ export default function PickAnswer({
     form: {
       getValues,
       setValue,
-      getFieldState,
       formState: { errors },
       trigger,
     },
@@ -57,8 +56,6 @@ export default function PickAnswer({
       };
     });
 
-  // const
-
   const addOption = () => {
     setValue(`questions.${questionIndex}.items`, [
       ...question.items,
@@ -72,36 +69,44 @@ export default function PickAnswer({
 
   return (
     question.items && (
-      <div className="flex flex-col gap-3">
-        <Reorder.Group
-          axis="y"
-          onReorder={async (items) => {
-            setValue(`questions.${questionIndex}.items`, items);
-            if (errors.questions) {
-              await trigger();
+      <div className="flex flex-col gap-1">
+        <p className="font-semibold">Options</p>
+        <div className="flex flex-col gap-3">
+          <Reorder.Group
+            axis="y"
+            onReorder={async (items) => {
+              setValue(`questions.${questionIndex}.items`, items);
+              if (errors.questions) {
+                await trigger();
+              }
+            }}
+            values={question.items}
+            className="flex flex-col gap-3"
+          >
+            {question.items.map((item, i) => {
+              return (
+                <PickAnswerOption
+                  key={item.id}
+                  item={item}
+                  itemIndex={i}
+                  questionIndex={questionIndex}
+                />
+              );
+            })}
+          </Reorder.Group>
+          <ErrorSpan
+            error={
+              oneCorrectAnswerError?.items.oneCorrectAnswer &&
+              oneCorrectAnswerError?.items.oneCorrectAnswer
             }
-          }}
-          values={question.items}
-          className="flex flex-col gap-3"
-        >
-          {question.items.map((item, i) => {
-            return (
-              <PickAnswerOption
-                key={item.id}
-                item={item}
-                itemIndex={i}
-                questionIndex={questionIndex}
-              />
-            );
-          })}
-        </Reorder.Group>
-        <ErrorSpan error={oneCorrectAnswerError?.items.oneCorrectAnswer} />
+          />
 
-        {question.items.length < 8 && (
-          <Button type="button" onClick={addOption}>
-            Add Option
-          </Button>
-        )}
+          {question.items.length < 8 && (
+            <Button type="button" onClick={addOption}>
+              Add Option
+            </Button>
+          )}
+        </div>
       </div>
     )
   );

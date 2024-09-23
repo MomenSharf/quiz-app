@@ -3,6 +3,8 @@ import { Button } from "@/components/ui/button";
 import { Reorder } from "framer-motion";
 import { useEffect } from "react";
 import CorrectOrderItem from "./QuestionFormsElements/CorrectOrderItem";
+import { FieldError } from "react-hook-form";
+import ErrorSpan from "./QuestionFormsElements/ErrorSpan";
 
 export default function CorrectOrder({
   questionIndex,
@@ -10,7 +12,12 @@ export default function CorrectOrder({
   questionIndex: number;
 }) {
   const {
-    form: { getValues, setValue, formState: {errors}, trigger },
+    form: {
+      getValues,
+      setValue,
+      formState: { errors },
+      trigger,
+    },
   } = useEditorContext();
 
   const question = getValues(`questions.${questionIndex}`);
@@ -40,6 +47,10 @@ export default function CorrectOrder({
   }, [question, questionIndex, setValue]);
 
   if (question.type !== "ORDER") return;
+  console.log(errors && errors.questions && errors.questions[questionIndex]);
+  
+
+ 
 
   const addOption = () => {
     setValue(`questions.${questionIndex}.items`, [
@@ -51,7 +62,6 @@ export default function CorrectOrder({
       },
     ]);
   };
-  
 
   return (
     question.items && (
@@ -68,8 +78,8 @@ export default function CorrectOrder({
                 };
               })
             );
-            if(errors.questions) {
-              await trigger()
+            if (errors.questions) {
+              await trigger();
             }
           }}
           values={question.items}

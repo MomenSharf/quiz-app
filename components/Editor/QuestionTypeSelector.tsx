@@ -1,13 +1,9 @@
-import { QUESTION_TYPES_WITH_LABEL_AND_ICONS } from "@/constants";
-import React, { useState } from "react";
-import { cn } from "@/lib/utils";
-import { useEditorContext } from "../EditorContext";
 import { Button } from "@/components/ui/button";
-import { type QuestionType } from "@prisma/client";
+import { QUESTION_TYPES_WITH_LABEL_AND_ICONS } from "@/constants";
+import { cn } from "@/lib/utils";
+import { useEditorContext } from "./EditorContext";
 
-export default function TypesTab({  questionIndex }: {
-  questionIndex: number;
-}) {
+export default function QuestionTypeSelector({ questionIndex }: { questionIndex: number }) {
   const {
     dispatch,
     form: {
@@ -28,7 +24,7 @@ export default function TypesTab({  questionIndex }: {
               type="button"
               className="py-10"
               onClick={async () => {
-                  setValue(`questions.${questionIndex}.type`, value);
+                setValue(`questions.${questionIndex}.type`, value);
                 dispatch({
                   type: "SET_CURRENT_QUESTION_TAB",
                   payload: "content",

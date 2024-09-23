@@ -69,6 +69,8 @@ export default function MatchingPairs({
 
   if (question.type !== "MATCHING_PAIRS") return;
 
+  
+
   const paires = question.items;
 
   const addPairs = () => {

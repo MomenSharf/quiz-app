@@ -19,6 +19,7 @@ import { Reorder, useDragControls, useMotionValue } from "framer-motion";
 import { GripVertical, Trash } from "lucide-react";
 import { ItemsSchemaType } from "@/lib/validations/quizSchemas";
 import { useEditorContext } from "@/components/Editor/EditorContext";
+import ErrorSpan from "./ErrorSpan";
 
 type OprionProps = InputProps & {
   questionIndex: number;
@@ -43,11 +44,9 @@ export default function CorrectOrderItem({
 
   const items = getValues(`questions.${questionIndex}.items`);
 
-
-
-  
-
-
+  const { error } = getFieldState(
+    `questions.${questionIndex}.items.${itemIndex}.text`
+  );
 
   return (
     <Reorder.Item
@@ -57,7 +56,9 @@ export default function CorrectOrderItem({
       animate={{ border: "1px solid var(hsl(--primary))" }}
       dragListener={false}
       dragControls={dragControls}
-      className="rounded group"
+      className={cn("rounded group relative", {
+        "mb-4": error,
+      })}
     >
       <div className="flex">
         <FormField
@@ -71,9 +72,7 @@ export default function CorrectOrderItem({
                     "h-12 font-semibold rounded-tr-none rounded-br-none focus:z-10",
                     {
                       "border-destructive bg-[hsl(var(--destructive)_/_10%)] focus-visible:ring-destructive":
-                        getFieldState(
-                          `questions.${questionIndex}.items.${itemIndex}`
-                        ).error,
+                        error,
                     },
                     className
                   )}
@@ -84,7 +83,6 @@ export default function CorrectOrderItem({
                   )}
                 />
               </FormControl>
-              <FormMessage className="text-xs font-extralight mt-0" />
             </FormItem>
           )}
         />
@@ -103,7 +101,7 @@ export default function CorrectOrderItem({
         >
           <Trash className="w-4 h-4 group-hover/delete:text-destructive group-disabled/delete:opacity-50" />
         </Button>
-      
+
         <Tooltip delayDuration={100}>
           <TooltipTrigger asChild>
             <Button
@@ -120,6 +118,9 @@ export default function CorrectOrderItem({
           </TooltipTrigger>
           <TooltipContent className="text-xs">Reorder</TooltipContent>
         </Tooltip>
+      </div>
+      <div className="absolute -bottom-6 ">
+        <ErrorSpan error={error} />
       </div>
     </Reorder.Item>
   );

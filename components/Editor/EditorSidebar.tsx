@@ -9,6 +9,7 @@ import EditorSidebarItem from "./EditorSidebarItem";
 export default function EditorSidebar() {
   const {
     dispatch,
+    state: { currentQuestion },
     form: {
       setValue,
       getValues,
@@ -23,13 +24,15 @@ export default function EditorSidebar() {
   const dimensions = useScreenDimensions();
 
   const newQuetion = async () => {
-    const id = `${UNSAVED_ID_PREFIX}${crypto.randomUUID()}`;
+    const id = crypto.randomUUID();
     setValue("questions", [
       ...questions,
       {
+        id,
         type: "UNSELECTED",
         questionOrder: questions.length,
-        id,
+        timeLimit: 5,
+        points: 1,
       },
     ]);
     dispatch({ type: "SET_CURRENT_QUESTION", payload: id });
@@ -71,7 +74,6 @@ export default function EditorSidebar() {
             <EditorSidebarItem
               key={question.id}
               question={question}
-              index={i}
             />
           ))}
         </Reorder.Group>

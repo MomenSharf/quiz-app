@@ -44,7 +44,7 @@ export default function Question({
                 },
                 className
               )}
-              placeholder="Question..."
+              placeholder="Type your Question..."
               {...field}
               value={getValues(`questions.${questionIndex}.question`)}
               {...props}

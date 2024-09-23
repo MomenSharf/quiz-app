@@ -9,24 +9,25 @@ import EditorHeader from "./EditorHeader";
 import EditorSidebar from "./EditorSidebar";
 import QuestionTabs from "./QuestionTabs";
 import { useWatch } from "react-hook-form";
+import QuestionForm from "./QuestionForm";
+import Settings from "./Settings";
 
 type EditorFormProps = {
   quiz: EditorQuiz;
 };
 export default function EditorForm({ quiz }: EditorFormProps) {
-  const onSubmit = async () => {console.log('fomtStat goood');
+  const onSubmit = async () => {
+    console.log("fomtStat goood");
   };
 
   const {
     dispatch,
-    state: { currentQuestion },
+    state: { currentQuestion, isSettingsOpen },
     form,
     debounceSaveData,
   } = useEditorContext();
 
-  const { getValues, watch, control, handleSubmit, formState: {errors} } = form;
-
-  
+  const { getValues, watch, control, handleSubmit } = form;
 
   useEffect(() => {
     const subscription = watch((_, { name }) => {
@@ -37,7 +38,6 @@ export default function EditorForm({ quiz }: EditorFormProps) {
           name === "image" ||
           name === "visibility" ||
           name === "categories" ||
-          name === "difficulty" ||
           name.startsWith("questions"))
       ) {
         debounceSaveData(false);
@@ -74,8 +74,6 @@ export default function EditorForm({ quiz }: EditorFormProps) {
     visible: { opacity: 1 },
   };
 
-  
-
   return (
     <Form {...form}>
       <form
@@ -92,7 +90,7 @@ export default function EditorForm({ quiz }: EditorFormProps) {
                   variants={variants}
                   initial={{ opacity: 0 }}
                   animate={
-                    question.id === currentQuestion
+                    question.id === currentQuestion || isSettingsOpen
                       ? { opacity: 1 }
                       : { opacity: 0 }
                   }
@@ -103,7 +101,11 @@ export default function EditorForm({ quiz }: EditorFormProps) {
                   }}
                   key={question.id}
                 >
-                  <QuestionTabs questionIndex={question.questionOrder} />
+                  {isSettingsOpen ? (
+                    <Settings />
+                  ) : (
+                    <QuestionForm questionIndex={question.questionOrder} />
+                  )}
                 </MotionDiv>
               );
             })}

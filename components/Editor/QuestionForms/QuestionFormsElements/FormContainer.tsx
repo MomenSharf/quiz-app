@@ -1,18 +1,19 @@
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Paperclip } from "lucide-react";
-import { useCallback } from "react";
 import { useEditorContext } from "../EditorContext";
 import QuestionImage from "../QuestionImageManager/QuestionImage";
 import QuestionImageManagerTabs from "../QuestionImageManager/QuestionImageManagerTabs";
-import CorrectOrder from "./CorrectOrder";
-import FillInTheBlanks from "./FillInTheBlanks";
-import MatchingPairs from "./MatchingPairs";
-import PickAnswer from "./PickAnswer";
-import ErrorSpan from "./QuestionFormsElements/ErrorSpan";
 import Question from "./QuestionFormsElements/Question";
-import ShortAnswer from "./ShortAnswer";
 import TrueFalse from "./TrueFalse";
+import ShortAnswer from "./ShortAnswer";
+import { useCallback, useMemo } from "react";
+import MatchingPairs from "./MatchingPairs";
+import CorrectOrder from "./CorrectOrder";
+import PickAnswer from "./PickAnswer";
+import FillInTheBlanks from "./FillInTheBlanks";
+import ErrorSpan from "./QuestionFormsElements/ErrorSpan";
+import Timelimit from "./QuestionFormsElements/Timelimit";
 
 type FormContainerType = {
   questionIndex: number;
@@ -63,31 +64,29 @@ export default function FormContainer({ questionIndex }: FormContainerType) {
       <div className="sm:col-span-2 flex flex-col gap-3">
         <div className="flex flex-col gap-1">
           <div className="flex">
-            <div className="flex flex-col gap-1 w-full">
-              <p className="font-semibold text-sm">Question</p>
-              <div className="flex w-full">
-                <Question
-                  questionIndex={questionIndex}
-                  className="rounded-tr-none rounded-br-none h-14"
-                />
-                <QuestionImageManagerTabs
-                  trigger={
-                    <Button
-                      type="button"
-                      size="icon"
-                      variant="outline"
-                      className="rounded-tl-none rounded-bl-none border-l-0 h-full"
-                    >
-                      <Paperclip className="w-4 h-4" />
-                    </Button>
-                  }
-                />
-              </div>
-            </div>
+            <Question
+              questionIndex={questionIndex}
+              className="rounded-tr-none rounded-br-none h-14"
+            />
+            <QuestionImageManagerTabs
+              trigger={
+                <Button
+                  type="button"
+                  size="icon"
+                  variant="outline"
+                  className="rounded-tl-none rounded-bl-none border-l-0 h-full"
+                >
+                  <Paperclip className="w-4 h-4" />
+                </Button>
+              }
+            />
           </div>
           <ErrorSpan error={error} />
         </div>
         <QuestionForm />
+        <div className="flex gap-3">
+          <Timelimit questionIndex={questionIndex} />
+        </div>
       </div>
     </div>
   );

@@ -8,6 +8,7 @@ import { UTApi } from "uploadthing/server";
 import { getCurrentUser } from "../auth";
 import { db } from "../db";
 import { imageSchemaType, quizSchemaType } from "../validations/quizSchemas";
+import { VISIBILITY_OPTIONS } from "@/constants";
 
 const utapi = new UTApi();
 
@@ -20,7 +21,6 @@ export const getGalleryQuizzes = async () => {
   }
 
   try {
-    noStore();
     const quizzes = await db.quiz.findMany({
       where: {
         userId: session.user.id,
@@ -46,7 +46,7 @@ export const getGalleryQuizzes = async () => {
 
     return quizzes;
   } catch (error) {
-    console.log(error);
+    console.error("Failed to fetch quizzes:", error);
   }
 };
 export const getGalleryFolders = async () => {
@@ -57,7 +57,6 @@ export const getGalleryFolders = async () => {
   }
 
   try {
-    noStore();
     const folders = await db.folder.findMany({
       where: {
         userId: session.user.id,
@@ -80,7 +79,9 @@ export const getGalleryFolders = async () => {
       },
     });
     return folders;
-  } catch (error) {}
+  } catch (error) {
+    console.error("Failed to fetch folders:", error);
+  }
 };
 export const getQuiz = async (quizId: string) => {
   const session = await getCurrentUser();
@@ -116,7 +117,7 @@ export const getQuiz = async (quizId: string) => {
 
     return quiz;
   } catch (error) {
-    console.log(error);
+    console.error("Failed to fetch quiz:", error);
   }
 };
 export const getFolder = async (folderId: string) => {
@@ -130,6 +131,7 @@ export const getFolder = async (folderId: string) => {
     const folder = await db.folder.findUnique({
       where: {
         id: folderId,
+        userId: session.user.id,
       },
       include: {
         quizzes: {
@@ -169,7 +171,9 @@ export const getFolder = async (folderId: string) => {
       },
     });
     return folder;
-  } catch (error) {}
+  } catch (error) {
+    console.error("Failed to fetch folder:", error);
+  }
 };
 
 // New
@@ -192,6 +196,8 @@ export const newQuiz = async (pathname: string, folderId?: string) => {
           create: {
             type: "UNSELECTED",
             questionOrder: 0,
+            timeLimit: 5,
+            points: 1
           },
         },
       },
@@ -203,7 +209,7 @@ export const newQuiz = async (pathname: string, folderId?: string) => {
 
     return myQuiz.id;
   } catch (error) {
-    console.log(error);
+    console.error("Failed to create quiz:", error);
   }
 };
 export const newFolder = async (
@@ -231,7 +237,7 @@ export const newFolder = async (
 
     return myFolder.id;
   } catch (error) {
-    console.log(error);
+    console.error("Failed to create folder:", error);
   }
 };
 
@@ -255,139 +261,155 @@ export const saveQuiz = async (
       visibility: data.visibility,
     };
 
-    const questions = data.questions.map((question) => {
-      switch (question.type) {
-        case QuestionType.UNSELECTED:
-          return {
-            type: question.type,
-            questionOrder: question.questionOrder,
-          };
+    const questions = data.questions
+      .map((question) => {
+        switch (question.type) {
+          case QuestionType.UNSELECTED:
+            return {
+              type: question.type,
+              questionOrder: question.questionOrder,
+              timeLimit: question.timeLimit,
+              points: question.points,
+            };
 
-        case QuestionType.PICK_ANSWER:
-          return {
-            type: question.type,
-            questionOrder: question.questionOrder,
-            image: {
-              create: question.image
+          case QuestionType.PICK_ANSWER:
+            return {
+              type: question.type,
+              questionOrder: question.questionOrder,
+              timeLimit: question.timeLimit,
+              points: question.points,
+              image: {
+                create: question.image
+                  ? {
+                      url: question.image.url,
+                      uploadthingId: question.image.uploadthingId,
+                    }
+                  : undefined,
+              },
+              question: question.question ?? "",
+              items: {
+                create: question.items.map((e) => ({
+                  text: e.text,
+                  isCorrect: e.isCorrect,
+                })),
+              },
+            };
+
+          case QuestionType.TRUE_FALSE:
+            return {
+              type: question.type,
+              questionOrder: question.questionOrder,
+              timeLimit: question.timeLimit,
+              points: question.points,
+              image: question.image
                 ? {
-                    url: question.image.url,
-                    uploadthingId: question.image.uploadthingId,
+                    create: {
+                      uploadthingId: question.image?.uploadthingId,
+                      url: question.image?.url,
+                    },
                   }
                 : undefined,
-            },
-            question: question.question ?? "",
-            items: {
-              create: question.items.map((e) => ({
-                text: e.text,
-                isCorrect: e.isCorrect,
-              })),
-            },
-          };
+              question: question.question ?? "",
+              correctAnswer: (question.correctAnswer ?? "true") as
+                | "true"
+                | "false",
+            };
 
-        case QuestionType.TRUE_FALSE:
-          return {
-            type: question.type,
-            questionOrder: question.questionOrder,
-            image: question.image
-              ? {
-                  create: {
-                    uploadthingId: question.image?.uploadthingId,
-                    url: question.image?.url,
-                  },
-                }
-              : undefined,
-            question: question.question ?? "",
-            correctAnswer: (question.correctAnswer ?? "true") as
-              | "true"
-              | "false",
-          };
+          case QuestionType.FILL_IN_THE_BLANK:
+            return {
+              type: question.type,
+              questionOrder: question.questionOrder,
+              timeLimit: question.timeLimit,
+              points: question.points,
+              image: question.image
+                ? {
+                    create: {
+                      uploadthingId: question.image?.uploadthingId,
+                      url: question.image?.url,
+                    },
+                  }
+                : undefined,
+              question: question.question ?? "",
+              items: {
+                create: question.items.map((e) => ({
+                  text: e.text,
+                  isBlank: e.isBlank,
+                })),
+              },
+            };
 
-        case QuestionType.FILL_IN_THE_BLANK:
-          return {
-            type: question.type,
-            questionOrder: question.questionOrder,
-            image: question.image
-              ? {
-                  create: {
-                    uploadthingId: question.image?.uploadthingId,
-                    url: question.image?.url,
-                  },
-                }
-              : undefined,
-            question: question.question ?? "",
-            items: {
-              create: question.items.map((e) => ({
-                text: e.text,
-                isBlank: e.isBlank,
-              })),
-            },
-          };
+          case QuestionType.SHORT_ANSWER:
+            return {
+              type: question.type,
+              questionOrder: question.questionOrder,
+              timeLimit: question.timeLimit,
+              points: question.points,
+              image: question.image
+                ? {
+                    create: {
+                      uploadthingId: question.image?.uploadthingId,
+                      url: question.image?.url,
+                    },
+                  }
+                : undefined,
+              question: question.question ?? "",
+              correctAnswer: question.correctAnswer ?? "",
+            };
 
-        case QuestionType.SHORT_ANSWER:
-          return {
-            type: question.type,
-            questionOrder: question.questionOrder,
-            image: question.image
-              ? {
-                  create: {
-                    uploadthingId: question.image?.uploadthingId,
-                    url: question.image?.url,
-                  },
-                }
-              : undefined,
-            question: question.question ?? "",
-            correctAnswer: question.correctAnswer ?? "",
-          };
+          case QuestionType.MATCHING_PAIRS:
+            return {
+              type: question.type,
+              questionOrder: question.questionOrder,
+              timeLimit: question.timeLimit,
+              points: question.points,
+              image: question.image
+                ? {
+                    create: {
+                      uploadthingId: question.image?.uploadthingId,
+                      url: question.image?.url,
+                    },
+                  }
+                : undefined,
+              question: question.question ?? "",
+              items: {
+                create: question.items.map((e) => ({
+                  text: e.text,
+                  match: e.match,
+                })),
+              },
+            };
 
-        case QuestionType.MATCHING_PAIRS:
-          return {
-            type: question.type,
-            questionOrder: question.questionOrder,
-            image: question.image
-              ? {
-                  create: {
-                    uploadthingId: question.image?.uploadthingId,
-                    url: question.image?.url,
-                  },
-                }
-              : undefined,
-            question: question.question ?? "",
-            items: {
-              create: question.items.map((e) => ({
-                text: e.text,
-                match: e.match,
-              })),
-            },
-          };
+          case QuestionType.ORDER:
+            return {
+              type: question.type,
+              questionOrder: question.questionOrder,
+              timeLimit: question.timeLimit,
+              points: question.points,
+              image: question.image
+                ? {
+                    create: {
+                      uploadthingId: question.image?.uploadthingId,
+                      url: question.image?.url,
+                    },
+                  }
+                : undefined,
+              question: question.question ?? "",
+              items: {
+                create: question.items.map((e) => ({
+                  text: e.text,
+                  order: e.order,
+                })),
+              },
+            };
 
-        case QuestionType.ORDER:
-          return {
-            type: question.type,
-            questionOrder: question.questionOrder,
-            image: question.image
-              ? {
-                  create: {
-                    uploadthingId: question.image?.uploadthingId,
-                    url: question.image?.url,
-                  },
-                }
-              : undefined,
-            question: question.question ?? "",
-            items: {
-              create: question.items.map((e) => ({
-                text: e.text,
-                order: e.order,
-              })),
-            },
-          };
-
-        default:
-          return {
-            type: QuestionType.UNSELECTED,
-            questionOrder: 0,
-          };
-      }
-    }).filter(question => question.type !== 'UNSELECTED');
+          default:
+            return {
+              type: QuestionType.UNSELECTED,
+              questionOrder: 0,
+            };
+        }
+      })
+      .filter((question) => question.type !== "UNSELECTED");
 
     const quiz = await db.quiz.update({
       where: {
@@ -397,7 +419,7 @@ export const saveQuiz = async (
       data: {
         ...quizData,
         questions: {
-          deleteMany: {}, // Removes existing questions
+          deleteMany: {}, 
           create: questions,
         },
       },
@@ -405,13 +427,13 @@ export const saveQuiz = async (
 
     if (quiz) {
       revalidatePath(pathname);
-      return questions;
+      return quiz;
     } else {
-      throw new Error("An error happened");
+      throw new Error("An error happened while updating the quiz.");
     }
-  } catch (error) {
+  } catch (error: any) {
     console.error(error);
-    throw new Error("An error happened");
+    throw new Error(`An error happened: ${error.message}`);
   }
 };
 
@@ -442,65 +464,54 @@ export const deleteQuizzes = async (quizzesIds: string[], pathname: string) => {
     throw new Error("Quiz not Deleted, try again");
   }
 };
-export async function deleteFolderAndSubfolders(
-  folderId: string,
+export const deleteFolderAndSubfolders = async (
+  id: string,
   pathname: string
-) {
+) => {
   const session = await getCurrentUser();
 
   if (!session) {
-    throw new Error("Unauthorized: User is not logged in.");
+    return redirect("/login");
   }
-
-  const deleteSubfolders = async (id: string) => {
-    try {
-      // Delete quizzes within the current folder
-      // await db.quiz.deleteMany({
-      //   where: { folderId: id, userId: session.user.id },
-      // });
-
-      // // Fetch subfolders
-      // const subfolders = await db.folder.findMany({
-      //   where: { parentId: id, userId: session.user.id },
-      // });
-
-      // // Recursively delete each subfolder
-      // for (const subfolder of subfolders) {
-      //   await deleteSubfolders(subfolder.id); // Recursive call
-      // }
-
-      // Delete the folder itself
-      const folder = await db.folder.delete({
-        where: { id, userId: session.user.id },
-      });
-
-      return folder.id;
-    } catch (error) {
-      console.error(`Error deleting folder with id ${id}:`, error);
-      throw error; // Rethrow the error to handle it in the outer scope
-    }
-  };
 
   try {
-    // Start the deletion process
-    const id = await deleteSubfolders(folderId);
+    await db.$transaction(async (prisma) => {
+      // Delete all quizzes associated with the folder and its subfolders
+      await prisma.quiz.deleteMany({
+        where: {
+          OR: [{ folderId: id }, { folder: { parentId: id } }],
+          userId: session.user.id,
+        },
+      });
+
+      // Delete all subfolders
+      await prisma.folder.deleteMany({
+        where: {
+          parentId: id,
+          userId: session.user.id,
+        },
+      });
+
+      // Finally, delete the folder itself
+      await prisma.folder.delete({
+        where: {
+          id,
+          userId: session.user.id,
+        },
+      });
+    });
 
     revalidatePath(pathname);
-    return id;
   } catch (error) {
-    console.error(
-      `Error deleting folder and subfolders for id ${folderId}:`,
-      error
-    );
-    // Handle the error (e.g., rollback transaction, notify user, etc.)
+    console.error("Failed to delete folder and subfolders:", error);
   }
-}
+};
 
 // Visibility
 export const toggleQuizVisibility = async (
   quizId: string,
   pathname: string,
-  visibility: "PUBLIC" | "PRIVATE"
+  visibility: (typeof VISIBILITY_OPTIONS)[number]
 ) => {
   const session = await getCurrentUser();
 
@@ -522,7 +533,7 @@ export const toggleQuizVisibility = async (
 
     return updatedQuiz;
   } catch (error) {
-    console.log(error);
+    console.error("Failed to toggle quiz visibility:", error);
   }
 };
 
@@ -589,17 +600,19 @@ export const deleteImages = async (images: string[]) => {
   try {
     await utapi.deleteFiles(images);
   } catch (error) {
-    console.log({
-      error: error,
-    });
+    console.error("Failed to save image:", error);
   }
 };
 
 export async function revalidatePathInServer(pathname: string) {
   try {
     revalidatePath(pathname);
+    return {
+      success: true,
+      message: `Path ${pathname} revalidated successfully.`,
+    };
   } catch (error) {
-    console.error("Failed to revalidate path:", error);
-    throw new Error("Revalidation failed");
+    console.error(`Failed to revalidate path ${pathname}:`, error);
+    throw new Error(`Failed to revalidate path ${pathname}.`);
   }
 }

@@ -12,16 +12,14 @@ import { useEditorContext } from "./EditorContext";
 
 interface EditorSidebarItemProps {
   question: questionSchemaType;
-  index: number;
 }
 
 export default function EditorSidebarItem({
   question,
-  index,
 }: EditorSidebarItemProps) {
   const {
     dispatch,
-    state: { currentQuestion },
+    state: { currentQuestion, isSettingsOpen },
   } = useEditorContext();
 
   const y = useMotionValue(0);
@@ -45,12 +43,17 @@ export default function EditorSidebarItem({
           "py-10 w-full min-w-20 min-h-20 relative hover:border-ring hover:bg-background cursor-pointer",
           {
             "border-ring bg-accent hover:bg-accent":
-              currentQuestion === question.id,
+              currentQuestion === question.id && !isSettingsOpen ,
           }
         )}
         onClick={() => {
-          if (currentQuestion !== question.id)
+          if (currentQuestion !== question.id || isSettingsOpen) {
+            dispatch({
+              type: "SET_IS_SETTINGS_OPEN",
+              payload: false,
+            });
             dispatch({ type: "SET_CURRENT_QUESTION", payload: question.id });
+          }
         }}
       >
         {Icon ? (
@@ -58,11 +61,11 @@ export default function EditorSidebarItem({
             className={cn(
               "w-7 h-7 text-muted-foreground fill-muted-foreground",
               {
-                "text-primary fill-primary": currentQuestion === question.id,
+                "text-primary fill-primary": currentQuestion === question.id && !isSettingsOpen,
               }
             )}
           />
-        ): (
+        ) : (
           <Circle className="w-7 h-7 text-transparent" />
         )}
         <span className="absolute top-1 left-1 text-muted-foreground text-xs">
