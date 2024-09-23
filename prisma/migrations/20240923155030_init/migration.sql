@@ -5,7 +5,7 @@ CREATE TYPE "Visibility" AS ENUM ('PUBLIC', 'PRIVATE');
 CREATE TYPE "QuestionType" AS ENUM ('UNSELECTED', 'PICK_ANSWER', 'TRUE_FALSE', 'FILL_IN_THE_BLANK', 'SHORT_ANSWER', 'MATCHING_PAIRS', 'ORDER');
 
 -- CreateEnum
-CREATE TYPE "Difficulty" AS ENUM ('EASY', 'MEDIUM', 'HARD');
+CREATE TYPE "Category" AS ENUM ('SCIENCE', 'MATH', 'HISTORY', 'GEOGRAPHY', 'LITERATURE', 'TECHNOLOGY', 'SPORTS', 'ART', 'LANGUAGE', 'GENERAL_KNOWLEDGE', 'POLITICS', 'ECONOMICS', 'PHILOSOPHY', 'PSYCHOLOGY', 'BIOLOGY', 'CHEMISTRY', 'PHYSICS', 'COMPUTER_SCIENCE', 'RELIGION', 'NATURE', 'EDUCATION');
 
 -- CreateTable
 CREATE TABLE "User" (
@@ -42,7 +42,6 @@ CREATE TABLE "Quiz" (
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "categories" TEXT[],
     "description" TEXT NOT NULL,
-    "difficulty" "Difficulty" NOT NULL,
     "visibility" "Visibility" NOT NULL DEFAULT 'PUBLIC',
     "folderId" TEXT,
     "userId" TEXT NOT NULL,
@@ -59,7 +58,10 @@ CREATE TABLE "Question" (
     "correctAnswer" TEXT,
     "quizId" TEXT NOT NULL,
     "questionOrder" INTEGER NOT NULL,
+    "categories" "Category"[],
     "imageId" TEXT,
+    "timeLimit" INTEGER NOT NULL,
+    "points" INTEGER NOT NULL,
 
     CONSTRAINT "Question_pkey" PRIMARY KEY ("id")
 );

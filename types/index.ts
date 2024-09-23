@@ -25,7 +25,6 @@ export type EditorQuiz = Prisma.QuizGetPayload<{
     title: true,
     description: true,
     image: true,
-    difficulty: true,
     visibility: true,
     categories: true,
     createdAt: true,

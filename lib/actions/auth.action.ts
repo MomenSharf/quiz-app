@@ -42,28 +42,4 @@ export async function registerUser({ email, password, name }: { email: string; p
   };
 }
 
-export async function generateResetToken(email: string) {
-  // Find the user by email
-  const user = await db.user.findUnique({ where: { email } });
 
-  if (!user) {
-    throw new Error('User not found');
-  }
-
-  // Generate a token
-  const token = randomBytes(32).toString('hex');
-  const expiresAt = addMinutes(new Date(), 15); // Token valid for 15 minutes
-
-  // Save the token to the database
-  await db.resetToken.create({
-    data: {
-      token,
-      userId: user.id,
-      expiresAt,
-    },
-  });
-
-  // Send an email with the reset link
-  const resetLink = `${process.env.NEXTAUTH_URL}/reset-password?token=${token}`;
-  await sendResetPasswordEmail(email, resetLink);
-}

@@ -7,7 +7,6 @@ import { MotionDiv } from "../useMotion";
 import { useEditorContext } from "./EditorContext";
 import EditorHeader from "./EditorHeader";
 import EditorSidebar from "./EditorSidebar";
-import QuestionTabs from "./QuestionTabs";
 import { useWatch } from "react-hook-form";
 import QuestionForm from "./QuestionForm";
 import Settings from "./Settings";
