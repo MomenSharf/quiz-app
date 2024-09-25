@@ -53,6 +53,7 @@ export default function FillInTheBlanks({
           : []
       );
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [questionIndex, watchQuestion]);
 
   const setIsBlank = (index: number) => {

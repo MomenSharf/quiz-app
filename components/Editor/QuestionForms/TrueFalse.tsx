@@ -18,6 +18,7 @@ export default function TrueFalse({
     
     if (question.correctAnswer !== 'true' && question.correctAnswer !== 'false')
       setValue(`questions.${questionIndex}.correctAnswer`, "true");
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (question.type !== "TRUE_FALSE") return;
