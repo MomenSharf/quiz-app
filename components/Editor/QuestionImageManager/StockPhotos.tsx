@@ -2,7 +2,6 @@ import { Input } from "@/components/ui/input";
 import {  stockPhotos } from "@/lib/actions/image.actions";
 import { Photo, UnsplashPhoto } from "@/types";
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import Gallery from "react-photo-gallery";
 import { useDebounce, useDebouncedCallback } from "use-debounce";
 import { useEditorContext } from "../EditorContext";
 import { Url } from "url";
@@ -97,10 +96,10 @@ export default function StockPhotos() {
       />
       <div className="overflow-y-auto max-h-full">
         <div>
-          <Gallery
+          {/* <Gallery
             photos={photos}
             onClick={(e, { photo }) => handleOnClick(photo.src)}
-          />
+          /> */}
         </div>
         {(query || photos.length !== 0) && (
           <div className="flex justify-center mt-3">

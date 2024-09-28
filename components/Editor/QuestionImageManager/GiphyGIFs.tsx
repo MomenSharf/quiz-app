@@ -2,7 +2,6 @@ import { Input } from "@/components/ui/input";
 import { giphyGIFs, stockPhotos } from "@/lib/actions/image.actions";
 import { GiphyApiResponse, Photo, UnsplashPhoto } from "@/types";
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import Gallery from "react-photo-gallery";
 import { useDebounce, useDebouncedCallback } from "use-debounce";
 import { useEditorContext } from "../EditorContext";
 import { Url } from "url";
