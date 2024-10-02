@@ -1,5 +1,4 @@
 "use server";
-import sharp from "sharp";
 
 import axios from "axios";
 import { UnsplashPhoto } from "@/types";
@@ -42,15 +41,4 @@ export async function giphyGIFs(query: string, page: string) {
   }
 }
 
-export async function convertToAVIF(base64Image: string): Promise<Buffer> {
-  // Extract base64 data and convert to buffer
-  const base64Data = base64Image.replace(/^data:image\/(png|jpeg);base64,/, "");
-  const imageBuffer = Buffer.from(base64Data, "base64");
 
-  // Convert the image to AVIF using sharp
-  const avifBuffer = await sharp(imageBuffer)
-    .avif({ quality: 50 }) // Adjust quality as needed
-    .toBuffer();
-
-  return avifBuffer;
-}

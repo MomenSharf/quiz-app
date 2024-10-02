@@ -13,6 +13,7 @@ import ErrorSpan from "./QuestionFormsElements/ErrorSpan";
 import Question from "./QuestionFormsElements/Question";
 import ShortAnswer from "./ShortAnswer";
 import TrueFalse from "./TrueFalse";
+import { Icons } from "@/components/icons";
 
 type FormContainerType = {
   questionIndex: number;
@@ -78,7 +79,7 @@ export default function FormContainer({ questionIndex }: FormContainerType) {
                       variant="outline"
                       className="rounded-tl-none rounded-bl-none border-l-0 h-full"
                     >
-                      <Paperclip className="w-4 h-4" />
+                      <Icons.picture  className="w-5 h-5" />
                     </Button>
                   }
                 />

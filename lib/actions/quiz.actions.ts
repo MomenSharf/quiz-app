@@ -83,6 +83,17 @@ export const getGalleryFolders = async () => {
     console.error("Failed to fetch folders:", error);
   }
 };
+export const getHomeQuizzes = async () => {
+
+  return  await db.quiz.findMany({
+    include: {
+      image: true,
+      questions: true,
+      user: true
+    }
+  })
+
+}
 export const getQuiz = async (quizId: string) => {
   const session = await getCurrentUser();
 

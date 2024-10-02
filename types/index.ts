@@ -21,24 +21,31 @@ export type QuizGalleryWithQuestionsCount = Prisma.QuizGetPayload<{
 
 export type EditorQuiz = Prisma.QuizGetPayload<{
   select: {
-    id: true,
-    title: true,
-    description: true,
-    image: true,
-    visibility: true,
-    categories: true,
-    createdAt: true,
-    updatedAt: true,
+    id: true;
+    title: true;
+    description: true;
+    image: true;
+    visibility: true;
+    categories: true;
+    createdAt: true;
+    updatedAt: true;
     questions: {
       include: {
-        image: true,
-        items: true,
-      }
-    },
-    user: true,
+        image: true;
+        items: true;
+      };
+    };
+    user: true;
   };
 }>;
 
+export type gameBoardQuizzes = Prisma.QuizGetPayload<{
+  include: {
+    image: true;
+    questions: true;
+    user: true;
+  };
+}>;
 export type FolderGalleryWithQuizzesCount = Prisma.FolderGetPayload<{
   select: {
     id: true;
