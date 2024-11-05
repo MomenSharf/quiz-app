@@ -1,10 +1,7 @@
 'use server'
 
+import bcrypt from 'bcrypt';
 import { db } from "../db";
-import bcrypt from 'bcrypt'
-import { randomBytes } from 'crypto';
-import { addMinutes } from 'date-fns';
-import { sendResetPasswordEmail } from "../email";
 
 
 export async function registerUser({ email, password, name }: { email: string; password: string; name: string }) {

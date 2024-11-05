@@ -24,16 +24,12 @@ import ErrorSpan from "./ErrorSpan";
 type OprionProps = InputProps & {
   questionIndex: number;
   itemIndex: number;
-  // deleteOption: (id: string) => void;
-  item: Pick<Items, "id" | "text" | "order">;
 };
 
 export default function CorrectOrderItem({
   className,
   questionIndex,
   itemIndex,
-  // deleteOption,
-  item,
 }: OprionProps) {
   const {
     form: { control, getFieldState, getValues, setValue },
@@ -43,6 +39,7 @@ export default function CorrectOrderItem({
   const dragControls = useDragControls();
 
   const items = getValues(`questions.${questionIndex}.items`);
+  const item = getValues(`questions.${questionIndex}.items.${itemIndex}`);
 
   const { error } = getFieldState(
     `questions.${questionIndex}.items.${itemIndex}.text`

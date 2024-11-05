@@ -89,7 +89,6 @@ export default function CorrectOrder({
             return (
               <CorrectOrderItem
                 key={item.id}
-                item={item}
                 itemIndex={i}
                 questionIndex={questionIndex}
               />

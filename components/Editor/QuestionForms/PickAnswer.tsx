@@ -87,7 +87,6 @@ export default function PickAnswer({
               return (
                 <PickAnswerOption
                   key={item.id}
-                  item={item}
                   itemIndex={i}
                   questionIndex={questionIndex}
                 />
