@@ -10,6 +10,7 @@ import EditorSidebar from "./EditorSidebar";
 import { useWatch } from "react-hook-form";
 import QuestionForm from "./QuestionForm";
 import Settings from "./Settings";
+import ImageEditor from "./QuestionImageManager/ImageEditor";
 
 type EditorFormProps = {
   quiz: EditorQuiz;
@@ -105,6 +106,7 @@ export default function EditorForm({ quiz }: EditorFormProps) {
                   ) : (
                     <QuestionForm questionIndex={question.questionOrder} />
                   )}
+                  <ImageEditor />
                 </MotionDiv>
               );
             })}

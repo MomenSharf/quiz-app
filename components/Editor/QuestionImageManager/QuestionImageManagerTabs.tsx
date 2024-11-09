@@ -31,7 +31,7 @@ export default function QuestionImageManagerTabs({
     >
       <DialogTrigger asChild>{trigger}</DialogTrigger>
       <DialogContent className="max-w-3xl h-[85vh] root-background-white flex flex-col">
-        <Tabs defaultValue="giphy-GIFS" className="h-full">
+        <Tabs defaultValue="upload" className="h-full">
           <TabsList>
             <TabsTrigger value="upload">Upload</TabsTrigger>
             <TabsTrigger value="stock-photos">Stock photos</TabsTrigger>

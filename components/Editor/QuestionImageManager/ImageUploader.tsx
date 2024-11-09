@@ -30,10 +30,10 @@ export default function ImageUploader() {
       if (acceptedFiles[0].size > 2000000) {
         return toast("Maximam 2MB size");
       }
-      dispatch({
-        type: "SET_IS_QUESTION_IMAGE_MANAGER_TABS_OPEN",
-        payload: false,
-      });
+      // dispatch({
+      //   type: "SET_IS_QUESTION_IMAGE_MANAGER_TABS_OPEN",
+      //   payload: false,
+      // });
       dispatch({
         type: "SET_IS_IMAGE_EDITOR_OPEN",
         payload: {
@@ -47,7 +47,7 @@ export default function ImageUploader() {
 
   const { getRootProps, getInputProps } = useDropzone({
     onDrop,
-    accept: "image/*" ? generateClientDropzoneAccept(["image/*"]) : undefined,
+    accept: generateClientDropzoneAccept(["image/*"]),
   });
 
   return (

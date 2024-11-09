@@ -30,7 +30,7 @@ import { DebouncedState, useDebouncedCallback } from "use-debounce";
 import { z } from "zod";
 
 // Define the state shape
-interface EditorState {
+type EditorState = {
   saveState: "GOOD" | "BAD" | "WAITING" | "OFFLINE";
   historyArray: quizSchemaType[];
   currentQuestion: string;
@@ -48,7 +48,7 @@ interface EditorState {
 }
 
 // Define action types
-type EditorAction =
+type EditorActions =
   | { type: "SET_SAVE_SATAT"; payload: "GOOD" | "BAD" | "WAITING" | "OFFLINE" }
   | {
       type: "SET_HISTORY_ARRAY";
@@ -71,9 +71,9 @@ type EditorAction =
     };
 
 // Define the context type
-interface EditorContextType {
+type EditorContextType = {
   state: EditorState;
-  dispatch: React.Dispatch<EditorAction>;
+  dispatch: React.Dispatch<EditorActions>;
   historyIndex: MutableRefObject<number>;
   isUndoOrRedo: MutableRefObject<boolean>;
   headerRef: RefObject<HTMLDivElement>;
@@ -100,7 +100,7 @@ const initialState: EditorState = {
 // Reducer function to handle state updates
 const editorReducer = (
   state: EditorState,
-  action: EditorAction
+  action: EditorActions
 ): EditorState => {
   switch (action.type) {
     case "SET_SAVE_SATAT":

@@ -20,6 +20,7 @@ import { Dispatch, SetStateAction, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { useEditorContext } from "./EditorContext";
 import CategoriesSelector from "./CategoriesSelector";
+import QuestionImageManagerTabs from "./QuestionImageManager/QuestionImageManagerTabs";
 
 export default function Settings() {
   const {
@@ -28,6 +29,21 @@ export default function Settings() {
 
   return (
     <div className="container max-w-3xl py-3 flex flex-col gap-3">
+
+      <FormField
+        control={control}
+        name="description"
+        render={({ field }) => (
+          <FormItem className="space-y-1 flex w-full flex-col">
+            <FormLabel>Descrption</FormLabel>
+            <FormControl>
+              
+            <QuestionImageManagerTabs trigger={<Button>add cover to Quiz</Button>}/>
+            </FormControl>
+            <FormMessage className="text-xs font-extralight mt-0" />
+          </FormItem>
+        )}
+      />
       <FormField
         control={control}
         name="description"
