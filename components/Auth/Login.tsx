@@ -103,13 +103,12 @@ export default function Login({ type }: { type: "register" | "login" }) {
           variant: "destructive",
         });
       }
-    } catch (error: any) {
+    } catch (error: any) {      
       toast({
         title: "Error",
-        description: "Something went wrong",
+        description: JSON.stringify(error),
         variant: "destructive",
       });
-      console.log(error);
       
       
     }
