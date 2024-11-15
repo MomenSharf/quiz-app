@@ -10,7 +10,7 @@ export default function OptionsSwitcher({
 }) {
     switch (question.type) {
       case "PICK_ANSWER":
-        return <PickAnswer />;
+        return <PickAnswer question={question} />;
       default:
         return;
     }

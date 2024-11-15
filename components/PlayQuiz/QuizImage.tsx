@@ -3,7 +3,7 @@ import React from 'react'
 
 export default function QuizImage({ imageUrl }: { imageUrl: string }) {
   return (
-    <div className="flex flex-col w-full rounded-md overflow-hidden">
+    <div className="flex flex-col w-full rounded-xl overflow-hidden">
       <Image
         // src={imageUrl}
         src='/assets/images/hero.webp'

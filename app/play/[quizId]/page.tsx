@@ -21,7 +21,7 @@ export default async function page({
   }
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen  root-background-white">
       <Provider quiz={quiz} />
     </div>
   );
