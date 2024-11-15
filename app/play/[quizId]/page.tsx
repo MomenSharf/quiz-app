@@ -1,4 +1,4 @@
-import PlayQuizProvider from "@/components/PlayQuiz/PlayQuizProvider";
+import Provider from "@/components/PlayQuiz/Provider";
 import { getQuiz } from "@/lib/actions/quiz.actions";
 import { getCurrentUser } from "@/lib/auth";
 import { notFound, redirect } from "next/navigation";
@@ -22,7 +22,7 @@ export default async function page({
 
   return (
     <div className="min-h-screen">
-      <PlayQuizProvider quiz={quiz} />
+      <Provider quiz={quiz} />
     </div>
   );
 }

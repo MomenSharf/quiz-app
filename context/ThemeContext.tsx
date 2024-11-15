@@ -1,11 +1,8 @@
 "use client";
 import { cn } from "@/lib/utils";
 import { ThemeState } from "@/types/theme";
-import { Nunito } from "next/font/google";
 import { createContext, ReactNode, useContext, useReducer } from "react";
 
-
-const nunito = Nunito({ subsets: ["latin"] });
 
 type ThemeActions =
   | { type: "SET_THEME"; payload: ThemeState | null }
@@ -54,7 +51,7 @@ export const ThemeContextProvider = ({ children }: { children: ReactNode }) => {
 
   return (
     <ThemeContext.Provider value={{ state, dispatch }}>
-      <body data-theme-color={state.theme} className={cn(state.mode,nunito.className,'min-h-screen')}>
+      <body data-theme-color={state.theme} className={cn(state.mode,'min-h-screen')}>
      
         {children}
       </body>

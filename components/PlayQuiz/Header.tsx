@@ -2,7 +2,7 @@ import React from "react";
 import { Button } from "../ui/button";
 import { ArrowLeft } from "lucide-react";
 
-export default function PlayQuizHeader() {
+export default function Header() {
   return (
     <div className="flex gap-3 p-1 bg-popover">
       <Button size="icon" variant='ghost'>

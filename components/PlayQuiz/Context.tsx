@@ -10,17 +10,19 @@ import {
   useReducer,
 } from "react";
 
-type PlayQuizQuestions = EditorQuiz["questions"][number] & {
+export type PlayQuizQuestion = EditorQuiz["questions"][number] & {
   timeTaken: number;
   isAnswerRight: boolean;
 };
 
 type PlayQuizState = {
-  currentQuiztion: number;
-  playQuizQuestions: PlayQuizQuestions[];
+  currentQuestion: number;
+  playQuizQuestions: PlayQuizQuestion[];
 };
 
-type PlayQuizActions = { type: "SET_QUESTIONS"; payload: PlayQuizQuestions[] };
+type PlayQuizActions =
+  | { type: "SET_QUESTIONS"; payload: PlayQuizQuestion[] }
+  | { type: "SET_CURRENT_QUESTION"; payload: number };
 
 type PlayQuizContextType = {
   state: PlayQuizState;
@@ -28,7 +30,7 @@ type PlayQuizContextType = {
 };
 
 const initialState: PlayQuizState = {
-  currentQuiztion: 0,
+  currentQuestion: 0,
   playQuizQuestions: [],
 };
 
@@ -37,8 +39,10 @@ const quizRoomReducer = (
   action: PlayQuizActions
 ): PlayQuizState => {
   switch (action.type) {
-    case 'SET_QUESTIONS' :
-      return {...state, playQuizQuestions:  action.payload}
+    case "SET_QUESTIONS":
+      return { ...state, playQuizQuestions: action.payload };
+      case 'SET_CURRENT_QUESTION' :
+        return { ...state, currentQuestion: action.payload };
     default:
       return state;
   }
@@ -57,7 +61,7 @@ export const PlayQuizProvider = ({
 }) => {
   const [state, dispatch] = useReducer(quizRoomReducer, initialState);
 
-  const initialQuestions: PlayQuizQuestions[] = useMemo(() => {
+  const initialQuestions: PlayQuizQuestion[] = useMemo(() => {
     return quiz.questions.map((question) => {
       return { ...question, timeTaken: 0, isAnswerRight: false };
     });
@@ -66,7 +70,6 @@ export const PlayQuizProvider = ({
   useEffect(() => {
     dispatch({ type: "SET_QUESTIONS", payload: initialQuestions });
   }, [initialQuestions]);
-  
 
   return (
     <QuizRoomContext.Provider value={{ state, dispatch }}>

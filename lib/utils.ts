@@ -17,3 +17,8 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export const convertFileToUrl = (file: File) => URL.createObjectURL(file);
+
+export function toCapitalize(str: string) {
+  if (!str || typeof str !== 'string') return '';
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
