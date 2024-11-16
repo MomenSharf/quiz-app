@@ -10,21 +10,26 @@ export default function PickAnswer({
 }: {
   question: PlayQuizQuestion;
 }) {
+  
   return (
-    <div className="flex flex-col gap-3 justify-center">
+    <div
+      className={cn("grid gap-3 items-center", {
+        "grid-cols-2": question.items.length > 5,
+      })}
+    >
       {question.items.map((item) => {
         return (
           <motion.button
             key={item.id}
             className={cn(
-              "flex py-3 px-4 rounded-xl bg-primary-foreground shadow-sm border border-transparent",
+              "py-3 px-4 rounded-xl bg-primary-foreground shadow-sm border border-transparent self-stretch flex items-center",
               {
                 "bg-success/20 border-success": item.isCorrect,
                 "bg-destructive/20 border-destructive": !item.isCorrect,
               }
             )}
-            whileHover={{ scale: 1.03 }}
-            whileTap={{ scale: 0.98 }}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.97 }}
           >
             <span className="font-medium ">A</span>
             <span className="flex-1">{item.text}</span>

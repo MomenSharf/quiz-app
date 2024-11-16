@@ -80,7 +80,7 @@ export default function Timer({ timeLimit }: { timeLimit: number }) {
 
       {/* Progress bar that updates based on the remaining time */}
       <Progress
-        value={progressValue}
+        value={Math.floor(progressValue)}
         className={cn("w-full h-2 border bg-transparent transition-colors", {
           "bg-destructive-var": remainingTime <= 1000, // Highlight text when time is near the end
         })}

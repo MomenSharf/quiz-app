@@ -24,9 +24,6 @@ export default function Content({
   return (
     <div className="flex flex-col w-full flex-1  items-center">
       <div className="p-3 max-w-4xl flex-1 flex flex-col">
-        <div className="flex gap-3 items-center">
-          <ProgressBar />
-        </div>
         <div className="flex-1 flex">
           {questions
             .sort((a, b) => a.questionOrder - b.questionOrder)
@@ -50,10 +47,10 @@ export default function Content({
                         : "none",
                   }}
                   key={question.id}
-                  className="sm:grid-cols-2 gap-5 items-center"
+                  className="grid-rows-[auto_1fr] sm:grid-rows-1 sm:grid-cols-2 gap-5 items-center"
                 >
                   <QuizImage imageUrl="" />
-                  <div className="flex flex-col justify-center gap-3">
+                  <div className="flex flex-col gap-3 h-full sm:justify-center">
                     {question.question && (
                       <p className="text-2xl text-gray-900 text-center sm:text-start">
                         {toCapitalize(question.question)}

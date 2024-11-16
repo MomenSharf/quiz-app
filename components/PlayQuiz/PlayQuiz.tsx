@@ -11,9 +11,9 @@ export default function PlayQuiz() {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <Header />
+      <Header numberOfQuestions={playQuizQuestions.length} />
       <Content questions={playQuizQuestions} />
-      {/* <Footer /> */}
+      <Footer />
       {/* {playQuizQuestions.map((question) => {
         return <OptionsSwitcher key={question.id} question={question} />;
       })} */}
