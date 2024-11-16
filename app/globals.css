@@ -517,6 +517,9 @@ body {
   transform: translateZ(0);
   animation: mltShdSpin 1.7s infinite ease, round 1.7s infinite ease;
 }
+.bg-destructive-var {
+  --primary: 0 84.2% 60.2%
+}
 
 @keyframes mltShdSpin {
   0% {

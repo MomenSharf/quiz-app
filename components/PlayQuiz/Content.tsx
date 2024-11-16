@@ -6,6 +6,7 @@ import { toCapitalize } from "@/lib/utils";
 import { Button } from "../ui/button";
 import OptionsSwitcher from "./OptionsSwitcher";
 import ProgressBar from "./ProgressBar";
+import Timer from "./Timer";
 
 const variants = {
   hidden: { opacity: 0 },
@@ -21,9 +22,11 @@ export default function Content({
     state: { currentQuestion },
   } = usePlayQuizContext();
   return (
-    <div className="flex flex-col w-full flex-1 mt-3 items-center">
+    <div className="flex flex-col w-full flex-1  items-center">
       <div className="p-3 max-w-4xl flex-1 flex flex-col">
-        <ProgressBar />
+        <div className="flex gap-3 items-center">
+          <ProgressBar />
+        </div>
         <div className="flex-1 flex">
           {questions
             .sort((a, b) => a.questionOrder - b.questionOrder)
@@ -31,12 +34,13 @@ export default function Content({
               return (
                 <motion.div
                   variants={variants}
-                  initial={{ opacity: 0 }}
+                  initial={{ opacity: 1 }}
                   animate={
                     question.questionOrder === currentQuestion
                       ? { opacity: 1 }
                       : { opacity: 0 }
                   }
+                  exit={{ opacity: 1 }}
                   transition={{ duration: 0.3 }}
                   viewport={{ amount: 0 }}
                   style={{
@@ -46,17 +50,18 @@ export default function Content({
                         : "none",
                   }}
                   key={question.id}
-                  className="sm:grid-cols-2 gap-5"
+                  className="sm:grid-cols-2 gap-5 items-center"
                 >
+                  <QuizImage imageUrl="" />
                   <div className="flex flex-col justify-center gap-3">
-                    <QuizImage imageUrl="" />
                     {question.question && (
                       <p className="text-2xl text-gray-900 text-center sm:text-start">
                         {toCapitalize(question.question)}
                       </p>
                     )}
+                    <Timer timeLimit={question.timeLimit} />
+                    <OptionsSwitcher question={question} />
                   </div>
-                  <OptionsSwitcher question={question} />
                 </motion.div>
               );
             })}
