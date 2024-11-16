@@ -2,7 +2,6 @@ import Content from "./Content";
 import { usePlayQuizContext } from "./Context";
 import Footer from "./Footer";
 import Header from "./Header";
-import ProgressBar from "./ProgressBar";
 
 export default function PlayQuiz() {
   const {
@@ -13,7 +12,6 @@ export default function PlayQuiz() {
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
-      <ProgressBar />
       <Content questions={playQuizQuestions} />
       <Footer />
       {/* {playQuizQuestions.map((question) => {

@@ -10,8 +10,9 @@ export default function ProgressBar() {
   const progressValue = (currentQuestion / playQuizQuestions.length) * 100;
   return (
     <Progress
-      value={progressValue ? progressValue : 3}
-      className="rounded-tl-none rounded-bl-none rounded-tr-full rounded-br-full bg-transparent h-1"
+      value={100}
+      // value={progressValue ? progressValue : 3}
+      className="h-2"
     />
   );
 }
