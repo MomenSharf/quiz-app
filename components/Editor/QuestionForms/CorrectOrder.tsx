@@ -47,10 +47,6 @@ export default function CorrectOrder({
   }, [question, questionIndex, setValue]);
 
   if (question.type !== "ORDER") return;
-  console.log(errors && errors.questions && errors.questions[questionIndex]);
-  
-
- 
 
   const addOption = () => {
     setValue(`questions.${questionIndex}.items`, [

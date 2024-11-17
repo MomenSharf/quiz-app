@@ -28,8 +28,6 @@ export default function MatchingPairs({
   } = useEditorContext();
   const question = getValues(`questions.${questionIndex}`);
 
-  console.log(errors);
-
   useEffect(() => {
     if (question.type === "MATCHING_PAIRS") {
       if (!question.items) {

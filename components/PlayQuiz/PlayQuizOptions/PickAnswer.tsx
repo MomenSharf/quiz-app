@@ -13,7 +13,13 @@ export default function PickAnswer({
 }) {
   const {
     dispatch,
-    state: { quizMode, userAnswer, playQuizQuestions },
+    state: {
+      quizMode,
+      userAnswer,
+      playQuizQuestions,
+      currentQuestion,
+      timeTaken,
+    },
   } = usePlayQuizContext();
   console.log(userAnswer);
 
@@ -24,13 +30,6 @@ export default function PickAnswer({
       })}
     >
       {question.items.map((item, i) => {
-        // const isAnswerCorrect =
-        //   quizMode !== "answered"
-        //   &&  !item.isCorrect
-        //    && !userAnswer
-        //     && typeof userAnswer !== "string"
-        //       &&   userAnswer.id === item.id
-
         const isShaking =
           quizMode === "answered" &&
           !item.isCorrect &&
@@ -45,7 +44,6 @@ export default function PickAnswer({
           typeof userAnswer !== "string" &&
           userAnswer.id === item.id;
 
-        // &&
         return (
           <motion.button
             key={item.id}
@@ -73,29 +71,32 @@ export default function PickAnswer({
               },
             }}
             onClick={() => {
-              const newPlayQuizQuestions = playQuizQuestions.map((question) => {
-
-              })
+              
+              const newPlayQuizQuestions = playQuizQuestions.map(
+                (question, i) => {
+                  if (currentQuestion === i) {
+                    return {
+                      ...question,
+                      isAnswerRight: item.isCorrect,
+                      timeTaken,
+                    };
+                  }
+                }
+              );
               if (quizMode === "playing") {
                 dispatch({ type: "SET_QUIZ_MODE", payload: "answered" });
                 dispatch({ type: "SET_USER_ANSWER", payload: item });
                 // dispatch({type: 'SET_PLAY_QUIZ_QUESTIONS', payload})
               }
             }}
-            // initial={{ x: 0 }}
-            // animate={{
-            //   x: isShaking ? [0, -10, 10, -10, 10, 0] : 0, // Shake effect
-            // }}
-            initial={{ x: 0, scale: 1 }}  // Initial scale set to 1
+            initial={{ x: 0, scale: 1 }}
             animate={{
-              // Shake effect for wrong answers
               x: isShaking ? [0, -10, 10, -10, 10, 0] : 0,
-              // Scale animation for correct answers, scales up and then resets to 1
               scale: isCorrect ? [1, 1.1, 1] : 1,
-              rotate: isCorrect ? [0, 5, -5, 0] : 0, // Optional rotation effect
+              rotate: isCorrect ? [0, 5, -5, 0] : 0,
             }}
             transition={{
-              duration: 0.3, // Duration of the animation
+              duration: 0.3,
               ease: "easeInOut",
             }}
           >

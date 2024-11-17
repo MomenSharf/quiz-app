@@ -8,7 +8,7 @@ export default function Footer() {
     state: { currentQuestion },
   } = usePlayQuizContext();
   return (
-    <div className="p-3 flex">
+    <div className="p-3 flex justify-end">
       <Button
         onClick={() => {
           dispatch({

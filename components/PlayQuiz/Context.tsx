@@ -1,9 +1,6 @@
 import { EditorQuiz } from "@/types";
-import { Question } from "@prisma/client";
-import { Members, PresenceChannel } from "pusher-js";
 import {
   createContext,
-  useCallback,
   useContext,
   useEffect,
   useMemo,
@@ -29,7 +26,7 @@ type PlayQuizState = {
   isStarterDialogOpen: boolean;
   quizMode: quizMode;
   userAnswer: userAnswer;
-  timeTaken: number
+  timeTaken: number;
 };
 
 type PlayQuizActions =
@@ -38,7 +35,8 @@ type PlayQuizActions =
   | { type: "SET_IS_STARTER_DIALOG_OPEN"; payload: boolean }
   | { type: "SET_QUIZ_MODE"; payload: quizMode }
   | { type: "SET_USER_ANSWER"; payload: userAnswer }
-  | { type: "SET_PLAY_QUIZ_QUESTIONS"; payload:  PlayQuizQuestion[] };
+  | { type: "SET_PLAY_QUIZ_QUESTIONS"; payload: PlayQuizQuestion[] }
+  | { type: "SET_TIME_TAKEN"; payload: number };
 
 type PlayQuizContextType = {
   state: PlayQuizState;
@@ -51,7 +49,7 @@ const initialState: PlayQuizState = {
   isStarterDialogOpen: false,
   quizMode: "waiting",
   userAnswer: null,
-  timeTaken: 0
+  timeTaken: 0,
 };
 
 const quizRoomReducer = (
@@ -71,6 +69,8 @@ const quizRoomReducer = (
       return { ...state, userAnswer: action.payload };
     case "SET_PLAY_QUIZ_QUESTIONS":
       return { ...state, playQuizQuestions: action.payload };
+    case "SET_TIME_TAKEN":
+      return { ...state, timeTaken: action.payload };
     default:
       return state;
   }
@@ -88,6 +88,7 @@ export const PlayQuizProvider = ({
   quiz: EditorQuiz;
 }) => {
   const [state, dispatch] = useReducer(quizRoomReducer, initialState);
+  const { userAnswer, timeTaken, quizMode } = state;
 
   const initialQuestions: PlayQuizQuestion[] = useMemo(() => {
     return quiz.questions.map((question) => {
@@ -99,6 +100,31 @@ export const PlayQuizProvider = ({
     dispatch({ type: "SET_QUESTIONS", payload: initialQuestions });
     dispatch({ type: "SET_IS_STARTER_DIALOG_OPEN", payload: true });
   }, [initialQuestions]);
+
+  useEffect(() => {
+    if (typeof userAnswer !== "string" && userAnswer && quizMode === 'answered') {
+      const newPlayQuizQuestions = state.playQuizQuestions.map(
+        (question, i) => {
+          if (state.currentQuestion === i) {
+            return {
+              ...question,
+              isAnswerRight: userAnswer.isCorrect
+                ? userAnswer.isCorrect
+                : false,
+              timeTaken,
+            };
+          } else {
+            return question;
+          }
+        }
+      );
+      dispatch({
+        type: "SET_PLAY_QUIZ_QUESTIONS",
+        payload: newPlayQuizQuestions,
+      });
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [quizMode]);
 
   return (
     <QuizRoomContext.Provider value={{ state, dispatch }}>

@@ -22,8 +22,6 @@ export default function FillInTheBlanks({
   } = useEditorContext();
   const question = getValues(`questions.${questionIndex}`);
 
-  console.log(question);
-
   const watchQuestion = watch(`questions.${questionIndex}.question`);
   const specialChars =
     /([ \t\r\f\?\!\/\@\$\>\<\*\+\-\(\)\[\]\{\}\:\;\'\"\`\|\&\^\%\,\.\s\\])/;
@@ -83,7 +81,6 @@ export default function FillInTheBlanks({
       };
     });
 
-  console.log(oneBlankError);
 
   return (
     <div className="flex flex-col gap-1">

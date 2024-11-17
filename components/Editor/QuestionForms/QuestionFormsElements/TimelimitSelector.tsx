@@ -19,6 +19,9 @@ export default function TimelimitSelector({
   } = useEditorContext();
 
   const timeLimit = getValues(`questions.${questionIndex}.timeLimit`);
+  console.log(timeLimit);
+  
+  
 
   return (
     <Select
@@ -26,7 +29,7 @@ export default function TimelimitSelector({
       onValueChange={(e) =>
         setValue(
           `questions.${questionIndex}.timeLimit`,
-          Number(e) || TIMELIMIT_OPTIONS[0].value
+          Number(e)
         )
       }
     >

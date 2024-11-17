@@ -25,7 +25,6 @@ export default function Content({
     <div className="flex flex-col w-full flex-1  items-center">
       <div className="p-3 max-w-4xl flex-1 flex flex-col">
         <div className="flex-1 flex">
-          <div>{quizMode}</div>
           {questions
             .sort((a, b) => a.questionOrder - b.questionOrder)
             .map((question) => {
@@ -43,7 +42,7 @@ export default function Content({
                   viewport={{ amount: 0 }}
                   style={{
                     display:
-                      question.questionOrder === currentQuestion 
+                      question.questionOrder === currentQuestion
                         ? "grid"
                         : "none",
                   }}
@@ -63,7 +62,7 @@ export default function Content({
                 </motion.div>
               );
             })}
-            
+          <div></div>
         </div>
       </div>
     </div>

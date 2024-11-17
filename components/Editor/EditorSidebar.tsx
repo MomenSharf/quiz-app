@@ -31,7 +31,7 @@ export default function EditorSidebar() {
         id,
         type: "UNSELECTED",
         questionOrder: questions.length,
-        timeLimit: 5,
+        timeLimit: 5000,
         points: 1,
       },
     ]);

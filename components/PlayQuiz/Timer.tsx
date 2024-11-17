@@ -10,30 +10,25 @@ export default function Timer({ timeLimit }: { timeLimit: number }) {
   const [remainingTime, setRemainingTime] = useState(timeLimit); // Initialize with the passed timeLimit
   const intervalIdRef = useRef<number | null>(null);
 
-  console.log(timeLimit);
-  
-
   const {
     dispatch,
     state: { quizMode },
   } = usePlayQuizContext();
 
   // Calculate progress as a percentage between 0 and 100
-  const progressValue = ((remainingTime / timeLimit) * 1000) / 10000;
+  const progressValue = (remainingTime / timeLimit) * 100;
   //  Math.floor(
   // );
 
   useEffect(() => {
-    // Log progressValue to see if it updates
-    if (quizMode === "timeOut") {
-    }
-
-    if (quizMode === "playing") {
+    if (quizMode === "answered") {
+      dispatch({ type: "SET_TIME_TAKEN", payload: (timeLimit - remainingTime) });
+    } else if (quizMode === "playing") {
       intervalIdRef.current = window.setInterval(() => {
         setRemainingTime((prevTime) => {
           if (prevTime <= 0) {
             dispatch({ type: "SET_QUIZ_MODE", payload: "timeOut" });
-            console.log(timeLimit);
+            dispatch({ type: "SET_TIME_TAKEN", payload: timeLimit });
 
             clearInterval(intervalIdRef.current as number); // Stop the countdown when it reaches 0
             return 0;
@@ -48,7 +43,7 @@ export default function Timer({ timeLimit }: { timeLimit: number }) {
         clearInterval(intervalIdRef.current);
       }
     };
-  }, [dispatch, quizMode, remainingTime]); // Ensure remainingTime is included as a dependency
+  }, [dispatch, quizMode, remainingTime, timeLimit]); // Ensure remainingTime is included as a dependency
 
   function start() {
     if (remainingTime > 0) {
