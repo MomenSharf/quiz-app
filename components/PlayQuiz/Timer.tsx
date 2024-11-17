@@ -1,11 +1,15 @@
 import { cn } from "@/lib/utils";
 import { useState, useEffect, useRef } from "react";
 import { Progress } from "../ui/progress";
+import { TimerIcon } from "lucide-react";
+import { usePlayQuizContext } from "./Context";
 
 export default function Timer({ timeLimit }: { timeLimit: number }) {
   const [isRunning, setIsRunning] = useState(false);
-  const [remainingTime, setRemainingTime] = useState(timeLimit * 1000); // Initialize with the passed timeLimit
+  const [remainingTime, setRemainingTime] = useState(timeLimit * 1000 / 3); // Initialize with the passed timeLimit
   const intervalIdRef = useRef<number | null>(null);
+
+  const {dispatch, state : {quizMode} } = usePlayQuizContext()
 
   // Calculate progress as a percentage between 0 and 100
   const progressValue = ((remainingTime / timeLimit) * 1000) / 10000
@@ -14,12 +18,13 @@ export default function Timer({ timeLimit }: { timeLimit: number }) {
 
   useEffect(() => {
     // Log progressValue to see if it updates
-    console.log("Progress Value:", progressValue);
 
-    if (isRunning) {
+    if (quizMode === 'playing') {
       intervalIdRef.current = window.setInterval(() => {
         setRemainingTime((prevTime) => {
           if (prevTime <= 0) {
+            dispatch({type: 'SET_QUIZ_MODE', payload:'timeOut'})
+            
             clearInterval(intervalIdRef.current as number); // Stop the countdown when it reaches 0
             return 0;
           }
@@ -33,7 +38,7 @@ export default function Timer({ timeLimit }: { timeLimit: number }) {
         clearInterval(intervalIdRef.current);
       }
     };
-  }, [isRunning, remainingTime]); // Ensure remainingTime is included as a dependency
+  }, [dispatch, quizMode, remainingTime]); // Ensure remainingTime is included as a dependency
 
   function start() {
     if (remainingTime > 0) {
@@ -76,22 +81,21 @@ export default function Timer({ timeLimit }: { timeLimit: number }) {
 
   return (
     <div className="flex items-center gap-2">
-      <p className="text-sm font-medium">Timer</p>
-
-      {/* Progress bar that updates based on the remaining time */}
       <Progress
         value={Math.floor(progressValue)}
-        className={cn("w-full h-2 border bg-transparent transition-colors", {
-          "bg-destructive-var": remainingTime <= 1000, // Highlight text when time is near the end
+        className={cn("h-3 w-full border bg-transparent transition-colors", {
+          "bg-destructive-var": remainingTime <= 1000, 
         })}
       />
 
       <div
         onClick={start}
-        className={cn('transition-colors w-[80px]',{
-          "text-destructive": remainingTime <= 1000, // Highlight text when time is near the end
+        className={cn('transition-colors w-[80px] flex gap-1',{
+          "text-destructive": remainingTime <= 1000, 
         })}
       >
+        <TimerIcon className="left-2 w-4 h-4" />
+
         {formatTime()}
       </div>
 

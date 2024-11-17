@@ -15,14 +15,27 @@ export type PlayQuizQuestion = EditorQuiz["questions"][number] & {
   isAnswerRight: boolean;
 };
 
+type quizMode = "waiting" | "playing" | "timeOut" | "answered" | "ended";
+
+type userAnswer =
+  | EditorQuiz["questions"][number]["items"][number]
+  | EditorQuiz["questions"][number]["correctAnswer"]
+  | null;
+
 type PlayQuizState = {
   currentQuestion: number;
   playQuizQuestions: PlayQuizQuestion[];
+  isStarterDialogOpen: boolean;
+  quizMode: quizMode;
+  userAnswer: userAnswer;
 };
 
 type PlayQuizActions =
   | { type: "SET_QUESTIONS"; payload: PlayQuizQuestion[] }
-  | { type: "SET_CURRENT_QUESTION"; payload: number };
+  | { type: "SET_CURRENT_QUESTION"; payload: number }
+  | { type: "SET_IS_STARTER_DIALOG_OPEN"; payload: boolean }
+  | { type: "SET_QUIZ_MODE"; payload: quizMode }
+  | { type: "SET_USER_ANSWER"; payload: userAnswer };
 
 type PlayQuizContextType = {
   state: PlayQuizState;
@@ -32,6 +45,9 @@ type PlayQuizContextType = {
 const initialState: PlayQuizState = {
   currentQuestion: 0,
   playQuizQuestions: [],
+  isStarterDialogOpen: false,
+  quizMode: "waiting",
+  userAnswer: null,
 };
 
 const quizRoomReducer = (
@@ -41,8 +57,14 @@ const quizRoomReducer = (
   switch (action.type) {
     case "SET_QUESTIONS":
       return { ...state, playQuizQuestions: action.payload };
-      case 'SET_CURRENT_QUESTION' :
-        return { ...state, currentQuestion: action.payload };
+    case "SET_CURRENT_QUESTION":
+      return { ...state, currentQuestion: action.payload };
+    case "SET_IS_STARTER_DIALOG_OPEN":
+      return { ...state, isStarterDialogOpen: action.payload };
+    case "SET_QUIZ_MODE":
+      return { ...state, quizMode: action.payload };
+    case "SET_QUIZ_MODE":
+      return { ...state, quizMode: action.payload };
     default:
       return state;
   }
@@ -69,6 +91,7 @@ export const PlayQuizProvider = ({
 
   useEffect(() => {
     dispatch({ type: "SET_QUESTIONS", payload: initialQuestions });
+    dispatch({ type: "SET_IS_STARTER_DIALOG_OPEN", payload: true });
   }, [initialQuestions]);
 
   return (

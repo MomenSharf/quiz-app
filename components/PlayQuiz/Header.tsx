@@ -1,12 +1,13 @@
-import React from "react";
-import { Button } from "../ui/button";
+import { toCapitalize } from "@/lib/utils";
 import { ArrowLeft } from "lucide-react";
-import { usePlayQuizContext } from "./Context";
+import { Button } from "../ui/button";
+import { PlayQuizQuestion, usePlayQuizContext } from "./Context";
+import Settings from "./Settings";
 
 export default function Header({
-  numberOfQuestions,
+  questions,
 }: {
-  numberOfQuestions: number;
+  questions: PlayQuizQuestion[];
 }) {
   const {
     dispatch,
@@ -21,11 +22,17 @@ export default function Header({
         onClick={() => {
           dispatch({ type: "SET_CURRENT_QUESTION", payload: 0 });
         }}
-        className="font-medium"
+        className="text-gray-800"
       >
-        Question {currentQuestion + 1}/{numberOfQuestions}
+        Question {currentQuestion + 1}/{questions.length} - {" "}
+        {questions[currentQuestion] &&
+          toCapitalize(
+            questions[currentQuestion].type.split("_").join(" ").toLowerCase()
+          )}
       </div>
-      <div></div>
+      <Button variant='ghost' size='icon' className="p-1 rounded-full">
+         <Settings />
+      </Button>
     </div>
   );
 }
