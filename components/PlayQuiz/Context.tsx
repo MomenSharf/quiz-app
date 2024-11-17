@@ -9,6 +9,7 @@ import {
   useMemo,
   useReducer,
 } from "react";
+import { number } from "zod";
 
 export type PlayQuizQuestion = EditorQuiz["questions"][number] & {
   timeTaken: number;
@@ -28,6 +29,7 @@ type PlayQuizState = {
   isStarterDialogOpen: boolean;
   quizMode: quizMode;
   userAnswer: userAnswer;
+  timeTaken: number
 };
 
 type PlayQuizActions =
@@ -35,7 +37,8 @@ type PlayQuizActions =
   | { type: "SET_CURRENT_QUESTION"; payload: number }
   | { type: "SET_IS_STARTER_DIALOG_OPEN"; payload: boolean }
   | { type: "SET_QUIZ_MODE"; payload: quizMode }
-  | { type: "SET_USER_ANSWER"; payload: userAnswer };
+  | { type: "SET_USER_ANSWER"; payload: userAnswer }
+  | { type: "SET_PLAY_QUIZ_QUESTIONS"; payload:  PlayQuizQuestion[] };
 
 type PlayQuizContextType = {
   state: PlayQuizState;
@@ -48,6 +51,7 @@ const initialState: PlayQuizState = {
   isStarterDialogOpen: false,
   quizMode: "waiting",
   userAnswer: null,
+  timeTaken: 0
 };
 
 const quizRoomReducer = (
@@ -65,6 +69,8 @@ const quizRoomReducer = (
       return { ...state, quizMode: action.payload };
     case "SET_USER_ANSWER":
       return { ...state, userAnswer: action.payload };
+    case "SET_PLAY_QUIZ_QUESTIONS":
+      return { ...state, playQuizQuestions: action.payload };
     default:
       return state;
   }

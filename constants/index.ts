@@ -137,19 +137,19 @@ export const QUESTION_TYPES_WITH_LABEL_AND_ICONS: {
 ];
 
 export const TIMELIMIT_OPTIONS = [
-  { label: "5 seconds", value: 5 },
-  { label: "10 seconds", value: 10 },
-  { label: "15 seconds", value: 15 },
-  { label: "20 seconds", value: 20 },
-  { label: "30 seconds", value: 30 },
-  { label: "45 seconds", value: 45 },
-  { label: "1 minute", value: 60 },
-  { label: "2 minutes", value: 120 },
-  { label: "3 minutes", value: 180 },
-  { label: "5 minutes", value: 300 },
-  { label: "10 minutes", value: 600 },
-  { label: "15 minutes", value: 900 },
-  { label: "20 minutes", value: 1200 },
+  { label: "5 seconds", value: 5000 },
+  { label: "10 seconds", value: 10000 },
+  { label: "15 seconds", value: 15000 },
+  { label: "20 seconds", value: 20000 },
+  { label: "30 seconds", value: 30000 },
+  { label: "45 seconds", value: 45000 },
+  { label: "1 minute", value: 60000 },
+  { label: "2 minutes", value: 120000 },
+  { label: "3 minutes", value: 180000 },
+  { label: "5 minutes", value: 300000 },
+  { label: "10 minutes", value: 600000 },
+  { label: "15 minutes", value: 900000 },
+  { label: "20 minutes", value: 1200000 },
 ];
 
 export const POINTS_OPTIONS = [

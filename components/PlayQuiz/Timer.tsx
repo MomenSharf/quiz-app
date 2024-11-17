@@ -6,25 +6,35 @@ import { usePlayQuizContext } from "./Context";
 
 export default function Timer({ timeLimit }: { timeLimit: number }) {
   const [isRunning, setIsRunning] = useState(false);
-  const [remainingTime, setRemainingTime] = useState(timeLimit * 1000 / 3); // Initialize with the passed timeLimit
+  // const [remainingTime, setRemainingTime] = useState((timeLimit * 1000) / 3); // Initialize with the passed timeLimit
+  const [remainingTime, setRemainingTime] = useState(timeLimit); // Initialize with the passed timeLimit
   const intervalIdRef = useRef<number | null>(null);
 
-  const {dispatch, state : {quizMode} } = usePlayQuizContext()
+  console.log(timeLimit);
+  
+
+  const {
+    dispatch,
+    state: { quizMode },
+  } = usePlayQuizContext();
 
   // Calculate progress as a percentage between 0 and 100
-  const progressValue = ((remainingTime / timeLimit) * 1000) / 10000
+  const progressValue = ((remainingTime / timeLimit) * 1000) / 10000;
   //  Math.floor(
   // );
 
   useEffect(() => {
     // Log progressValue to see if it updates
+    if (quizMode === "timeOut") {
+    }
 
-    if (quizMode === 'playing') {
+    if (quizMode === "playing") {
       intervalIdRef.current = window.setInterval(() => {
         setRemainingTime((prevTime) => {
           if (prevTime <= 0) {
-            dispatch({type: 'SET_QUIZ_MODE', payload:'timeOut'})
-            
+            dispatch({ type: "SET_QUIZ_MODE", payload: "timeOut" });
+            console.log(timeLimit);
+
             clearInterval(intervalIdRef.current as number); // Stop the countdown when it reaches 0
             return 0;
           }
@@ -42,9 +52,9 @@ export default function Timer({ timeLimit }: { timeLimit: number }) {
 
   function start() {
     if (remainingTime > 0) {
-      setIsRunning(prev => !prev);
-    }else {
-      reset()
+      setIsRunning((prev) => !prev);
+    } else {
+      reset();
     }
   }
 
@@ -84,23 +94,20 @@ export default function Timer({ timeLimit }: { timeLimit: number }) {
       <Progress
         value={Math.floor(progressValue)}
         className={cn("h-3 w-full border bg-transparent transition-colors", {
-          "bg-destructive-var": remainingTime <= 1000, 
+          "bg-destructive-var": remainingTime <= 1000,
         })}
       />
 
       <div
         onClick={start}
-        className={cn('transition-colors w-[80px] flex gap-1',{
-          "text-destructive": remainingTime <= 1000, 
+        className={cn("transition-colors w-[80px] flex gap-1", {
+          "text-destructive": remainingTime <= 1000,
         })}
       >
         <TimerIcon className="left-2 w-4 h-4" />
 
         {formatTime()}
       </div>
-
-      
     </div>
   );
 }
-

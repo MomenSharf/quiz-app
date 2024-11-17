@@ -13,7 +13,7 @@ export default function PickAnswer({
 }) {
   const {
     dispatch,
-    state: { quizMode, userAnswer },
+    state: { quizMode, userAnswer, playQuizQuestions },
   } = usePlayQuizContext();
   console.log(userAnswer);
 
@@ -73,10 +73,13 @@ export default function PickAnswer({
               },
             }}
             onClick={() => {
+              const newPlayQuizQuestions = playQuizQuestions.map((question) => {
+
+              })
               if (quizMode === "playing") {
                 dispatch({ type: "SET_QUIZ_MODE", payload: "answered" });
                 dispatch({ type: "SET_USER_ANSWER", payload: item });
-                
+                // dispatch({type: 'SET_PLAY_QUIZ_QUESTIONS', payload})
               }
             }}
             // initial={{ x: 0 }}
