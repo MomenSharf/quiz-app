@@ -63,8 +63,8 @@ const quizRoomReducer = (
       return { ...state, isStarterDialogOpen: action.payload };
     case "SET_QUIZ_MODE":
       return { ...state, quizMode: action.payload };
-    case "SET_QUIZ_MODE":
-      return { ...state, quizMode: action.payload };
+    case "SET_USER_ANSWER":
+      return { ...state, userAnswer: action.payload };
     default:
       return state;
   }

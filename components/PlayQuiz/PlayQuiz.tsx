@@ -8,7 +8,6 @@ export default function PlayQuiz() {
   const {
     state: { playQuizQuestions },
   } = usePlayQuizContext();
-  console.log(playQuizQuestions);
 
   return (
     <div className="flex flex-col min-h-screen">
