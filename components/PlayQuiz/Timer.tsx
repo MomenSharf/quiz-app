@@ -1,10 +1,19 @@
 import { cn } from "@/lib/utils";
 import { useState, useEffect, useRef } from "react";
 import { Progress } from "../ui/progress";
-import { TimerIcon } from "lucide-react";
+import { TimerIcon, TimerOff } from "lucide-react";
 import { usePlayQuizContext } from "./Context";
+import { intervalToDuration } from "date-fns";
 
-export default function Timer({ timeLimit }: { timeLimit: number }) {
+export default function Timer({
+  timeLimit,
+  questionOrder,
+}: {
+  timeLimit: number;
+  questionOrder: number;
+}) {
+  console.log(timeLimit);
+
   const [isRunning, setIsRunning] = useState(false);
   // const [remainingTime, setRemainingTime] = useState((timeLimit * 1000) / 3); // Initialize with the passed timeLimit
   const [remainingTime, setRemainingTime] = useState(timeLimit); // Initialize with the passed timeLimit
@@ -12,7 +21,7 @@ export default function Timer({ timeLimit }: { timeLimit: number }) {
 
   const {
     dispatch,
-    state: { quizMode },
+    state: { quizMode, currentQuestion },
   } = usePlayQuizContext();
 
   // Calculate progress as a percentage between 0 and 100
@@ -31,14 +40,17 @@ export default function Timer({ timeLimit }: { timeLimit: number }) {
       }, 0);
       return; // Do not start the timer if answered
     }
-    if (quizMode === "playing") {
+    if (quizMode === "playing" && currentQuestion === questionOrder) {
       intervalIdRef.current = window.setInterval(() => {
         setRemainingTime((prevTime) => {
           if (prevTime <= 0) {
             clearInterval(intervalIdRef.current as number); // Stop the countdown when it reaches 0
             setTimeout(() => {
               dispatch({ type: "SET_TIME_TAKEN", payload: timeLimit });
-              // dispatch({ type: "SET_QUIZ_MODE", payload: "timeOut" });
+              dispatch({ type: "SET_QUIZ_MODE", payload: 'timeOut' });
+              setTimeout(() => {
+                dispatch({ type: "SET_IS_RESULT_SHEET_OPEN", payload: true });
+              }, 500);
             }, 0);
             return 0;
           }
@@ -80,36 +92,52 @@ export default function Timer({ timeLimit }: { timeLimit: number }) {
       2,
       "0"
     );
-    const milliseconds = String(
-      Math.floor((remainingTime % 1000) / 10)
-    ).padStart(2, "0");
+    // const milliseconds = String(
+    //   Math.floor((remainingTime % 1000) / 10)
+    // ).padStart(2, "0");
 
     return (
-      <div className="flex text-sm">
+      <div
+        className={cn("flex text-sm items-center text-success", {
+          "text-[#FFC107]": remainingTime <= timeLimit / 3.5,
+          "text-destructive": remainingTime <= timeLimit / 10,
+        })}
+      >
         <span>{minutes}</span>
         <span>:{seconds}</span>
-        <span className="text-xs relative top-[2px]">:{milliseconds}</span>
       </div>
     );
   }
 
   return (
     <div className="flex items-center gap-2">
-      <Progress
+      {/* <Progress
         value={Math.floor(progressValue)}
         className={cn("h-3 w-full border bg-transparent transition-colors", {
           "bg-destructive-var": remainingTime <= 1000,
         })}
-      />
+      /> */}
 
       <div
         onClick={start}
-        className={cn("transition-colors w-[80px] flex gap-1", {
-          "text-destructive": remainingTime <= 1000,
-        })}
+        className={cn(
+          "transition-colors w-[80px] flex gap-1 items-center justify-center px-2 py-1 bg-success/30 rounded-full",
+          {
+            "bg-[#FFC107]/20": remainingTime <= timeLimit / 3.5,
+            "bg-destructive/20": remainingTime <= timeLimit / 10,
+          }
+        )}
       >
-        <TimerIcon className="left-2 w-4 h-4" />
-
+        {remainingTime > 0 ? (
+          <TimerIcon
+            className={cn("w-4 h-4 text-success", {
+              "text-[#FFC107]": remainingTime <= timeLimit / 3.5,
+              "text-destructive": remainingTime <= timeLimit / 10,
+            })}
+          />
+        ) : (
+          <TimerOff className="w-4 h-4 text-destructive" />
+        )}
         {formatTime()}
       </div>
     </div>

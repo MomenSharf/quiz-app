@@ -7,6 +7,7 @@ import { Button } from "../ui/button";
 import OptionsSwitcher from "./OptionsSwitcher";
 import ProgressBar from "./ProgressBar";
 import Timer from "./Timer";
+import QuizResult from "./QuizResult";
 
 const variants = {
   hidden: { opacity: 0 },
@@ -19,12 +20,12 @@ export default function Content({
   questions: PlayQuizQuestion[];
 }) {
   const {
-    state: { currentQuestion, playQuizQuestions },
+    state: { currentQuestion, quizMode },
   } = usePlayQuizContext();
   return (
     <div className="flex flex-col w-full flex-1  items-center">
       <div className="p-3 max-w-4xl flex-1 flex flex-col">
-        {currentQuestion !== playQuizQuestions.length ? (
+        {quizMode !== "ended" ? (
           <div className="flex-1 flex">
             {questions
               .sort((a, b) => a.questionOrder - b.questionOrder)
@@ -57,16 +58,23 @@ export default function Content({
                           {toCapitalize(question.question)}
                         </p>
                       )}
-                      <Timer timeLimit={question.timeLimit} />
+                      <div className="flex gap-3 justify-between">
+
+                      <Timer
+                        timeLimit={question.timeLimit}
+                        questionOrder={question.questionOrder}
+                        />
+                        <div>Hint</div>
+                        </div>
                       <OptionsSwitcher question={question} />
                     </div>
                   </motion.div>
                 );
               })}
           </div>
-        ) : currentQuestion === playQuizQuestions.length ? (
-          "result"
-        ) : null}
+        ) : (
+          <QuizResult />
+        )}
       </div>
     </div>
   );

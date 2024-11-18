@@ -57,10 +57,11 @@ const SheetContent = React.forwardRef<
   React.ElementRef<typeof SheetPrimitive.Content>,
   SheetContentProps & {
     hideClose?: boolean; // Add hideClose as an optional prop
+    overlayClasses?: string
   }
->(({ side = "right", className, children, hideClose = false, ...props }, ref) => (
+>(({ side = "right", className, children, hideClose = false, overlayClasses, ...props }, ref) => (
   <SheetPortal>
-    <SheetOverlay />
+    <SheetOverlay className={overlayClasses}/>
     <SheetPrimitive.Content
       ref={ref}
       className={cn(sheetVariants({ side }), className)}

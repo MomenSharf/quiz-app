@@ -13,7 +13,7 @@ export type PlayQuizQuestion = EditorQuiz["questions"][number] & {
   isAnswerRight: boolean;
 };
 
-type quizMode = "waiting" | "playing" | "timeOut" | "answered" | "ended";
+type quizMode = "waiting" | "playing"  | "answered" | 'timeOut' | "ended";
 
 type userAnswer =
   | EditorQuiz["questions"][number]["items"][number]
