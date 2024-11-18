@@ -13,7 +13,6 @@ export default function Timer({
   timeLimit: number;
   questionOrder: number;
 }) {
-  console.log(timeLimit);
 
   const [isRunning, setIsRunning] = useState(false);
   // const [remainingTime, setRemainingTime] = useState((timeLimit * 1000) / 3); // Initialize with the passed timeLimit

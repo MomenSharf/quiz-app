@@ -103,7 +103,7 @@ export const PlayQuizProvider = ({
 
   useEffect(() => {
     dispatch({ type: "SET_QUESTIONS", payload: initialQuestions });
-    dispatch({ type: "SET_IS_STARTER_DIALOG_OPEN", payload: true });
+    // dispatch({ type: "SET_IS_STARTER_DIALOG_OPEN", payload: true });
   }, [initialQuestions]);
 
   useEffect(() => {
