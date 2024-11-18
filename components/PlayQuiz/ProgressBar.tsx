@@ -10,9 +10,8 @@ export default function ProgressBar() {
   const progressValue = (currentQuestion / playQuizQuestions.length) * 100;
   return (
     <Progress
-      value={100}
-      // value={progressValue ? progressValue : 3}
-      className="h-2"
+      value={progressValue ? progressValue : 3}
+      className="h-2 flex-1 sm:mx-10"
     />
   );
 }

@@ -20,7 +20,7 @@ export default function StarterDialog() {
 
   return (
     <Dialog open={isStarterDialogOpen}>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[425px]" hideClose>
         <DialogHeader>
           <DialogTitle className="text-center">Are You ready ?</DialogTitle>
         </DialogHeader>

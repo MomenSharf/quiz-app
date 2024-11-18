@@ -21,7 +21,6 @@ export default function PickAnswer({
       timeTaken,
     },
   } = usePlayQuizContext();
-  console.log(userAnswer);
 
   return (
     <div
@@ -71,7 +70,6 @@ export default function PickAnswer({
               },
             }}
             onClick={() => {
-              
               const newPlayQuizQuestions = playQuizQuestions.map(
                 (question, i) => {
                   if (currentQuestion === i) {
@@ -86,6 +84,9 @@ export default function PickAnswer({
               if (quizMode === "playing") {
                 dispatch({ type: "SET_QUIZ_MODE", payload: "answered" });
                 dispatch({ type: "SET_USER_ANSWER", payload: item });
+                setTimeout(() => {
+                  dispatch({ type: "SET_IS_RESULT_SHEET_OPEN", payload: true });
+                }, 500);
                 // dispatch({type: 'SET_PLAY_QUIZ_QUESTIONS', payload})
               }
             }}

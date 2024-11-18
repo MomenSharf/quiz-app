@@ -24,6 +24,7 @@ type PlayQuizState = {
   currentQuestion: number;
   playQuizQuestions: PlayQuizQuestion[];
   isStarterDialogOpen: boolean;
+  isResultSheetOpen: boolean;
   quizMode: quizMode;
   userAnswer: userAnswer;
   timeTaken: number;
@@ -33,6 +34,7 @@ type PlayQuizActions =
   | { type: "SET_QUESTIONS"; payload: PlayQuizQuestion[] }
   | { type: "SET_CURRENT_QUESTION"; payload: number }
   | { type: "SET_IS_STARTER_DIALOG_OPEN"; payload: boolean }
+  | { type: "SET_IS_RESULT_SHEET_OPEN"; payload: boolean }
   | { type: "SET_QUIZ_MODE"; payload: quizMode }
   | { type: "SET_USER_ANSWER"; payload: userAnswer }
   | { type: "SET_PLAY_QUIZ_QUESTIONS"; payload: PlayQuizQuestion[] }
@@ -47,6 +49,7 @@ const initialState: PlayQuizState = {
   currentQuestion: 0,
   playQuizQuestions: [],
   isStarterDialogOpen: false,
+  isResultSheetOpen: false,
   quizMode: "waiting",
   userAnswer: null,
   timeTaken: 0,
@@ -63,6 +66,8 @@ const quizRoomReducer = (
       return { ...state, currentQuestion: action.payload };
     case "SET_IS_STARTER_DIALOG_OPEN":
       return { ...state, isStarterDialogOpen: action.payload };
+    case "SET_IS_RESULT_SHEET_OPEN":
+      return { ...state, isResultSheetOpen: action.payload };
     case "SET_QUIZ_MODE":
       return { ...state, quizMode: action.payload };
     case "SET_USER_ANSWER":
@@ -102,7 +107,11 @@ export const PlayQuizProvider = ({
   }, [initialQuestions]);
 
   useEffect(() => {
-    if (typeof userAnswer !== "string" && userAnswer && quizMode === 'answered') {
+    if (
+      typeof userAnswer !== "string" &&
+      userAnswer &&
+      quizMode === "answered"
+    ) {
       const newPlayQuizQuestions = state.playQuizQuestions.map(
         (question, i) => {
           if (state.currentQuestion === i) {
@@ -123,7 +132,7 @@ export const PlayQuizProvider = ({
         payload: newPlayQuizQuestions,
       });
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [quizMode]);
 
   return (
@@ -137,7 +146,9 @@ export const PlayQuizProvider = ({
 export const usePlayQuizContext = () => {
   const context = useContext(QuizRoomContext);
   if (context === undefined) {
-    throw new Error("useEditorContext must be used within an EditorProvider");
+    throw new Error(
+      "usePlayQuizContext must be used within an PlayQuizProvider"
+    );
   }
   return context;
 };

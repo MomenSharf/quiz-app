@@ -22,18 +22,27 @@ export default function Timer({ timeLimit }: { timeLimit: number }) {
 
   useEffect(() => {
     if (quizMode === "answered") {
-      dispatch({ type: "SET_TIME_TAKEN", payload: (timeLimit - remainingTime) });
-    } else if (quizMode === "playing") {
+      // Defer dispatch to prevent state updates during rendering
+      setTimeout(() => {
+        dispatch({
+          type: "SET_TIME_TAKEN",
+          payload: timeLimit - remainingTime,
+        });
+      }, 0);
+      return; // Do not start the timer if answered
+    }
+    if (quizMode === "playing") {
       intervalIdRef.current = window.setInterval(() => {
         setRemainingTime((prevTime) => {
           if (prevTime <= 0) {
-            dispatch({ type: "SET_QUIZ_MODE", payload: "timeOut" });
-            dispatch({ type: "SET_TIME_TAKEN", payload: timeLimit });
-
             clearInterval(intervalIdRef.current as number); // Stop the countdown when it reaches 0
+            setTimeout(() => {
+              dispatch({ type: "SET_TIME_TAKEN", payload: timeLimit });
+              // dispatch({ type: "SET_QUIZ_MODE", payload: "timeOut" });
+            }, 0);
             return 0;
           }
-          return prevTime - 10; // Decrease the time by 10 ms (for smoother countdown)
+          return prevTime - 10; // Decrease the time by 10 ms
         });
       }, 10);
     }
