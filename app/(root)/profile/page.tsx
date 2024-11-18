@@ -1,14 +1,5 @@
-'use client'
-
-import App from "@/components/test/App";
-import { Reorder } from "framer-motion";
-
-
+"use client";
 
 export default function Page() {
-
-
-  return (''
-    // <App />
-  );
+  return <div></div>;
 }

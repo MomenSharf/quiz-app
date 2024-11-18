@@ -8,6 +8,7 @@ import OptionsSwitcher from "./OptionsSwitcher";
 import ProgressBar from "./ProgressBar";
 import Timer from "./Timer";
 import QuizResult from "./QuizResult";
+import Hints from "./Hints";
 
 const variants = {
   hidden: { opacity: 0 },
@@ -64,7 +65,7 @@ export default function Content({
                         timeLimit={question.timeLimit}
                         questionOrder={question.questionOrder}
                         />
-                        <div>Hint</div>
+                       <Hints />
                         </div>
                       <OptionsSwitcher question={question} />
                     </div>

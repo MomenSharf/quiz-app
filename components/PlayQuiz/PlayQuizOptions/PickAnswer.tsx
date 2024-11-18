@@ -75,9 +75,11 @@ export default function PickAnswer({
                   if (currentQuestion === i) {
                     return {
                       ...question,
-                      isAnswerRight: item.isCorrect,
+                      isAnswerRight: question.correctAnswer === 'true',
                       timeTaken,
                     };
+                  }else {
+                    return question
                   }
                 }
               );
@@ -87,7 +89,7 @@ export default function PickAnswer({
                 setTimeout(() => {
                   dispatch({ type: "SET_IS_RESULT_SHEET_OPEN", payload: true });
                 }, 500);
-                // dispatch({type: 'SET_PLAY_QUIZ_QUESTIONS', payload})
+                dispatch({type: 'SET_PLAY_QUIZ_QUESTIONS', payload: newPlayQuizQuestions})
               }
             }}
             initial={{ x: 0, scale: 1 }}

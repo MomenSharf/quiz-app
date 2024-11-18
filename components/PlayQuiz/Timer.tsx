@@ -4,6 +4,7 @@ import { Progress } from "../ui/progress";
 import { TimerIcon, TimerOff } from "lucide-react";
 import { usePlayQuizContext } from "./Context";
 import { intervalToDuration } from "date-fns";
+import { buttonVariants } from "../ui/button";
 
 export default function Timer({
   timeLimit,
@@ -120,11 +121,11 @@ export default function Timer({
 
       <div
         onClick={start}
-        className={cn(
-          "transition-colors w-[80px] flex gap-1 items-center justify-center px-2 py-1 bg-success/30 rounded-full",
+        className={cn(buttonVariants(),
+          "transition-colors text-sm flex gap-1 items-center justify-center py-2 px-4 bg-success/20 hover:bg-success/20 rounded-full",
           {
-            "bg-[#FFC107]/20": remainingTime <= timeLimit / 3.5,
-            "bg-destructive/20": remainingTime <= timeLimit / 10,
+            "bg-[#FFC107]/20 hover:bg-[#FFC107]/20": remainingTime <= timeLimit / 3.5,
+            "bg-destructive/20 hover:bg-destructive/20": remainingTime <= timeLimit / 10,
           }
         )}
       >
