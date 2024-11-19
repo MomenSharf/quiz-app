@@ -25,7 +25,7 @@ export default function Content({
   } = usePlayQuizContext();
   return (
     <div className="flex flex-col w-full flex-1  items-center">
-      <div className="p-3 max-w-4xl flex-1 flex flex-col">
+      <div className="p-3 max-w-6xl flex-1 flex flex-col">
         {quizMode !== "ended" ? (
           <div className="flex-1 flex">
             {questions

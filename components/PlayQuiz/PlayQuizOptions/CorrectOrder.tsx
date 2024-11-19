@@ -90,13 +90,6 @@ export default function CorrectOrder({
     [question.items]
   );
   const [items, setItems] = useState(shuffledItems);
-  // const [items, setItems] = useState(() =>
-  //   shuffleArray(
-  //     question.items.sort(
-  //       (a, b) => (a.order ? a.order : 0) - (b.order ? b.order : 0)
-  //     )
-  //   )
-  // );
 
   useEffect(() => {
     if (quizMode === "answered" || quizMode === "timeOut") {
@@ -125,6 +118,8 @@ export default function CorrectOrder({
     quizMode === "answered" &&
     playQuizQuestions[currentQuestion].isAnswerRight &&
     userAnswer?.type === "CORRECT_ORDER";
+
+    
 
   return (
     items && (

@@ -21,6 +21,8 @@ export default function OptionsSwitcher({
         return <CorrectOrder question={question} />;
     case "MATCHING_PAIRS":
       return <MatchingPairs question={question} />;
+    case 'FILL_IN_THE_BLANK' :
+      return ''
     default:
       return;
   }

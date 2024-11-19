@@ -20,6 +20,7 @@ export type Item = EditorQuiz["questions"][number]["items"][number];
 type userAnswer =
   | { type: "PICK_ANSWER"; answer: Item }
   | { type: "CORRECT_ORDER"; answer: Item[] }
+  | { type: "MATCHING_PAIRS"; answer: { texts: Item[]; matches: Item[] } }
   | { type: "TRUE_FALSE"; answer: "true" | "false" }
   | { type: "SHORT_ANSWER"; answer: string }
   | null;
@@ -222,8 +223,32 @@ export const PlayQuizProvider = ({
             dispatch({ type: "SET_IS_RESULT_SHEET_OPEN", payload: true });
           }, 1200);
           break;
+        case "MATCHING_PAIRS":
+          newPlayQuizQuestions = playQuizQuestions.map((question, i) => {
+            const isAnswerRight = userAnswer.answer.texts.every(
+              (textItem, i) => {
+                return textItem.id === userAnswer.answer.matches[i].id;
+              }
+            );
+            if (currentQuestion === i && userAnswer.answer) {
+              return {
+                ...question,
+                isAnswerRight,
+                timeTaken,
+              };
+            } else {
+              return question;
+            }
+          });
+          dispatch({
+            type: "SET_PLAY_QUIZ_QUESTIONS",
+            payload: newPlayQuizQuestions,
+          });
+          setTimeout(() => {
+            dispatch({ type: "SET_IS_RESULT_SHEET_OPEN", payload: true });
+          }, 1200);
+          break;
       }
-   
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [quizMode]);

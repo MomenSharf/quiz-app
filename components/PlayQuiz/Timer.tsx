@@ -122,7 +122,7 @@ export default function Timer({
       <div
         onClick={start}
         className={cn(buttonVariants(),
-          "transition-colors text-sm flex gap-1 items-center justify-center py-2 px-4 bg-success/20 hover:bg-success/20 rounded-full",
+          "min-w-[116px] transition-colors text-sm flex gap-1 items-center justify-center py-2 px-4 bg-success/20 hover:bg-success/20 rounded-full",
           {
             "bg-[#FFC107]/20 hover:bg-[#FFC107]/20": remainingTime <= timeLimit / 3.5,
             "bg-destructive/20 hover:bg-destructive/20": remainingTime <= timeLimit / 10,
@@ -131,7 +131,7 @@ export default function Timer({
       >
         {remainingTime > 0 ? (
           <TimerIcon
-            className={cn("w-4 h-4 text-success", {
+            className={cn("w-5 h-5 text-success", {
               "text-[#FFC107]": remainingTime <= timeLimit / 3.5,
               "text-destructive": remainingTime <= timeLimit / 10,
             })}
