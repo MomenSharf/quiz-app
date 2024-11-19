@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { Item, PlayQuizQuestion, usePlayQuizContext } from "../Context";
 import { Reorder, useDragControls, useMotionValue } from "framer-motion";
-import { cn } from "@/lib/utils";
+import { cn, shuffleArray } from "@/lib/utils";
 import { FormControl, FormField, FormItem } from "@/components/ui/form";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
@@ -13,12 +13,13 @@ import { GripVertical } from "lucide-react";
 
 function CorrectOrderItem({
   item,
-  itemIndex,
+  isCorrect,
+  isShaking,
 }: {
   item: Item;
-  itemIndex: number;
+  isShaking: boolean;
+  isCorrect: boolean;
 }) {
-  
   const y = useMotionValue(0);
   const dragControls = useDragControls();
 
@@ -30,6 +31,16 @@ function CorrectOrderItem({
       whileDrag={{ scale: 1.05 }}
       dragListener={false}
       dragControls={dragControls}
+      initial={{ x: 0, scale: 1 }}
+      animate={{
+        x: isShaking ? [0, -10, 10, -10, 10, 0] : 0,
+        scale: isCorrect ? [1, 1.1, 1] : 1,
+        rotate: isCorrect ? [0, 5, -5, 0] : 0,
+      }}
+      transition={{
+        duration: 0.3,
+        ease: "easeInOut",
+      }}
       className="flex"
     >
       <div
@@ -68,13 +79,52 @@ export default function CorrectOrder({
     dispatch,
     state: {
       quizMode,
-      userAnswer,
       playQuizQuestions,
       currentQuestion,
-      timeTaken,
+      userAnswer,
+      isResultSheetOpen,
     },
   } = usePlayQuizContext();
-  const [items, setItems] = useState(question.items);
+  const shuffledItems = useCallback(
+    () => shuffleArray([...question.items]),
+    [question.items]
+  );
+  const [items, setItems] = useState(shuffledItems);
+  // const [items, setItems] = useState(() =>
+  //   shuffleArray(
+  //     question.items.sort(
+  //       (a, b) => (a.order ? a.order : 0) - (b.order ? b.order : 0)
+  //     )
+  //   )
+  // );
+
+  useEffect(() => {
+    if (quizMode === "answered" || quizMode === "timeOut") {
+      setTimeout(() => {
+        setItems(
+          question.items.sort(
+            (a, b) => (a.order ? a.order : 0) - (b.order ? b.order : 0)
+          )
+        );
+      }, 500);
+    } else if (
+      quizMode === "playing" &&
+      playQuizQuestions[currentQuestion].isAnswerRight === null &&
+      currentQuestion !== 0
+    ) {
+      setItems(shuffleArray([...question.items]));
+    }
+  }, [quizMode]);
+
+  const isShaking =
+    quizMode === "answered" &&
+    !playQuizQuestions[currentQuestion].isAnswerRight &&
+    userAnswer?.type === "CORRECT_ORDER";
+
+  const isCorrect =
+    quizMode === "answered" &&
+    playQuizQuestions[currentQuestion].isAnswerRight &&
+    userAnswer?.type === "CORRECT_ORDER";
 
   return (
     items && (
@@ -85,32 +135,22 @@ export default function CorrectOrder({
         className="flex flex-col gap-3"
       >
         {items.map((item, i) => {
-          return <CorrectOrderItem key={item.id} item={item} itemIndex={i} />;
+          return (
+            <CorrectOrderItem
+              key={item.id}
+              item={item}
+              isShaking={isShaking}
+              isCorrect={isCorrect || false}
+            />
+          );
         })}
         <Button
           onClick={() => {
-            const newPlayQuizQuestions = playQuizQuestions.map(
-              (question, i) => {
-                if (currentQuestion === i) {
-                  return {
-                    ...question,
-                    isAnswerRight: question.correctAnswer === "true",
-                    timeTaken,
-                  };
-                } else {
-                  return question;
-                }
-              }
-            );
             if (quizMode === "playing") {
               dispatch({ type: "SET_QUIZ_MODE", payload: "answered" });
-              dispatch({ type: "SET_USER_ANSWER", payload: item });
-              setTimeout(() => {
-                dispatch({ type: "SET_IS_RESULT_SHEET_OPEN", payload: true });
-              }, 500);
               dispatch({
-                type: "SET_PLAY_QUIZ_QUESTIONS",
-                payload: newPlayQuizQuestions,
+                type: "SET_USER_ANSWER",
+                payload: { type: "CORRECT_ORDER", answer: items },
               });
             }
           }}

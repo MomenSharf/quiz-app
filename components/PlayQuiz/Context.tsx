@@ -9,7 +9,6 @@ import {
 } from "react";
 import stringSimilarity from "string-similarity";
 
-
 export type PlayQuizQuestion = EditorQuiz["questions"][number] & {
   timeTaken: number;
   isAnswerRight: boolean | null;
@@ -20,6 +19,7 @@ export type Item = EditorQuiz["questions"][number]["items"][number];
 
 type userAnswer =
   | { type: "PICK_ANSWER"; answer: Item }
+  | { type: "CORRECT_ORDER"; answer: Item[] }
   | { type: "TRUE_FALSE"; answer: "true" | "false" }
   | { type: "SHORT_ANSWER"; answer: string }
   | null;
@@ -107,7 +107,7 @@ export const PlayQuizProvider = ({
     quizMode,
     playQuizQuestions,
     currentQuestion,
-    isResultSheetOpen
+    isResultSheetOpen,
   } = state;
 
   const initialQuestions: PlayQuizQuestion[] = useMemo(() => {
@@ -123,10 +123,10 @@ export const PlayQuizProvider = ({
 
   useEffect(() => {
     if (quizMode === "answered" && userAnswer) {
-      let newPlayQuizQuestions : PlayQuizQuestion[]
+      let newPlayQuizQuestions: PlayQuizQuestion[];
       switch (userAnswer.type) {
         case "PICK_ANSWER":
-           newPlayQuizQuestions = playQuizQuestions.map((question, i) => {
+          newPlayQuizQuestions = playQuizQuestions.map((question, i) => {
             if (currentQuestion === i && userAnswer.answer.isCorrect) {
               return {
                 ...question,
@@ -147,11 +147,15 @@ export const PlayQuizProvider = ({
           break;
         case "SHORT_ANSWER":
           newPlayQuizQuestions = playQuizQuestions.map((question, i) => {
-            if (currentQuestion === i && userAnswer.answer && question.correctAnswer) {
+            if (
+              currentQuestion === i &&
+              userAnswer.answer &&
+              question.correctAnswer
+            ) {
               const isAnswerRight = !!stringSimilarity.compareTwoStrings(
                 userAnswer.answer.toLowerCase().trim(),
                 question.correctAnswer.toLowerCase().trim()
-              )
+              );
               return {
                 ...question,
                 isAnswerRight,
@@ -169,8 +173,8 @@ export const PlayQuizProvider = ({
             dispatch({ type: "SET_IS_RESULT_SHEET_OPEN", payload: true });
           }, 500);
           break;
-          case "TRUE_FALSE":
-           newPlayQuizQuestions = playQuizQuestions.map((question, i) => {
+        case "TRUE_FALSE":
+          newPlayQuizQuestions = playQuizQuestions.map((question, i) => {
             if (currentQuestion === i && userAnswer.answer) {
               return {
                 ...question,
@@ -189,32 +193,40 @@ export const PlayQuizProvider = ({
             dispatch({ type: "SET_IS_RESULT_SHEET_OPEN", payload: true });
           }, 500);
           break;
+        case "CORRECT_ORDER":
+          newPlayQuizQuestions = playQuizQuestions.map((question, i) => {
+            const isAnswerRight =
+              question.items.length === userAnswer.answer.length &&
+              question.items
+                .sort(
+                  (a, b) => (a.order ? a.order : 0) - (b.order ? b.order : 0)
+                )
+                .every((item1, i) => {
+                  return item1.order === userAnswer.answer[i].order;
+                });
+            if (currentQuestion === i && userAnswer.answer) {
+              return {
+                ...question,
+                isAnswerRight,
+                timeTaken,
+              };
+            } else {
+              return question;
+            }
+          });
+          dispatch({
+            type: "SET_PLAY_QUIZ_QUESTIONS",
+            payload: newPlayQuizQuestions,
+          });
+          setTimeout(() => {
+            dispatch({ type: "SET_IS_RESULT_SHEET_OPEN", payload: true });
+          }, 1200);
+          break;
       }
-      // const newPlayQuizQuestions = state.playQuizQuestions.map(
-      //   (question, i) => {
-      //     if (state.currentQuestion === i) {
-      //       return {
-      //         ...question,
-      //         isAnswerRight: userAnswer.isCorrect
-      //           ? userAnswer.isCorrect
-      //           : false,
-      //         timeTaken,
-      //       };
-      //     } else {
-      //       return question;
-      //     }
-      //   }
-      // );
-      // dispatch({
-      //   type: "SET_PLAY_QUIZ_QUESTIONS",
-      //   payload: newPlayQuizQuestions,
-      // });
+   
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [quizMode]);
-
-  
-  
 
   return (
     <QuizRoomContext.Provider value={{ state, dispatch }}>

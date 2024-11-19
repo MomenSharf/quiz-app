@@ -54,8 +54,8 @@ export default function TrueAndFalse({
         initial={{ x: 0, scale: 1 }}
         animate={{
           x: isShaking && userAnswer.answer === "true" ? [0, -10, 10, -10, 10, 0] : 0,
-          scale: isCorrect && userAnswer.answer === "true" ? [1, 1.1, 1] : 1,
-          rotate: isCorrect && userAnswer.answer === "true" ? [0, 5, -5, 0] : 0,
+          scale: (isCorrect && userAnswer.answer === "true") || (quizMode === 'timeOut' &&  question.correctAnswer === 'true') ? [1, 1.1, 1] : 1,
+          rotate: isCorrect && userAnswer.answer === "true" ||  (quizMode === 'timeOut' && question.correctAnswer === 'true')  ? [0, 5, -5, 0] : 0,
         }}
         transition={{
           duration: 0.3,
@@ -93,9 +93,9 @@ export default function TrueAndFalse({
         }}
         initial={{ x: 0, scale: 1 }}
         animate={{
-          x: isShaking && userAnswer.answer === "false" ? [0, -10, 10, -10, 10, 0] : 0,
-          scale: isCorrect && userAnswer.answer === "false" ? [1, 1.1, 1] : 1,
-          rotate: isCorrect && userAnswer.answer === "false" ? [0, 5, -5, 0] : 0,
+          x: isShaking && userAnswer.answer === "false"    ? [0, -10, 10, -10, 10, 0] : 0,
+          scale: isCorrect && userAnswer.answer === "false" || (quizMode === 'timeOut' &&  question.correctAnswer === 'false')  ? [1, 1.1, 1] : 1,
+          rotate: isCorrect && userAnswer.answer === "false"||(quizMode === 'timeOut' &&  question.correctAnswer === 'false') ? [0, 5, -5, 0] : 0,
         }}
         transition={{
           duration: 0.3,

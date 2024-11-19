@@ -6,6 +6,8 @@ export default function MatchingPairs({
 }: {
   question: PlayQuizQuestion;
 }) {
+  const items = question.items.map(item => item.text)
+  const matches = question.items.map(item => item.match)
   return (
     <div>MatchingPairs</div>
   )

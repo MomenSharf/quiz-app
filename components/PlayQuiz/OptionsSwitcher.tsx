@@ -17,10 +17,10 @@ export default function OptionsSwitcher({
       return <TrueAndFalse question={question} />;
     case "SHORT_ANSWER":
       return <ShortAnswer question={question} />;
-    // case "MATCHING_PAIRS":
-    //   return <MatchingPairs question={question} />;
-    // case "ORDER":
-    //   return <CorrectOrder question={question} />;
+      case "ORDER":
+        return <CorrectOrder question={question} />;
+    case "MATCHING_PAIRS":
+      return <MatchingPairs question={question} />;
     default:
       return;
   }

@@ -47,7 +47,7 @@ export default function Timer({
             clearInterval(intervalIdRef.current as number); // Stop the countdown when it reaches 0
             setTimeout(() => {
               dispatch({ type: "SET_TIME_TAKEN", payload: timeLimit });
-              // dispatch({ type: "SET_QUIZ_MODE", payload: 'timeOut' });
+              dispatch({ type: "SET_QUIZ_MODE", payload: 'timeOut' });
               setTimeout(() => {
                 dispatch({ type: "SET_IS_RESULT_SHEET_OPEN", payload: true });
               }, 500);
