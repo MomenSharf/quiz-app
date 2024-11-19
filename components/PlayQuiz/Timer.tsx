@@ -47,7 +47,7 @@ export default function Timer({
             clearInterval(intervalIdRef.current as number); // Stop the countdown when it reaches 0
             setTimeout(() => {
               dispatch({ type: "SET_TIME_TAKEN", payload: timeLimit });
-              dispatch({ type: "SET_QUIZ_MODE", payload: 'timeOut' });
+              // dispatch({ type: "SET_QUIZ_MODE", payload: 'timeOut' });
               setTimeout(() => {
                 dispatch({ type: "SET_IS_RESULT_SHEET_OPEN", payload: true });
               }, 500);
@@ -92,9 +92,9 @@ export default function Timer({
       2,
       "0"
     );
-    // const milliseconds = String(
-    //   Math.floor((remainingTime % 1000) / 10)
-    // ).padStart(2, "0");
+    const milliseconds = String(
+      Math.floor((remainingTime % 1000) / 10)
+    ).padStart(2, "0");
 
     return (
       <div
@@ -105,6 +105,7 @@ export default function Timer({
       >
         <span>{minutes}</span>
         <span>:{seconds}</span>
+        <span>:{milliseconds}</span>
       </div>
     );
   }

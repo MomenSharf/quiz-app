@@ -70,8 +70,8 @@ export default function ResultSheet() {
           </div>
           <Button
             className={cn({
-              "bg-success hover:bg-success/90": isRight,
-              "bg-destructive hover:bg-destructive/90": !isRight,
+              "bg-success hover:bg-success/90 focus-visible:ring-success": isRight,
+              "bg-destructive hover:bg-destructive/90 focus-visible:ring-destructive": !isRight,
             })}
             onClick={() => {
               dispatch({

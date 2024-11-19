@@ -18,21 +18,18 @@ export default function TrueAndFalse({
       userAnswer,
       playQuizQuestions,
       currentQuestion,
-      timeTaken,
     },
   } = usePlayQuizContext();
 
   const isShaking =
     quizMode === "answered" &&
-    userAnswer &&
-    typeof userAnswer === "string" &&
-    question.correctAnswer !== userAnswer;
+    !playQuizQuestions[currentQuestion].isAnswerRight &&
+    userAnswer?.type === "TRUE_FALSE";
 
   const isCorrect =
     quizMode === "answered" &&
-    userAnswer &&
-    typeof userAnswer === "string" &&
-    question.correctAnswer === userAnswer;
+    playQuizQuestions[currentQuestion].isAnswerRight &&
+    userAnswer?.type === "TRUE_FALSE";
 
   return (
     <div className="grid grid-cols-2 gap-3">
@@ -56,35 +53,20 @@ export default function TrueAndFalse({
         }}
         initial={{ x: 0, scale: 1 }}
         animate={{
-          x: isShaking && userAnswer === "true" ? [0, -10, 10, -10, 10, 0] : 0,
-          scale: isCorrect && userAnswer === "true" ? [1, 1.1, 1] : 1,
-          rotate: isCorrect && userAnswer === "true" ? [0, 5, -5, 0] : 0,
+          x: isShaking && userAnswer.answer === "true" ? [0, -10, 10, -10, 10, 0] : 0,
+          scale: isCorrect && userAnswer.answer === "true" ? [1, 1.1, 1] : 1,
+          rotate: isCorrect && userAnswer.answer === "true" ? [0, 5, -5, 0] : 0,
         }}
         transition={{
           duration: 0.3,
           ease: "easeInOut",
         }}
         onClick={() => {
-          const newPlayQuizQuestions = playQuizQuestions.map((question, i) => {
-            if (currentQuestion === i) {
-              return {
-                ...question,
-                isAnswerRight: question.correctAnswer === "true",
-                timeTaken,
-              };
-            } else {
-              return question;
-            }
-          });
           if (quizMode === "playing") {
             dispatch({ type: "SET_QUIZ_MODE", payload: "answered" });
-            dispatch({ type: "SET_USER_ANSWER", payload: "true" });
-            setTimeout(() => {
-              dispatch({ type: "SET_IS_RESULT_SHEET_OPEN", payload: true });
-            }, 500);
             dispatch({
-              type: "SET_PLAY_QUIZ_QUESTIONS",
-              payload: newPlayQuizQuestions,
+              type: "SET_USER_ANSWER",
+              payload: { type: "TRUE_FALSE", answer: "true" },
             });
           }
         }}
@@ -111,35 +93,20 @@ export default function TrueAndFalse({
         }}
         initial={{ x: 0, scale: 1 }}
         animate={{
-          x: isShaking && userAnswer === "false" ? [0, -10, 10, -10, 10, 0] : 0,
-          scale: isCorrect && userAnswer === "false" ? [1, 1.1, 1] : 1,
-          rotate: isCorrect && userAnswer === "false" ? [0, 5, -5, 0] : 0,
+          x: isShaking && userAnswer.answer === "false" ? [0, -10, 10, -10, 10, 0] : 0,
+          scale: isCorrect && userAnswer.answer === "false" ? [1, 1.1, 1] : 1,
+          rotate: isCorrect && userAnswer.answer === "false" ? [0, 5, -5, 0] : 0,
         }}
         transition={{
           duration: 0.3,
           ease: "easeInOut",
         }}
         onClick={() => {
-          const newPlayQuizQuestions = playQuizQuestions.map((question, i) => {
-            if (currentQuestion === i) {
-              return {
-                ...question,
-                isAnswerRight: question.correctAnswer === "false",
-                timeTaken,
-              };
-            } else {
-              return question;
-            }
-          });
           if (quizMode === "playing") {
             dispatch({ type: "SET_QUIZ_MODE", payload: "answered" });
-            dispatch({ type: "SET_USER_ANSWER", payload: "false" });
-            setTimeout(() => {
-              dispatch({ type: "SET_IS_RESULT_SHEET_OPEN", payload: true });
-            }, 500);
             dispatch({
-              type: "SET_PLAY_QUIZ_QUESTIONS",
-              payload: newPlayQuizQuestions,
+              type: "SET_USER_ANSWER",
+              payload: { type: "TRUE_FALSE", answer: "false" },
             });
           }
         }}

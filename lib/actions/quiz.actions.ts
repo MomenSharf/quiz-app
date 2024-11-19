@@ -207,7 +207,7 @@ export const newQuiz = async (pathname: string, folderId?: string) => {
           create: {
             type: "UNSELECTED",
             questionOrder: 0,
-            timeLimit: 5,
+            timeLimit: 5000,
             points: 1
           },
         },

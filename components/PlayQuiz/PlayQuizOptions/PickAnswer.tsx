@@ -5,6 +5,7 @@ import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Check, X } from "lucide-react";
 import { LETTER_MAPPING } from "@/constants";
+import { type Item } from "../Context";
 
 export default function PickAnswer({
   question,
@@ -31,17 +32,15 @@ export default function PickAnswer({
       {question.items.map((item, i) => {
         const isShaking =
           quizMode === "answered" &&
-          !item.isCorrect &&
-          userAnswer &&
-          typeof userAnswer !== "string" &&
-          userAnswer.id === item.id;
+          !playQuizQuestions[currentQuestion].isAnswerRight &&
+          userAnswer?.type === "PICK_ANSWER" &&
+          userAnswer.answer.id === item.id;
 
         const isCorrect =
           quizMode === "answered" &&
-          item.isCorrect &&
-          userAnswer &&
-          typeof userAnswer !== "string" &&
-          userAnswer.id === item.id;
+          playQuizQuestions[currentQuestion].isAnswerRight &&
+          userAnswer?.type === "PICK_ANSWER" &&
+          userAnswer.answer.id === item.id;
 
         return (
           <motion.button
@@ -70,26 +69,15 @@ export default function PickAnswer({
               },
             }}
             onClick={() => {
-              const newPlayQuizQuestions = playQuizQuestions.map(
-                (question, i) => {
-                  if (currentQuestion === i) {
-                    return {
-                      ...question,
-                      isAnswerRight: question.correctAnswer === 'true',
-                      timeTaken,
-                    };
-                  }else {
-                    return question
-                  }
-                }
-              );
+
               if (quizMode === "playing") {
                 dispatch({ type: "SET_QUIZ_MODE", payload: "answered" });
-                dispatch({ type: "SET_USER_ANSWER", payload: item });
-                setTimeout(() => {
-                  dispatch({ type: "SET_IS_RESULT_SHEET_OPEN", payload: true });
-                }, 500);
-                dispatch({type: 'SET_PLAY_QUIZ_QUESTIONS', payload: newPlayQuizQuestions})
+                dispatch({
+                  type: "SET_USER_ANSWER",
+                  payload: { type: "PICK_ANSWER", answer: item },
+                });
+               
+                
               }
             }}
             initial={{ x: 0, scale: 1 }}
