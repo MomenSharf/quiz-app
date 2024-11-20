@@ -135,7 +135,6 @@ export default function MatchingPairs({
           className="flex flex-col gap-3 w-full"
         >
           {texts.map((text, i) => {
-            
             return (
               <MatchingPairsItem
                 type="text"
@@ -154,7 +153,6 @@ export default function MatchingPairs({
           className="flex flex-col gap-3 w-full"
         >
           {matches.map((match, i) => {
-            
             return (
               <MatchingPairsItem
                 type="match"

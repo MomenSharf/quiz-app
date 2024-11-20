@@ -5,7 +5,7 @@ import { getCurrentUser } from "@/lib/auth";
 import { useSession } from "next-auth/react";
 import { Button } from "../ui/button";
 import { Icons } from "../icons";
-import { Medal, TimerIcon, Watch, WatchIcon } from "lucide-react";
+import { Medal, Send, Star, TimerIcon, Watch, WatchIcon } from "lucide-react";
 import ResultProgress from "./circular-bar/ResultProgress";
 
 export default function QuizResult() {
@@ -25,18 +25,14 @@ export default function QuizResult() {
       <Button className="text-lg px-7 rounded-full self-center">
         Quiz Result
       </Button>
-      <div className="flex flex-col gap-3">
+      <div className="flex flex-col gap-5">
         <div className="flex-1 flex justify-center items-center">
-          <div className="progress-circle-outer">
-            <div>
-              <ResultProgress progress={5} />
-            </div>
-          </div>
+          <ResultProgress progress={80} />
         </div>
 
-        <div className="grid grid-cols-3 grid-rows-2 gap-3 justify-center">
+        <div className="grid grid-cols-3 gap-3 justify-center">
           <div className="bg-white rounded-2xl">
-            <div className="flex flex-col gap-1 p-2 sm:p-3 bg-primary/5 rounded-xl max-w-[180px] shadow-sm">
+            <div className="flex flex-col gap-1 p-2 sm:p-3 bg-primary/5 rounded-xl max-w-[180px] shadow-sm h-full">
               <Icons.logo className="w-6 h-6 sm:w-10 sm:h-10 fill-primary" />
               <span className="text-lg sm:text-3xl font-medium">{`${correctAnswer.length}/${playQuizQuestions.length}`}</span>
               <p className="text-gray-600 text-xs sm:text-sm ">
@@ -45,32 +41,38 @@ export default function QuizResult() {
             </div>
           </div>
           <div className="bg-white rounded-xl">
-            <div className="flex flex-col gap-1 p-3 bg-[#FFC107]/5 rounded-xl max-w-[180px] shadow-sm">
-              <Medal className="w-10 h-10 text-[#FFC107]" />
-              <span className="text-3xl">{`${correctAnswer.length}/${playQuizQuestions.length}`}</span>
-              <p className="text-gray-600 text-sm ">
+            <div className="flex flex-col gap-1 p-2 sm:p-3 bg-primary/5 rounded-xl max-w-[180px] shadow-sm h-full">
+              <Medal className="w-6 h-6 sm:w-10 sm:h-10 text-[#FFC107]" />
+              <span className="text-lg sm:text-3xl font-medium">{`${correctAnswer.length}/${playQuizQuestions.length}`}</span>
+              <p className="text-gray-600 text-xs sm:text-sm ">
                 Questions you have answerd right
               </p>
             </div>
           </div>
           <div className="bg-white rounded-xl ">
-            <div className="flex flex-col gap-1 p-3 bg-success/5 rounded-xl max-w-[180px] shadow-sm">
-              <TimerIcon className="w-10 h-10 text-success" />
-              <span className="text-3xl">{`${correctAnswer.length}/${playQuizQuestions.length}`}</span>
-              <p className="text-gray-600 text-sm ">
+            <div className="flex flex-col gap-1 p-2 sm:p-3 bg-[#e91e63]/5 rounded-xl max-w-[180px] shadow-sm h-full">
+              <TimerIcon className="w-6 h-6 sm:w-10 sm:h-10 text-[#e91e63]" />
+              <span className="text-lg sm:text-3xl font-medium">{`${correctAnswer.length}/${playQuizQuestions.length}`}</span>
+              <p className="text-gray-600 text-xs sm:text-sm ">
                 Questions you have answerd right
               </p>
             </div>
           </div>
-          <div className="w-full h-full p-5">
-
-          <Button className="w-full h-full" size='icon'>
-            <Icons.home className="w-16 h-16 fill-white" />
-          </Button>
-          </div>
-    
         </div>
-
+        <div className="flex gap-3 justify-center">
+          <Button className="w-20 h-20 sm:w-28 sm:h-28 flex-col gap-1">
+            <Icons.home className="w-10 h-10 sm:w-14 sm:h-14 fill-white" />
+            <span className="text-xs">Home</span>
+          </Button>
+          <Button className="w-20 h-20 sm:w-28 sm:h-28 flex-col gap-1 bg-[#FFC107] hover:bg-[#FFC107]/90">
+            <Icons.star className="w-10 h-10 sm:w-14 sm:h-14 fill-white" />
+            <span className="text-xs">Rate</span>
+          </Button>
+          <Button className="w-20 h-20 sm:w-28 sm:h-28 flex-col gap-1 bg-[#e91e63] hover:bg-[#e91e63]/90">
+            <Icons.send className="w-10 h-10 sm:w-14 sm:h-14 fill-white" />
+            <span className="text-xs">Rate</span>
+          </Button>
+        </div>
       </div>
     </div>
   );
