@@ -10,12 +10,12 @@ import stringSimilarity from "string-similarity";
 
 export type PlayQuizQuestion = EditorQuiz["questions"][number] & {
   timeTaken: number;
-  isAnswerRight: boolean | null;
+  // isAnswerRight: boolean | null;
 };
 
 type quizMode = "waiting" | "playing" | "answered" | "timeOut" | "ended";
 export type Item = EditorQuiz["questions"][number]["items"][number];
-export type fillInTheBlankChoice = { item: Item; index: number }
+export type fillInTheBlankChoice = { item: Item; index: number };
 
 type userAnswer =
   | { type: "PICK_ANSWER"; answer: Item }
@@ -25,10 +25,6 @@ type userAnswer =
   | { type: "SHORT_ANSWER"; answer: string }
   | { type: "FILL_IN_THE_BLANKS"; answer: fillInTheBlankChoice[] }
   | null;
-// | Item
-// | Item[]
-// | EditorQuiz["questions"][number]["correctAnswer"]
-// | null;
 
 type PlayQuizState = {
   currentQuestion: number;
@@ -37,7 +33,7 @@ type PlayQuizState = {
   isResultSheetOpen: boolean;
   quizMode: quizMode;
   userAnswer: userAnswer;
-  timeTaken: number;
+  timeTakenArray: {questionId: string; timeTaken: number}[] | null;
 };
 
 type PlayQuizActions =
@@ -48,7 +44,7 @@ type PlayQuizActions =
   | { type: "SET_QUIZ_MODE"; payload: quizMode }
   | { type: "SET_USER_ANSWER"; payload: userAnswer }
   | { type: "SET_PLAY_QUIZ_QUESTIONS"; payload: PlayQuizQuestion[] }
-  | { type: "SET_TIME_TAKEN"; payload: number };
+  | { type: "SET_TIME_TAKEN"; payload: {questionId: string; timeTaken: number}[] };
 
 type PlayQuizContextType = {
   state: PlayQuizState;
@@ -60,9 +56,9 @@ const initialState: PlayQuizState = {
   playQuizQuestions: [],
   isStarterDialogOpen: false,
   isResultSheetOpen: false,
-  quizMode: "ended",
+  quizMode: "waiting",
   userAnswer: null,
-  timeTaken: 0,
+  timeTakenArray: null,
 };
 
 const quizRoomReducer = (
@@ -85,7 +81,7 @@ const quizRoomReducer = (
     case "SET_PLAY_QUIZ_QUESTIONS":
       return { ...state, playQuizQuestions: action.payload };
     case "SET_TIME_TAKEN":
-      return { ...state, timeTaken: action.payload };
+      return { ...state, timeTakenArray: action.payload };
     default:
       return state;
   }
@@ -105,12 +101,14 @@ export const PlayQuizProvider = ({
   const [state, dispatch] = useReducer(quizRoomReducer, initialState);
   const {
     userAnswer,
-    timeTaken,
+    timeTakenArray,
     quizMode,
     playQuizQuestions,
     currentQuestion,
     isResultSheetOpen,
   } = state;
+  console.log(timeTakenArray);
+  
 
   const initialQuestions: PlayQuizQuestion[] = useMemo(() => {
     return quiz.questions.map((question) => {
@@ -120,7 +118,7 @@ export const PlayQuizProvider = ({
 
   useEffect(() => {
     dispatch({ type: "SET_QUESTIONS", payload: initialQuestions });
-    // dispatch({ type: "SET_IS_STARTER_DIALOG_OPEN", payload: true });
+    dispatch({ type: "SET_IS_STARTER_DIALOG_OPEN", payload: true });
   }, [initialQuestions]);
 
   useEffect(() => {
@@ -133,7 +131,7 @@ export const PlayQuizProvider = ({
               return {
                 ...question,
                 isAnswerRight: userAnswer.answer.isCorrect,
-                timeTaken,
+                // timeTaken,
               };
             } else {
               return question;
@@ -161,7 +159,7 @@ export const PlayQuizProvider = ({
               return {
                 ...question,
                 isAnswerRight,
-                timeTaken,
+                // timeTaken,
               };
             } else {
               return question;
@@ -181,7 +179,7 @@ export const PlayQuizProvider = ({
               return {
                 ...question,
                 isAnswerRight: userAnswer.answer === question.correctAnswer,
-                timeTaken,
+                // timeTaken,
               };
             } else {
               return question;
@@ -210,7 +208,6 @@ export const PlayQuizProvider = ({
               return {
                 ...question,
                 isAnswerRight,
-                timeTaken,
               };
             } else {
               return question;
@@ -235,7 +232,7 @@ export const PlayQuizProvider = ({
               return {
                 ...question,
                 isAnswerRight,
-                timeTaken,
+                // timeTaken,
               };
             } else {
               return question;
@@ -252,12 +249,14 @@ export const PlayQuizProvider = ({
         case "FILL_IN_THE_BLANKS":
           newPlayQuizQuestions = playQuizQuestions.map((question, i) => {
             if (currentQuestion === i && userAnswer.answer) {
-              const blanks = question.items.filter(item => item.isBlank)
-              const isAnswerRight = userAnswer.answer.every((answer, i) => answer.item.id === blanks[i].id )
+              const blanks = question.items.filter((item) => item.isBlank);
+              const isAnswerRight = userAnswer.answer.every(
+                (answer, i) => answer.item.id === blanks[i].id
+              );
               return {
                 ...question,
                 isAnswerRight,
-                timeTaken,
+                // timeTaken,
               };
             } else {
               return question;
@@ -275,6 +274,8 @@ export const PlayQuizProvider = ({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [quizMode]);
+
+
 
   return (
     <QuizRoomContext.Provider value={{ state, dispatch }}>

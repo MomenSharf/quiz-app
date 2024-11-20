@@ -14,15 +14,14 @@ export default function PointsSelector({
 }: {
   questionIndex: number;
 }) {
-
   const {
     form: { setValue, getValues },
   } = useEditorContext();
 
-  const points =  getValues(`questions.${questionIndex}.points`)
+  const points = getValues(`questions.${questionIndex}.points`);
   return (
     <Select
-      defaultValue={points ? points.toString() : POINTS_OPTIONS[0].value.toString()}
+      defaultValue={points ? points.toString() : (10).toString()}
       onValueChange={(e) =>
         setValue(
           `questions.${questionIndex}.points`,
@@ -33,7 +32,7 @@ export default function PointsSelector({
       <SelectTrigger className="w-full ">
         <Bolt className="w-4 h-4" />
         <SelectValue placeholder="Points" />
-      </SelectTrigger >
+      </SelectTrigger>
       <SelectContent>
         {POINTS_OPTIONS.map((option, i) => (
           <SelectItem value={option.value.toString()} key={i}>

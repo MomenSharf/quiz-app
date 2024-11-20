@@ -13,7 +13,6 @@ export default function Timer({
   timeLimit: number;
   questionOrder: number;
 }) {
-
   const [isRunning, setIsRunning] = useState(false);
   // const [remainingTime, setRemainingTime] = useState((timeLimit * 1000) / 3); // Initialize with the passed timeLimit
   const [remainingTime, setRemainingTime] = useState(timeLimit); // Initialize with the passed timeLimit
@@ -21,24 +20,32 @@ export default function Timer({
 
   const {
     dispatch,
-    state: { quizMode, currentQuestion },
+    state: { quizMode, currentQuestion, playQuizQuestions, timeTakenArray },
   } = usePlayQuizContext();
-
-  // Calculate progress as a percentage between 0 and 100
-  const progressValue = (remainingTime / timeLimit) * 100;
-  //  Math.floor(
-  // );
 
   useEffect(() => {
     if (quizMode === "answered") {
-      // Defer dispatch to prevent state updates during rendering
-      setTimeout(() => {
+      if (
+        !timeTakenArray?.find(
+          (question) =>
+            playQuizQuestions[currentQuestion] &&
+            question.questionId === playQuizQuestions[currentQuestion].id
+        )
+      ) {
+        console.log(timeLimit , remainingTime);
+        
+        const newtimeTakenArray = timeTakenArray ? timeTakenArray : [];
         dispatch({
           type: "SET_TIME_TAKEN",
-          payload: timeLimit - remainingTime,
+          payload: [
+            ...newtimeTakenArray,
+            {
+              questionId: playQuizQuestions[currentQuestion].id,
+              timeTaken: timeLimit - remainingTime,
+            },
+          ],
         });
-      }, 0);
-      return; // Do not start the timer if answered
+      }
     }
     if (quizMode === "playing" && currentQuestion === questionOrder) {
       intervalIdRef.current = window.setInterval(() => {
@@ -46,8 +53,27 @@ export default function Timer({
           if (prevTime <= 0) {
             clearInterval(intervalIdRef.current as number); // Stop the countdown when it reaches 0
             setTimeout(() => {
-              dispatch({ type: "SET_TIME_TAKEN", payload: timeLimit });
-              dispatch({ type: "SET_QUIZ_MODE", payload: 'timeOut' });
+              if (
+                !timeTakenArray?.find(
+                  (question) =>
+                    playQuizQuestions[currentQuestion] &&
+                    question.questionId ===
+                      playQuizQuestions[currentQuestion].id
+                )
+              ) {
+                const newtimeTakenArray = timeTakenArray ? timeTakenArray : [];
+                dispatch({
+                  type: "SET_TIME_TAKEN",
+                  payload: [
+                    ...newtimeTakenArray,
+                    {
+                      questionId: playQuizQuestions[currentQuestion].id,
+                      timeTaken: timeLimit,
+                    },
+                  ],
+                });
+              }
+              dispatch({ type: "SET_QUIZ_MODE", payload: "timeOut" });
               setTimeout(() => {
                 dispatch({ type: "SET_IS_RESULT_SHEET_OPEN", payload: true });
               }, 500);
@@ -121,11 +147,14 @@ export default function Timer({
 
       <div
         onClick={start}
-        className={cn(buttonVariants(),
+        className={cn(
+          buttonVariants(),
           "min-w-[116px] transition-colors text-sm flex gap-1 items-center justify-center py-2 px-4 bg-success/20 hover:bg-success/20 rounded-full",
           {
-            "bg-[#FFC107]/20 hover:bg-[#FFC107]/20": remainingTime <= timeLimit / 3.5,
-            "bg-destructive/20 hover:bg-destructive/20": remainingTime <= timeLimit / 10,
+            "bg-[#FFC107]/20 hover:bg-[#FFC107]/20":
+              remainingTime <= timeLimit / 3.5,
+            "bg-destructive/20 hover:bg-destructive/20":
+              remainingTime <= timeLimit / 10,
           }
         )}
       >

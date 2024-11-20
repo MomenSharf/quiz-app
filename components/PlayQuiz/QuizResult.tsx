@@ -1,22 +1,27 @@
-import React, { useEffect, useState } from "react";
-import { usePlayQuizContext } from "./Context";
-import { UserAvatar, UserAvatarImage } from "../User/UserAvatar";
-import { getCurrentUser } from "@/lib/auth";
-import { useSession } from "next-auth/react";
-import { Button } from "../ui/button";
+import { Medal, TimerIcon } from "lucide-react";
 import { Icons } from "../icons";
-import { Medal, Send, Star, TimerIcon, Watch, WatchIcon } from "lucide-react";
+import { Button } from "../ui/button";
 import ResultProgress from "./circular-bar/ResultProgress";
+import { usePlayQuizContext } from "./Context";
 
 export default function QuizResult() {
   const {
     state: { playQuizQuestions },
   } = usePlayQuizContext();
-  const { data: session } = useSession();
 
   const correctAnswer = playQuizQuestions.filter(
     (question) => question.isAnswerRight
   );
+
+  console.log(playQuizQuestions);
+  
+
+  const totalPoints = playQuizQuestions.map(
+    (question) => question.points
+  ).reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+  const points = playQuizQuestions.map(
+    (question) => (question.timeLimit / question.timeTaken) * question.points
+  ).reduce((accumulator, currentValue) => accumulator + currentValue, 0);
 
   const progress = 5;
 
@@ -43,9 +48,9 @@ export default function QuizResult() {
           <div className="bg-white rounded-xl">
             <div className="flex flex-col gap-1 p-2 sm:p-3 bg-primary/5 rounded-xl max-w-[180px] shadow-sm h-full">
               <Medal className="w-6 h-6 sm:w-10 sm:h-10 text-[#FFC107]" />
-              <span className="text-lg sm:text-3xl font-medium">{`${correctAnswer.length}/${playQuizQuestions.length}`}</span>
+              <span className="text-lg sm:text-3xl font-medium">{`${points}/${totalPoints}`}</span>
               <p className="text-gray-600 text-xs sm:text-sm ">
-                Questions you have answerd right
+                Points
               </p>
             </div>
           </div>
