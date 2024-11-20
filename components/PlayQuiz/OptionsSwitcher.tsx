@@ -1,5 +1,6 @@
 import { PlayQuizQuestion } from "./Context";
 import CorrectOrder from "./PlayQuizOptions/CorrectOrder";
+import FillInTheBlanks from "./PlayQuizOptions/FillInTheBlanks";
 import MatchingPairs from "./PlayQuizOptions/MatchingPairs";
 import PickAnswer from "./PlayQuizOptions/PickAnswer";
 import ShortAnswer from "./PlayQuizOptions/ShortAnswer";
@@ -22,7 +23,7 @@ export default function OptionsSwitcher({
     case "MATCHING_PAIRS":
       return <MatchingPairs question={question} />;
     case 'FILL_IN_THE_BLANK' :
-      return ''
+      return <FillInTheBlanks question={question} />;
     default:
       return;
   }

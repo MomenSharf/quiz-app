@@ -19,7 +19,6 @@ export default function PickAnswer({
       userAnswer,
       playQuizQuestions,
       currentQuestion,
-      timeTaken,
     },
   } = usePlayQuizContext();
 
@@ -69,15 +68,12 @@ export default function PickAnswer({
               },
             }}
             onClick={() => {
-
               if (quizMode === "playing") {
                 dispatch({ type: "SET_QUIZ_MODE", payload: "answered" });
                 dispatch({
                   type: "SET_USER_ANSWER",
                   payload: { type: "PICK_ANSWER", answer: item },
                 });
-               
-                
               }
             }}
             initial={{ x: 0, scale: 1 }}

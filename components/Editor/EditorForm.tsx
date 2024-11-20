@@ -16,7 +16,7 @@ type EditorFormProps = {
   quiz: EditorQuiz;
 };
 export default function EditorForm({ quiz }: EditorFormProps) {
-  const onSubmit = async () => {
+  const onSubmit = async () => { 
     console.log("fomtStat goood");
   };
 

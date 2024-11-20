@@ -105,7 +105,6 @@ export const getQuiz = async (quizId: string) => {
     const quiz = await db.quiz.findUnique({
       where: {
         id: quizId,
-        userId: session.user.id,
       },
       select: {
         id: true,

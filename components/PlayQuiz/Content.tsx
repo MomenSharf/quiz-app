@@ -54,7 +54,7 @@ export default function Content({
                   >
                     <QuizImage imageUrl="" />
                     <div className="flex flex-col gap-3 h-full sm:justify-center">
-                      {question.question && (
+                      {question.question && question.type !== 'FILL_IN_THE_BLANK' && (
                         <p className="text-2xl text-gray-900 text-center sm:text-start">
                           {toCapitalize(question.question)}
                         </p>

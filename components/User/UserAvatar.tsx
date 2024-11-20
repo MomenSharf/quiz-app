@@ -113,7 +113,6 @@ export function UserAvatar({ isLoggedIn, user }: UserAvatarProps) {
 
 export function UserAvatarImage({
   imageUrl,
-  className,
   ...props
 }: UserAvatarImageProps) {
   return (

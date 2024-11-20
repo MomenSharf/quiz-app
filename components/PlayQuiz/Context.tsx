@@ -1,5 +1,4 @@
 import { EditorQuiz } from "@/types";
-import { QuestionType } from "@prisma/client";
 import {
   createContext,
   useContext,
@@ -16,6 +15,7 @@ export type PlayQuizQuestion = EditorQuiz["questions"][number] & {
 
 type quizMode = "waiting" | "playing" | "answered" | "timeOut" | "ended";
 export type Item = EditorQuiz["questions"][number]["items"][number];
+export type fillInTheBlankChoice = { item: Item; index: number }
 
 type userAnswer =
   | { type: "PICK_ANSWER"; answer: Item }
@@ -23,6 +23,7 @@ type userAnswer =
   | { type: "MATCHING_PAIRS"; answer: { texts: Item[]; matches: Item[] } }
   | { type: "TRUE_FALSE"; answer: "true" | "false" }
   | { type: "SHORT_ANSWER"; answer: string }
+  | { type: "FILL_IN_THE_BLANKS"; answer: fillInTheBlankChoice[] }
   | null;
 // | Item
 // | Item[]
@@ -59,7 +60,7 @@ const initialState: PlayQuizState = {
   playQuizQuestions: [],
   isStarterDialogOpen: false,
   isResultSheetOpen: false,
-  quizMode: "waiting",
+  quizMode: "ended",
   userAnswer: null,
   timeTaken: 0,
 };
@@ -119,7 +120,7 @@ export const PlayQuizProvider = ({
 
   useEffect(() => {
     dispatch({ type: "SET_QUESTIONS", payload: initialQuestions });
-    dispatch({ type: "SET_IS_STARTER_DIALOG_OPEN", payload: true });
+    // dispatch({ type: "SET_IS_STARTER_DIALOG_OPEN", payload: true });
   }, [initialQuestions]);
 
   useEffect(() => {
@@ -247,6 +248,28 @@ export const PlayQuizProvider = ({
           setTimeout(() => {
             dispatch({ type: "SET_IS_RESULT_SHEET_OPEN", payload: true });
           }, 1200);
+          break;
+        case "FILL_IN_THE_BLANKS":
+          newPlayQuizQuestions = playQuizQuestions.map((question, i) => {
+            if (currentQuestion === i && userAnswer.answer) {
+              const blanks = question.items.filter(item => item.isBlank)
+              const isAnswerRight = userAnswer.answer.every((answer, i) => answer.item.id === blanks[i].id )
+              return {
+                ...question,
+                isAnswerRight,
+                timeTaken,
+              };
+            } else {
+              return question;
+            }
+          });
+          dispatch({
+            type: "SET_PLAY_QUIZ_QUESTIONS",
+            payload: newPlayQuizQuestions,
+          });
+          setTimeout(() => {
+            dispatch({ type: "SET_IS_RESULT_SHEET_OPEN", payload: true });
+          }, 500);
           break;
       }
     }

@@ -521,6 +521,63 @@ body {
   --primary: 0 84.2% 60.2%
 }
 
+
+.circular-bar-wrapper{
+  box-shadow: 6px 6px 10px -1px rgba(0,0,0,0.15),
+  -6px -6px 10px -1px rgba(255,255,255,0.7);
+  width: 430px;
+  padding: 45px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  border-radius: 7px;
+
+  .circular-bar{
+    width: 260px;
+    height: 260px;
+    background: conic-gradient(#4285f4 1.5deg, #e8f0f7 0deg);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 6px 6px 10px -1px rgba(0,0,0,0.15),
+    -6px -6px 10px -1px rgba(255,255,255,0.7);
+    margin-bottom: 40px;
+  }
+
+  .circular-bar::before{
+    content: "";
+    position: absolute;
+    width: 220px;
+    height: 220px;
+    background: #e8f0f7;
+    border-radius: 50%;
+    box-shadow: inset 6px 6px 10px -1px rgba(0,0,0,0.15),
+    inset -6px -6px 10px -1px rgba(255,255,255,0.7);
+  }
+
+  .circular-bar::before{
+    content: "";
+    position: absolute;
+    width: 220px;
+    height: 220px;
+    background: #e8f0f7;
+    border-radius: 50%;
+    box-shadow: inset 6px 6px 10px -1px rgba(0,0,0,0.15),
+    inset -6px -6px 10px -1px rgba(255,255,255,0.7);
+  }
+  
+  .percent{
+    z-index: 10;
+    font-size: 30px;
+  }
+}
+
+
+
+
+
 @keyframes mltShdSpin {
   0% {
     box-shadow: 0 -0.83em 0 -0.4em, 0 -0.83em 0 -0.42em, 0 -0.83em 0 -0.44em,

@@ -99,7 +99,12 @@ export default function MatchingPairs({
   const [matches, setMatches] = useState(shuffledmatches);
 
   useEffect(() => {
-    if (
+    if (quizMode === "answered") {
+      setTimeout(() => {
+        setTexts(question.items);
+        setMatches(question.items);
+      }, 300);
+    } else if (
       quizMode === "playing" &&
       playQuizQuestions[currentQuestion].isAnswerRight === null &&
       currentQuestion !== 0
@@ -130,17 +135,7 @@ export default function MatchingPairs({
           className="flex flex-col gap-3 w-full"
         >
           {texts.map((text, i) => {
-            // const isShaking = !!(
-            //   userAnswer &&
-            //   userAnswer.type === "MATCHING_PAIRS" &&
-            //   userAnswer.answer.matches[i] &&
-            //   text.id !== userAnswer.answer.matches[i].id
-            // );
-            // const isCorrect =
-            //   userAnswer &&
-            //   userAnswer.type === "MATCHING_PAIRS" &&
-            //   userAnswer.answer.matches[i] &&
-            //   text.id !== userAnswer.answer.matches[i].id;
+            
             return (
               <MatchingPairsItem
                 type="text"
@@ -159,17 +154,7 @@ export default function MatchingPairs({
           className="flex flex-col gap-3 w-full"
         >
           {matches.map((match, i) => {
-            // const isShaking = !!(
-            //   userAnswer &&
-            //   userAnswer.type === "MATCHING_PAIRS" &&
-            //   userAnswer.answer.texts[i] &&
-            //   match.id !== userAnswer.answer.texts[i].id
-            // );
-            // const isCorrect =
-            //   userAnswer &&
-            //   userAnswer.type === "MATCHING_PAIRS" &&
-            //   userAnswer.answer.texts[i] &&
-            //   match.id !== userAnswer.answer.texts[i].id;
+            
             return (
               <MatchingPairsItem
                 type="match"
