@@ -3,7 +3,7 @@
 import { EditorQuiz } from "@/types";
 import { useEffect, useState } from "react";
 import { Form } from "../ui/form";
-import { MotionDiv } from "../useMotion";
+import { MotionDiv } from "@/hooks/useMotion";
 import { useEditorContext } from "./EditorContext";
 import EditorHeader from "./EditorHeader";
 import EditorSidebar from "./EditorSidebar";

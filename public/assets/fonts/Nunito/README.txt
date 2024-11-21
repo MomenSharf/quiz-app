@@ -1,32 +1,34 @@
-Rubik Variable Font
-===================
+Nunito Variable Font
+====================
 
-This download contains Rubik as both variable fonts and static fonts.
+This download contains Nunito as both variable fonts and static fonts.
 
-Rubik is a variable font with this axis:
+Nunito is a variable font with this axis:
   wght
 
 This means all the styles are contained in these files:
-  Rubik-VariableFont_wght.ttf
-  Rubik-Italic-VariableFont_wght.ttf
+  Nunito-VariableFont_wght.ttf
+  Nunito-Italic-VariableFont_wght.ttf
 
 If your app fully supports variable fonts, you can now pick intermediate styles
 that aren’t available as static fonts. Not all apps support variable fonts, and
-in those cases you can use the static font files for Rubik:
-  static/Rubik-Light.ttf
-  static/Rubik-Regular.ttf
-  static/Rubik-Medium.ttf
-  static/Rubik-SemiBold.ttf
-  static/Rubik-Bold.ttf
-  static/Rubik-ExtraBold.ttf
-  static/Rubik-Black.ttf
-  static/Rubik-LightItalic.ttf
-  static/Rubik-Italic.ttf
-  static/Rubik-MediumItalic.ttf
-  static/Rubik-SemiBoldItalic.ttf
-  static/Rubik-BoldItalic.ttf
-  static/Rubik-ExtraBoldItalic.ttf
-  static/Rubik-BlackItalic.ttf
+in those cases you can use the static font files for Nunito:
+  static/Nunito-ExtraLight.ttf
+  static/Nunito-Light.ttf
+  static/Nunito-Regular.ttf
+  static/Nunito-Medium.ttf
+  static/Nunito-SemiBold.ttf
+  static/Nunito-Bold.ttf
+  static/Nunito-ExtraBold.ttf
+  static/Nunito-Black.ttf
+  static/Nunito-ExtraLightItalic.ttf
+  static/Nunito-LightItalic.ttf
+  static/Nunito-Italic.ttf
+  static/Nunito-MediumItalic.ttf
+  static/Nunito-SemiBoldItalic.ttf
+  static/Nunito-BoldItalic.ttf
+  static/Nunito-ExtraBoldItalic.ttf
+  static/Nunito-BlackItalic.ttf
 
 Get started
 -----------

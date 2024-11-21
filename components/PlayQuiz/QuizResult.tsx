@@ -6,6 +6,7 @@ import { usePlayQuizContext } from "./Context";
 import { formatToMinSec } from "@/lib/utils";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { QUESTION_MARK_TIMES } from "@/constants";
 
 export default function QuizResult() {
   const {
@@ -55,7 +56,7 @@ export default function QuizResult() {
     .reduce((total, question) => {
       const { points, timeLimit, timeTaken } = question;
 
-      const adjustedTimeTaken = timeTaken < 3000 ? 0 : timeTaken - 3000;
+      const adjustedTimeTaken = timeTaken < QUESTION_MARK_TIMES[`${question.type}`] ? 0 : timeTaken - 3000;
 
       const calculatedScore =
         timeTaken <= timeLimit

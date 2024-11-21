@@ -2,6 +2,7 @@ import { CATEGORY_OPTIONS_LIST } from "@/constants";
 import { XCircle } from "lucide-react";
 import { Button } from "../ui/button";
 import { useEditorContext } from "./EditorContext";
+import { toast } from "sonner";
 
 export default function CategoriesSelector() {
   const {
@@ -19,6 +20,7 @@ export default function CategoriesSelector() {
             size="sm"
             variant={categories.includes(value) ? "default" : "outline"}
             onClick={() => {
+              if(categories.length >= 5 && !categories.includes(value))  return toast('Maximum 5 categories')
               categories.includes(value)
                 ? setValue(
                     "categories",

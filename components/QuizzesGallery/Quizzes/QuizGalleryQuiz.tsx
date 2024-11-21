@@ -7,7 +7,7 @@ import QuizGalleryQuizDrawer from "./QuizGalleryQuizDrawer";
 import QuizGalleryQuizMenu from "./QuizGalleryQuizMenu";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Icons } from "@/components/icons";
-import VisibilityButton from "@/components/VisibilityButton";
+import VisibilityButton from "@/components/QuizzesGallery/VisibilityButton";
 import { Button } from "@/components/ui/button";
 
 type QuizGalleryQuizProps = {

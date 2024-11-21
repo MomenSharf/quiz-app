@@ -97,6 +97,8 @@ export const QUESTION_TYPES: QuestionType[] = [
   "ORDER",
 ] as const;
 
+
+
 export const VISIBILITY_OPTIONS = ["PUBLIC", "PRIVATE"] as const;
 
 export const QUESTION_TYPES_WITH_LABEL_AND_ICONS: {
@@ -227,4 +229,16 @@ export const LETTER_MAPPING: { [key: number]: string } = {
   23: "X",
   24: "Y",
   25: "Z",
+};
+
+export const QUESTION_MARK_TIMES : {
+  [key in QuestionType]: number;
+} = {
+  UNSELECTED: 0,
+  PICK_ANSWER: 3000,       // 3 seconds for PickAnswer
+  TRUE_FALSE: 3000,        // 2 seconds for True/False
+  FILL_IN_THE_BLANK: 6000, // 5 seconds for Fill-in-the-Blank
+  SHORT_ANSWER: 8000,      // 4 seconds for Short Answer
+  MATCHING_PAIRS: 8000,    // 6 seconds for Matching Pairs
+  ORDER: 8000              // 7 seconds for Order type questions
 };

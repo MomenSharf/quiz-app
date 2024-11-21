@@ -3,9 +3,9 @@ import { cn } from "@/lib/utils";
 import { QuizGalleryWithQuestionsCount } from "@/types";
 import { Globe, Lock } from "lucide-react";
 import { useState } from "react";
-import { Icons } from "./icons";
-import { Button } from "./ui/button";
-import { toast } from "./ui/use-toast";
+import { Icons } from "../icons";
+import { Button } from "../ui/button";
+import { toast } from "../ui/use-toast";
 
 type VisibilityButtonProps = {
   quiz: Pick<QuizGalleryWithQuestionsCount, "id" | "visibility">;

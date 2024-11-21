@@ -55,7 +55,7 @@ export default async function page({
     // }
 
   return (
-    <div className="min-h-screen  root-background-white">
+    <div className="min-h-screen bg-[hsl(var(--main-background))]">
       <Provider quiz={quiz} />
     </div>
   );

@@ -5,8 +5,8 @@
 @layer base {
   /* violet */
   :root {
-    /* --background: 0 0% 100%; */
-    --background: 262, 83%, 95%;
+    --background: 0 0% 100%;
+    --main-background: 262, 83%, 95%;
     --foreground: 224 71.4% 4.1%;
     --card: 0 0% 100%;
     --card-foreground: 224 71.4% 4.1%;
@@ -56,8 +56,7 @@
     --table-shadow: 0 25px 20px -20px rgba(0, 0, 0, 0.2);
   }
 
-  .dark {
-    --background: 224 71.4% 4.1%;
+  /* .dark {
     --background: 224 71.4% 4.1%;
     --foreground: 210 20% 98%;
     --card: 224 71.4% 4.1%;
@@ -77,11 +76,12 @@
     --border: 215 27.9% 16.9%;
     --input: 215 27.9% 16.9%;
     --ring: 263.4 70% 50.4%;
-  }
+  } */
 
   /* slate */
   [data-theme-color="slate"] {
-    --background: 210, 20%, 95%;
+    --background: 0 0% 100%;
+    --main-background: 210, 20%, 95%;
     --foreground: 222.2 84% 4.9%;
     --card: 0 0% 100%;
     --card-foreground: 222.2 84% 4.9%;
@@ -126,7 +126,8 @@
 
   /* zinc  */
   [data-theme-color="zinc"] {
-    --background: 0, 0%, 90%;
+    --background: 0 0% 100%;
+    --main-background: 0, 0%, 90%;
     --foreground: 240 10% 3.9%;
     --card: 0 0% 100%;
     --card-foreground: 240 10% 3.9%;
@@ -171,7 +172,8 @@
 
   /* red */
   [data-theme-color="red"] {
-    --background: 0, 100%, 95%;
+    --background: 0 0% 100%;
+    --main-background: 0, 100%, 95%;
     --foreground: 0 0% 3.9%;
     --card: 0 0% 100%;
     --card-foreground: 0 0% 3.9%;
@@ -216,7 +218,8 @@
 
   /* rose */
   [data-theme-color="rose"] {
-    --background: 340, 100%, 95%;
+    --background: 0 0% 100%;
+    --main-background: 340, 100%, 95%;
     --foreground: 240 10% 3.9%;
     --card: 0 0% 100%;
     --card-foreground: 240 10% 3.9%;
@@ -261,7 +264,8 @@
 
   /* orange */
   [data-theme-color="orange"] {
-    --background: 30, 100%, 95%;
+    --background: 0 0% 100%;
+    --main-background: 30, 100%, 95%;
     --foreground: 20 14.3% 4.1%;
     --card: 0 0% 100%;
     --card-foreground: 20 14.3% 4.1%;
@@ -306,7 +310,8 @@
 
   /* green  */
   [data-theme-color="green"] {
-    --background: 120, 60%, 95%;
+    --background: 0 0% 100%;
+    --main-background: 120, 60%, 95%;
     --foreground: 240 10% 3.9%;
     --card: 0 0% 100%;
     --card-foreground: 240 10% 3.9%;
@@ -351,7 +356,8 @@
 
   /* blue  */
   [data-theme-color="blue"] {
-    --background: 220, 100%, 95%;
+    --background: 0 0% 100%;
+    --main-background:220, 100%, 95%;
     --foreground: 222.2 84% 4.9%;
     --card: 0 0% 100%;
     --card-foreground: 222.2 84% 4.9%;
@@ -396,7 +402,8 @@
 
   /* yellow  */
   [data-theme-color="yellow"] {
-    --background: (60, 100%, 95%);
+    --background: 0 0% 100%;
+    --main-background: (60, 100%, 95%);
     --foreground: 20 14.3% 4.1%;
     --card: 0 0% 100%;
     --card-foreground: 20 14.3% 4.1%;
@@ -448,7 +455,7 @@
 
 @font-face {
   font-family: 'Rubik';
-  src: url('/assets/fonts/Rubik/Rubik-VariableFont_wght.ttf');
+  src: url('/assets/fonts/Nunito/Nunito-VariableFont_wght.ttf');
 }
 
 body {
