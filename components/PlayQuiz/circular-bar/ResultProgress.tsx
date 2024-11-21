@@ -10,7 +10,7 @@ export default function ResultProgress({ progress, score }: { progress: number, 
         <div className="outer border-2 ">
           <div className="inner">
             <div className="flex flex-col items-center">
-              <span className="text-4xl">{score}</span>
+              <span className="text-4xl">{Math.round(score)}</span>
               <span className="text-xs">Score</span>
             </div>
           </div>
@@ -35,7 +35,7 @@ export default function ResultProgress({ progress, score }: { progress: number, 
             transform="rotate(-90 80 80)" /* Rotate circle */
             strokeLinecap="round"
             style={{
-              strokeDashoffset: 100,
+              strokeDashoffset: strokeOffset,
             }}
           />
         </svg>

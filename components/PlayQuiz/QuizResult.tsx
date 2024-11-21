@@ -12,69 +12,73 @@ export default function QuizResult() {
     state: { playQuizQuestions, timeTakenArray, quizMode },
   } = usePlayQuizContext();
 
-  const router = useRouter()
+  const router = useRouter();
 
   const [progress, setProgress] = useState(0);
 
   const correctQuestions = playQuizQuestions.filter(
     (question) => question.isAnswerRight
   );
-  const wrongQuestion = playQuizQuestions.filter(
-    (question) => !question.isAnswerRight
+
+  const totalTime = playQuizQuestions.reduce(
+    (acc, curr) => acc + curr.timeLimit,
+    0
   );
-  const totalTime = playQuizQuestions
-    .map((question) => question.timeLimit)
-    .reduce((acc, curr) => acc + curr, 0);
   const timeTaken =
     timeTakenArray &&
-    timeTakenArray
-      .map((question) => question.timeTaken)
-      .reduce((acc, curr) => acc + curr, 0);
+    timeTakenArray.reduce((acc, curr) => acc + curr.timeTaken, 0);
 
-  const totalPoints = playQuizQuestions
-    .map((question) => question.points)
-    .reduce((acc, curr) => acc + curr, 0);
-
-  const userPoints = correctQuestions
-    .map((question) => question.points)
-    .reduce((acc, curr) => acc + curr, 0);
-
-    const maximumScore = playQuizQuestions.reduce((totalPoints, question) => {
-      if (question.isAnswerRight) {
-        return totalPoints + question.points; // Add full points for correctly answered questions
-      }
-      return totalPoints;
-    }, 0);
-  const score = Math.round(
-    timeTakenArray?.reduce((totalPoints, { questionId, timeTaken }) => {
-      const question = playQuizQuestions.find((q) => q.id === questionId);
-      if (!question || !question.isAnswerRight) return totalPoints;
-
-      const basePoints = question.points;
-      const timePenalty =
-        timeTaken > 5000
-          ? Math.max(0, basePoints - (timeTaken - 5000) / 1000)
-          : basePoints;
-
-      return totalPoints + timePenalty;
-    }, 0) || 0
+  const totalPoints = playQuizQuestions.reduce(
+    (acc, curr) => acc + curr.points,
+    0
   );
+
+  const userPoints = correctQuestions.reduce(
+    (acc, curr) => acc + curr.points,
+    0
+  );
+
+  const updatedQuizQuestions = playQuizQuestions.map((question) => {
+    const timeTaken =
+      timeTakenArray?.find((t) => t.questionId === question.id)?.timeTaken || 0;
+    return { ...question, timeTaken };
+  });
+
+  // Calculate scores
+  const maximumScore = updatedQuizQuestions.reduce(
+    (total, question) => total + question.points,
+    0
+  );
+
+  const userScore = updatedQuizQuestions
+    .filter((question) => question.isAnswerRight)
+    .reduce((total, question) => {
+      const { points, timeLimit, timeTaken } = question;
+
+      const adjustedTimeTaken = timeTaken < 3000 ? 0 : timeTaken - 3000;
+
+      const calculatedScore =
+        timeTaken <= timeLimit
+          ? points * (1 - adjustedTimeTaken / timeLimit)
+          : 0;
+      return total + calculatedScore;
+    }, 0);
 
   useEffect(() => {
     const progress =
-      quizMode === "ended" ? (score / maximumScore) * 100 : 0;
+      quizMode === "ended" ? (userScore / maximumScore) * 100 : 0;
     setProgress(progress);
   }, [quizMode, totalPoints, userPoints]);
 
   return (
     <div className="w-full h-full flex-1 flex flex-col gap-5">
-      {/* <Button className="text-lg px-7 rounded-full self-center">
-        Quiz Result
-      </Button> */}
       <div className="flex flex-col gap-5">
         <div className="flex-1 flex flex-col gap-2 justify-center items-center">
-          <ResultProgress progress={progress} score={score} />
-          <div className="text-xs">Maximum socre is : <span className="text-sm text-primary">{maximumScore}</span></div>
+          <ResultProgress progress={progress} score={userScore} />
+          <div className="text-xs">
+            Maximum socre is :{" "}
+            <span className="text-sm text-primary">{maximumScore}</span>
+          </div>
         </div>
 
         <div className="grid grid-cols-3 gap-3 justify-center">
@@ -107,7 +111,12 @@ export default function QuizResult() {
           </div>
         </div>
         <div className="flex gap-3 justify-center">
-          <Button className="w-20 h-20 sm:w-28 sm:h-28 flex-col gap-1" onClick={() => {router.push('/')}}>
+          <Button
+            className="w-20 h-20 sm:w-28 sm:h-28 flex-col gap-1"
+            onClick={() => {
+              router.push("/");
+            }}
+          >
             <Icons.home className="w-10 h-10 sm:w-14 sm:h-14 fill-white" />
             <span className="text-xs">Home</span>
           </Button>
@@ -117,7 +126,7 @@ export default function QuizResult() {
           </Button>
           <Button className="w-20 h-20 sm:w-28 sm:h-28 flex-col gap-1 bg-[#e91e63] hover:bg-[#e91e63]/90">
             <Icons.send className="w-10 h-10 sm:w-14 sm:h-14 fill-white" />
-            <span className="text-xs">Rate</span>
+            <span className="text-xs">Share</span>
           </Button>
         </div>
       </div>

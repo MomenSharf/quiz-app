@@ -10,7 +10,7 @@ import {
 import { usePlayQuizContext } from "./Context";
 import { ArrowRight, Check, X } from "lucide-react";
 import { Icons } from "../icons";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "../ui/button";
 
@@ -20,12 +20,11 @@ export default function ResultSheet() {
     state: { isResultSheetOpen, currentQuestion, playQuizQuestions, quizMode },
   } = usePlayQuizContext();
 
+  
+
   const isRight =
     playQuizQuestions[currentQuestion] &&
     playQuizQuestions[currentQuestion].isAnswerRight;
-
-
- 
   return (
     <Sheet open={isResultSheetOpen}>
       <SheetContent
@@ -73,8 +72,10 @@ export default function ResultSheet() {
           </div>
           <Button
             className={cn({
-              "bg-success hover:bg-success/90 focus-visible:ring-success": isRight,
-              "bg-destructive hover:bg-destructive/90 focus-visible:ring-destructive": !isRight,
+              "bg-success hover:bg-success/90 focus-visible:ring-success":
+                isRight,
+              "bg-destructive hover:bg-destructive/90 focus-visible:ring-destructive":
+                !isRight,
             })}
             onClick={() => {
               dispatch({
