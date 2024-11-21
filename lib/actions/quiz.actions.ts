@@ -455,7 +455,6 @@ export const deleteQuizzes = async (quizzesIds: string[], pathname: string) => {
     throw new Error("Unauthorized: User is not logged in.");
   }
   try {
-    console.log(quizzesIds);
 
     const deletedQuizzes = await db.quiz.deleteMany({
       where: {
@@ -470,7 +469,6 @@ export const deleteQuizzes = async (quizzesIds: string[], pathname: string) => {
 
     return deletedQuizzes.count;
   } catch (error) {
-    console.log(error);
     throw new Error("Quiz not Deleted, try again");
   }
 };

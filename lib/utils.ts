@@ -31,3 +31,17 @@ export function shuffleArray(array: any[]): any[] {
   }
   return newArray; // Return the shuffled copy
 }
+
+import { formatDuration, intervalToDuration } from "date-fns";
+
+// Utility function to format milliseconds as "Xmin Ys"
+export const formatToMinSec = (time: number) => {
+  const end = time < 1000 ? 1000 : time
+  const duration = intervalToDuration({ start: 0, end  });
+
+  const minutes = duration.minutes ? `${duration.minutes}min` : '';
+  const seconds = duration.seconds ? `${duration.seconds}s` : '';
+
+  // Return formatted string with proper spacing
+  return `${minutes} ${seconds}`.trim();
+};

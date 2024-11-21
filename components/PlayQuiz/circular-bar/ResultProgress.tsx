@@ -1,16 +1,17 @@
 import React from "react";
 import "./style.css";
-export default function ResultProgress({ progress }: { progress: number }) {
+export default function ResultProgress({ progress, score }: { progress: number, score: number }) {
   const radius = 70; // radius of the circle
   const circumference = 2 * Math.PI * radius; // circumference of the circle
   const strokeOffset = circumference - (progress / 100) * circumference; // Calculate the stroke-dashoffset based on progress
   return (
     <div className="">
       <div className="skill">
-        <div className="outer">
+        <div className="outer border-2 ">
           <div className="inner">
-            <div id="number">
-              <div>{progress}%</div>
+            <div className="flex flex-col items-center">
+              <span className="text-4xl">{score}</span>
+              <span className="text-xs">Score</span>
             </div>
           </div>
         </div>
@@ -32,15 +33,13 @@ export default function ResultProgress({ progress }: { progress: number }) {
             cy="80"
             r={radius}
             transform="rotate(-90 80 80)" /* Rotate circle */
-
             strokeLinecap="round"
             style={{
-              strokeDashoffset: strokeOffset,
+              strokeDashoffset: 100,
             }}
           />
         </svg>
       </div>
-      
     </div>
   );
 }

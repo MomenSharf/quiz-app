@@ -28,7 +28,6 @@ export default function ShortAnswer({
     state: {
       playQuizQuestions,
       currentQuestion,
-      timeTaken,
       quizMode,
       userAnswer,
     },
@@ -56,7 +55,6 @@ export default function ShortAnswer({
     userAnswer?.type === "SHORT_ANSWER";
 
   const onSubmit = (data: userInputSchamaType) => {
-    console.log(10);
 
     if (question.correctAnswer) {
       if (quizMode === "playing") {

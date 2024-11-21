@@ -7,10 +7,11 @@ import {
   useReducer,
 } from "react";
 import stringSimilarity from "string-similarity";
+import { Button } from "../ui/button";
 
 export type PlayQuizQuestion = EditorQuiz["questions"][number] & {
-  timeTaken: number;
-  // isAnswerRight: boolean | null;
+  // timeTaken: number;
+  isAnswerRight: boolean | null;
 };
 
 type quizMode = "waiting" | "playing" | "answered" | "timeOut" | "ended";
@@ -33,7 +34,7 @@ type PlayQuizState = {
   isResultSheetOpen: boolean;
   quizMode: quizMode;
   userAnswer: userAnswer;
-  timeTakenArray: {questionId: string; timeTaken: number}[] | null;
+  timeTakenArray: { questionId: string; timeTaken: number }[] | null;
 };
 
 type PlayQuizActions =
@@ -44,7 +45,10 @@ type PlayQuizActions =
   | { type: "SET_QUIZ_MODE"; payload: quizMode }
   | { type: "SET_USER_ANSWER"; payload: userAnswer }
   | { type: "SET_PLAY_QUIZ_QUESTIONS"; payload: PlayQuizQuestion[] }
-  | { type: "SET_TIME_TAKEN"; payload: {questionId: string; timeTaken: number}[] };
+  | {
+      type: "SET_TIME_TAKEN";
+      payload: { questionId: string; timeTaken: number }[];
+    };
 
 type PlayQuizContextType = {
   state: PlayQuizState;
@@ -81,7 +85,13 @@ const quizRoomReducer = (
     case "SET_PLAY_QUIZ_QUESTIONS":
       return { ...state, playQuizQuestions: action.payload };
     case "SET_TIME_TAKEN":
-      return { ...state, timeTakenArray: action.payload };
+      const updatedTimeTakenArray = action.payload.map((newTimeTaken) => {
+        const existing = state.timeTakenArray?.find(
+          (time) => time.questionId === newTimeTaken.questionId
+        );
+        return existing || newTimeTaken;
+      });
+      return { ...state, timeTakenArray: updatedTimeTakenArray };
     default:
       return state;
   }
@@ -107,14 +117,22 @@ export const PlayQuizProvider = ({
     currentQuestion,
     isResultSheetOpen,
   } = state;
-  console.log(timeTakenArray);
-  
 
   const initialQuestions: PlayQuizQuestion[] = useMemo(() => {
     return quiz.questions.map((question) => {
       return { ...question, timeTaken: 0, isAnswerRight: null };
     });
   }, [quiz.questions]);
+
+  const playRightWorngAnswerSound = (isAnswerRight: boolean | null) => {
+    if (isAnswerRight === null) return;
+    const audio = new Audio(
+      "/assets/sounds/zapsplat_multimedia_game_sound_slot_machine_mallet_chime_positive_win_001_65507.mp3"
+    );
+    console.log(audio);
+    // Adjust the path to your sound file
+    if (isAnswerRight) audio.play();
+  };
 
   useEffect(() => {
     dispatch({ type: "SET_QUESTIONS", payload: initialQuestions });
@@ -124,26 +142,21 @@ export const PlayQuizProvider = ({
   useEffect(() => {
     if (quizMode === "answered" && userAnswer) {
       let newPlayQuizQuestions: PlayQuizQuestion[];
+      let isAnswerRight: boolean | null = null;
       switch (userAnswer.type) {
         case "PICK_ANSWER":
+          isAnswerRight = userAnswer.answer.isCorrect;
           newPlayQuizQuestions = playQuizQuestions.map((question, i) => {
             if (currentQuestion === i && userAnswer.answer.isCorrect) {
               return {
                 ...question,
-                isAnswerRight: userAnswer.answer.isCorrect,
-                // timeTaken,
+                isAnswerRight,
               };
             } else {
               return question;
             }
           });
-          dispatch({
-            type: "SET_PLAY_QUIZ_QUESTIONS",
-            payload: newPlayQuizQuestions,
-          });
-          setTimeout(() => {
-            dispatch({ type: "SET_IS_RESULT_SHEET_OPEN", payload: true });
-          }, 500);
+
           break;
         case "SHORT_ANSWER":
           newPlayQuizQuestions = playQuizQuestions.map((question, i) => {
@@ -152,7 +165,7 @@ export const PlayQuizProvider = ({
               userAnswer.answer &&
               question.correctAnswer
             ) {
-              const isAnswerRight = !!stringSimilarity.compareTwoStrings(
+              isAnswerRight = !!stringSimilarity.compareTwoStrings(
                 userAnswer.answer.toLowerCase().trim(),
                 question.correctAnswer.toLowerCase().trim()
               );
@@ -165,37 +178,26 @@ export const PlayQuizProvider = ({
               return question;
             }
           });
-          dispatch({
-            type: "SET_PLAY_QUIZ_QUESTIONS",
-            payload: newPlayQuizQuestions,
-          });
-          setTimeout(() => {
-            dispatch({ type: "SET_IS_RESULT_SHEET_OPEN", payload: true });
-          }, 500);
+
           break;
         case "TRUE_FALSE":
           newPlayQuizQuestions = playQuizQuestions.map((question, i) => {
             if (currentQuestion === i && userAnswer.answer) {
+              isAnswerRight = userAnswer.answer === question.correctAnswer;
               return {
                 ...question,
-                isAnswerRight: userAnswer.answer === question.correctAnswer,
+                isAnswerRight,
                 // timeTaken,
               };
             } else {
               return question;
             }
           });
-          dispatch({
-            type: "SET_PLAY_QUIZ_QUESTIONS",
-            payload: newPlayQuizQuestions,
-          });
-          setTimeout(() => {
-            dispatch({ type: "SET_IS_RESULT_SHEET_OPEN", payload: true });
-          }, 500);
+
           break;
         case "CORRECT_ORDER":
           newPlayQuizQuestions = playQuizQuestions.map((question, i) => {
-            const isAnswerRight =
+            isAnswerRight =
               question.items.length === userAnswer.answer.length &&
               question.items
                 .sort(
@@ -213,21 +215,13 @@ export const PlayQuizProvider = ({
               return question;
             }
           });
-          dispatch({
-            type: "SET_PLAY_QUIZ_QUESTIONS",
-            payload: newPlayQuizQuestions,
-          });
-          setTimeout(() => {
-            dispatch({ type: "SET_IS_RESULT_SHEET_OPEN", payload: true });
-          }, 1200);
+
           break;
         case "MATCHING_PAIRS":
           newPlayQuizQuestions = playQuizQuestions.map((question, i) => {
-            const isAnswerRight = userAnswer.answer.texts.every(
-              (textItem, i) => {
-                return textItem.id === userAnswer.answer.matches[i].id;
-              }
-            );
+            isAnswerRight = userAnswer.answer.texts.every((textItem, i) => {
+              return textItem.id === userAnswer.answer.matches[i].id;
+            });
             if (currentQuestion === i && userAnswer.answer) {
               return {
                 ...question,
@@ -238,19 +232,13 @@ export const PlayQuizProvider = ({
               return question;
             }
           });
-          dispatch({
-            type: "SET_PLAY_QUIZ_QUESTIONS",
-            payload: newPlayQuizQuestions,
-          });
-          setTimeout(() => {
-            dispatch({ type: "SET_IS_RESULT_SHEET_OPEN", payload: true });
-          }, 1200);
+
           break;
         case "FILL_IN_THE_BLANKS":
           newPlayQuizQuestions = playQuizQuestions.map((question, i) => {
             if (currentQuestion === i && userAnswer.answer) {
               const blanks = question.items.filter((item) => item.isBlank);
-              const isAnswerRight = userAnswer.answer.every(
+              isAnswerRight = userAnswer.answer.every(
                 (answer, i) => answer.item.id === blanks[i].id
               );
               return {
@@ -262,20 +250,24 @@ export const PlayQuizProvider = ({
               return question;
             }
           });
-          dispatch({
-            type: "SET_PLAY_QUIZ_QUESTIONS",
-            payload: newPlayQuizQuestions,
-          });
-          setTimeout(() => {
-            dispatch({ type: "SET_IS_RESULT_SHEET_OPEN", payload: true });
-          }, 500);
-          break;
       }
+      dispatch({
+        type: "SET_PLAY_QUIZ_QUESTIONS",
+        payload: newPlayQuizQuestions,
+      });
+      setTimeout(
+        () => {
+          dispatch({ type: "SET_IS_RESULT_SHEET_OPEN", payload: true });
+        },
+        userAnswer.type === "MATCHING_PAIRS" ||
+          userAnswer.type === "CORRECT_ORDER"
+          ? 1200
+          : 500
+      );
+      playRightWorngAnswerSound(isAnswerRight);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [quizMode]);
-
-
 
   return (
     <QuizRoomContext.Provider value={{ state, dispatch }}>

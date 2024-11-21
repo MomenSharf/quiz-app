@@ -19,7 +19,6 @@ export default function GiphyGIFs() {
     dispatch,
     state: { currentQuestion },
   } = useEditorContext();
-  console.log(GIFs);
 
   const filter = new Filter();
 
@@ -52,7 +51,6 @@ export default function GiphyGIFs() {
   };
 
   const handleLoadMore = async () => {
-    console.log(page.current);
 
     if (query === "") return;
     try {

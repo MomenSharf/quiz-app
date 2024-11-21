@@ -9,7 +9,6 @@ export default function TrueAndFalse({
 }: {
   question: PlayQuizQuestion;
 }) {
-  console.log(question.correctAnswer && question.correctAnswer);
 
   const {
     dispatch,

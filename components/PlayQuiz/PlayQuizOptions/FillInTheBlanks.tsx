@@ -23,7 +23,6 @@ export default function FillInTheBlanks({
       userAnswer,
       playQuizQuestions,
       currentQuestion,
-      timeTaken,
     },
   } = usePlayQuizContext();
   const [blanks, setBlanks] = useState<Item[]>(() =>
@@ -32,7 +31,6 @@ export default function FillInTheBlanks({
         item.isBlank 
     )
   );
-  console.log(userChoices);
   
   const blanksIndexes = question.items
     .map((obj, index) => (obj.isBlank ? index : null)) // Map to indices or null

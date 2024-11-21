@@ -10,7 +10,7 @@ import {
 import { usePlayQuizContext } from "./Context";
 import { ArrowRight, Check, X } from "lucide-react";
 import { Icons } from "../icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "../ui/button";
 
@@ -23,6 +23,9 @@ export default function ResultSheet() {
   const isRight =
     playQuizQuestions[currentQuestion] &&
     playQuizQuestions[currentQuestion].isAnswerRight;
+
+
+ 
   return (
     <Sheet open={isResultSheetOpen}>
       <SheetContent

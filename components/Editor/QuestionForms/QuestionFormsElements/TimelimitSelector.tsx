@@ -19,7 +19,6 @@ export default function TimelimitSelector({
   } = useEditorContext();
 
   const timeLimit = getValues(`questions.${questionIndex}.timeLimit`);
-  console.log(timeLimit);
   
   
 

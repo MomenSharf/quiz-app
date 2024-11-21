@@ -5,6 +5,7 @@ import { TimerIcon, TimerOff } from "lucide-react";
 import { usePlayQuizContext } from "./Context";
 import { intervalToDuration } from "date-fns";
 import { buttonVariants } from "../ui/button";
+import { time } from "console";
 
 export default function Timer({
   timeLimit,
@@ -14,7 +15,6 @@ export default function Timer({
   questionOrder: number;
 }) {
   const [isRunning, setIsRunning] = useState(false);
-  // const [remainingTime, setRemainingTime] = useState((timeLimit * 1000) / 3); // Initialize with the passed timeLimit
   const [remainingTime, setRemainingTime] = useState(timeLimit); // Initialize with the passed timeLimit
   const intervalIdRef = useRef<number | null>(null);
 
@@ -24,56 +24,38 @@ export default function Timer({
   } = usePlayQuizContext();
 
   useEffect(() => {
-    if (quizMode === "answered") {
-      if (
-        !timeTakenArray?.find(
-          (question) =>
-            playQuizQuestions[currentQuestion] &&
-            question.questionId === playQuizQuestions[currentQuestion].id
-        )
-      ) {
-        console.log(timeLimit , remainingTime);
-        
-        const newtimeTakenArray = timeTakenArray ? timeTakenArray : [];
-        dispatch({
-          type: "SET_TIME_TAKEN",
-          payload: [
-            ...newtimeTakenArray,
-            {
-              questionId: playQuizQuestions[currentQuestion].id,
-              timeTaken: timeLimit - remainingTime,
-            },
-          ],
-        });
-      }
+    if (quizMode === "answered" && currentQuestion === questionOrder) {
+      const timeTaken = timeLimit - remainingTime;
+      dispatch({
+        type: "SET_TIME_TAKEN",
+        payload: [
+          ...(timeTakenArray || []),
+          {
+            questionId: playQuizQuestions[currentQuestion].id,
+            timeTaken,
+          },
+        ],
+      });
     }
+
+
     if (quizMode === "playing" && currentQuestion === questionOrder) {
       intervalIdRef.current = window.setInterval(() => {
         setRemainingTime((prevTime) => {
           if (prevTime <= 0) {
             clearInterval(intervalIdRef.current as number); // Stop the countdown when it reaches 0
             setTimeout(() => {
-              if (
-                !timeTakenArray?.find(
-                  (question) =>
-                    playQuizQuestions[currentQuestion] &&
-                    question.questionId ===
-                      playQuizQuestions[currentQuestion].id
-                )
-              ) {
-                const newtimeTakenArray = timeTakenArray ? timeTakenArray : [];
-                dispatch({
-                  type: "SET_TIME_TAKEN",
-                  payload: [
-                    ...newtimeTakenArray,
-                    {
-                      questionId: playQuizQuestions[currentQuestion].id,
-                      timeTaken: timeLimit,
-                    },
-                  ],
-                });
-              }
               dispatch({ type: "SET_QUIZ_MODE", payload: "timeOut" });
+              dispatch({
+                type: "SET_TIME_TAKEN",
+                payload: [
+                  ...(timeTakenArray || []),
+                  {
+                    questionId: playQuizQuestions[currentQuestion].id,
+                    timeTaken:timeLimit,
+                  },
+                ],
+              });
               setTimeout(() => {
                 dispatch({ type: "SET_IS_RESULT_SHEET_OPEN", payload: true });
               }, 500);

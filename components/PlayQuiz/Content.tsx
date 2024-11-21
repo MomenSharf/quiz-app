@@ -21,8 +21,11 @@ export default function Content({
   questions: PlayQuizQuestion[];
 }) {
   const {
-    state: { currentQuestion, quizMode, timeTaken },
+    dispatch, state: { currentQuestion, quizMode, timeTakenArray },
   } = usePlayQuizContext();
+
+  const handleTimeUpdate = (timeTaken: number) => {
+  };
   return (
     <div className="flex flex-col w-full flex-1  items-center">
       <div className="p-3 max-w-6xl flex-1 flex flex-col">
@@ -56,8 +59,7 @@ export default function Content({
                     <div className="flex flex-col gap-3 h-full sm:justify-center">
                       {question.question && question.type !== 'FILL_IN_THE_BLANK' && (
                         <p className="text-2xl text-gray-900 text-center sm:text-start">
-                          {/* {toCapitalize(question.question)} */}
-                          {timeTaken}
+                          {toCapitalize(question.question)}
                         </p>
                       )}
                       <div className="flex gap-3 justify-between">
