@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useMotionValue, Reorder, useDragControls } from "framer-motion";
 import { ReorderIcon } from "./Icon";
-import { useRaisedShadow } from "../use-raised-shadow";
+import { useRaisedShadow } from "@/hooks/use-raised-shadow";
 
 interface Props {
   item: string;
