@@ -107,7 +107,7 @@ export default function Timer({
     return (
       <div
         className={cn("flex text-sm items-center text-success", {
-          "text-[#FFC107]": remainingTime <= timeLimit / 3.5,
+          "text-yellow": remainingTime <= timeLimit / 3.5,
           "text-destructive": remainingTime <= timeLimit / 10,
         })}
       >

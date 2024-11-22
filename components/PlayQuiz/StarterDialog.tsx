@@ -16,7 +16,7 @@ export default function SaveProgressDialog() {
   const {
     state: { isStarterDialogOpen },
     dispatch,
-    resetQuiz
+    resetQuiz,
   } = usePlayQuizContext();
 
   return (
@@ -24,25 +24,27 @@ export default function SaveProgressDialog() {
       <DialogContent className="sm:max-w-[425px]" hideClose>
         <DialogHeader>
           <DialogTitle className="text-center">
-            {isStarterDialogOpen.isStarted
-              ?  "Start from scratch or continue?" 
+            {!isStarterDialogOpen.isStarted
+              ? "Start from beginning or continue?"
               : "Are You ready ?"}
           </DialogTitle>
         </DialogHeader>
         <DialogFooter className="py-5 sm:justify-center">
           <div className="flex gap-3">
-           {isStarterDialogOpen.isStarted && <Button
-              type="button"
-              onClick={() => {
-                dispatch({
-                  type: "SET_IS_STARTER_DIALOG_OPEN",
-                  payload: { open: false },
-                });
-                resetQuiz()
-              }}
-            >
-              Start
-            </Button>}
+            {!isStarterDialogOpen.isStarted && (
+              <Button
+                type="button"
+                onClick={() => {
+                  dispatch({
+                    type: "SET_IS_STARTER_DIALOG_OPEN",
+                    payload: { open: false },
+                  });
+                  resetQuiz();
+                }}
+              >
+                Start
+              </Button>
+            )}
             <Button
               type="button"
               onClick={() => {
@@ -56,9 +58,7 @@ export default function SaveProgressDialog() {
                 });
               }}
             >
-              {isStarterDialogOpen.isStarted
-              ?  "Continue" 
-              : "Start"}
+              {!isStarterDialogOpen.isStarted ? "Continue" : "Start "}
             </Button>
           </div>
         </DialogFooter>

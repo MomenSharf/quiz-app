@@ -19,18 +19,7 @@ export default function Header({
       <Button size="icon" variant="ghost">
         <ArrowLeft className="w-4 h-4" />
       </Button>
-      {/* <div
-        onClick={() => {
-          dispatch({ type: "SET_CURRENT_QUESTION", payload: 0 });
-        }}
-        className="text-gray-800"
-      >
-        Question {currentQuestion + 1}/{questions.length} - {" "}
-        {questions[currentQuestion] &&
-          toCapitalize(
-            questions[currentQuestion].type.split("_").join(" ").toLowerCase()
-          )}
-      </div> */}
+   
       <ProgressBar  />
       <Button variant='ghost' size='icon' className="p-1 rounded-full">
          <Settings />

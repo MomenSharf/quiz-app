@@ -173,7 +173,7 @@ export const PlayQuizProvider = ({
     let initialQuestions: PlayQuizQuestion[];
     if (
       quizProgress.playQuizQuestions.length > 0 &&
-      !quizProgress.isCompleted
+      quizProgress.currentQuestion > 0
     ) {
       initialQuestions = quizProgress.playQuizQuestions as PlayQuizQuestion[];
       dispatch({
@@ -326,6 +326,9 @@ export const PlayQuizProvider = ({
           : 500
       );
       playRightWorngAnswerSound(isAnswerRight);
+    }
+    if (quizMode === "ended") {
+      dispatch({ type: "SET_CURRENT_QUESTION", payload: 0 });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [quizMode]);

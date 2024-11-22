@@ -1,23 +1,23 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
-import QuizImage from "./QuizImage";
+import { cn, formatToMinSec } from "@/lib/utils";
 import { EditorQuiz } from "@/types";
-import Image from "next/image";
-import { UserAvatarImage } from "../User/UserAvatar";
-import { Icons } from "../icons";
-import { Badge } from "../ui/badge";
-import { Button } from "../ui/button";
 import {
   ArrowDownIcon,
   ArrowUpIcon,
   Bookmark,
   Copy,
-  Heart,
-  Send,
+  Edit,
   Timer,
+  Trash2,
 } from "lucide-react";
-import { cn, formatToMinSec } from "@/lib/utils";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
+import { UserAvatarImage } from "../User/UserAvatar";
+import { Icons } from "../icons";
+import { Badge } from "../ui/badge";
+import { Button } from "../ui/button";
+import QuizImage from "./QuizImage";
 
 export default function QuizCard({ quiz }: { quiz: EditorQuiz }) {
   const sessiom = useSession();
@@ -43,19 +43,19 @@ export default function QuizCard({ quiz }: { quiz: EditorQuiz }) {
     }
   }, []);
 
+  const router = useRouter();
+
+  const isOner = quiz.user.id === sessiom.data?.user.id;
+
   return (
     <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 justify-center p-5 bg-white rounded-xl">
       <QuizImage imageUrl="" />
       <div className="lg:col-span-2 flex flex-col gap-2 justify-between">
         <div className="flex items-center gap-1">
           <UserAvatarImage imageUrl={""} className="w-10 h-10" />
-          <span className="text-xs text-gray-500 font-medium">
-            {quiz.user.username} {' '}
-            {quiz.user.id === sessiom.data?.user.id && (
-               <Badge className="font-thin">
-              You
-             </Badge>
-            )}
+          <span className="text-xs text-gray-dark font-medium">
+            {quiz.user.username}{" "}
+            {isOner && <Badge className="font-thin">You</Badge>}
           </span>
         </div>
         <p className="text-lg font-medium truncate">{quiz.title}</p>
@@ -76,7 +76,7 @@ export default function QuizCard({ quiz }: { quiz: EditorQuiz }) {
         <div className="flex flex-col gap-1">
           <p className="text-sm">Description :</p>
           <p
-            className={cn("text-xs text-gray-500 relative", {
+            className={cn("text-xs text-gray-medium relative", {
               "line-clamp-3": isDescriptionOpen,
             })}
             ref={descriptionRef}
@@ -109,16 +109,43 @@ export default function QuizCard({ quiz }: { quiz: EditorQuiz }) {
           </div>
         </div>
         <div className="flex gap-1">
-          <Button className="rounded-full" size="icon" variant="outline">
-            <Bookmark className="w-4 h-4" />
-          </Button>
+          {isOner ? (
+            <Button
+              className="group rounded-full hover:bg-destructive"
+              size="icon"
+              variant="outline"
+            >
+              <Trash2 className="w-4 h-4 text-destructive group-hover:text-white" />
+            </Button>
+          ) : (
+            <Button className="rounded-full" size="icon" variant="outline">
+              <Bookmark className="w-4 h-4" />
+            </Button>
+          )}
           <Button className="rounded-full" size="icon" variant="outline">
             <Icons.share className="w-4 h-4 stroke-black fill-black" />
           </Button>
-          <Button className="rounded-full" size="icon" variant="outline">
-            <Copy className="w-4 h-4" />
+          {isOner ? (
+            <Button
+              className="group rounded-full flex-1  max-w-40 gap-2"
+              variant="outline"
+              onClick={() => router.push(`/editor/${quiz.id}`)}
+            >
+              <Edit className="w-4 h-4 " />
+              <span>Edit</span>
+            </Button>
+          ) : (
+            <Button className="rounded-full" size="icon" variant="outline">
+              <Copy className="w-4 h-4" />
+            </Button>
+          )}
+
+          <Button
+            className="flex-1 rounded-full max-w-40"
+            onClick={() => router.push(`/play/${quiz.id}`)}
+          >
+            Play
           </Button>
-          <Button className="flex-1 rounded-full max-w-40">Play</Button>
         </div>
       </div>
     </div>

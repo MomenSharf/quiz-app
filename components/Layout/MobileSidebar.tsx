@@ -91,7 +91,7 @@ export default function MobileSideBar({
                   </span>
                   <span
                     className={cn(
-                      "text-gray-400 group-hover:text-primary-foreground",
+                      "text-gray-light group-hover:text-primary-foreground",
                       {
                         "text-primary-foreground":
                           pathname === item.route ||

@@ -53,7 +53,29 @@ const config = withUt({
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        success: 'hsl(var(--success))' 
+        success: "hsl(var(--success))",
+        // Base Colors
+        "green-dark": "hsl(var(--green-dark))",
+        red: "hsl(var(--red))",
+        orange: "hsl(var(--orange))",
+        amber: "hsl(var(--amber))",
+        "light-green": "hsl(var(--light-green))",
+        blue: "hsl(var(--blue))",
+        "blue-dark": "hsl(var(--blue-dark))",
+        teal: "hsl(var(--teal))",
+        "pink-dark": "hsl(var(--pink-dark))",
+        pink: "hsl(var(--pink))",
+        "purple-dark": "hsl(var(--purple-dark))",
+        yellow: "hsl(var(--yellow))",
+        "deep-orange": "hsl(var(--deep-orange))",
+        navy: "hsl(var(--navy))",
+        indigo: "hsl(var(--indigo))",
+
+        // Gray Colors
+        "gray-light": "hsl(var(--gray-light))",
+        "gray-medium": "hsl(var(--gray-medium))",
+        "gray-dark": "hsl(var(--gray-dark))",
+        "gray-extra-dark": "hsl(var(--gray-extra-dark))",
       },
       borderRadius: {
         lg: "var(--radius)",

@@ -5,9 +5,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex antialiased h-screen">
       <Sidebar />
-      <div className="flex-1 flex flex-col">
+      <div className="w-full h-full flex">
         <Header />
-        <main className="flex-1 h-full overflow-auto bg-[hsl(var(--main-background))]">{children}</main>
+        <main className="w-full h-full overflow-auto bg-[hsl(var(--main-background))]">{children}</main>
       </div>
     </div>
   );

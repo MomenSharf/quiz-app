@@ -7,11 +7,13 @@ import { formatToMinSec } from "@/lib/utils";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { QUESTION_MARK_TIMES } from "@/constants";
+import { motion } from "framer-motion";
 
 export default function QuizResult() {
   const {
     state: { playQuizQuestions, timeTakenArray, quizMode },
   } = usePlayQuizContext();
+  const [g, setG] = useState(false);
 
   const router = useRouter();
 
@@ -56,7 +58,10 @@ export default function QuizResult() {
     .reduce((total, question) => {
       const { points, timeLimit, timeTaken } = question;
 
-      const adjustedTimeTaken = timeTaken < QUESTION_MARK_TIMES[`${question.type}`] ? 0 : timeTaken - 3000;
+      const adjustedTimeTaken =
+        timeTaken < QUESTION_MARK_TIMES[`${question.type}`]
+          ? 0
+          : timeTaken - 3000;
 
       const calculatedScore =
         timeTaken <= timeLimit
@@ -83,52 +88,107 @@ export default function QuizResult() {
         </div>
 
         <div className="grid grid-cols-3 gap-3 justify-center">
-          <div className="bg-white rounded-xl">
+          <motion.div
+            initial={{ opacity: 0, x: 30 }} // Start slightly from the right
+            animate={{ opacity: 1, x: 0 }} // Move to original position and become visible
+            transition={{
+              delay: 0 * 0.3, // Delay for each item based on its index
+              duration: 0.6, // Duration for the animation
+            }}
+            className="bg-white rounded-xl"
+            onClick={() => setG((prev) => !prev)}
+          >
             <div className="flex flex-col gap-1 p-2 sm:p-3 bg-primary/5 rounded-xl max-w-[180px] shadow-sm h-full">
               <Icons.logo className="w-6 h-6 sm:w-10 sm:h-10 fill-primary" />
-              <span className="text-lg sm:text-3xl font-medium">{`${correctQuestions.length}/${playQuizQuestions.length}`}</span>
-              <p className="text-gray-600 text-xs sm:text-sm ">
+              <span className="text-lg sm:text-2xl font-medium">{`${correctQuestions.length}/${playQuizQuestions.length}`}</span>
+              <p className="text-gray-DARK text-xs sm:text-sm ">
                 Questions you have answerd right
               </p>
             </div>
-          </div>
-          <div className="bg-white rounded-xl">
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, x: 30 }} // Start slightly from the right
+            animate={{ opacity: 1, x: 0 }} // Move to original position and become visible
+            transition={{
+              delay: 1 * 0.3, // Delay for each item based on its index
+              duration: 0.6, // Duration for the animation
+            }}
+            className="bg-white rounded-xl"
+          >
             <div className="flex flex-col gap-1 p-2 sm:p-3 bg-primary/5 rounded-xl max-w-[180px] shadow-sm h-full">
-              <Medal className="w-6 h-6 sm:w-10 sm:h-10 text-[#FFC107]" />
-              <span className="text-lg sm:text-3xl font-medium">{`${userPoints}/${totalPoints}`}</span>
-              <p className="text-gray-600 text-xs sm:text-sm ">
+              <Medal className="w-6 h-6 sm:w-10 sm:h-10 text-yellow" />
+              <span className="text-lg sm:text-2xl font-medium">{`${userPoints}/${totalPoints}`}</span>
+              <p className="text-gray-DARK text-xs sm:text-sm ">
                 Points you get it
               </p>
             </div>
-          </div>
-          <div className="bg-white rounded-xl ">
-            <div className="flex flex-col gap-1 p-2 sm:p-3 bg-[#e91e63]/5 rounded-xl max-w-[180px] shadow-sm h-full">
-              <TimerIcon className="w-6 h-6 sm:w-10 sm:h-10 text-[#e91e63]" />
-              <span className="text-lg sm:text-3xl font-medium">{`${formatToMinSec(
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, x: 30 }} // Start slightly from the right
+            animate={{ opacity: 1, x: 0 }} // Move to original position and become visible
+            transition={{
+              delay: 2 * 0.3, // Delay for each item based on its index
+              duration: 0.6, // Duration for the animation
+            }}
+            className="bg-white rounded-xl "
+          >
+            <div className="flex flex-col gap-1 p-2 sm:p-3 bg-pink/5 rounded-xl max-w-[180px] shadow-sm h-full">
+              <TimerIcon className="w-6 h-6 sm:w-10 sm:h-10 text-pink" />
+              <span className="text-lg sm:text-xl font-medium">{`${formatToMinSec(
                 timeTaken || 0
               )}/${formatToMinSec(totalTime)}`}</span>
-              <p className="text-gray-600 text-xs sm:text-sm ">Time Taken</p>
+              <p className="text-gray-DARK text-xs sm:text-sm ">Time Taken</p>
             </div>
-          </div>
+          </motion.div>
         </div>
         <div className="flex gap-3 justify-center">
-          <Button
-            className="w-20 h-20 sm:w-28 sm:h-28 flex-col gap-1"
-            onClick={() => {
-              router.push("/");
+          <motion.div
+            initial={{ opacity: 0, y: -30 }} // Start above the screen
+            animate={{ opacity: 1, y: 0 }} // Move to original position and become visible
+            transition={{
+              delay: 0 * 0.3, // Delay for each item based on its index
+              duration: 0.6, // Duration for the animation
             }}
+            className="animated-item"
           >
-            <Icons.home className="w-10 h-10 sm:w-14 sm:h-14 fill-white" />
-            <span className="text-xs">Home</span>
-          </Button>
-          <Button className="w-20 h-20 sm:w-28 sm:h-28 flex-col gap-1 bg-[#FFC107] hover:bg-[#FFC107]/90">
-            <Icons.star className="w-10 h-10 sm:w-14 sm:h-14 fill-white" />
-            <span className="text-xs">Rate</span>
-          </Button>
-          <Button className="w-20 h-20 sm:w-28 sm:h-28 flex-col gap-1 bg-[#e91e63] hover:bg-[#e91e63]/90">
-            <Icons.send className="w-10 h-10 sm:w-14 sm:h-14 fill-white" />
-            <span className="text-xs">Share</span>
-          </Button>
+            <Button
+              className="w-20 h-20 sm:w-28 sm:h-28 flex-col gap-1"
+              onClick={() => {
+                router.push("/");
+              }}
+            >
+              <Icons.home className="w-10 h-10 sm:w-14 sm:h-14 fill-white" />
+              <span className="text-xs">Home</span>
+            </Button>
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, y: -30 }} // Start above the screen
+            animate={{ opacity: 1, y: 0 }} // Move to original position and become visible
+            transition={{
+              delay: 1 * 0.3, // Delay for each item based on its index
+              duration: 0.6, // Duration for the animation
+            }}
+            className="animated-item"
+          >
+            <Button className="w-20 h-20 sm:w-28 sm:h-28 flex-col gap-1 bg-[#FFC107] hover:bg-[#FFC107]/90">
+              <Icons.star className="w-10 h-10 sm:w-14 sm:h-14 fill-white" />
+              <span className="text-xs">Rate</span>
+            </Button>
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, y: -30 }} // Start above the screen
+            animate={{ opacity: 1, y: 0 }} // Move to original position and become visible
+            transition={{
+              delay: 2 * 0.3, // Delay for each item based on its index
+              duration: 0.6, // Duration for the animation
+            }}
+            className="animated-item"
+          >
+            <Button className="w-20 h-20 sm:w-28 sm:h-28 flex-col gap-1 bg-[#e91e63] hover:bg-[#e91e63]/90">
+              <Icons.send className="w-10 h-10 sm:w-14 sm:h-14 fill-white" />
+              <span className="text-xs">Share</span>
+            </Button>
+          </motion.div>
         </div>
       </div>
     </div>
