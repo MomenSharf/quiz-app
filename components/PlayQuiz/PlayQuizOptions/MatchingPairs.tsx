@@ -48,7 +48,7 @@ function MatchingPairsItem({
       <div
         className={cn(
           buttonVariants(),
-          "flex-1 rounded-tr-none rounded-br-none bg-white hover:bg-white text-foreground"
+          "flex-1 rounded-tr-none rounded-br-none bg-card hover:bg-card text-foreground"
         )}
       >
         {type === "text" ? item.text : item.match}
@@ -58,7 +58,7 @@ function MatchingPairsItem({
           <Button
             type="button"
             size="icon"
-            className="rounded-tl-none rounded-bl-none focus:z-10  bg-white hover:bg-white"
+            className="rounded-tl-none rounded-bl-none focus:z-10  bg-card hover:bg-card"
           >
             <GripVertical
               onPointerDown={(e) => dragControls.start(e)}

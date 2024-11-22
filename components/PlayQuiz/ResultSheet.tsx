@@ -20,8 +20,6 @@ export default function ResultSheet() {
     state: { isResultSheetOpen, currentQuestion, playQuizQuestions, quizMode },
   } = usePlayQuizContext();
 
-  
-
   const isRight =
     playQuizQuestions[currentQuestion] &&
     playQuizQuestions[currentQuestion].isAnswerRight;
@@ -30,7 +28,7 @@ export default function ResultSheet() {
       <SheetContent
         side="bottom"
         hideClose
-        className="bg-white p-0 border-0"
+        className="bg-card p-0 border-0"
         overlayClasses="bg-black/10"
       >
         <div
@@ -40,7 +38,7 @@ export default function ResultSheet() {
           })}
         >
           <div className="flex gap-3 flex-1 items-center">
-            <div className="p-2 sm:p-3 bg-white rounded-full">
+            <div className="p-2 sm:p-3 bg-card rounded-full">
               {isRight ? (
                 <Check
                   className="w-5 h-5 sm:w-6 sm:h-6 text-success"

@@ -48,7 +48,7 @@ export default function QuizCard({ quiz }: { quiz: EditorQuiz }) {
   const isOner = quiz.user.id === sessiom.data?.user.id;
 
   return (
-    <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 justify-center p-5 bg-white rounded-xl">
+    <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 justify-center p-5 bg-card rounded-xl">
       <QuizImage imageUrl="" />
       <div className="lg:col-span-2 flex flex-col gap-2 justify-between">
         <div className="flex items-center gap-1">

@@ -29,7 +29,7 @@ export default function MobileSideBar({
 
   return (
     <Sheet>
-      <SheetTrigger asChild className="sm:hidden mx-2">
+      <SheetTrigger asChild>
         <Button variant="ghost" size="icon">
           <Icons.menu className="w-5 h-5 stroke-foreground" />
         </Button>

@@ -95,7 +95,7 @@ export default function QuizResult() {
               delay: 0 * 0.3, // Delay for each item based on its index
               duration: 0.6, // Duration for the animation
             }}
-            className="bg-white rounded-xl"
+            className="bg-card rounded-xl"
             onClick={() => setG((prev) => !prev)}
           >
             <div className="flex flex-col gap-1 p-2 sm:p-3 bg-primary/5 rounded-xl max-w-[180px] shadow-sm h-full">
@@ -113,7 +113,7 @@ export default function QuizResult() {
               delay: 1 * 0.3, // Delay for each item based on its index
               duration: 0.6, // Duration for the animation
             }}
-            className="bg-white rounded-xl"
+            className="bg-card rounded-xl"
           >
             <div className="flex flex-col gap-1 p-2 sm:p-3 bg-primary/5 rounded-xl max-w-[180px] shadow-sm h-full">
               <Medal className="w-6 h-6 sm:w-10 sm:h-10 text-yellow" />
@@ -130,7 +130,7 @@ export default function QuizResult() {
               delay: 2 * 0.3, // Delay for each item based on its index
               duration: 0.6, // Duration for the animation
             }}
-            className="bg-white rounded-xl "
+            className="bg-card rounded-xl "
           >
             <div className="flex flex-col gap-1 p-2 sm:p-3 bg-pink/5 rounded-xl max-w-[180px] shadow-sm h-full">
               <TimerIcon className="w-6 h-6 sm:w-10 sm:h-10 text-pink" />

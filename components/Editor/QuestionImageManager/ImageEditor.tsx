@@ -240,7 +240,7 @@ export default function ImageEditor() {
           </div>
         )}
         {isUploading && (
-          <div className="absolute flex flex-col left-0 top-0 w-full h-full bg-white/50 z-10 justify-center items-center">
+          <div className="absolute flex flex-col left-0 top-0 w-full h-full bg-card/50 z-10 justify-center items-center">
             <span className="loader" />
             <span className="font-semibold mt-5">Uploading...</span>
           </div>
