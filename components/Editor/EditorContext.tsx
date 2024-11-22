@@ -1,4 +1,4 @@
-import { saveQuiz } from "@/lib/actions/quiz.actions";
+import { saveEditorQuiz } from "@/lib/actions/quiz.actions";
 import {
   fillInTheBlankSchema,
   matchingPairsSchema,
@@ -45,7 +45,7 @@ type EditorState = {
     url?: string;
   };
   isQuestionImageManagerTabsOpen: boolean;
-}
+};
 
 // Define action types
 type EditorActions =
@@ -82,7 +82,7 @@ type EditorContextType = {
   debounceSaveData: DebouncedState<(isReseting: boolean) => void>;
   redoFunction: () => void;
   undoFunction: () => void;
-}
+};
 
 // Initial state
 const initialState: EditorState = {
@@ -289,13 +289,17 @@ export const EditorProvider = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const saveQuizFun = useCallback(
+  const saveEditorQuizFun = useCallback(
     async (isReseting: boolean) => {
       const data = getValues();
       try {
         dispatch({ type: "SET_SAVE_SATAT", payload: "WAITING" });
 
-        const prismaQuiz = await saveQuiz(initialQuiz.id, data, "pathname");
+        const prismaQuiz = await saveEditorQuiz(
+          initialQuiz.id,
+          data,
+          "pathname"
+        );
 
         if (prismaQuiz) {
           dispatch({ type: "SET_SAVE_SATAT", payload: "GOOD" });
@@ -318,7 +322,7 @@ export const EditorProvider = ({
     [getValues, initialQuiz.id]
   );
   const debounceSaveData = useDebouncedCallback((isReseting: boolean) => {
-    saveQuizFun(isReseting);
+    saveEditorQuizFun(isReseting);
   }, 1500);
 
   const undoFunction = useCallback(() => {

@@ -1,13 +1,13 @@
-import { EditorQuiz } from "@/types";
+import { saveQuizProgress } from "@/lib/actions/quiz.actions";
+import { EditorQuiz, PlayQuizType } from "@/types";
 import {
   createContext,
+  useCallback,
   useContext,
   useEffect,
-  useMemo,
   useReducer,
 } from "react";
 import stringSimilarity from "string-similarity";
-import { Button } from "../ui/button";
 
 export type PlayQuizQuestion = EditorQuiz["questions"][number] & {
   // timeTaken: number;
@@ -30,7 +30,7 @@ type userAnswer =
 type PlayQuizState = {
   currentQuestion: number;
   playQuizQuestions: PlayQuizQuestion[];
-  isStarterDialogOpen: boolean;
+  isStarterDialogOpen: { open: boolean; isStarted?: boolean };
   isResultSheetOpen: boolean;
   quizMode: quizMode;
   userAnswer: userAnswer;
@@ -40,7 +40,10 @@ type PlayQuizState = {
 type PlayQuizActions =
   | { type: "SET_QUESTIONS"; payload: PlayQuizQuestion[] }
   | { type: "SET_CURRENT_QUESTION"; payload: number }
-  | { type: "SET_IS_STARTER_DIALOG_OPEN"; payload: boolean }
+  | {
+      type: "SET_IS_STARTER_DIALOG_OPEN";
+      payload: { open: boolean; isStarted?: boolean };
+    }
   | { type: "SET_IS_RESULT_SHEET_OPEN"; payload: boolean }
   | { type: "SET_QUIZ_MODE"; payload: quizMode }
   | { type: "SET_USER_ANSWER"; payload: userAnswer }
@@ -53,12 +56,13 @@ type PlayQuizActions =
 type PlayQuizContextType = {
   state: PlayQuizState;
   dispatch: React.Dispatch<PlayQuizActions>;
+  resetQuiz: () => void;
 };
 
 const initialState: PlayQuizState = {
   currentQuestion: 0,
   playQuizQuestions: [],
-  isStarterDialogOpen: false,
+  isStarterDialogOpen: { open: false, isStarted: false },
   isResultSheetOpen: false,
   quizMode: "waiting",
   userAnswer: null,
@@ -103,10 +107,10 @@ const QuizRoomContext = createContext<PlayQuizContextType | undefined>(
 
 export const PlayQuizProvider = ({
   children,
-  quiz,
+  quizProgress,
 }: {
   children: React.ReactNode;
-  quiz: EditorQuiz;
+  quizProgress: PlayQuizType;
 }) => {
   const [state, dispatch] = useReducer(quizRoomReducer, initialState);
   const {
@@ -118,12 +122,6 @@ export const PlayQuizProvider = ({
     isResultSheetOpen,
   } = state;
 
-  const initialQuestions: PlayQuizQuestion[] = useMemo(() => {
-    return quiz.questions.map((question) => {
-      return { ...question, timeTaken: 0, isAnswerRight: null };
-    });
-  }, [quiz.questions]);
-
   const playRightWorngAnswerSound = (isAnswerRight: boolean | null) => {
     if (isAnswerRight === null) return;
     const audio = new Audio(
@@ -134,10 +132,75 @@ export const PlayQuizProvider = ({
     if (isAnswerRight) audio.play();
   };
 
-  useEffect(() => {
+  const resetQuiz = () => {
+    const initialQuestions = quizProgress.quiz.questions.map((question) => {
+      return { ...question, timeTaken: 0, isAnswerRight: null };
+    });
+
     dispatch({ type: "SET_QUESTIONS", payload: initialQuestions });
-    dispatch({ type: "SET_IS_STARTER_DIALOG_OPEN", payload: true });
-  }, [initialQuestions]);
+    dispatch({
+      type: "SET_QUIZ_MODE",
+      payload: "playing",
+    });
+    dispatch({ type: "SET_CURRENT_QUESTION", payload: 0 });
+  };
+
+  const saveQuizProgressFun = useCallback(
+    async (data: {
+      playQuizQuestions: PlayQuizQuestion[];
+      currentQuestion: number;
+      isCompleted: boolean;
+    }) => {
+      await saveQuizProgress(quizProgress.quiz.id, {
+        playQuizQuestions: data.playQuizQuestions,
+        currentQuestion: data.currentQuestion,
+        isCompleted: data.isCompleted,
+      });
+    },
+    [quizProgress.quiz.id]
+  );
+
+  useEffect(() => {
+    saveQuizProgressFun({
+      playQuizQuestions,
+      currentQuestion,
+      isCompleted: quizMode === "ended",
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentQuestion]);
+
+  useEffect(() => {
+    let initialQuestions: PlayQuizQuestion[];
+    if (
+      quizProgress.playQuizQuestions.length > 0 &&
+      !quizProgress.isCompleted
+    ) {
+      initialQuestions = quizProgress.playQuizQuestions as PlayQuizQuestion[];
+      dispatch({
+        type: "SET_IS_STARTER_DIALOG_OPEN",
+        payload: { open: true, isStarted: false },
+      });
+    } else {
+      initialQuestions = quizProgress.quiz.questions.map((question) => {
+        return { ...question, timeTaken: 0, isAnswerRight: null };
+      });
+      dispatch({
+        type: "SET_IS_STARTER_DIALOG_OPEN",
+        payload: { open: true, isStarted: true },
+      });
+    }
+
+    dispatch({
+      type: "SET_CURRENT_QUESTION",
+      payload: quizProgress.currentQuestion || 0,
+    });
+    dispatch({ type: "SET_QUESTIONS", payload: initialQuestions });
+  }, [
+    quizProgress.currentQuestion,
+    quizProgress.isCompleted,
+    quizProgress.playQuizQuestions,
+    quizProgress.quiz.questions,
+  ]);
 
   useEffect(() => {
     if (quizMode === "answered" && userAnswer) {
@@ -172,7 +235,6 @@ export const PlayQuizProvider = ({
               return {
                 ...question,
                 isAnswerRight,
-                // timeTaken,
               };
             } else {
               return question;
@@ -187,7 +249,6 @@ export const PlayQuizProvider = ({
               return {
                 ...question,
                 isAnswerRight,
-                // timeTaken,
               };
             } else {
               return question;
@@ -270,7 +331,7 @@ export const PlayQuizProvider = ({
   }, [quizMode]);
 
   return (
-    <QuizRoomContext.Provider value={{ state, dispatch }}>
+    <QuizRoomContext.Provider value={{ state, dispatch, resetQuiz }}>
       {children}
     </QuizRoomContext.Provider>
   );

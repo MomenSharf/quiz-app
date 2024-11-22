@@ -5,12 +5,15 @@ export default function QuizImage({ imageUrl }: { imageUrl: string }) {
     <div className="flex flex-col w-full rounded-xl overflow-hidden">
       <Image
         // src={imageUrl}
-        src='/assets/images/hero.webp'
+        src="/assets/images/hero.webp"
         alt="question Image"
-        layout="responsive" // Maintain aspect ratio
-        width={4}
-        height={3}
-        className="object-contain rounded-xl"
+        width={800} // Replace with your desired pixel width
+        height={600} // Replace with your desired pixel height
+        priority
+        style={{
+          aspectRatio: "4 / 3", // Maintains the 4:3 aspect ratio
+        }}
+        className="rounded-xl"
       />
     </div>
   );

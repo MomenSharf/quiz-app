@@ -1,12 +1,12 @@
 "use client";
 import React from "react";
 import PlayQuiz from "./PlayQuiz";
-import { EditorQuiz } from "@/types";
+import { type EditorQuiz, PlayQuizType } from "@/types";
 import { PlayQuizProvider } from "./Context";
 
-export default function Provider({ quiz }: { quiz: EditorQuiz }) {
+export default function Provider({ quizProgress }: { quizProgress: PlayQuizType }) {
   return (
-    <PlayQuizProvider quiz={quiz}>
+    <PlayQuizProvider quizProgress={quizProgress}>
       <PlayQuiz />
     </PlayQuizProvider>
   );

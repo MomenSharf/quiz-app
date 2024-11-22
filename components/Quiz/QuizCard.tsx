@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import QuizImage from "./QuizImage";
 import { EditorQuiz } from "@/types";
 import Image from "next/image";
@@ -7,10 +7,41 @@ import { UserAvatarImage } from "../User/UserAvatar";
 import { Icons } from "../icons";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
-import { Bookmark, Copy, Heart, Send, Timer } from "lucide-react";
+import {
+  ArrowDownIcon,
+  ArrowUpIcon,
+  Bookmark,
+  Copy,
+  Heart,
+  Send,
+  Timer,
+} from "lucide-react";
+import { cn, formatToMinSec } from "@/lib/utils";
+import { useSession } from "next-auth/react";
 
 export default function QuizCard({ quiz }: { quiz: EditorQuiz }) {
-  console.log(quiz);
+  const sessiom = useSession();
+  // console.log(quiz);
+  const [isDescriptionOpen, setIsDescriptionOpen] = useState(false);
+  const [isShowMoreVisible, setIsShowMoreVisible] = useState(false);
+  const descriptionRef = useRef<HTMLParagraphElement>(null);
+  const quizTime = quiz.questions.reduce(
+    (acc, curr) => acc + curr.timeLimit,
+    0
+  );
+
+  useEffect(() => {
+    if (!descriptionRef.current) return;
+    const lineHeight = parseFloat(
+      getComputedStyle(descriptionRef.current).lineHeight
+    );
+    const contentHeight = descriptionRef.current.scrollHeight;
+    if (contentHeight > lineHeight * 3) {
+      setIsShowMoreVisible(true);
+      console.log(contentHeight);
+      console.log(lineHeight);
+    }
+  }, []);
 
   return (
     <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 justify-center p-5 bg-white rounded-xl">
@@ -19,7 +50,12 @@ export default function QuizCard({ quiz }: { quiz: EditorQuiz }) {
         <div className="flex items-center gap-1">
           <UserAvatarImage imageUrl={""} className="w-10 h-10" />
           <span className="text-xs text-gray-500 font-medium">
-            {quiz.user.username}
+            {quiz.user.username} {' '}
+            {quiz.user.id === sessiom.data?.user.id && (
+               <Badge className="font-thin">
+              You
+             </Badge>
+            )}
           </span>
         </div>
         <p className="text-lg font-medium truncate">{quiz.title}</p>
@@ -34,12 +70,33 @@ export default function QuizCard({ quiz }: { quiz: EditorQuiz }) {
           </Badge>
           <Badge className="bg-destructive/30 hover:bg-destructive/30 text-destructive gap-0.5">
             <Timer className="w-3 h-3 text-destructive" />
-            1min 45s
+            {formatToMinSec(quizTime)}
           </Badge>
         </div>
         <div className="flex flex-col gap-1">
           <p className="text-sm">Description :</p>
-          <p className="text-xs text-gray-500">{quiz.description} Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quae blanditiis consequuntur at? Molestias nesciunt minus maxime natus modi distinctio eum, nobis deleniti, cupiditate itaque sunt aliquam, obcaecati blanditiis voluptatibus rem?</p>
+          <p
+            className={cn("text-xs text-gray-500 relative", {
+              "line-clamp-3": isDescriptionOpen,
+            })}
+            ref={descriptionRef}
+          >
+            {quiz.description}
+            {isShowMoreVisible && (
+              <Button
+                className="absolute right-0 bottom-0 rounded-full w-6 h-6 opacity-70 hover:opacity-100"
+                size="icon"
+                variant="outline"
+                onClick={() => setIsDescriptionOpen((prev) => !prev)}
+              >
+                {!isDescriptionOpen ? (
+                  <ArrowUpIcon className="w-3 h-3" />
+                ) : (
+                  <ArrowDownIcon className="w-3 h-3" />
+                )}
+              </Button>
+            )}
+          </p>
         </div>
         <div className="flex flex-col gap-1">
           <p className="text-sm">Categories :</p>

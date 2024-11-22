@@ -36,7 +36,25 @@ export type EditorQuiz = Prisma.QuizGetPayload<{
       };
     };
     user: true;
+    rates: true;
   };
+}>;
+export type PlayQuizType = Prisma.QuizProgressGetPayload<{
+  include: {
+    quiz: {
+      include: {
+        image: true,
+        questions: {
+          include: {
+            image: true,
+            items: true,
+          },
+        },
+        rates: true,
+      },
+    },
+    user: true,
+  },
 }>;
 
 export type gameBoardQuizzes = Prisma.QuizGetPayload<{

@@ -1,6 +1,6 @@
 "use server";
 
-import { FolderPathSegment } from "@/types";
+import { FolderPathSegment, PlayQuizType } from "@/types";
 import { QuestionType } from "@prisma/client";
 import { unstable_noStore as noStore, revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
@@ -9,6 +9,7 @@ import { getCurrentUser } from "../auth";
 import { db } from "../db";
 import { imageSchemaType, quizSchemaType } from "../validations/quizSchemas";
 import { VISIBILITY_OPTIONS } from "@/constants";
+import { PlayQuizQuestion } from "@/components/PlayQuiz/Context";
 
 const utapi = new UTApi();
 
@@ -84,17 +85,15 @@ export const getGalleryFolders = async () => {
   }
 };
 export const getHomeQuizzes = async () => {
-
-  return  await db.quiz.findMany({
+  return await db.quiz.findMany({
     include: {
       image: true,
       questions: true,
-      user: true
-    }
-  })
-
-}
-export const getQuiz = async (quizId: string) => {
+      user: true,
+    },
+  });
+};
+export const getEditorQuiz = async (quizId: string) => {
   const session = await getCurrentUser();
 
   if (!session) {
@@ -122,6 +121,7 @@ export const getQuiz = async (quizId: string) => {
           },
         },
         user: true,
+        rates: true,
       },
     });
 
@@ -130,6 +130,75 @@ export const getQuiz = async (quizId: string) => {
     console.error("Failed to fetch quiz:", error);
   }
 };
+export const getPlayQuiz = async (quizId: string) => {
+  const session = await getCurrentUser();
+
+  if (!session) {
+    throw new Error("Unauthorized: User is not logged in.");
+  }
+
+  try {
+    // Await the Prisma call to get the actual data
+    let quizProgress = await db.quizProgress.findUnique({
+      where: {
+        userId_quizId: {
+          userId: session.user.id,
+          quizId: quizId,
+        },
+      },
+      include: {
+        quiz: {
+          include: {
+            image: true,
+            questions: {
+              include: {
+                image: true,
+                items: true,
+              },
+            },
+            rates: true,
+          },
+        },
+        user: true,
+      },
+    });
+
+    // If not found, create a new QuizProgress record
+    if (!quizProgress) {
+      quizProgress = await db.quizProgress.create({
+        data: {
+          userId: session.user.id,
+          quizId: quizId,
+          currentQuestion: 0,
+          isCompleted: false,
+          startedAt: new Date(),
+        },
+        include: {
+          quiz: {
+            include: {
+              image: true,
+              questions: {
+                include: {
+                  image: true,
+                  items: true,
+                },
+              },
+              rates: true,
+            },
+          },
+          user: true,
+        },
+      });
+    }
+
+    // Return the quiz progress data (or handle it as needed)
+    return quizProgress;
+  } catch (error) {
+    console.error("Failed to fetch or create quiz progress:", error);
+    throw error; // Optionally rethrow or handle error as needed
+  }
+};
+
 export const getFolder = async (folderId: string) => {
   const session = await getCurrentUser();
 
@@ -207,7 +276,7 @@ export const newQuiz = async (pathname: string, folderId?: string) => {
             type: "UNSELECTED",
             questionOrder: 0,
             timeLimit: 5000,
-            points: 10
+            points: 10,
           },
         },
       },
@@ -252,7 +321,7 @@ export const newFolder = async (
 };
 
 // Updata
-export const saveQuiz = async (
+export const saveEditorQuiz = async (
   quizId: string,
   data: quizSchemaType,
   pathname: string
@@ -429,7 +498,7 @@ export const saveQuiz = async (
       data: {
         ...quizData,
         questions: {
-          deleteMany: {}, 
+          deleteMany: {},
           create: questions,
         },
       },
@@ -447,6 +516,44 @@ export const saveQuiz = async (
   }
 };
 
+export const saveQuizProgress = async (
+  quizId: string,
+  data: {
+    playQuizQuestions: PlayQuizQuestion[];
+    currentQuestion: number;
+    isCompleted: boolean;
+  }
+) => {
+  const session = await getCurrentUser();
+
+  if (!session) {
+    throw new Error("Unauthorized: User is not logged in.");
+  }
+
+  const filteredQuestions = data.playQuizQuestions.filter(
+    (question) => question !== null
+  );
+
+  try {
+    const quizProgress = await db.quizProgress.update({
+      where: {
+        userId_quizId: {
+          userId: session.user.id,
+          quizId,
+        },
+      },
+      data: {
+        currentQuestion: data.currentQuestion,
+        playQuizQuestions: filteredQuestions,
+        isCompleted: data.isCompleted,
+      },
+    });
+    console.log(quizProgress);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 // Delete
 export const deleteQuizzes = async (quizzesIds: string[], pathname: string) => {
   const session = await getCurrentUser();
@@ -455,7 +562,6 @@ export const deleteQuizzes = async (quizzesIds: string[], pathname: string) => {
     throw new Error("Unauthorized: User is not logged in.");
   }
   try {
-
     const deletedQuizzes = await db.quiz.deleteMany({
       where: {
         id: {
