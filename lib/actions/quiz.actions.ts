@@ -34,6 +34,7 @@ export const getGalleryQuizzes = async () => {
         visibility: true,
         createdAt: true,
         updatedAt: true,
+        folderId: true,
         _count: {
           select: {
             questions: true,
@@ -229,6 +230,7 @@ export const getFolder = async (folderId: string) => {
             visibility: true,
             createdAt: true,
             updatedAt: true,
+            folderId: true,
             _count: {
               select: {
                 questions: true,
