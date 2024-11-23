@@ -2,6 +2,8 @@ import { Icons } from "@/components/icons";
 import { THEME_COLORS as colorsType } from "@/types/theme";
 import { Category, QuestionType } from "@prisma/client";
 import { LucideProps } from "lucide-react";
+import { BookOpen, Cpu, Calendar, Globe, PenTool, Code, Heart, Layers, User, Lightbulb, Briefcase, BarChart2, FileText, Github, Music, Video } from 'lucide-react';
+
 
 export const UNSAVED_ID_PREFIX = "unsaved-";
 
@@ -32,10 +34,6 @@ export const THEME_COLORS: {
   { id: 8, label: "yellow", color: "#F1C40F" },
   { id: 9, label: "violet", color: "#7c3aed" },
 ];
-
-
-
-
 
 export const DESKTOP_SIDEBAR_ITEMS = [
   {
@@ -96,8 +94,6 @@ export const QUESTION_TYPES: QuestionType[] = [
   "MATCHING_PAIRS",
   "ORDER",
 ] as const;
-
-
 
 export const VISIBILITY_OPTIONS = ["PUBLIC", "PRIVATE"] as const;
 
@@ -177,29 +173,37 @@ export const POINTS_OPTIONS = [
   { label: "20 points", value: 20 },
 ];
 
-export const CATEGORY_OPTIONS_LIST: { label: string; value: Category; id: number }[] = [
-  { label: "Science", value: "SCIENCE", id: 1 },
-  { label: "Math", value: "MATH", id: 2 },
-  { label: "History", value: "HISTORY", id: 3 },
-  { label: "Geography", value: "GEOGRAPHY", id: 4 },
-  { label: "Literature", value: "LITERATURE", id: 5 },
-  { label: "Technology", value: "TECHNOLOGY", id: 6 },
-  { label: "Sports", value: "SPORTS", id: 7 },
-  { label: "Art", value: "ART", id: 8 },
-  { label: "Language", value: "LANGUAGE", id: 9 },
-  { label: "General Knowledge", value: "GENERAL_KNOWLEDGE", id: 10 },
-  { label: "Politics", value: "POLITICS", id: 11 },
-  { label: "Economics", value: "ECONOMICS", id: 12 },
-  { label: "Philosophy", value: "PHILOSOPHY", id: 13 },
-  { label: "Psychology", value: "PSYCHOLOGY", id: 14 },
-  { label: "Biology", value: "BIOLOGY", id: 15 },
-  { label: "Chemistry", value: "CHEMISTRY", id: 16 },
-  { label: "Physics", value: "PHYSICS", id: 17 },
-  { label: "Computer Science", value: "COMPUTER_SCIENCE", id: 18 },
-  { label: "Religion", value: "RELIGION", id: 19 },
-  { label: "Nature", value: "NATURE", id: 20 },
-  { label: "Education", value: "EDUCATION", id: 21 },
+export const CATEGORY_OPTIONS_LIST: {
+  label: string;
+  value: Category;
+  id: number;
+  color: string;
+  icon: React.ElementType; // Store the actual icon component
+}[] = [
+  { label: "Science", value: "SCIENCE", id: 1, color: "--green-dark", icon: BookOpen },
+  { label: "Math", value: "MATH", id: 2, color: "--blue-dark", icon: Code },
+  { label: "History", value: "HISTORY", id: 3, color: "--amber", icon: Calendar },
+  { label: "Geography", value: "GEOGRAPHY", id: 4, color: "--teal", icon: Globe },
+  { label: "Literature", value: "LITERATURE", id: 5, color: "--purple-dark", icon: PenTool },
+  { label: "Technology", value: "TECHNOLOGY", id: 6, color: "--indigo", icon: Cpu },
+  { label: "Sports", value: "SPORTS", id: 7, color: "--red", icon: Heart },
+  { label: "Art", value: "ART", id: 8, color: "--pink", icon: Layers },
+  { label: "Language", value: "LANGUAGE", id: 9, color: "--deep-orange", icon: User },
+  { label: "General", value: "GENERAL_KNOWLEDGE", id: 10, color: "--yellow", icon: Lightbulb },
+  { label: "Politics", value: "POLITICS", id: 11, color: "--navy", icon: Briefcase },
+  { label: "Economics", value: "ECONOMICS", id: 12, color: "--orange", icon: BarChart2 },
+  { label: "Philosophy", value: "PHILOSOPHY", id: 13, color: "--gray-extra-dark", icon: FileText },
+  { label: "Psychology", value: "PSYCHOLOGY", id: 14, color: "--pink-dark", icon: Github },
+  { label: "Biology", value: "BIOLOGY", id: 15, color: "--light-green", icon: Music },
+  { label: "Chemistry", value: "CHEMISTRY", id: 16, color: "--blue", icon: Video },
+  { label: "Physics", value: "PHYSICS", id: 17, color: "--gray-dark", icon: FileText },
+  { label: "Computer", value: "COMPUTER_SCIENCE", id: 18, color: "--amber", icon: Cpu },
+  { label: "Religion", value: "RELIGION", id: 19, color: "--purple-dark", icon: Heart },
+  { label: "Nature", value: "NATURE", id: 20, color: "--green-dark", icon: Globe },
+  { label: "Education", value: "EDUCATION", id: 21, color: "--gray-medium", icon: BookOpen },
 ];
+
+
 
 
 export const LETTER_MAPPING: { [key: number]: string } = {
@@ -231,14 +235,14 @@ export const LETTER_MAPPING: { [key: number]: string } = {
   25: "Z",
 };
 
-export const QUESTION_MARK_TIMES : {
+export const QUESTION_MARK_TIMES: {
   [key in QuestionType]: number;
 } = {
   UNSELECTED: 0,
-  PICK_ANSWER: 3000,       // 3 seconds for PickAnswer
-  TRUE_FALSE: 3000,        // 2 seconds for True/False
+  PICK_ANSWER: 3000, // 3 seconds for PickAnswer
+  TRUE_FALSE: 3000, // 2 seconds for True/False
   FILL_IN_THE_BLANK: 6000, // 5 seconds for Fill-in-the-Blank
-  SHORT_ANSWER: 8000,      // 4 seconds for Short Answer
-  MATCHING_PAIRS: 8000,    // 6 seconds for Matching Pairs
-  ORDER: 8000              // 7 seconds for Order type questions
+  SHORT_ANSWER: 8000, // 4 seconds for Short Answer
+  MATCHING_PAIRS: 8000, // 6 seconds for Matching Pairs
+  ORDER: 8000, // 7 seconds for Order type questions
 };

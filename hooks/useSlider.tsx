@@ -10,12 +10,15 @@ export function useSlider() {
   const sliderRef = useRef<HTMLDivElement | null>(null); // sliderRef is allowed to be null
 
   useEffect(() => {
-    if (sliderRef.current == null) return; // Handle null reference early
+    const sliderElement = sliderRef.current; // Capture the current value of the ref
+
+    if (sliderElement == null) return; // Handle null reference early
 
     const fun = () => {
-      const scrollLeft = sliderRef.current?.scrollLeft;
-      const scrollWidth = sliderRef.current?.scrollWidth;
-      const clientWidth = sliderRef.current?.clientWidth;
+      const scrollLeft = sliderElement.scrollLeft;
+      const scrollWidth = sliderElement.scrollWidth;
+      const clientWidth = sliderElement.clientWidth;
+
       if (
         scrollLeft === undefined ||
         scrollWidth === undefined ||
@@ -25,20 +28,18 @@ export function useSlider() {
 
       const isAtRight = scrollWidth - clientWidth < scrollLeft + 10;
 
-      if (scrollLeft > 10) setIsLeftVisible(true);
-      else setIsLeftVisible(false);
-      if (isAtRight) setIsRightVisible(false);
-      else setIsRightVisible(true);
+      setIsLeftVisible(scrollLeft > 10);
+      setIsRightVisible(!isAtRight);
     };
 
     fun();
 
-    sliderRef.current.addEventListener("scroll", fun);
+    sliderElement.addEventListener("scroll", fun);
 
     return () => {
-      sliderRef.current?.removeEventListener("scroll", fun);
+      sliderElement.removeEventListener("scroll", fun); // Use the captured variable
     };
-  }, []);
+  }, []); // The dependency array remains empty because we're only reacting to ref initialization
 
   const goLeft = () => {
     sliderRef.current?.scrollBy({

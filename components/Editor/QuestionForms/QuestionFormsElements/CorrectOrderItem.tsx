@@ -1,10 +1,9 @@
-import { Icons } from "@/components/icons";
+import { useEditorContext } from "@/components/Editor/EditorContext";
 import { Button } from "@/components/ui/button";
 import {
   FormControl,
   FormField,
-  FormItem,
-  FormMessage,
+  FormItem
 } from "@/components/ui/form";
 import { Input, InputProps } from "@/components/ui/input";
 import {
@@ -13,11 +12,9 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
-import { Items } from "@prisma/client";
+import { ItemsSchemaType } from "@/lib/validations/quizSchemas";
 import { Reorder, useDragControls, useMotionValue } from "framer-motion";
 import { GripVertical, Trash } from "lucide-react";
-import { ItemsSchemaType } from "@/lib/validations/quizSchemas";
-import { useEditorContext } from "@/components/Editor/EditorContext";
 import ErrorSpan from "./ErrorSpan";
 
 type OprionProps = InputProps & {
