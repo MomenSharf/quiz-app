@@ -11,6 +11,7 @@ export type QuizGalleryWithQuestionsCount = Prisma.QuizGetPayload<{
     visibility: true;
     createdAt: true;
     updatedAt: true;
+    folderId: true;
     _count: {
       select: {
         questions: true;

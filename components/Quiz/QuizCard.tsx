@@ -20,6 +20,8 @@ import { Button } from "../ui/button";
 import QuizImage from "./QuizImage";
 
 export default function QuizCard({ quiz }: { quiz: EditorQuiz }) {
+  console.log(quiz);
+  
   const sessiom = useSession();
   // console.log(quiz);
   const [isDescriptionOpen, setIsDescriptionOpen] = useState(false);
@@ -54,19 +56,20 @@ export default function QuizCard({ quiz }: { quiz: EditorQuiz }) {
         <div className="flex items-center gap-1">
           <UserAvatarImage imageUrl={""} className="w-10 h-10" />
           <span className="text-xs text-gray-dark font-medium">
-            {quiz.user.username}{" "}
+            {quiz.user.username?.trim()}{" "}
             {isOner && <Badge className="font-thin">You</Badge>}
           </span>
         </div>
-        <p className="text-lg font-medium truncate">{quiz.title}</p>
+        <p className="text-lg font-medium truncate">{quiz.title.trim()}</p>
         <div className="flex gap-1 items-center">
-          <Icons.star className="w-3 h-3 fill-yellow-400" />
+          <Icons.star className="w-3 h-3 fill-yellow" />
           <span className="text-xs">4.5</span>
           <span className="text-xs text-yellow-400">{"(50 vote)"}</span>
         </div>
         <div className="flex gap-1">
           <Badge className="bg-primary/30 hover:bg-primary/30 text-primary gap-0.5">
-            <Icons.quizzes className="w-3 h-3 fill-primary" />8 Question
+            <Icons.quizzes className="w-3 h-3 fill-primary" />
+            {quiz.questions.length} Question
           </Badge>
           <Badge className="bg-destructive/30 hover:bg-destructive/30 text-destructive gap-0.5">
             <Timer className="w-3 h-3 text-destructive" />
@@ -81,7 +84,7 @@ export default function QuizCard({ quiz }: { quiz: EditorQuiz }) {
             })}
             ref={descriptionRef}
           >
-            {quiz.description}
+            {quiz.description.trim()}
             {isShowMoreVisible && (
               <Button
                 className="absolute right-0 bottom-0 rounded-full w-6 h-6 opacity-70 hover:opacity-100"

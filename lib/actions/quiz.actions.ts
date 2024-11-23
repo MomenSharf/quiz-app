@@ -84,13 +84,22 @@ export const getGalleryFolders = async () => {
     console.error("Failed to fetch folders:", error);
   }
 };
-export const getHomeQuizzes = async () => {
+export const getHomeQuizzes = async (limit: number = 1000) => {
+  const session = await getCurrentUser();
+
+  if (!session) {
+    throw new Error("Unauthorized: User is not logged in.");
+  }
   return await db.quiz.findMany({
+    where: {
+      userId: session.user.id
+    },
     include: {
       image: true,
       questions: true,
       user: true,
     },
+    take: limit
   });
 };
 export const getEditorQuiz = async (quizId: string) => {
@@ -198,7 +207,6 @@ export const getPlayQuiz = async (quizId: string) => {
     throw error; // Optionally rethrow or handle error as needed
   }
 };
-
 export const getFolder = async (folderId: string) => {
   const session = await getCurrentUser();
 
@@ -319,6 +327,30 @@ export const newFolder = async (
     console.error("Failed to create folder:", error);
   }
 };
+
+// export const DuplicateingQuiz = async (pathname: string, quizId: string, folderId?: string) => {
+//   const session = await getCurrentUser();
+
+//   if (!session) {
+//     return redirect("/login");
+//   }
+
+//   const quiz = getPlayQuiz(quizId)
+
+//   try {
+//     const myQuiz = await db.quiz.create({
+//       data: quiz
+//     });
+
+//     if (myQuiz) {
+//       revalidatePath(pathname);
+//     }
+
+//     return myQuiz.id;
+//   } catch (error) {
+//     console.error("Failed to create quiz:", error);
+//   }
+// };
 
 // Updata
 export const saveEditorQuiz = async (

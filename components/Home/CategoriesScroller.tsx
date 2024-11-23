@@ -1,12 +1,13 @@
-'use client'
+"use client";
 import { CATEGORY_OPTIONS_LIST } from "@/constants";
 import React from "react";
 import { Button } from "../ui/button";
-import { useSlider } from "@/hooks/useSlider"; // Import the useSlider hook
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useScroller } from "@/hooks/useScroller";
 
-export default function CategoriesSlider() {
-  const { translate, isLeftVisible, isRightVisible, sliderRef, goLeft, goRight } = useSlider();
+export default function CategoriesScroller() {
+  const { isLeftVisible, isRightVisible, sliderRef, goLeft, goRight } =
+    useScroller();
 
   return (
     <div className="flex flex-col">
@@ -17,13 +18,15 @@ export default function CategoriesSlider() {
             className="cursor-pointer group absolute z-[2] top-1/2 left-1 -translate-y-1/2 p-2 bg-card/70 hover:bg-card transition-all border rounded-full flex justify-center items-center"
             onClick={goLeft}
           >
-            <ChevronLeft className="w-3 h-3 m:w-5 sm:h-5 group-hover:text-primary" onClick={goLeft} />
+            <ChevronLeft
+              className="w-3 h-3 m:w-5 sm:h-5 group-hover:text-primary"
+              onClick={goLeft}
+            />
           </div>
         )}
         <div
           ref={sliderRef}
           className="flex gap-3 py-1 transition-transform overflow-x-scroll no-scrollbar "
-          style={{ transform: `translateX(-${translate}px)` }}
         >
           {CATEGORY_OPTIONS_LIST.map(({ id, label, value, icon: Icon }) => (
             <Button
@@ -38,11 +41,12 @@ export default function CategoriesSlider() {
         </div>
         {isRightVisible && (
           <div
-          className="cursor-pointer group absolute z-[2] top-1/2 right-1 -translate-y-1/2 p-2 bg-card/70 hover:bg-card transition-all border rounded-full flex justify-center items-center"
-          onClick={goRight}
-        >
-          <ChevronRight className="w-3 h-3 m:w-5 sm:h-5 group-hover:text-primary" />
-        </div>)}
+            className="cursor-pointer group absolute z-[2] top-1/2 right-1 -translate-y-1/2 p-2 bg-card/70 hover:bg-card transition-all border rounded-full flex justify-center items-center"
+            onClick={goRight}
+          >
+            <ChevronRight className="w-3 h-3 m:w-5 sm:h-5 group-hover:text-primary" />
+          </div>
+        )}
       </div>
     </div>
   );

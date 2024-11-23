@@ -23,7 +23,6 @@ export default function NewQuizButton({
 }: NewQuizButtonProps) {
   const [isLoading, setIsLoading] = useState(false);
   
-  const router = useRouter();
 
   const createNewQuiz = async () => {
     setIsLoading(true);

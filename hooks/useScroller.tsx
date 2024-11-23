@@ -1,10 +1,7 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
 
-const TRANSLATE_AMOUNT = 300;
-
-export function useSlider() {
-  const [translate, setTranslate] = useState(0);
+export function useScroller(scrollBy: number = 150) {
   const [isLeftVisible, setIsLeftVisible] = useState(false);
   const [isRightVisible, setIsRightVisible] = useState(true);
   const sliderRef = useRef<HTMLDivElement | null>(null); // sliderRef is allowed to be null
@@ -43,20 +40,19 @@ export function useSlider() {
 
   const goLeft = () => {
     sliderRef.current?.scrollBy({
-      left: -150, // Scroll 100px to the left
+      left: -scrollBy, // Scroll 100px to the left
       behavior: "smooth", // Smooth scrolling
     });
   };
 
   const goRight = () => {
     sliderRef.current?.scrollBy({
-      left: 150, // Scroll 100px to the right
+      left: scrollBy, // Scroll 100px to the right
       behavior: "smooth", // Smooth scrolling
     });
   };
 
   return {
-    translate,
     isLeftVisible,
     isRightVisible,
     sliderRef,

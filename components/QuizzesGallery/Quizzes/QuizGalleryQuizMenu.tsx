@@ -1,10 +1,4 @@
-import {
-  Copy,
-  ExternalLink,
-  PenLine,
-  Play,
-  RotateCcw
-} from "lucide-react";
+import { Copy, ExternalLink, PenLine, Play, RotateCcw } from "lucide-react";
 
 import {
   DropdownMenu,
@@ -13,16 +7,21 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuTrigger
+  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 import { Quiz } from "@prisma/client";
 import DeleteQuizButton from "./DeleteQuizButton";
+import { MouseEvent, useState } from "react";
+import { toast } from "@/components/ui/use-toast";
+import { newQuiz } from "@/lib/actions/quiz.actions";
+import { usePathname } from "next/navigation";
+import { QuizGalleryWithQuestionsCount } from "@/types";
 
 type QuizGalleryQuizMenuProps = {
   trigger: JSX.Element;
   contentPostionClasses: string;
-  quiz: Pick<Quiz, "id" | "title">;
+  quiz: QuizGalleryWithQuestionsCount;
 };
 
 export default function QuizGalleryQuizMenu({
@@ -30,6 +29,38 @@ export default function QuizGalleryQuizMenu({
   contentPostionClasses,
   quiz,
 }: QuizGalleryQuizMenuProps) {
+  const [isDuplicating, setIsDuplicateing] = useState(false);
+
+  const pathname = usePathname();
+
+  const DuplicateQuiz = async (
+    e: MouseEvent<HTMLDivElement, globalThis.MouseEvent>
+  ) => {
+    e.preventDefault();
+    setIsDuplicateing(true);
+
+    try {
+      const quizId = await newQuiz(pathname, quiz.folderId || undefined);
+
+      if (quizId) {
+        // router.push(`/quizzes/${quizId}`);
+        setIsDuplicateing(false)
+      } else {
+        toast({
+          title: "Error",
+          description: "There was an error with creating new Quiz",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "There was an error with creating new Quiz",
+        variant: "destructive",
+      });
+    }
+  };
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>{trigger}</DropdownMenuTrigger>
@@ -61,20 +92,22 @@ export default function QuizGalleryQuizMenu({
             <RotateCcw className="w-5 h-5" />
             <span className="font-semibold">Reset</span>
           </DropdownMenuItem>
-          <DropdownMenuItem className=" flex gap-2">
+          <DropdownMenuItem className=" flex gap-2" onClick={DuplicateQuiz}>
             <Copy className="w-5 h-5" />
             <span className="font-semibold">Duplicate</span>
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuGroup>
           <DropdownMenuSeparator />
-          <DropdownMenuItem className="p-0 transition-all" onClick={(e) => e.preventDefault()}>
-            
+          <DropdownMenuItem
+            className="p-0 transition-all"
+            onClick={(e) => e.preventDefault()}
+          >
             <DeleteQuizButton
               variant="ghost"
               text="Delete"
               pathname="/my-quizzes"
-              titleIds={[{title: quiz.title, id: quiz.id}]}
+              titleIds={[{ title: quiz.title, id: quiz.id }]}
               className="flex gap-1 w-full text-destructive bg-transparent hover:bg-destructive hover:text-destructive-foreground"
             />
           </DropdownMenuItem>
