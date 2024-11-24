@@ -11,10 +11,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye, EyeOff } from "lucide-react";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Icons } from "../icons";
+import Logo from "../Layout/Logo";
 import { Button } from "../ui/button";
 import {
   Form,
@@ -42,7 +43,7 @@ export default function Login({ type }: { type: "register" | "login" }) {
     setloginWithGoogle(true);
 
     try {
-      await signIn("google");
+      signIn("google");
     } catch (error) {
       toast({
         title: "Error",
@@ -51,21 +52,6 @@ export default function Login({ type }: { type: "register" | "login" }) {
       });
     } finally {
       setloginWithGoogle(false);
-    }
-  };
-  const loginWithFacebook = async () => {
-    setisloginWithFacebook(true);
-
-    try {
-      await signIn("facebook");
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "There was an error logging in with facebook",
-        variant: "destructive",
-      });
-    } finally {
-      setisloginWithFacebook(false);
     }
   };
 
@@ -103,26 +89,39 @@ export default function Login({ type }: { type: "register" | "login" }) {
           variant: "destructive",
         });
       }
-    } catch (error: any) {      
+    } catch (error: any) {
+      console.log(error.message);
+
       toast({
         title: "Error",
-        description: JSON.stringify(error),
+        description: error.message,
         variant: "destructive",
       });
-      
-      
     }
   };
 
   const login = async (values: loginSchemaType) => {
-    const result = await signIn("credentials", {
-      ...values,
-    });
+    try {
+      const result = await signIn("credentials", {
+        ...values,
+        redirect: false,
+      });
 
-    if (result?.error) {
+      if (result?.ok) return router.push("/");
+
+      if (result?.error) {
+        console.log(result.error);
+
+        toast({
+          title: "Error",
+          description: result.error,
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
       toast({
         title: "Error",
-        description: "Something went wrong",
+        description: "Something went wrong! try again later",
         variant: "destructive",
       });
     }
@@ -131,7 +130,7 @@ export default function Login({ type }: { type: "register" | "login" }) {
   return (
     <div className="flex flex-col gap-4 items-center">
       <Link href="/">
-        <Icons.logo className="w-16 h-16 fill-primary" />
+        <Logo />
       </Link>
 
       <div className="bg-card p-4 flex flex-col justify-center rounded-xl">
@@ -174,10 +173,13 @@ export default function Login({ type }: { type: "register" | "login" }) {
                     <FormControl>
                       <Input
                         placeholder="Email..."
-                        className={cn("transition-all", {
-                          "border-destructive bg-[hsl(var(--destructive)_/_10%)] focus-visible:ring-destructive":
-                            registerform.getFieldState("email").error,
-                        })}
+                        className={cn(
+                          "transition-all bg-[hsl(var(--main-background))]",
+                          {
+                            "border-destructive bg-destructive/10 focus-visible:ring-destructive":
+                              registerform.getFieldState("email").error,
+                          }
+                        )}
                         {...field}
                       />
                     </FormControl>
@@ -196,17 +198,20 @@ export default function Login({ type }: { type: "register" | "login" }) {
                         <Input
                           placeholder="Passwored..."
                           type={showPassword ? "text" : "password"}
-                          className={cn("transition-all", {
-                            "border-destructive bg-[hsl(var(--destructive)_/_10%)] focus-visible:ring-destructive":
-                              registerform.getFieldState("password").error,
-                          })}
+                          className={cn(
+                            "transition-all pr-10 bg-[hsl(var(--main-background))]",
+                            {
+                              "border-destructive bg-destructive/10 focus-visible:ring-destructive":
+                                registerform.getFieldState("password").error,
+                            }
+                          )}
                           {...field}
                         />
                         <Button
                           type="button"
                           variant="outline"
                           size="icon"
-                          className="absolute right-0 top-0 border-l-0 rounded-tl-none rounded-bl-none rounded-tr-md rounded-br-md"
+                          className="absolute right-0 top-0 border-l-0 rounded-tl-none rounded-bl-none rounded-tr-md rounded-br-md bg-[hsl(var(--main-background))]"
                           onClick={togglePasswordVisibility}
                         >
                           {showPassword ? (
@@ -230,10 +235,13 @@ export default function Login({ type }: { type: "register" | "login" }) {
                     <FormControl>
                       <Input
                         placeholder="Full name..."
-                        className={cn("transition-all", {
-                          "border-destructive bg-[hsl(var(--destructive)_/_10%)] focus-visible:ring-destructive":
-                            registerform.getFieldState("name").error,
-                        })}
+                        className={cn(
+                          "transition-all bg-[hsl(var(--main-background))]",
+                          {
+                            "border-destructive bg-[hsl(var(--destructive)_/_10%)] focus-visible:ring-destructive":
+                              registerform.getFieldState("name").error,
+                          }
+                        )}
                         {...field}
                       />
                     </FormControl>
@@ -264,10 +272,13 @@ export default function Login({ type }: { type: "register" | "login" }) {
                     <FormControl>
                       <Input
                         placeholder="Email..."
-                        className={cn("transition-all", {
-                          "border-destructive bg-[hsl(var(--destructive)_/_10%)] focus-visible:ring-destructive":
-                            loginform.getFieldState("email").error,
-                        })}
+                        className={cn(
+                          "transition-all bg-[hsl(var(--main-background))]",
+                          {
+                            "border-destructive bg-[hsl(var(--destructive)_/_10%)] focus-visible:ring-destructive":
+                              loginform.getFieldState("email").error,
+                          }
+                        )}
                         {...field}
                       />
                     </FormControl>
@@ -286,17 +297,20 @@ export default function Login({ type }: { type: "register" | "login" }) {
                         <Input
                           placeholder="Passwored..."
                           type={showPassword ? "text" : "password"}
-                          className={cn("transition-all", {
-                            "border-destructive bg-[hsl(var(--destructive)_/_10%)] focus-visible:ring-destructive":
-                              loginform.getFieldState("password").error,
-                          })}
+                          className={cn(
+                            "transition-all pr-10 bg-[hsl(var(--main-background))]",
+                            {
+                              "border-destructive bg-[hsl(var(--destructive)_/_10%)] focus-visible:ring-destructive":
+                                loginform.getFieldState("password").error,
+                            }
+                          )}
                           {...field}
                         />
                         <Button
                           type="button"
                           variant="outline"
                           size="icon"
-                          className="absolute right-0 top-0 border-l-0 rounded-tl-none rounded-bl-none rounded-tr-md rounded-br-md"
+                          className="absolute right-0 top-0 border-l-0 rounded-tl-none rounded-bl-none rounded-tr-md rounded-br-md bg-[hsl(var(--main-background))]"
                           onClick={togglePasswordVisibility}
                         >
                           {showPassword ? (
@@ -326,11 +340,11 @@ export default function Login({ type }: { type: "register" | "login" }) {
             Or
           </span>
         </div>
-        <div className="flex gap-3 justify-center mt-6">
+        <div className="w-full flex gap-3 justify-center mt-6">
           <Button
             size="icon"
-            variant="ghost"
-            className="p-5 w-auto"
+            variant="outline"
+            className="px-4 py-8 w-full gap-2"
             onClick={loginWithGoogle}
           >
             {isloginWithGoogle ? (
@@ -338,18 +352,7 @@ export default function Login({ type }: { type: "register" | "login" }) {
             ) : (
               <Icons.google className="w-8 h-8" />
             )}
-          </Button>
-          <Button
-            size="icon"
-            variant="ghost"
-            className="p-5 w-auto"
-            onClick={loginWithFacebook}
-          >
-            {isloginWithFacebook ? (
-              <Icons.Loader className="w-7 h-7 animate-spin stroke-muted-foreground" />
-            ) : (
-              <Icons.facebook className="w-10 h-10" />
-            )}
+            <span className="font-bold">Continue with Google</span>
           </Button>
         </div>
       </div>

@@ -33,25 +33,33 @@ export const authOptions: NextAuthOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        // Check if user exists
-        const user = await db.user.findUnique({
-          where: { email: credentials?.email },
-        });
-
-        if (!user || !user.password) {
-          throw new Error("No user found");
+        try {
+          // Ensure credentials are provided
+          if (!credentials?.email || !credentials.password) {
+            throw new Error("Missing email or password");
+          }
+    
+          // Find the user in the database
+          const user = await db.user.findUnique({
+            where: { email: credentials.email },
+          });
+    
+          if (!user || !user.password) {
+            throw new Error("No user found with the provided credentials");
+          }
+    
+          // Verify the password
+          const isValid = await bcrypt.compare(credentials.password, user.password);
+          if (!isValid) {
+            throw new Error("Invalid password");
+          }
+    
+          // Return the user object upon successful validation
+          return { id: user.id, name: user.name, email: user.email };
+        } catch (error: any) {
+          console.error("Error during user authorization:", error.message);
+          throw new Error(error.message || "Authorization failed");
         }
-
-        if(!credentials?.password) {
-          throw new Error('missing password')
-        }
-
-        const isValid = await bcrypt.compare(credentials?.password, user.password);
-        if (!isValid) {
-          throw new Error("Invalid password");
-        }
-
-        return { id: user.id, name: user.name, email: user.email };
       },
     })
   ],
@@ -99,8 +107,8 @@ export const authOptions: NextAuthOptions = {
         username: dbUser.username,
       };
     },
-    redirect() {
-      return "/";
+    redirect({url}) {
+      return url;
     },
   },
 };
