@@ -6,13 +6,14 @@ import { buttonVariants } from "../ui/button";
 import { UserAvatar } from "../User/UserAvatar";
 import MobileSideBar from "./MobileSidebar";
 import SearchInput from "./SearchInput";
+import Logo from "./Logo";
 
 export default async function Header() {
   const session = await getCurrentUser();
 
   return (
-    <header className="w-full p-2 flex bg-card shadow-sm">
-      <div className="sm:hidden w-full flex justify-between gap-3">
+    <header className="z-20 w-full p-2 flex bg-card shadow-sm">
+      <div className="sm:hidden w-full flex items-center  gap-1">
         <MobileSideBar
           user={{
             email: session?.user.email || "",
@@ -21,9 +22,12 @@ export default async function Header() {
           }}
           isLoggedIn={!!session?.user}
         />
+        <Logo />
+
         <SearchInput />
       </div>
-      <div className="hidden w-full sm:flex justify-end gap-3 items-center px-3">
+      <div className="hidden container sm:flex  items-center justify-end gap-3">
+        <Logo />
         <SearchInput />
         {session?.user ? (
           <>

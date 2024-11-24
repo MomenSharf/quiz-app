@@ -1,9 +1,11 @@
-"use client";
+'use client'
 import { CATEGORY_OPTIONS_LIST } from "@/constants";
 import React from "react";
-import { Button } from "../ui/button";
+import { Button, buttonVariants } from "../ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useScroller } from "@/hooks/useScroller";
+import Link from "next/link";
+import { cn } from "@/lib/utils";
 
 export default function CategoriesScroller() {
   const { isLeftVisible, isRightVisible, sliderRef, goLeft, goRight } =
@@ -29,14 +31,14 @@ export default function CategoriesScroller() {
           className="flex gap-3 py-1 transition-transform overflow-x-scroll no-scrollbar "
         >
           {CATEGORY_OPTIONS_LIST.map(({ id, label, value, icon: Icon }) => (
-            <Button
+            <Link
               key={id}
-              variant="outline"
-              className="rounded-xl min-w-16 min-h-16  sm:min-w-20 sm:min-h-20 flex flex-col gap-1 hover:border-primary hover:scale-[1.05] transition-all duration-200"
+              className={cn(buttonVariants({variant:'outline'}),"rounded-xl min-w-16 min-h-16  sm:min-w-20 sm:min-h-20 flex flex-col gap-1 hover:border-primary hover:scale-[1.05] transition-all duration-200")}
+              href={`/discover`}
             >
               <Icon className="w-4 h-4 sm:w-5 sm:h-5" />
               <span className="text-xs">{label}</span>
-            </Button>
+            </Link>
           ))}
         </div>
         {isRightVisible && (

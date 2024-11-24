@@ -1,4 +1,5 @@
-"use client";
+
+'use client'
 import { motion } from "framer-motion";
 import { Input } from "../ui/input";
 import { Search } from "lucide-react";
@@ -8,12 +9,12 @@ import { cn } from "@/lib/utils";
 
 export default function SearchInput() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const searchInputRef = useRef<HTMLInputElement>(null)
+  const searchInputRef = useRef<HTMLInputElement>(null);
   return (
-    <div className="flex items-center">
+    <div className="flex items-center ml-auto">
       <motion.div
         initial={{ width: 0 }}
-        animate={{ width: isSearchOpen ? "250px" : 0 }}
+        animate={{ width: isSearchOpen ? "" : 0 }}
         transition={{ type: "spring", stiffness: 300, damping: 30 }}
       >
         <Input
@@ -35,7 +36,7 @@ export default function SearchInput() {
           if (isSearchOpen) {
           } else {
             setIsSearchOpen(true);
-            searchInputRef.current?.focus()
+            searchInputRef.current?.focus();
           }
         }}
       >

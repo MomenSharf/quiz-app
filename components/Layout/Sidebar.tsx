@@ -9,7 +9,7 @@ export default function Sidebar() {
   const [state, setStat] = useState<"collapsed" | "expanded">("collapsed");
 
   return (
-    <div className="hidden sm:flex flex-col w-14">
+    <div className="hidden sm:flex flex-col w-14 z-30">
       <nav
         onMouseEnter={() => setStat("expanded")}
         onMouseLeave={() => setStat("collapsed")}

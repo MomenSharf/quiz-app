@@ -3,14 +3,21 @@ import Image from "next/image";
 import React from "react";
 import { UserAvatarImage } from "../User/UserAvatar";
 import { Icons } from "../icons";
-import { Button } from "../ui/button";
+import { Button, buttonVariants } from "../ui/button";
 import { useRouter } from "next/navigation";
 import { Badge } from "../ui/badge";
 import { Timer } from "lucide-react";
-import { formatToMinSec } from "@/lib/utils";
-import {motion} from 'framer-motion'
+import { cn, formatToMinSec } from "@/lib/utils";
+import { motion } from "framer-motion";
+import Link from "next/link";
 
-export default function QuizzesScrollerCard({ quiz, index }: { quiz: EditorQuiz, index: number }) {
+export default function QuizzesScrollerCard({
+  quiz,
+  index,
+}: {
+  quiz: EditorQuiz;
+  index: number;
+}) {
   const router = useRouter();
   const quizTime = quiz.questions.reduce(
     (acc, curr) => acc + curr.timeLimit,
@@ -18,19 +25,20 @@ export default function QuizzesScrollerCard({ quiz, index }: { quiz: EditorQuiz,
   );
   return (
     <motion.div
-    variants={{
-      hidden: {opacity: 0},
-      visible: {opacity: 1}
-    }}
-    initial='hidden'
-    animate="visible"
-    transition={{
-      delay: index * 0.2,
-      ease:"easeInOut",
-      duration: 0.3
-    }}
-    viewport={{amount: 0}}
-    className="min-w-52 bg-white rounded-xl flex flex-col">
+      variants={{
+        hidden: { opacity: 0 },
+        visible: { opacity: 1 },
+      }}
+      initial="hidden"
+      animate="visible"
+      transition={{
+        delay: index * 0.2,
+        ease: "easeInOut",
+        duration: 0.3,
+      }}
+      viewport={{ amount: 0 }}
+      className="min-w-52 bg-white rounded-xl flex flex-col"
+    >
       <div className="group relative flex flex-col w-full rounded-xl  rounded-bl-none rounded-br-none overflow-hidden">
         <Image
           // src={imageUrl}
@@ -45,19 +53,29 @@ export default function QuizzesScrollerCard({ quiz, index }: { quiz: EditorQuiz,
           className="rounded-xl rounded-bl-none rounded-br-none"
         />
         <div className="absolute opacity-0 group-hover:opacity-100 transition-opacity w-full h-full flex justify-center items-center bg-black/30">
-          <Button size='lg' className="px-10 rounded-full hover:bg-primary hover:scale-[1.05] transition-transform text-lg border-2 border-white">Play</Button>
+          <Link
+            href={`play/${quiz.id}`}
+            className={cn(
+              buttonVariants({ size: "lg" }),
+              "px-10 rounded-full hover:bg-primary hover:scale-[1.05] transition-transform text-lg border-2 border-white"
+            )}
+          >
+            Play
+          </Link>
         </div>
       </div>
       <div className="p-2 pb-4 flex flex-col gap-2">
         <div className="flex items-center gap-1">
           <UserAvatarImage imageUrl={quiz.user.image} className="w-6 h-6" />
           <div className="flex flex-col gap-0 w-full">
-            <h5
-              className="text-sm font-bold max-w-[85%] truncate cursor-pointer hover:text-primary"
-              onClick={() => router.push(`/quiz/${quiz.id}`)}
+            <Link
+              href={`quiz/${quiz.id}`}
+              className={cn(
+                "text-sm font-bold max-w-[85%] truncate cursor-pointer hover:text-primary"
+              )}
             >
               {quiz.title}
-            </h5>
+            </Link>
             <p className="text-xs text-gray-medium max-w-[75%] truncate">
               {quiz.user.username}
             </p>

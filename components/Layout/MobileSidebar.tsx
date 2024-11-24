@@ -53,7 +53,7 @@ export default function MobileSideBar({
             <SheetClose  asChild>
 
               <Link
-                href="/sign-up"
+                href="/register"
                 className={cn(buttonVariants({ size: "sm" }), 'w-full')}
                 >
                 SIGN UP NEW

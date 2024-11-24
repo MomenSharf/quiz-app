@@ -8,8 +8,7 @@ export default async function Home() {
 
   return (
     <div className="flex flex-col">
-      <Header />
-      <div className="container mt-3 mbm-5 flex flex-col gap-5">
+      <div className="container mb-5 flex flex-col gap-5">
         <Cards />
         <CategoriesScroller />
         <QuizzesScroller />

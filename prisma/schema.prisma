@@ -33,6 +33,7 @@ model User {
   sessions      Session[]
   rates         Rate[]
   QuizProgress  QuizProgress[]
+  bookmark      Bookmark[]
 
   @@index([email]) // Index for faster email lookups
 }
@@ -67,6 +68,7 @@ model Quiz {
   user         User           @relation(fields: [userId], references: [id])
   rates        Rate[]
   QuizProgress QuizProgress[]
+  bookmark     Bookmark[]
 
   @@index([title, createdAt]) // Index for faster querying by title and creation date
 }
@@ -110,6 +112,15 @@ model Image {
 }
 
 model Rate {
+  id     String @id @default(cuid())
+  quiz   Quiz   @relation(fields: [quizId], references: [id])
+  quizId String
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+  rate   Int
+}
+
+model Bookmark {
   id     String @id @default(cuid())
   quiz   Quiz   @relation(fields: [quizId], references: [id])
   quizId String

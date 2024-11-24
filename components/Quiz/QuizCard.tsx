@@ -47,7 +47,7 @@ export default function QuizCard({ quiz }: { quiz: EditorQuiz }) {
 
   const router = useRouter();
 
-  const isOner = quiz.user.id === sessiom.data?.user.id;
+  const isOner = quiz.user.id === sessiom.data?.user.id && false;
 
   return (
     <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 justify-center p-5 bg-card rounded-xl">
