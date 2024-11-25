@@ -1,24 +1,40 @@
 "use server";
 
-import { sendVerificationEmailResetPassword } from "@/lib/auth/mail";
+import { sendVerificationEmail } from "@/lib/auth/mail";
 import { generateVerificationToken } from "@/lib/auth/token";
 import { db } from "@/lib/db";
-import bcrypt from "bcrypt";
-import { redirect } from "next/navigation";
+import { TokenHasExpired } from "./token-expires";
+import Email from "next-auth/providers/email";
 
-export async function resetPassword({
-  token,
-  password,
-  passwordConfirmation,
-}: {
-  token: string;
-  password: string;
-  passwordConfirmation: string;
-}) {
+export async function VerifyEmail(email: string ) {
   try {
-    if (password !== passwordConfirmation) {
-      return { error: "Passwords do not match" };
+
+    const userExists = await db.user.findFirst({
+      where: {
+        email,
+      },
+    });
+
+    if (!userExists) {
+      return { error: "user not exist" };
     }
+    const verificationToken = await generateVerificationToken(email);
+
+    await sendVerificationEmail(email, verificationToken.token);
+
+    return { success: "Email Verification was sent" };
+
+  } catch (error) {
+    console.log(error);
+    
+    return { error: "An unexpected error occurred. Please try again later." };
+  }
+}
+
+export async function VerifyPrismaEmail (token: string)  {
+
+  try {
+ 
 
     const existingToken = await db.verificationToken.findFirst(({
       where: {
@@ -47,14 +63,17 @@ export async function resetPassword({
       return { error: "user not exist" };
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+    if(userExists.emailVerified) {
+      return { success: "the user aready verified" }
+    }
+
 
     await db.user.update({
       where: {
         id: userExists.id,
       },
       data: {
-        password: hashedPassword,
+        emailVerified: new Date(),
       },
     });
 
@@ -65,32 +84,8 @@ export async function resetPassword({
     })
 
     return { success: "Your password has been reset successfully!" };
-  } catch (error) {
-    return { error: "An unexpected error occurred. Please try again later." };
-  }
-}
-
-export async function VerifyEmailToResetPassword({ email }: { email: string }) {
-  try {
-
-    const userExists = await db.user.findFirst({
-      where: {
-        email,
-      },
-    });
-
-    if (!userExists) {
-      return { error: "user not exist" };
-    }
-    const verificationToken = await generateVerificationToken(email);
-
-    await sendVerificationEmailResetPassword(email, verificationToken.token);
-
-    return { success: "Email Verification was sent" };
-
-  } catch (error) {
-    console.log(error);
-    
+  } catch (error) {console.log(error);
+  
     return { error: "An unexpected error occurred. Please try again later." };
   }
 }

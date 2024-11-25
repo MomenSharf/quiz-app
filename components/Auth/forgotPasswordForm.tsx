@@ -9,7 +9,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { VerifyEmail } from "@/lib/actions/auth/verify-password";
+import { VerifyEmail } from "@/lib/actions/auth/verify-email";
 import { cn } from "@/lib/utils";
 import { ResetPasswordShema } from "@/lib/validations/Auth";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -22,9 +22,16 @@ import { Button } from "../ui/button";
 import { toast } from "../ui/use-toast";
 import CardWrapper from "./CardWrapper";
 import VerifyEmailForm from "./VerifyEmailForm";
+import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+import NewPasswordForm from "./NewPasswordForm";
+import { VerifyEmailToResetPassword } from "@/lib/actions/auth/reset-password";
 
 export default function ForgotPassword() {
-  const [isSendVerificationEmailSuccess, setIsSendVerificationEmailSuccess] = useState(false);
+  const [isSendVerificationEmailSuccess, setIsSendVerificationEmailSuccess] =
+    useState(false);
+
+  const token = useSearchParams().get('token')
 
   const form = useForm<z.infer<typeof ResetPasswordShema>>({
     resolver: zodResolver(ResetPasswordShema),
@@ -35,8 +42,8 @@ export default function ForgotPassword() {
 
   const onSubmit = async (data: z.infer<typeof ResetPasswordShema>) => {
     try {
-      const res = await VerifyEmail(data);
-      
+      const res = await VerifyEmailToResetPassword(data);
+
       if (res?.error) {
         toast({
           title: "Error",
@@ -44,9 +51,9 @@ export default function ForgotPassword() {
           variant: "destructive",
         });
       }
-      if (res?.success) { 
-        toast({description: res.success})
-        setIsSendVerificationEmailSuccess(true)
+      if (res?.success) {
+        toast({ description: res.success });
+        setIsSendVerificationEmailSuccess(true);
       }
     } catch (error: any) {
       toast({
@@ -56,6 +63,10 @@ export default function ForgotPassword() {
       });
     }
   };
+
+  
+
+  if(token) return <NewPasswordForm token={token} />
 
   return (
     <div>
@@ -110,7 +121,22 @@ export default function ForgotPassword() {
           animate={{ opacity: 1, x: 0 }}
           exit={{ opacity: 0 }}
         >
-          <VerifyEmailForm email={form.getValues("email")} />
+          <CardWrapper title="Recovery email sent">
+            <div className="mt-3 text-sm mx-10">
+              <p className="text-center">
+                An e-mail has been sent to <br />{" "}
+              </p>
+              <p>
+                <Link
+                  className="font-bold text-primary hover:underline text-xs"
+                  href="mailto:mwmnshrfaldinpse@gmail.com"
+                >
+                  {"momefsadf asfdas@.fsadf"}
+                </Link>{" "}
+                with further instructions.
+              </p>
+            </div>
+          </CardWrapper>
         </motion.div>
       )}
     </div>

@@ -103,11 +103,12 @@ export default function VerifyEmailForm({ email }: { email: string }) {
                     <FormDescription className="flex flex-col gap-1 items-center">
                       Please enter confirm code sent to your email.
                       <Link
-                        className={cn(buttonVariants({ variant: "link" }))}
-                        href="mailto:mwmnshrfaldinpse@gmail.com"
+              className="font-bold text-primary hover:underline text-xs"
+              href="mailto:mwmnshrfaldinpse@gmail.com"
                       >
-                        {email}
+                        {email || 'momen@gmail.com'}
                       </Link>
+                      <Button variant='link'>Resend code</Button>
                     </FormDescription>
                     <FormMessage />
                   </FormItem>

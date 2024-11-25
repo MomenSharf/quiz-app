@@ -166,12 +166,12 @@ model Account {
 }
 
 model VerificationToken {
-  id String @id @default(cuid())
-  email String
-  token String
-  expires DateTime
+  id       String           @id @default(cuid())
+  email    String
+  token    String
+  expires  DateTime
 
-  @@unique([email, token])
+  @@unique([email, token]) // Ensure uniqueness for email, token, and type
 }
 
 model Session {

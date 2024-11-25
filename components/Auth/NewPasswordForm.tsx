@@ -1,6 +1,5 @@
 "use client";
 
-import { useForm } from "react-hook-form";
 import {
   Form,
   FormControl,
@@ -9,24 +8,22 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
-import { z } from "zod";
-import { Button } from "../ui/button";
-import { useState } from "react";
-import { register } from "@/lib/actions/auth/register";
-import { Icons } from "../icons";
-import { cn } from "@/lib/utils";
-import { Eye, EyeOff } from "lucide-react";
-import CardWrapper from "./CardWrapper";
-import { toast } from "../ui/use-toast";
-import { NewPasswordSchema, RegisterSchema } from "@/lib/validations/Auth";
-import VerifyEmailForm from "./VerifyEmailForm";
-import { motion } from "framer-motion";
-import { useRouter } from "next/navigation";
 import { resetPassword } from "@/lib/actions/auth/reset-password";
+import { cn } from "@/lib/utils";
+import { NewPasswordSchema } from "@/lib/validations/Auth";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Eye, EyeOff } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { Icons } from "../icons";
+import { Button } from "../ui/button";
+import { toast } from "../ui/use-toast";
+import CardWrapper from "./CardWrapper";
 
-export default function newPasswordForm({ email }: { email: string }) {
+export default function NewPasswordForm({ token }: { token: string }) {
   const [showPassword, setShowPassword] = useState(false);
 
   const router = useRouter();
@@ -41,7 +38,7 @@ export default function newPasswordForm({ email }: { email: string }) {
 
   const onSubmit = async (data: z.infer<typeof NewPasswordSchema>) => {
     try {
-      const res = await resetPassword({ ...data, email });
+      const res = await resetPassword({ ...data, token });
       if (res.error) {
         toast({
           title: "Error",
@@ -61,6 +58,10 @@ export default function newPasswordForm({ email }: { email: string }) {
       });
     }
   };
+
+  useEffect(() => {
+    
+  })
 
   const togglePasswordVisibility = () => {
     setShowPassword((prevState) => !prevState);

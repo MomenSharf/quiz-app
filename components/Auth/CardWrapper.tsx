@@ -9,9 +9,9 @@ import { Icons } from "../icons";
 interface CardWrapperProps {
   children: React.ReactNode;
   title: string;
-  headerLabel: string;
-  headerHref: string;
-  headerHrefLabel: string;
+  headerLabel?: string;
+  headerHref?: string;
+  headerHrefLabel?: string;
   isSignWithGoogleOption?: boolean;
 }
 export default function CardWrapper({
@@ -48,7 +48,7 @@ export default function CardWrapper({
       <div className="bg-card p-4 flex flex-col justify-center rounded-xl">
         <h1 className="font-bold text-2xl text-center">{title}</h1>
 
-        <p className="font-semibold text-xs text-center flex gap-1 justify-center">
+        {headerLabel && headerHrefLabel && headerHref && <p className="font-semibold text-xs text-center flex gap-1 justify-center">
           {headerLabel}
           <Link
             href={headerHref}
@@ -56,7 +56,7 @@ export default function CardWrapper({
           >
             {headerHrefLabel}
           </Link>
-        </p>
+        </p>}
 
         {children}
         {isSignWithGoogleOption && (
