@@ -1,7 +1,7 @@
 "use server";
 
 import { db } from "@/lib/db";
-import { RegisterSchema } from "@/lib/validations/Auth";
+import { RegisterSchema } from "@/lib/validations/auth";
 import bcrypt from "bcrypt";
 import * as z from "zod";
 import { VerifyEmail } from "./verify-email";
@@ -42,12 +42,11 @@ export const register = async (data: z.infer<typeof RegisterSchema>) => {
       },
     });
 
-    const res = await VerifyEmail(lowerCaseEmail)
+    const res = await VerifyEmail(lowerCaseEmail);
 
-    if(res.error) {
-      return {error: 'An unexpected error occurred. Please try again later.'};
+    if (res.error) {
+      return { error: "An unexpected error occurred. Please try again later." };
     }
-
 
     return { success: "Your account has been created successfully" };
   } catch (error) {

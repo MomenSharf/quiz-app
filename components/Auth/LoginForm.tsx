@@ -20,7 +20,7 @@ import { cn } from "@/lib/utils";
 import { Eye, EyeOff } from "lucide-react";
 import CardWrapper from "./CardWrapper";
 import { toast } from "../ui/use-toast";
-import { LoginSchema, RegisterSchema } from "@/lib/validations/Auth";
+import { LoginSchema, RegisterSchema } from "@/lib/validations/auth";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";

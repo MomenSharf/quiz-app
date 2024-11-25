@@ -11,7 +11,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { VerifyEmailToResetPassword } from "@/lib/actions/auth/reset-password";
 import { cn } from "@/lib/utils";
-import { ResetPasswordShema } from "@/lib/validations/Auth";
+import { ResetPasswordShema } from "@/lib/validations/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "framer-motion";
 import Link from "next/link";
@@ -29,7 +29,7 @@ export default function ForgotPassword() {
   const [isSendVerificationEmailSuccess, setIsSendVerificationEmailSuccess] =
     useState(false);
 
-  const token = useSearchParams().get('token')
+  const token = useSearchParams().get("token");
 
   const form = useForm<z.infer<typeof ResetPasswordShema>>({
     resolver: zodResolver(ResetPasswordShema),
@@ -62,9 +62,7 @@ export default function ForgotPassword() {
     }
   };
 
-  
-
-  if(token) return <NewPasswordForm token={token} />
+  if (token) return <NewPasswordForm token={token} />;
 
   return (
     <div>

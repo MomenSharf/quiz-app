@@ -11,7 +11,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { register } from "@/lib/actions/auth/register";
 import { cn } from "@/lib/utils";
-import { RegisterSchema } from "@/lib/validations/Auth";
+import { RegisterSchema } from "@/lib/validations/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye, EyeOff } from "lucide-react";
 import { useRouter } from "next/navigation";

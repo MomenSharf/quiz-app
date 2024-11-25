@@ -11,7 +11,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { resetPassword } from "@/lib/actions/auth/reset-password";
 import { cn } from "@/lib/utils";
-import { NewPasswordSchema } from "@/lib/validations/Auth";
+import { NewPasswordSchema } from "@/lib/validations/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye, EyeOff } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -47,7 +47,7 @@ export default function NewPasswordForm({ token }: { token: string }) {
         });
       }
       if (res?.success) {
-        toast({description: res.success})
+        toast({ description: res.success });
         router.push("/login");
       }
     } catch (error: any) {
@@ -59,9 +59,7 @@ export default function NewPasswordForm({ token }: { token: string }) {
     }
   };
 
-  useEffect(() => {
-    
-  })
+  useEffect(() => {});
 
   const togglePasswordVisibility = () => {
     setShowPassword((prevState) => !prevState);
