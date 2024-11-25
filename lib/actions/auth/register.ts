@@ -1,11 +1,11 @@
 "use server";
 
 import { db } from "@/lib/db";
-import { RegisterSchema } from "@/lib/validations/auth";
 import bcrypt from "bcrypt";
 import * as z from "zod";
 import { VerifyEmail } from "./verify-email";
 import { error } from "console";
+import { RegisterSchema } from "@/lib/validations/authSchemas";
 
 export const register = async (data: z.infer<typeof RegisterSchema>) => {
   try {

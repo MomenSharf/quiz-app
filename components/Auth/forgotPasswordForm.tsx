@@ -11,7 +11,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { VerifyEmailToResetPassword } from "@/lib/actions/auth/reset-password";
 import { cn } from "@/lib/utils";
-import { ResetPasswordShema } from "@/lib/validations/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "framer-motion";
 import Link from "next/link";
@@ -24,6 +23,7 @@ import { Button } from "../ui/button";
 import { toast } from "../ui/use-toast";
 import CardWrapper from "./CardWrapper";
 import NewPasswordForm from "./NewPasswordForm";
+import { ResetPasswordShema } from "@/lib/validations/authSchemas";
 
 export default function ForgotPassword() {
   const [isSendVerificationEmailSuccess, setIsSendVerificationEmailSuccess] =

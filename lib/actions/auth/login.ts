@@ -2,7 +2,7 @@
 import * as z from "zod";
 import { getUserByEmail } from "../user.actions";
 import { signIn } from "next-auth/react";
-import { LoginSchema } from "@/lib/validations/auth";
+import { LoginSchema } from "@/lib/validations/authSchemas";
 
 export const login = async (data: z.infer<typeof LoginSchema>) => {
   // Validate the input data

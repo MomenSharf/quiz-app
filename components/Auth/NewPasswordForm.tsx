@@ -11,7 +11,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { resetPassword } from "@/lib/actions/auth/reset-password";
 import { cn } from "@/lib/utils";
-import { NewPasswordSchema } from "@/lib/validations/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye, EyeOff } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -22,6 +21,7 @@ import { Icons } from "../icons";
 import { Button } from "../ui/button";
 import { toast } from "../ui/use-toast";
 import CardWrapper from "./CardWrapper";
+import { NewPasswordSchema } from "@/lib/validations/authSchemas";
 
 export default function NewPasswordForm({ token }: { token: string }) {
   const [showPassword, setShowPassword] = useState(false);

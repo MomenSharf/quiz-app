@@ -7,7 +7,7 @@ import FacebookProvider from "next-auth/providers/facebook";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from 'bcrypt'
 import { getUserByEmail, getUserById } from "./actions/user.actions";
-import { LoginSchema } from "./validations/Auth";
+import { LoginSchema } from "./validations/authSchemas";
 
 
 export const authOptions: NextAuthOptions = {

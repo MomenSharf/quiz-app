@@ -20,10 +20,10 @@ import { cn } from "@/lib/utils";
 import { Eye, EyeOff } from "lucide-react";
 import CardWrapper from "./CardWrapper";
 import { toast } from "../ui/use-toast";
-import { LoginSchema, RegisterSchema } from "@/lib/validations/auth";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { LoginSchema } from "@/lib/validations/authSchemas";
 
 export default function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
