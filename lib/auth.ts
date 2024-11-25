@@ -6,6 +6,8 @@ import GoogleProvider from "next-auth/providers/google";
 import FacebookProvider from "next-auth/providers/facebook";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from 'bcrypt'
+import { getUserByEmail, getUserById } from "./actions/user.actions";
+import { LoginSchema } from "./validations/Auth";
 
 
 export const authOptions: NextAuthOptions = {
@@ -34,25 +36,35 @@ export const authOptions: NextAuthOptions = {
       },
       async authorize(credentials) {
         try {
+          
+          const validatedCredentials = LoginSchema.safeParse(credentials)
+
+          if (!validatedCredentials.success) {
+            throw new Error('Invalid input data')
+          }
+
+          const { email, password } = validatedCredentials.data;
+
+  
+
           // Ensure credentials are provided
-          if (!credentials?.email || !credentials.password) {
+          if (!email || !password) {
             throw new Error("Missing email or password");
           }
     
           // Find the user in the database
-          const user = await db.user.findUnique({
-            where: { email: credentials.email },
-          });
+          const user = await getUserByEmail(email);
     
           if (!user || !user.password) {
             throw new Error("No user found with the provided credentials");
           }
     
           // Verify the password
-          const isValid = await bcrypt.compare(credentials.password, user.password);
+          const isValid = await bcrypt.compare(password, user.password);
           if (!isValid) {
             throw new Error("Invalid password");
           }
+          
     
           // Return the user object upon successful validation
           return { id: user.id, name: user.name, email: user.email };
@@ -62,8 +74,10 @@ export const authOptions: NextAuthOptions = {
         }
       },
     })
+    
   ],
   callbacks: {
+
     async session({ token, session }) {
       if (token) {
         session.user.id = token.id;
@@ -77,11 +91,7 @@ export const authOptions: NextAuthOptions = {
     },
 
     async jwt({ token, user }) {
-      const dbUser = await db.user.findFirst({
-        where: {
-          email: token.email!,
-        },
-      });
+      const dbUser = await getUserByEmail(token.email|| '')
 
       if (!dbUser) {
         token.id = user!.id;

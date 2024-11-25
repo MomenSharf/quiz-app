@@ -16,15 +16,16 @@ datasource db {
 }
 
 model User {
-  id            String          @id @default(cuid())
-  name          String?
-  email         String          @unique
-  emailVerified DateTime?
-  image         String?
-  username      String?         @unique
-  createdAt     DateTime        @default(now())
-  updatedAt     DateTime        @updatedAt
-  password      String?
+  id               String    @id @default(cuid())
+  name             String?
+  email            String    @unique
+  emailVerified    DateTime?
+  image            String?
+  username         String?   @unique
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  password         String?
+  verificationCode String? // Field to store the email verification code
   accounts      Account[]
   Authenticator Authenticator[]
   folders       Folder[]
@@ -162,6 +163,15 @@ model Account {
   user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@id([provider, providerAccountId])
+}
+
+model VerificationToken {
+  id String @id @default(cuid())
+  email String
+  token String
+  expires DateTime
+
+  @@unique([email, token])
 }
 
 model Session {

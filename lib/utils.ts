@@ -45,3 +45,7 @@ export const formatToMinSec = (time: number) => {
   // Return formatted string with proper spacing
   return `${minutes} ${seconds}`.trim();
 };
+
+export function generateVerificationCode() {
+  return Math.floor(100000 + Math.random() * 900000).toString();
+}

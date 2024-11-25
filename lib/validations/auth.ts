@@ -1,22 +1,28 @@
 import { z } from "zod";
 
-export const regiseterSchema = z.object({
+export const RegisterSchema = z.object({
   name: z
     .string()
     .min(1, "Full name is required")
     .max(100, "Full name cannot exceed 100 characters"),
   email: z.string().email("Invalid email address"),
   password: z.string().min(6, "Password must be at least 6 characters long"),
+  passwordConfirmation: z
+    .string()
+    .min(6, "Password must be at least 6 characters long"),
+});
+export const NewPasswordSchema = z.object({
+  password: z.string().min(6, "Password must be at least 6 characters long"),
+  passwordConfirmation: z
+    .string()
+    .min(6, "Password must be at least 6 characters long"),
 });
 
-export const loginSchema = z.object({
+export const LoginSchema = z.object({
   email: z.string().email("Invalid email address"),
   password: z.string().min(6, "Password must be at least 6 characters long"),
 });
-export const forgotPasswordSchema = z.object({
+
+export const ResetPasswordShema = z.object({
   email: z.string().email("Invalid email address"),
 });
-
-export type regiseterSchemaType = z.infer<typeof regiseterSchema>;
-export type loginSchemaType = z.infer<typeof loginSchema>;
-export type forgotPasswordSchemaType = z.infer<typeof forgotPasswordSchema>;

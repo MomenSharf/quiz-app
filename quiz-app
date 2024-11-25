@@ -1,65 +1,128 @@
-"use client";
-import { useState, useEffect, useRef } from "react";
+import { db } from "@/lib/db";
+import { PrismaAdapter } from "@next-auth/prisma-adapter";
+import { nanoid } from "nanoid";
+import { NextAuthOptions, getServerSession } from "next-auth";
+import GoogleProvider from "next-auth/providers/google";
+import FacebookProvider from "next-auth/providers/facebook";
+import CredentialsProvider from "next-auth/providers/credentials";
+import bcrypt from 'bcrypt'
+import { LoginSchema } from "./validations/Auth";
+import { getUserByEmail } from "./actions/user.actions";
 
-const TRANSLATE_AMOUNT = 300;
 
-export function useSlider() {
-  const [translate, setTranslate] = useState(0);
-  const [isLeftVisible, setIsLeftVisible] = useState(false);
-  const [isRightVisible, setIsRightVisible] = useState(true);
-  const sliderRef = useRef<HTMLDivElement | null>(null); // sliderRef is allowed to be null
+export const authOptions: NextAuthOptions = {
+  adapter: PrismaAdapter(db),
+  session: {
+    strategy: "jwt",
+  },
+  pages: {
+    signIn: "/login",
+  },
+  secret: process.env.AUTH_SECRET,
+  providers: [
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+    }),
+  
+ 
+    CredentialsProvider({
+      name: "Credentials",
+      credentials: {
+        email: { label: "Email", type: "email" },
+        password: { label: "Password", type: "password" },
+      },
+      async authorize(credentials) {
+        try {
+          
+          const validatedCredentials = LoginSchema.safeParse(credentials)
 
-  useEffect(() => {
-    if (sliderRef.current == null) return; // Handle null reference early
+          if (!validatedCredentials.success) {
+            throw new Error('Invalid input data')
+          }
 
-    const fun = () => {
-      const scrollLeft = sliderRef.current?.scrollLeft;
-      const scrollWidth = sliderRef.current?.scrollWidth;
-      const clientWidth = sliderRef.current?.clientWidth;
-      if (
-        scrollLeft === undefined ||
-        scrollWidth === undefined ||
-        clientWidth === undefined
-      )
-        return;
+          const { email, password } = validatedCredentials.data;
 
-      const isAtRight = scrollWidth - clientWidth < scrollLeft + 10;
+  
 
-      if (scrollLeft > 10) setIsLeftVisible(true);
-      else setIsLeftVisible(false);
-      if (isAtRight) setIsRightVisible(false);
-      else setIsRightVisible(true);
-    };
+          // Ensure credentials are provided
+          if (!email || !password) {
+            throw new Error("Missing email or password");
+          }
+    
+          // Find the user in the database
+          const user = await getUserByEmail(email);
+    
+          if (!user || !user.password) {
+            throw new Error("No user found with the provided credentials");
+          }
+    
+          // Verify the password
+          const isValid = await bcrypt.compare(password, user.password);
+          if (!isValid) {
+            throw new Error("Invalid password");
+          }
+          console.log(user);
+          
+    
+          // Return the user object upon successful validation
+          return { id: user.id, name: user.name, email: user.email };
+        } catch (error: any) {
+          console.error("Error during user authorization:", error.message);
+          throw new Error(error.message || "Authorization failed");
+        }
+      },
+    })
+    
+  ],
+  callbacks: {
+    async session({ token, session }) {
+      if (token) {
+        session.user.id = token.id;
+        session.user.name = token.name;
+        session.user.email = token.email;
+        session.user.image = token.picture;
+        session.user.username = token.username;
+      }
 
-    fun();
+      return session;
+    },
 
-    sliderRef.current.addEventListener("scroll", fun);
+    async jwt({ token, user }) {
+      const dbUser = await db.user.findFirst({
+        where: {
+          email: token.email!,
+        },
+      });
 
-    return () => {
-      sliderRef.current?.removeEventListener("scroll", fun);
-    };
-  }, []);
+      if (!dbUser) {
+        token.id = user!.id;
+        return token;
+      }
 
-  const goLeft = () => {
-    sliderRef.current?.scrollBy({
-      left: -150, // Scroll 100px to the left
-      behavior: "smooth", // Smooth scrolling
-    });
-  };
+      if (!dbUser.username) {
+        await db.user.update({
+          where: {
+            id: dbUser.id,
+          },
+          data: {
+            username: nanoid(10),
+          },
+        });
+      }
 
-  const goRight = () => {
-    sliderRef.current?.scrollBy({
-      left: 150, // Scroll 100px to the right
-      behavior: "smooth", // Smooth scrolling
-    });
-  };
+      return {
+        id: dbUser.id,
+        name: dbUser.name,
+        email: dbUser.email,
+        picture: dbUser.image,
+        username: dbUser.username,
+      };
+    },
+    redirect() {
+      return '/';
+    },
+  },
+};
 
-  return {
-    translate,
-    isLeftVisible,
-    isRightVisible,
-    sliderRef,
-    goLeft,
-    goRight,
-  };
-}
+export const getCurrentUser = () => getServerSession(authOptions);
