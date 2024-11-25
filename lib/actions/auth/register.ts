@@ -45,7 +45,7 @@ export const register = async (data: z.infer<typeof RegisterSchema>) => {
     const res = await VerifyEmail(lowerCaseEmail)
 
     if(res.error) {
-      return res;
+      return {error: 'An unexpected error occurred. Please try again later.'};
     }
 
 

@@ -39,14 +39,14 @@ export default function NewPasswordForm({ token }: { token: string }) {
   const onSubmit = async (data: z.infer<typeof NewPasswordSchema>) => {
     try {
       const res = await resetPassword({ ...data, token });
-      if (res.error) {
+      if (res?.error) {
         toast({
           title: "Error",
           description: res.error,
           variant: "destructive",
         });
       }
-      if (res.success) {
+      if (res?.success) {
         toast({description: res.success})
         router.push("/login");
       }

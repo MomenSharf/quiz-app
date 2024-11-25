@@ -3,7 +3,6 @@ import { db } from "../db";
 import { getVerificationTokenByEmail } from "./verification-token";
 import { generateVerificationCode } from "../utils";
 import crypto from "crypto";
-import { VerificationType } from "@prisma/client";
 
 export const generateVerificationToken = async (
   email: string,

@@ -9,11 +9,13 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { VerifyEmail } from "@/lib/actions/auth/verify-email";
+import { VerifyEmailToResetPassword } from "@/lib/actions/auth/reset-password";
 import { cn } from "@/lib/utils";
 import { ResetPasswordShema } from "@/lib/validations/Auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "framer-motion";
+import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -21,11 +23,7 @@ import { Icons } from "../icons";
 import { Button } from "../ui/button";
 import { toast } from "../ui/use-toast";
 import CardWrapper from "./CardWrapper";
-import VerifyEmailForm from "./VerifyEmailForm";
-import Link from "next/link";
-import { useSearchParams } from "next/navigation";
 import NewPasswordForm from "./NewPasswordForm";
-import { VerifyEmailToResetPassword } from "@/lib/actions/auth/reset-password";
 
 export default function ForgotPassword() {
   const [isSendVerificationEmailSuccess, setIsSendVerificationEmailSuccess] =

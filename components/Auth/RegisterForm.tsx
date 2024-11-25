@@ -1,6 +1,5 @@
 "use client";
 
-import { useForm } from "react-hook-form";
 import {
   Form,
   FormControl,
@@ -9,22 +8,20 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
-import { z } from "zod";
-import { Button } from "../ui/button";
-import { useState } from "react";
 import { register } from "@/lib/actions/auth/register";
-import { Icons } from "../icons";
 import { cn } from "@/lib/utils";
-import { Eye, EyeOff } from "lucide-react";
-import CardWrapper from "./CardWrapper";
-import { toast } from "../ui/use-toast";
 import { RegisterSchema } from "@/lib/validations/Auth";
-import VerifyEmailForm from "./VerifyEmailForm";
-import { motion } from "framer-motion";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Eye, EyeOff } from "lucide-react";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { Icons } from "../icons";
+import { Button } from "../ui/button";
+import { toast } from "../ui/use-toast";
+import CardWrapper from "./CardWrapper";
 
 export default function RegisterForm() {
   const [showPassword, setShowPassword] = useState(false);
@@ -44,14 +41,14 @@ export default function RegisterForm() {
   const onSubmit = async (data: z.infer<typeof RegisterSchema>) => {
     try {
       const res = await register(data);
-      if (res.error) {
+      if (res?.error) {
         toast({
           title: "Error",
           description: res.error,
           variant: "destructive",
         });
       }
-      if (res.success) {
+      if (res?.success) {
         toast({ description: res.success });
 
         router.push("/login");

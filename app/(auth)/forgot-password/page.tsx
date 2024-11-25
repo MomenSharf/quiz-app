@@ -1,9 +1,7 @@
 import ForgotPassword from "@/components/Auth/forgotPasswordForm";
-import RegisterForm from "@/components/Auth/RegisterForm";
-import VerifyEmailForm from "@/components/Auth/VerifyEmailForm";
-import {  TokenHasExpired } from "@/lib/actions/auth/token-expires";
+import { TokenHasExpired } from "@/lib/actions/auth/token-expires";
 import { getCurrentUser } from "@/lib/auth";
-import { notFound, redirect } from "next/navigation";
+import { redirect } from "next/navigation";
 
 export default async function page({searchParams}: { searchParams: { [key: string]: string | string[] | undefined }}) {
   const session = await getCurrentUser();
