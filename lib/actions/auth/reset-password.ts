@@ -84,6 +84,8 @@ export async function VerifyEmailToResetPassword({ email }: { email: string }) {
     }
     const verificationToken = await generateVerificationToken(email);
 
+    
+
     await sendVerificationEmailResetPassword(email, verificationToken.token);
 
     return { success: "Email Verification was sent" };

@@ -44,18 +44,18 @@ export type PlayQuizType = Prisma.QuizProgressGetPayload<{
   include: {
     quiz: {
       include: {
-        image: true,
+        image: true;
         questions: {
           include: {
-            image: true,
-            items: true,
-          },
-        },
-        rates: true,
-      },
-    },
-    user: true,
-  },
+            image: true;
+            items: true;
+          };
+        };
+        rates: true;
+      };
+    };
+    user: true;
+  };
 }>;
 
 export type gameBoardQuizzes = Prisma.QuizGetPayload<{
@@ -381,3 +381,27 @@ export type GiphyApiResponse = {
     };
   };
 };
+
+export type DashboardQuiz = Prisma.QuizGetPayload<{
+  include: {
+    _count: {
+      select: {
+        questions: true;
+      };
+    };
+  };
+}>;
+export type DashboardFoldersWithQuiz = Prisma.FolderGetPayload<{
+  include: {
+    quizzes: {
+      include: {
+        _count: {
+          select: {
+            questions: true;
+          };
+        };
+      };
+    };
+  };
+
+}>;

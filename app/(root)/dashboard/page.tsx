@@ -1,56 +1,42 @@
-import EmptyQuizzesGallery from "@/components/QuizzesGallery/EmptyQuizzesGallery";
-import NewFolderButton from "@/components/QuizzesGallery/Folders/NewFolderButton";
-import NewQuizButton from "@/components/QuizzesGallery/Quizzes/NewQuizButton";
-import QuizzesGallery from "@/components/QuizzesGallery/QuizzesGallery";
-import { Separator } from "@/components/ui/separator";
+import DashboardProvider from "@/components/Dashboard/DashboardProvider";
 import {
-  getGalleryFolders,
-  getGalleryQuizzes,
-} from "@/lib/actions/quiz.actions";
+  getDashboardFoldersWithQuizzes,
+  getDashboardQuizzes,
+} from "@/lib/actions/dashboard";
+
 import { getCurrentUser } from "@/lib/auth";
 import { redirect } from "next/navigation";
+import React from "react";
 
 export default async function page() {
   const session = await getCurrentUser();
-
   if (!session) {
     return redirect("/login");
   }
+  const [quizzesResult, foldersResult] = await Promise.all([
+    getDashboardQuizzes(),
+    getDashboardFoldersWithQuizzes(),
+  ]);
 
-  const myQuizzes = await getGalleryQuizzes();
-  const myQuizzesFolders = await getGalleryFolders();
+  const { success: quizzesSuccess, quizzes } = quizzesResult;
+  const { success: folderWithQuizzesSuccess, folderWithQuizzes } =
+    foldersResult;
 
-  // const [myQuizzes, myQuizzesFolders] = await Promise.all([getGalleryQuizzes, getGalleryFolders]);
+  if (
+    !quizzesSuccess ||
+    !folderWithQuizzesSuccess ||
+    !quizzes ||
+    !folderWithQuizzes
+  ) {
+    return <div>Failed to load dashboard folders and quizzes</div>;
+  }
 
   return (
-    <div className=" h-full flex flex-col gap-3 px-2">
-      <h1 className="text-xl pt-5 font-semibold flex flex-col gap-1">
-        MY QUIZZES
-      </h1>
-      <Separator className="h-[2px]" />
-      {(myQuizzes && myQuizzes?.length !== 0) ||
-      (myQuizzesFolders && myQuizzesFolders?.length !== 0) ? (
-        <>
-          <div className="flex gap-3">
-            <NewQuizButton
-              userId={session.user.id}
-              className="w-fit"
-              pathname="/my-quizzes"
-            />
-            <NewFolderButton
-              userId={session.user.id}
-              className="w-fit"
-              pathname="/my-quizzes"
-            />
-          </div>
-          <QuizzesGallery
-            quizzes={myQuizzes ? myQuizzes : []}
-            folders={myQuizzesFolders ? myQuizzesFolders : []}
-          />
-        </>
-      ) : (
-        <EmptyQuizzesGallery userId={session.user.id} />
-      )}
+    <div className="flex w-full h-full">
+      <DashboardProvider
+        quizzes={quizzes}
+        folderWithQuizzes={folderWithQuizzes}
+      />
     </div>
   );
 }

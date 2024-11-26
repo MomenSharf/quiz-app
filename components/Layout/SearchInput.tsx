@@ -29,9 +29,10 @@ export default function SearchInput() {
       <Button
         size="icon"
         variant="outline"
-        className={cn("rounded-full", {
+        className={cn("rounded-full sr-only", {
           "rounded-tl-none rounded-bl-none transition-all": isSearchOpen,
         })}
+        aria-label="Search"
         onClick={() => {
           if (isSearchOpen) {
           } else {

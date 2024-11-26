@@ -15,13 +15,13 @@ const utapi = new UTApi();
 
 // Get
 export const getGalleryQuizzes = async () => {
-  const session = await getCurrentUser();
-
-  if (!session) {
-    throw new Error("Unauthorized: User is not logged in.");
-  }
-
   try {
+    const session = await getCurrentUser()
+
+    if (!session) {
+      return { success: false, message: "Unauthorized: User is not logged in." };
+    }
+
     const quizzes = await db.quiz.findMany({
       where: {
         userId: session.user.id,
@@ -93,14 +93,14 @@ export const getHomeQuizzes = async (limit: number = 1000) => {
   }
   return await db.quiz.findMany({
     where: {
-      userId: session.user.id
+      userId: session.user.id,
     },
     include: {
       image: true,
       questions: true,
       user: true,
     },
-    take: limit
+    take: limit,
   });
 };
 export const getEditorQuiz = async (quizId: string) => {

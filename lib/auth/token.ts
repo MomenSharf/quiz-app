@@ -11,7 +11,7 @@ export const generateVerificationToken = async (
   const expires = new Date().getTime() + 1000 * 60 * 30;
 
   const existingToken = await getVerificationTokenByEmail(email);
-
+  
   if (existingToken) {
     await db.verificationToken.delete({
       where: {
