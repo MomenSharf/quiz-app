@@ -8,7 +8,7 @@ export const generateVerificationToken = async (
   email: string,
 ) => {
   const token = crypto.randomBytes(32).toString("hex");
-  const expires = new Date().getTime() + 1000 * 60 * 10;
+  const expires = new Date().getTime() + 1000 * 60 * 30;
 
   const existingToken = await getVerificationTokenByEmail(email);
 

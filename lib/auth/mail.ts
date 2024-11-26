@@ -1,14 +1,21 @@
-import { Resend } from 'resend';
+import nodemailer from "nodemailer";
 
-const resend = new Resend(process.env.RESEND_API_KEY)
+const transporter = nodemailer.createTransport({
+    service: "gmail", 
+    auth: {
+        user: process.env.NODEMAILER_USER,
+        pass: process.env.NODEMAILER_PASS    
+    },
+});
 
+// Send verification email
 export const sendVerificationEmail = async (email: string, token: string) => {
-    const verificationUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/verify-email?token=${token}`; // Change this for your local dev URL
+    const verificationUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/verify-email?token=${token}`;
 
-    const result = await resend.emails.send({
-        from: "onboarding@resend.dev",
-        to: email,
-        subject: "Verify your email",
+    const mailOptions = {
+        from: `"QuizzesUp Support" <${process.env.NODEMAILER_USER}>`, // Sender address
+        to: email, // Recipient address
+        subject: "Verify your email", // Subject line
         html: `
             <div style="font-family: 'Google Sans', sans-serif; color: #333; line-height: 1.6; text-align: center;">
                 <h2 style="color: #7C3AED;">Welcome to QuizzesUp!</h2>
@@ -21,16 +28,24 @@ export const sendVerificationEmail = async (email: string, token: string) => {
                 <p>The QuizzesUp Team</p>
             </div>
         `,
-    });
+    };
+
+    try {
+        const info = await transporter.sendMail(mailOptions);
+        console.log("Verification email sent: ", info.messageId);
+    } catch (error) {
+        console.error("Error sending verification email: ", error);
+    }
 };
 
+// Send reset password email
 export const sendVerificationEmailResetPassword = async (email: string, token: string) => {
-    const resetPasswordUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/forgot-password?token=${token}`; // Update for your dev or production URL
+    const resetPasswordUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/forgot-password?token=${token}`;
 
-    const result = await resend.emails.send({
-        from: "onboarding@resend.dev",
-        to: email,
-        subject: "Reset Your Password",
+    const mailOptions = {
+        from: `"QuizzesUp Support" <${process.env.NODEMAILER_USER}>`,  // Sender address
+        to: email, // Recipient address
+        subject: "Reset Your Password", // Subject line
         html: `
             <div style="font-family: 'Google Sans', sans-serif; color: #333; line-height: 1.6; text-align: center;">
                 <h2 style="color: #7C3AED;">Reset Your Password</h2>
@@ -43,10 +58,12 @@ export const sendVerificationEmailResetPassword = async (email: string, token: s
                 <p>The QuizzesUp Team</p>
             </div>
         `,
-    });
+    };
 
-    console.log(result);
-    
+    try {
+        const info = await transporter.sendMail(mailOptions);
+        console.log("Reset password email sent: ", info.messageId);
+    } catch (error) {
+        console.error("Error sending reset password email: ", error);
+    }
 };
-
-
