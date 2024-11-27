@@ -8,6 +8,7 @@ type DashboardState = {
   isCreatingQuiz: boolean;
   isCreatingFolder: boolean;
   isNewFolderDialogOpen: boolean;
+  selectedQuizzes: DashboardQuiz[]
 };
 
 // Define action types
@@ -23,6 +24,10 @@ type DashboardActions =
   | {
       type: "SET_IS_NEW_FOLDER_DIALOG_OPEN";
       payload: boolean;
+    }
+  | {
+      type: "SET_IS_SELECTED_QUIZZES";
+      payload:  DashboardQuiz[];
     };
 
 // Define the context type
@@ -50,6 +55,7 @@ const initialState: DashboardState = {
   isCreatingQuiz: false,
   isCreatingFolder: false,
   isNewFolderDialogOpen: false,
+  selectedQuizzes: [],
 };
 
 // Reducer function to handle state updates
@@ -67,6 +73,8 @@ const DashboardReducer = (
         ...state,
         isNewFolderDialogOpen: action.payload,
       };
+    case "SET_IS_SELECTED_QUIZZES":
+      return {...state, selectedQuizzes: action.payload };
     default:
       return state;
   }

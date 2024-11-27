@@ -22,6 +22,7 @@ export default function SearchInput() {
           className="rounded-tr-none rounded-br-none rounded-tl-full rounded-bl-full border-r-0"
           ref={searchInputRef}
           onBlur={() => {
+            
             setIsSearchOpen(false);
           }}
         />
@@ -29,7 +30,7 @@ export default function SearchInput() {
       <Button
         size="icon"
         variant="outline"
-        className={cn("rounded-full sr-only", {
+        className={cn("rounded-full", {
           "rounded-tl-none rounded-bl-none transition-all": isSearchOpen,
         })}
         aria-label="Search"

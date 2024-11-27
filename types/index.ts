@@ -384,6 +384,7 @@ export type GiphyApiResponse = {
 
 export type DashboardQuiz = Prisma.QuizGetPayload<{
   include: {
+    image: true;
     _count: {
       select: {
         questions: true;
@@ -393,8 +394,14 @@ export type DashboardQuiz = Prisma.QuizGetPayload<{
 }>;
 export type DashboardFoldersWithQuiz = Prisma.FolderGetPayload<{
   include: {
+    _count: {
+      select: {
+        quizzes: true;
+      };
+    };
     quizzes: {
       include: {
+        image: true;
         _count: {
           select: {
             questions: true;
@@ -403,5 +410,4 @@ export type DashboardFoldersWithQuiz = Prisma.FolderGetPayload<{
       };
     };
   };
-
 }>;

@@ -14,6 +14,7 @@ export const getDashboardQuizzes = async () => {
     const quizzes = await db.quiz.findMany({
       where: { userId: session.user.id, folderId: null },
       include: {
+        image: true,
         _count: {
           select: {
             questions: true,
@@ -42,12 +43,19 @@ export const getDashboardFoldersWithQuizzes = async () => {
     const folderWithQuizzes = await db.folder.findMany({
       where: { userId: session.user.id },
       include: {
+        _count: {
+          select: {
+            quizzes: true,
+          },
+        },
         quizzes: {
           include: {
+            image: true,
             _count: {
               select: {
                 questions: true,
               },
+              
             },
           },
         },

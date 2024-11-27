@@ -58,4 +58,3 @@ export default async function Header() {
   );
 }
 
-// rounded-br-xl rounded-bl-xl sm:rounded-bl-none sm:rounded-tr-xl sm:rounded-br-xl

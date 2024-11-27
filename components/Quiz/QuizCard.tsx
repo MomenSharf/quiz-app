@@ -7,6 +7,7 @@ import {
   Bookmark,
   Copy,
   Edit,
+  Layers,
   Timer,
   Trash2,
 } from "lucide-react";
@@ -68,7 +69,7 @@ export default function QuizCard({ quiz }: { quiz: EditorQuiz }) {
         </div>
         <div className="flex gap-1">
           <Badge className="bg-primary/30 hover:bg-primary/30 text-primary gap-0.5">
-            <Icons.quizzes className="w-3 h-3 fill-primary" />
+            <Layers className="w-3 h-3 text-primary" />
             {quiz.questions.length} Question
           </Badge>
           <Badge className="bg-destructive/30 hover:bg-destructive/30 text-destructive gap-0.5">

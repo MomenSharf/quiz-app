@@ -4,6 +4,7 @@ import Loader from "@/components/Layout/Loader";
 import { Plus } from "lucide-react";
 import { useDashboardContext } from "../Context";
 import { cn } from "@/lib/utils";
+import { Icons } from "@/components/icons";
 
 export default function NewQuizButton({ className, ...props }: ButtonProps) {
   const {
@@ -13,13 +14,13 @@ export default function NewQuizButton({ className, ...props }: ButtonProps) {
   return (
     <Button
       size="sm"
-      className={cn("px-6 rounded-xl items-center gap-1  border border-transparent", className)}
+      className={cn("rounded-xl items-center gap-1  border border-transparent text-xs hover:scale-[1.02] transition-transform", className)}
       onClick={() => {
         createQuiz({ pathname: "/dashboard" });
       }}
       {...props}
     >
-      {isCreatingQuiz ? <Loader /> : <Plus className="w-4 h-4" />}
+      {isCreatingQuiz ? <Loader /> : <Icons.plus className="w-4 h-4 bg-transparent fill-white stroke-white" />}
       New Quiz
     </Button>
   );

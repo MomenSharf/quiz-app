@@ -66,9 +66,8 @@ export default function NewFolderButton({
     >
       <DialogTrigger asChild>
         <Button
-          variant="outline"
           size="sm"
-          className={cn("px-6 rounded-xl items-center gap-1 bg-white text-foreground", className)}
+          className={cn("rounded-xl items-center gap-1 bg-white hover:bg-white hover:scale-[1.02] transition-transform text-foreground text-xs", className)}
           {...props}
         >
           <Icons.folderPlus className="w-4 h-4 fill-primary stroke-transparent " />
