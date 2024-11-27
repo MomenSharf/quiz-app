@@ -1,8 +1,9 @@
 import React from "react";
 import NewQuizButton from "./Quiz/NewQuizButton";
 import NewFolderButton from "./Folder/NewFolderButton";
-import { Button } from "../ui/button";
+import { Button, buttonVariants } from "../ui/button";
 import { Icons } from "../icons";
+import { cn } from "@/lib/utils";
 
 export default function Header() {
   return (
@@ -10,7 +11,12 @@ export default function Header() {
       <h1 className="sm:text-xl">DASHBOARD</h1>
       <div className="flex gap-1">
         <NewQuizButton />
-        <NewFolderButton className="rounded-xl items-center gap-1 bg-white hover:bg-white hover:scale-[1.02] transition-transform text-foreground text-xs">
+        <NewFolderButton
+          className={cn(
+            buttonVariants({ size: "sm" }),
+            "rounded-xl items-center gap-1 bg-white hover:bg-white hover:scale-[1.02] transition-transform text-foreground text-xs cursor-pointer"
+          )}
+        >
           <Icons.folderPlus className="w-4 h-4 fill-gray-extra-dark stroke-transparent " />
           new Folder
         </NewFolderButton>

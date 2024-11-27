@@ -1,9 +1,10 @@
 import React from "react";
 import DeleteQuizButton from "./Quiz/DeleteQuizButton";
 import { Trash2, X } from "lucide-react";
-import { Button } from "../ui/button";
+import { Button, buttonVariants } from "../ui/button";
 import { useDashboardContext } from "./Context";
 import SortBy from "./SortBy";
+import { cn } from "@/lib/utils";
 
 export default function Toolbar() {
   const {
@@ -15,9 +16,7 @@ export default function Toolbar() {
       <div className="w-full flex gap-3 items-center">
         <DeleteQuizButton
           pathname="/dashboard"
-          variant="destructive"
-          size="sm"
-          className="gap-1 text-xs rounded-xl disabled:cursor-not-allowed"
+          className={cn(buttonVariants({size: 'sm', variant: 'destructive'}),"gap-1 text-xs rounded-xl disabled:cursor-not-allowed cursor-pointer")}
           disabled={selectedQuizzesIds.length === 0}
           ids={selectedQuizzesIds}
         >

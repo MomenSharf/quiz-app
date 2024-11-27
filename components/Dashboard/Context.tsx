@@ -3,6 +3,10 @@ import {
   newFolder,
   newQuiz,
   duplicateQuiz as duplicateQuizServer,
+  resetQuiz as resetQuizServer,
+  renameQuiz as renameQuizServer,
+  renameFolder as renameFolderServer,
+  deleteFolder as deleteFolderServer,
 } from "@/lib/actions/dashboard";
 import { DashboardFoldersWithQuiz, DashboardQuiz } from "@/types";
 import React, { createContext, ReactNode, useContext, useReducer } from "react";
@@ -13,9 +17,11 @@ type DashboardState = {
   isCreatingQuiz: boolean;
   isCreatingFolder: boolean;
   isDeletingQuiz: boolean;
+  isDeletingFolder: boolean;
   isDuplicatingQuiz: boolean;
-  isNewFolderDialogOpen: boolean;
-  isDeleteQuizDialogOpen: boolean;
+  isResettingQuiz: boolean;
+  isRenamingQuiz: boolean;
+  isRenamingFolder: boolean;
   selectedQuizzesIds: string[];
 };
 
@@ -34,15 +40,23 @@ type DashboardActions =
       payload: boolean;
     }
   | {
+      type: "SET_IS_DELETING_FOLDER";
+      payload: boolean;
+    }
+  | {
       type: "SET_IS_DUPLICATING_QUIZ";
       payload: boolean;
     }
   | {
-      type: "SET_IS_NEW_FOLDER_DIALOG_OPEN";
+      type: "SET_IS_RESETTING_QUIZ";
       payload: boolean;
     }
   | {
-      type: "SET_IS_DELETE_QUIZ_DIALOG_OPEN";
+      type: "SET_IS_RENAMING_QUIZ";
+      payload: boolean;
+    }
+  | {
+      type: "SET_IS_RENAMING_FOLDER";
       payload: boolean;
     }
   | {
@@ -73,8 +87,52 @@ type DashboardContextType = {
     pathname: string;
   }) => Promise<void>;
   toggleQuizSelection: (quizId: string) => void;
-  deleteQuizzess: (pathname: string, ids: string[]) => Promise<void>;
-  duplicateQuiz: (pathname: string, quizId: string) => Promise<void>
+  deleteQuizzess: ({
+    pathname,
+    ids,
+  }: {
+    pathname: string;
+    ids: string[];
+  }) => Promise<void>;
+  duplicateQuiz: ({
+    pathname,
+    quizId,
+  }: {
+    pathname: string;
+    quizId: string;
+  }) => Promise<void>;
+  resetQuiz: ({
+    pathname,
+    quizId,
+  }: {
+    pathname: string;
+    quizId: string;
+  }) => Promise<void>;
+  renameQuiz: ({
+    pathname,
+    quizId,
+    newTitle,
+  }: {
+    pathname: string;
+    quizId: string;
+    newTitle: string;
+  }) => Promise<void>;
+  renameFolder: ({
+    pathname,
+    folderId,
+    newTitle,
+  }: {
+    pathname: string;
+    folderId: string;
+    newTitle: string;
+  }) => Promise<void>;
+  deleteFolder: ({
+    pathname,
+    folderId,
+  }: {
+    pathname: string;
+    folderId: string;
+  }) => Promise<void>;
   toggleSelectAll: () => void;
 };
 
@@ -83,9 +141,12 @@ const initialState: DashboardState = {
   isCreatingQuiz: false,
   isCreatingFolder: false,
   isDeletingQuiz: false,
+  isDeletingFolder: false,
   isDuplicatingQuiz: false,
-  isNewFolderDialogOpen: false,
-  isDeleteQuizDialogOpen: false,
+  isResettingQuiz: false,
+  isRenamingFolder: false,
+  isRenamingQuiz: false,
+
   selectedQuizzesIds: [],
 };
 
@@ -101,18 +162,16 @@ const DashboardReducer = (
       return { ...state, isCreatingFolder: action.payload };
     case "SET_IS_DELETING_QUIZ":
       return { ...state, isDeletingQuiz: action.payload };
+    case "SET_IS_DELETING_FOLDER":
+      return { ...state, isDeletingFolder: action.payload };
     case "SET_IS_DUPLICATING_QUIZ":
       return { ...state, isDuplicatingQuiz: action.payload };
-    case "SET_IS_NEW_FOLDER_DIALOG_OPEN":
-      return {
-        ...state,
-        isNewFolderDialogOpen: action.payload,
-      };
-    case "SET_IS_DELETE_QUIZ_DIALOG_OPEN":
-      return {
-        ...state,
-        isDeleteQuizDialogOpen: action.payload,
-      };
+    case "SET_IS_RESETTING_QUIZ":
+      return { ...state, isResettingQuiz: action.payload };
+    case "SET_IS_RENAMING_QUIZ":
+      return { ...state, isRenamingQuiz: action.payload };
+    case "SET_IS_RENAMING_FOLDER":
+      return { ...state, isRenamingFolder: action.payload };
     case "SET_SELECTED_QUIZZES_IDS":
       return { ...state, selectedQuizzesIds: action.payload };
     default:
@@ -185,7 +244,13 @@ export const DashboardProvider = ({
       });
     }
   };
-  const duplicateQuiz = async (pathname: string, quizId: string) => {
+  const duplicateQuiz = async ({
+    pathname,
+    quizId,
+  }: {
+    pathname: string;
+    quizId: string;
+  }) => {
     dispatch({ type: "SET_IS_DUPLICATING_QUIZ", payload: true });
 
     const { success, message } = await duplicateQuizServer({
@@ -205,7 +270,13 @@ export const DashboardProvider = ({
 
     dispatch({ type: "SET_IS_DUPLICATING_QUIZ", payload: false });
   };
-  const deleteQuizzess = async (pathname: string, ids: string[]) => {
+  const deleteQuizzess = async ({
+    pathname,
+    ids,
+  }: {
+    pathname: string;
+    ids: string[];
+  }) => {
     dispatch({ type: "SET_IS_DELETING_QUIZ", payload: true });
 
     const { success, message } = await deleteQuizzesServer({
@@ -225,10 +296,57 @@ export const DashboardProvider = ({
 
     dispatch({ type: "SET_IS_DELETING_QUIZ", payload: false });
     dispatch({ type: "SET_SELECTED_QUIZZES_IDS", payload: [] });
-    dispatch({
-      type: "SET_IS_DELETE_QUIZ_DIALOG_OPEN",
-      payload: false,
+  };
+  const deleteFolder = async ({
+    pathname,
+    folderId,
+  }: {
+    pathname: string;
+    folderId: string;
+  }) => {
+    dispatch({ type: "SET_IS_DELETING_FOLDER", payload: true });
+
+    const { success, message } = await deleteFolderServer({
+      folderId,
+      pathname,
     });
+
+    if (success) {
+      toast({ description: "folder deleted successfully" });
+    } else {
+      toast({
+        description: message,
+        title: "error",
+        variant: "destructive",
+      });
+    }
+
+    dispatch({ type: "SET_IS_DELETING_FOLDER", payload: false });
+  };
+  const resetQuiz = async ({
+    pathname,
+    quizId,
+  }: {
+    pathname: string;
+    quizId: string;
+  }) => {
+    dispatch({ type: "SET_IS_RESETTING_QUIZ", payload: true });
+
+    const { success, message } = await resetQuizServer({
+      quizId,
+      pathname,
+    });
+
+    if (success) {
+      toast({ description: "Quiz reseted successfully" });
+    } else {
+      toast({
+        description: message,
+        title: "error",
+        variant: "destructive",
+      });
+    }
+    dispatch({ type: "SET_IS_RESETTING_QUIZ", payload: false });
   };
 
   const toggleQuizSelection = (quizId: string) => {
@@ -254,6 +372,62 @@ export const DashboardProvider = ({
       });
     }
   };
+  const renameQuiz = async ({
+    pathname,
+    quizId,
+    newTitle,
+  }: {
+    pathname: string;
+    quizId: string;
+    newTitle: string;
+  }) => {
+    dispatch({ type: "SET_IS_RENAMING_QUIZ", payload: true });
+
+    const { success, message } = await renameQuizServer({
+      quizId,
+      newTitle,
+      pathname,
+    });
+
+    if (success) {
+      toast({ description: "Quiz renamed successfully" });
+    } else {
+      toast({
+        description: message,
+        title: "error",
+        variant: "destructive",
+      });
+    }
+    dispatch({ type: "SET_IS_RENAMING_QUIZ", payload: false });
+  };
+
+  const renameFolder = async ({
+    pathname,
+    folderId,
+    newTitle,
+  }: {
+    pathname: string;
+    folderId: string;
+    newTitle: string;
+  }) => {
+    dispatch({ type: "SET_IS_RENAMING_FOLDER", payload: true });
+    const { success, message } = await renameFolderServer({
+      folderId,
+      newTitle,
+      pathname,
+    });
+    if (success) {
+      toast({ description: "Folder renamed successfully" });
+    } else {
+      toast({
+        description: message,
+        title: "error",
+        variant: "destructive",
+      });
+
+      dispatch({ type: "SET_IS_RENAMING_FOLDER", payload: false });
+    }
+  };
 
   return (
     <DashboardContext.Provider
@@ -268,6 +442,10 @@ export const DashboardProvider = ({
         deleteQuizzess,
         duplicateQuiz,
         toggleSelectAll,
+        resetQuiz,
+        renameQuiz,
+        renameFolder,
+        deleteFolder
       }}
     >
       {children}

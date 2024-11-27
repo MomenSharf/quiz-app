@@ -1,5 +1,5 @@
 import { Icons } from "@/components/icons";
-import { Button, ButtonProps, buttonVariants } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogClose,
@@ -9,27 +9,24 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { toast } from "@/components/ui/use-toast";
-import { deleteQuizzes } from "@/lib/actions/quiz.actions";
-import { cn } from "@/lib/utils";
 import { Trash2 } from "lucide-react";
-import { HTMLProps, ReactNode, useEffect, useState } from "react";
+import { HTMLProps } from "react";
 import { useDashboardContext } from "../Context";
 
 type DeleteQuizButtonProps = HTMLProps<HTMLDivElement>  & {
   pathname: string;
-  ids: string[];
+  folderId: string;
 };
 
-export default function DeleteQuizButton({
+export default function DeleteFolderButton({
   children,
   pathname,
-  ids,
+  folderId,
   ...props
 }: DeleteQuizButtonProps) {
   const {
-    state: {  isDeletingQuiz },
-    deleteQuizzess,
+    state: {  isDeletingFolder },
+    deleteFolder,
   } = useDashboardContext();
 
 
@@ -49,13 +46,13 @@ export default function DeleteQuizButton({
           </DialogClose>
           <Button
             variant="destructive"
-            disabled={isDeletingQuiz}
+            disabled={isDeletingFolder}
             onClick={() => {
-              deleteQuizzess({pathname, ids});
+              deleteFolder({pathname, folderId});
             }}
             className="flex gap-1 items-center"
           >
-            {isDeletingQuiz ? (
+            {isDeletingFolder ? (
               <Icons.Loader className="w-4 h-4 animate-spin stroke-primary-foreground" />
             ) : (
               <Trash2 className="w-4 h-4" />

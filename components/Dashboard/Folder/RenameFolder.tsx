@@ -16,7 +16,7 @@ import { folderSchema, folderSchemaType } from "@/lib/validations/quizSchemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { HTMLProps, LegacyRef, ReactNode, useRef, useState } from "react";
+import { HTMLProps, ReactNode, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import {
@@ -31,20 +31,21 @@ import { Button, ButtonProps } from "@/components/ui/button";
 import { useDashboardContext } from "../Context";
 import Loader from "@/components/Layout/Loader";
 
-type NewFolderButtonProps = HTMLProps<HTMLDivElement> & {
-  parentId?: string | null;
+type NewQuizButtonProps = HTMLProps<HTMLDivElement> & {
+  folderId: string ;
 };
 
-export default function NewFolderButton({
+export default function RenameFolder({
   children,
-  parentId = null,
+  folderId ,
   ...props
-}: NewFolderButtonProps) {
+}: NewQuizButtonProps) {
+
   const dialogCloseRef = useRef<HTMLButtonElement | null>(null);
 
   const {
-    state: { isCreatingFolder },
-    createFolder,
+    state: {  isRenamingFolder },
+    renameFolder
   } = useDashboardContext();
 
   const form = useForm<folderSchemaType>({
@@ -55,19 +56,23 @@ export default function NewFolderButton({
   });
 
   const onSumbit = async (values: folderSchemaType) => {
-    await createFolder({ pathname: "/dashboard", parentId, title: values.title });
+    renameFolder({ pathname: "/dashboard", folderId, newTitle: values.title });
     form.reset();
     if (dialogCloseRef) dialogCloseRef.current?.click();
   };
 
   return (
-    <Dialog>
+    <Dialog
+
+    >
       <DialogTrigger asChild>
-        <div {...props}>{children}</div>
+        <div {...props}>
+          {children}
+        </div>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px] rounded-xl">
+      <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Create Folder</DialogTitle>
+          <DialogTitle>Rename Folder</DialogTitle>
           <DialogDescription></DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -100,9 +105,9 @@ export default function NewFolderButton({
                   Cancel
                 </Button>
               </DialogClose>
-              <Button type="submit" className="flex gap-2" disabled={isCreatingFolder}>
-                {isCreatingFolder ? <Loader /> : <Plus className="w-4 h-4" />}
-                Create
+              <Button type="submit" className="flex gap-2" disabled={isRenamingFolder}>
+                {isRenamingFolder && <Loader />}
+                Rename
               </Button>
             </div>
           </form>

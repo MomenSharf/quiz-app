@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 import React from "react";
 import { useDashboardContext } from "@/components/Dashboard/Context";
 import QuizMenu from "./Quiz/QuizMenu";
+import FolderMenu from "./Folder/FolderMenu";
 
 export default function DataCard({
   data,
@@ -115,16 +116,24 @@ export default function DataCard({
       </td>
       <td className="p-2 rounded-tr-md rounded-br-md">
         <div className="flex justify-center items-center">
-
-        {isFolder ? (
-          <Button size="icon" variant="ghost" className="p-0 w-4">
-            <EllipsisVertical className="w-4 h-4" />
-          </Button>
-        ) : (
-          <QuizMenu pathname="/dashboard" quiz={data} className="p-0 w-4" size="icon" variant="ghost" contentPostionClasses="right-5">
-            <EllipsisVertical className="w-4 h-4" />
-          </QuizMenu>
-        )}
+          {isFolder ? (
+            <FolderMenu
+              pathname="/dashboard"
+              folder={data}
+              className="p-0 w-4"
+            >
+              <EllipsisVertical className="w-4 h-4" />
+            </FolderMenu>
+          ) : (
+            <QuizMenu
+              pathname="/dashboard"
+              quiz={data}
+              className="p-0 w-4"
+              contentPostionClasses="right-5"
+            >
+              <EllipsisVertical className="w-4 h-4" />
+            </QuizMenu>
+          )}
         </div>
       </td>
     </tr>

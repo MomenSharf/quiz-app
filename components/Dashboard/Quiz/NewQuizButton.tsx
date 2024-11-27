@@ -15,6 +15,7 @@ export default function NewQuizButton({ className, ...props }: ButtonProps) {
     <Button
       size="sm"
       className={cn("rounded-xl items-center gap-1  border border-transparent text-xs hover:scale-[1.02] transition-transform", className)}
+      disabled={isCreatingQuiz}
       onClick={() => {
         createQuiz({ pathname: "/dashboard" });
       }}

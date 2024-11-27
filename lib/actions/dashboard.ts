@@ -111,7 +111,6 @@ export const newQuiz = async ({
         folderId,
         title: "My new Quiz",
         description: "",
-        categories: [],
         questions: {
           create: {
             type: "UNSELECTED",
@@ -187,12 +186,6 @@ export const duplicateQuiz = async ({
       },
     });
 
-    // const quizzes = db.quiz.findMany({
-    //   where: {
-    //     title: initCustomTraceSubscriber
-    //   }
-    // })
-
     if (!originalQuiz) {
       return {
         success: false,
@@ -200,8 +193,9 @@ export const duplicateQuiz = async ({
       };
     }
 
-    const baseTitke = originalQuiz.title;
-    const copyPattern = `${baseTitke} copy`;
+    const baseTitle = originalQuiz.title;
+
+    const copyPattern = `${baseTitle} copy`;
 
     const similarQuizzes = await db.quiz.findMany({
       where: {
@@ -211,7 +205,7 @@ export const duplicateQuiz = async ({
       },
     });
 
-    let maxCopyNumber = 1; // Start with 2 since the first copy is (2)
+    let maxCopyNumber = 0; // Start with 2 since the first copy is (2)
     similarQuizzes.forEach((quiz) => {
       const match = quiz.title.match(/\((\d+)\)$/); // Match the number in parentheses at the end
       if (match) {
@@ -222,15 +216,15 @@ export const duplicateQuiz = async ({
       }
     });
 
-    
     const newQuizTitle = `${copyPattern} (${maxCopyNumber + 1})`;
 
-    const { id, createdAt, updatedAt, visibility, title, ...data } = originalQuiz;
+    const { id, createdAt, updatedAt, visibility, title, ...data } =
+      originalQuiz;
 
     const quiz = await db.quiz.create({
       data: {
         title: newQuizTitle,
-        ...data
+        ...data,
       },
     });
 
@@ -272,7 +266,6 @@ export const deleteQuizzes = async ({
 
     return { success: true, quizzes };
   } catch (error) {
-    console.log(error);
 
     return {
       success: false,
@@ -282,3 +275,145 @@ export const deleteQuizzes = async ({
     };
   }
 };
+export const deleteFolder = async ({
+  folderId,
+  pathname,
+}: {
+  folderId: string;
+  pathname: string;
+}) => {
+  const session = await getCurrentUser();
+  if (!session) {
+    return { success: false, message: "Unauthorized: User is not logged in." };
+  }
+
+  try {
+    const folder = await db.folder.deleteMany({
+      where: {
+        id: folderId,
+        userId: session.user.id,
+      },
+    });
+
+    revalidatePath(pathname);
+
+    return { success: true, folder };
+  } catch (error) {
+
+    return {
+      success: false,
+      message: `Failed to delete folder, Please try again later.`,
+    };
+  }
+};
+export const renameQuiz = async ({
+  pathname,
+  quizId,
+  newTitle,
+}: {
+  pathname: string;
+  quizId: string;
+  newTitle: string;
+}) => {
+  const session = await getCurrentUser();
+  if (!session) {
+    return { success: false, message: "Unauthorized: User is not logged in." };
+  }
+
+  try {
+    const quiz = await db.quiz.update({
+      where: {
+        id: quizId,
+      },
+      data: {
+        title: newTitle,
+        
+      },
+    });
+
+    revalidatePath(pathname);
+
+    return { success: true, quiz };
+  } catch (error) {
+    return {
+      success: false,
+      message: `Failed to renaming Quiz. Please try again later.`,
+    };
+  }
+};
+export const renameFolder = async ({
+  pathname,
+  folderId,
+  newTitle,
+}: {
+  pathname: string;
+  folderId: string;
+  newTitle: string;
+}) => {
+  const session = await getCurrentUser();
+  if (!session) {
+    return { success: false, message: "Unauthorized: User is not logged in." };
+  }
+
+  try {
+    const quiz = await db.folder.update({
+      where: {
+        id: folderId,
+      },
+      data: {
+        title: newTitle,
+        
+      },
+    });
+
+    revalidatePath(pathname);
+
+    return { success: true, quiz };
+  } catch (error) {
+    console.log(error);
+
+    return {
+      success: false,
+      message: `Failed to renaming Folder. Please try again later.`,
+    };
+  }
+};
+export const resetQuiz = async ({
+  quizId,
+  pathname,
+}: {
+  quizId: string;
+  pathname: string;
+}) => {
+  const session = await getCurrentUser();
+  if (!session) {
+    return { success: false, message: "Unauthorized: User is not logged in." };
+  }
+
+  try {
+    const quiz = await db.quiz.update({
+      where: {
+        id: quizId,
+      },
+      data: {
+        title: "My new Quiz",
+        description: "",
+        categories: [],
+        questions: {
+          deleteMany: {},
+        },
+      },
+    });
+
+    revalidatePath(pathname);
+
+    return { success: true, quiz };
+  } catch (error) {
+
+    return {
+      success: false,
+      message: `Failed to reset Quiz. Please try again later.`,
+    };
+  }
+};
+
