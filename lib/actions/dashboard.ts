@@ -3,14 +3,26 @@
 import { db } from "@/lib/db";
 import { getCurrentUser } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
+import { SortOption } from "@/types";
 
-export const getDashboardQuizzes = async () => {
+export const getDashboardQuizzes = async (sortOption: SortOption) => {
   const session = await getCurrentUser();
 
   if (!session) {
     return { success: false, message: "Unauthorized: User is not logged in." };
   }
   try {
+    const orderByMap: Record<SortOption, Record<string, string>> = {
+      alphabetical: { title: "asc" },
+      reverseAlphabetical: { title: "desc" },
+      recentUpdate: { updatedAt: "desc" },
+      recentCreate: { createdAt: "desc" },
+      oldestCreate: { createdAt: "asc" },
+      oldestUpdate: { updatedAt: "asc" },
+    };
+
+    const orderBy = orderByMap[sortOption];
+
     const quizzes = await db.quiz.findMany({
       where: { userId: session.user.id, folderId: null },
       include: {
@@ -21,9 +33,7 @@ export const getDashboardQuizzes = async () => {
           },
         },
       },
-      orderBy: {
-        updatedAt: "desc",
-      },
+      orderBy: orderBy,
     });
     return { success: true, quizzes };
   } catch (error) {
@@ -33,13 +43,25 @@ export const getDashboardQuizzes = async () => {
     };
   }
 };
-export const getDashboardFoldersWithQuizzes = async () => {
+export const getDashboardFoldersWithQuizzes = async (
+  sortOption: SortOption
+) => {
   const session = await getCurrentUser();
 
   if (!session) {
     return { success: false, message: "Unauthorized: User is not logged in." };
   }
   try {
+    const orderByMap: Record<SortOption, Record<string, string>> = {
+      alphabetical: { title: "asc" },
+      reverseAlphabetical: { title: "desc" },
+      recentUpdate: { updatedAt: "desc" },
+      recentCreate: { createdAt: "desc" },
+      oldestCreate: { createdAt: "asc" },
+      oldestUpdate: { updatedAt: "asc" },
+    };
+
+    const orderBy = orderByMap[sortOption];
     const folderWithQuizzes = await db.folder.findMany({
       where: { userId: session.user.id },
       include: {
@@ -55,14 +77,11 @@ export const getDashboardFoldersWithQuizzes = async () => {
               select: {
                 questions: true,
               },
-              
             },
           },
         },
       },
-      orderBy: {
-        updatedAt: "desc",
-      },
+      orderBy: orderBy,
     });
     return { success: true, folderWithQuizzes };
   } catch (error) {
@@ -86,7 +105,7 @@ export const newQuiz = async ({
   }
 
   try {
-    const myQuiz = await db.quiz.create({
+    const quiz = await db.quiz.create({
       data: {
         userId: session.user.id,
         folderId,
@@ -106,7 +125,7 @@ export const newQuiz = async ({
 
     revalidatePath(pathname);
 
-    return { success: true, quiz: myQuiz };
+    return { success: true, quiz };
   } catch (error) {
     return {
       success: false,
@@ -133,7 +152,7 @@ export const newFolder = async ({
       data: {
         userId: session.user.id,
         title: title || "New Folder",
-        parentId
+        parentId,
       },
     });
 
@@ -144,6 +163,122 @@ export const newFolder = async ({
     return {
       success: false,
       message: "Failed to create folder. Please try again later.",
+    };
+  }
+};
+
+export const duplicateQuiz = async ({
+  quizId,
+  pathname,
+}: {
+  quizId: string;
+  pathname: string;
+}) => {
+  const session = await getCurrentUser();
+  if (!session) {
+    return { success: false, message: "Unauthorized: User is not logged in." };
+  }
+
+  try {
+    const originalQuiz = await db.quiz.findFirst({
+      where: {
+        id: quizId,
+        userId: session.user.id,
+      },
+    });
+
+    // const quizzes = db.quiz.findMany({
+    //   where: {
+    //     title: initCustomTraceSubscriber
+    //   }
+    // })
+
+    if (!originalQuiz) {
+      return {
+        success: false,
+        message: "Failed to get quizz to duplicate. Please try again later.",
+      };
+    }
+
+    const baseTitke = originalQuiz.title;
+    const copyPattern = `${baseTitke} copy`;
+
+    const similarQuizzes = await db.quiz.findMany({
+      where: {
+        title: {
+          startsWith: copyPattern,
+        },
+      },
+    });
+
+    let maxCopyNumber = 1; // Start with 2 since the first copy is (2)
+    similarQuizzes.forEach((quiz) => {
+      const match = quiz.title.match(/\((\d+)\)$/); // Match the number in parentheses at the end
+      if (match) {
+        const copyNumber = parseInt(match[1], 10);
+        if (copyNumber > maxCopyNumber) {
+          maxCopyNumber = copyNumber;
+        }
+      }
+    });
+
+    
+    const newQuizTitle = `${copyPattern} (${maxCopyNumber + 1})`;
+
+    const { id, createdAt, updatedAt, visibility, title, ...data } = originalQuiz;
+
+    const quiz = await db.quiz.create({
+      data: {
+        title: newQuizTitle,
+        ...data
+      },
+    });
+
+    revalidatePath(pathname);
+
+    return { success: true, quiz };
+  } catch (error) {
+    console.log(error);
+
+    return {
+      success: false,
+      message: `Failed to delete duplicate quiz. Please try again later.`,
+    };
+  }
+};
+export const deleteQuizzes = async ({
+  quizzesIds,
+  pathname,
+}: {
+  quizzesIds: string[];
+  pathname: string;
+}) => {
+  const session = await getCurrentUser();
+  if (!session) {
+    return { success: false, message: "Unauthorized: User is not logged in." };
+  }
+
+  try {
+    const quizzes = await db.quiz.deleteMany({
+      where: {
+        id: {
+          in: quizzesIds,
+        },
+        userId: session.user.id,
+      },
+    });
+
+    revalidatePath(pathname);
+
+    return { success: true, quizzes };
+  } catch (error) {
+    console.log(error);
+
+    return {
+      success: false,
+      message: `Failed to delete ${
+        quizzesIds.length === 1 ? "Quiz" : "Quizzes"
+      }. Please try again later.`,
     };
   }
 };

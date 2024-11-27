@@ -1,4 +1,9 @@
-import { newFolder, newQuiz } from "@/lib/actions/dashboard";
+import {
+  deleteQuizzes as deleteQuizzesServer,
+  newFolder,
+  newQuiz,
+  duplicateQuiz as duplicateQuizServer,
+} from "@/lib/actions/dashboard";
 import { DashboardFoldersWithQuiz, DashboardQuiz } from "@/types";
 import React, { createContext, ReactNode, useContext, useReducer } from "react";
 import { toast } from "../ui/use-toast";
@@ -7,8 +12,11 @@ import { toast } from "../ui/use-toast";
 type DashboardState = {
   isCreatingQuiz: boolean;
   isCreatingFolder: boolean;
+  isDeletingQuiz: boolean;
+  isDuplicatingQuiz: boolean;
   isNewFolderDialogOpen: boolean;
-  selectedQuizzes: DashboardQuiz[]
+  isDeleteQuizDialogOpen: boolean;
+  selectedQuizzesIds: string[];
 };
 
 // Define action types
@@ -22,12 +30,24 @@ type DashboardActions =
       payload: boolean;
     }
   | {
+      type: "SET_IS_DELETING_QUIZ";
+      payload: boolean;
+    }
+  | {
+      type: "SET_IS_DUPLICATING_QUIZ";
+      payload: boolean;
+    }
+  | {
       type: "SET_IS_NEW_FOLDER_DIALOG_OPEN";
       payload: boolean;
     }
   | {
-      type: "SET_IS_SELECTED_QUIZZES";
-      payload:  DashboardQuiz[];
+      type: "SET_IS_DELETE_QUIZ_DIALOG_OPEN";
+      payload: boolean;
+    }
+  | {
+      type: "SET_SELECTED_QUIZZES_IDS";
+      payload: string[];
     };
 
 // Define the context type
@@ -43,19 +63,30 @@ type DashboardContextType = {
     folderId?: string | null;
     pathname: string;
   }) => Promise<void>;
-  createFolder: ({ title, parentId, pathname, }: {
+  createFolder: ({
+    title,
+    parentId,
+    pathname,
+  }: {
     title: string;
     parentId?: string | null;
     pathname: string;
-}) => Promise<void>
+  }) => Promise<void>;
+  toggleQuizSelection: (quizId: string) => void;
+  deleteQuizzess: (pathname: string, ids: string[]) => Promise<void>;
+  duplicateQuiz: (pathname: string, quizId: string) => Promise<void>
+  toggleSelectAll: () => void;
 };
 
 // Initial state
 const initialState: DashboardState = {
   isCreatingQuiz: false,
   isCreatingFolder: false,
+  isDeletingQuiz: false,
+  isDuplicatingQuiz: false,
   isNewFolderDialogOpen: false,
-  selectedQuizzes: [],
+  isDeleteQuizDialogOpen: false,
+  selectedQuizzesIds: [],
 };
 
 // Reducer function to handle state updates
@@ -68,13 +99,22 @@ const DashboardReducer = (
       return { ...state, isCreatingQuiz: action.payload };
     case "SET_IS_CREATING_Folder":
       return { ...state, isCreatingFolder: action.payload };
+    case "SET_IS_DELETING_QUIZ":
+      return { ...state, isDeletingQuiz: action.payload };
+    case "SET_IS_DUPLICATING_QUIZ":
+      return { ...state, isDuplicatingQuiz: action.payload };
     case "SET_IS_NEW_FOLDER_DIALOG_OPEN":
       return {
         ...state,
         isNewFolderDialogOpen: action.payload,
       };
-    case "SET_IS_SELECTED_QUIZZES":
-      return {...state, selectedQuizzes: action.payload };
+    case "SET_IS_DELETE_QUIZ_DIALOG_OPEN":
+      return {
+        ...state,
+        isDeleteQuizDialogOpen: action.payload,
+      };
+    case "SET_SELECTED_QUIZZES_IDS":
+      return { ...state, selectedQuizzesIds: action.payload };
     default:
       return state;
   }
@@ -97,6 +137,8 @@ export const DashboardProvider = ({
 }) => {
   const [state, dispatch] = useReducer(DashboardReducer, initialState);
 
+  const { selectedQuizzesIds } = state;
+
   const createFolder = async ({
     title,
     parentId = null,
@@ -106,25 +148,16 @@ export const DashboardProvider = ({
     parentId?: string | null;
     pathname: string;
   }) => {
-    dispatch({ type: "SET_IS_CREATING_QUIZ", payload: true });
+    dispatch({ type: "SET_IS_CREATING_Folder", payload: true });
 
-    try {
-      const { success } = await newFolder({ title, parentId, pathname });
+    const { success, message } = await newFolder({ title, parentId, pathname });
 
-      dispatch({ type: "SET_IS_CREATING_Folder", payload: false });
-      if (success) {
-        toast({ description: "Folder created successfully" });
-      } else {
-        toast({
-          description: "Error creating folder",
-          title: "error",
-          variant: "destructive",
-        });
-      }
-    } catch (error) {
-      dispatch({ type: "SET_IS_CREATING_Folder", payload: false });
+    dispatch({ type: "SET_IS_CREATING_Folder", payload: false });
+    if (success) {
+      toast({ description: "Folder created successfully" });
+    } else {
       toast({
-        description: "Error creating folder",
+        description: message,
         title: "error",
         variant: "destructive",
       });
@@ -139,25 +172,85 @@ export const DashboardProvider = ({
   }) => {
     dispatch({ type: "SET_IS_CREATING_QUIZ", payload: true });
 
-    try {
-      const { success } = await newQuiz({ folderId, pathname });
+    const { success, message } = await newQuiz({ folderId, pathname });
 
-      dispatch({ type: "SET_IS_CREATING_QUIZ", payload: false });
-      if (success) {
-        toast({ description: "Quiz created successfully" });
-      } else {
-        toast({
-          description: "Error creating quiz",
-          title: "error",
-          variant: "destructive",
-        });
-      }
-    } catch (error) {
-      dispatch({ type: "SET_IS_CREATING_QUIZ", payload: false });
+    dispatch({ type: "SET_IS_CREATING_QUIZ", payload: false });
+    if (success) {
+      toast({ description: "Quiz created successfully" });
+    } else {
       toast({
-        description: "Error creating quiz",
+        description: message,
         title: "error",
         variant: "destructive",
+      });
+    }
+  };
+  const duplicateQuiz = async (pathname: string, quizId: string) => {
+    dispatch({ type: "SET_IS_DUPLICATING_QUIZ", payload: true });
+
+    const { success, message } = await duplicateQuizServer({
+      quizId,
+      pathname,
+    });
+
+    if (success) {
+      toast({ description: "Quiz duplicated successfully" });
+    } else {
+      toast({
+        description: message,
+        title: "error",
+        variant: "destructive",
+      });
+    }
+
+    dispatch({ type: "SET_IS_DUPLICATING_QUIZ", payload: false });
+  };
+  const deleteQuizzess = async (pathname: string, ids: string[]) => {
+    dispatch({ type: "SET_IS_DELETING_QUIZ", payload: true });
+
+    const { success, message } = await deleteQuizzesServer({
+      quizzesIds: ids,
+      pathname,
+    });
+
+    if (success) {
+      toast({ description: "Quiz deleted successfully" });
+    } else {
+      toast({
+        description: message,
+        title: "error",
+        variant: "destructive",
+      });
+    }
+
+    dispatch({ type: "SET_IS_DELETING_QUIZ", payload: false });
+    dispatch({ type: "SET_SELECTED_QUIZZES_IDS", payload: [] });
+    dispatch({
+      type: "SET_IS_DELETE_QUIZ_DIALOG_OPEN",
+      payload: false,
+    });
+  };
+
+  const toggleQuizSelection = (quizId: string) => {
+    if (selectedQuizzesIds.includes(quizId)) {
+      dispatch({
+        type: "SET_SELECTED_QUIZZES_IDS",
+        payload: selectedQuizzesIds.filter((id) => id !== quizId),
+      });
+    } else {
+      dispatch({
+        type: "SET_SELECTED_QUIZZES_IDS",
+        payload: [...selectedQuizzesIds, quizId],
+      });
+    }
+  };
+  const toggleSelectAll = () => {
+    if (selectedQuizzesIds.length === quizzes.length) {
+      dispatch({ type: "SET_SELECTED_QUIZZES_IDS", payload: [] });
+    } else {
+      dispatch({
+        type: "SET_SELECTED_QUIZZES_IDS",
+        payload: quizzes.map((quiz) => quiz.id),
       });
     }
   };
@@ -170,7 +263,11 @@ export const DashboardProvider = ({
         quizzes,
         folderWithQuizzes,
         createQuiz,
-        createFolder
+        createFolder,
+        toggleQuizSelection,
+        deleteQuizzess,
+        duplicateQuiz,
+        toggleSelectAll,
       }}
     >
       {children}

@@ -16,15 +16,15 @@ datasource db {
 }
 
 model User {
-  id               String    @id @default(cuid())
-  name             String?
-  email            String    @unique
-  emailVerified    DateTime?
-  image            String?
-  username         String?   @unique
-  createdAt        DateTime  @default(now())
-  updatedAt        DateTime  @updatedAt
-  password         String?
+  id            String          @id @default(cuid())
+  name          String?
+  email         String          @unique
+  emailVerified DateTime?
+  image         String?
+  username      String?         @unique
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  password      String?
   accounts      Account[]
   Authenticator Authenticator[]
   folders       Folder[]
@@ -122,7 +122,7 @@ model Rate {
 
 model Bookmark {
   id     String @id @default(cuid())
-  quiz   Quiz   @relation(fields: [quizId], references: [id])
+  quiz   Quiz   @relation(fields: [quizId], references: [id] , onDelete: Cascade)
   quizId String
   user   User   @relation(fields: [userId], references: [id])
   userId String
@@ -140,7 +140,7 @@ model QuizProgress {
   lastUpdated       DateTime  @updatedAt // Time of the last update to the progress
   playQuizQuestions Json[]
   user              User      @relation(fields: [userId], references: [id])
-  quiz              Quiz      @relation(fields: [quizId], references: [id])
+  quiz              Quiz      @relation(fields: [quizId], references: [id], onDelete: Cascade)
 
   @@unique([userId, quizId]) // Ensures only one progress record per quiz per user
 }
@@ -165,10 +165,10 @@ model Account {
 }
 
 model VerificationToken {
-  id       String           @id @default(cuid())
-  email    String
-  token    String
-  expires  DateTime
+  id      String   @id @default(cuid())
+  email   String
+  token   String
+  expires DateTime
 
   @@unique([email, token]) // Ensure uniqueness for email, token, and type
 }

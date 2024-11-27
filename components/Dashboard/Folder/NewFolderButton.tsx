@@ -36,8 +36,8 @@ type NewQuizButtonProps = ButtonProps & {
 };
 
 export default function NewFolderButton({
+  children,
   parentId = null,
-  className,
   ...props
 }: NewQuizButtonProps) {
   const {
@@ -55,6 +55,8 @@ export default function NewFolderButton({
 
   const onSumbit = async (values: folderSchemaType) => {
     createFolder({ pathname: "/dashboard", parentId, title: values.title });
+    form.reset();
+    dispatch({ type: "SET_IS_NEW_FOLDER_DIALOG_OPEN", payload: false });
   };
 
   return (
@@ -65,14 +67,7 @@ export default function NewFolderButton({
       }
     >
       <DialogTrigger asChild>
-        <Button
-          size="sm"
-          className={cn("rounded-xl items-center gap-1 bg-white hover:bg-white hover:scale-[1.02] transition-transform text-foreground text-xs", className)}
-          {...props}
-        >
-          <Icons.folderPlus className="w-4 h-4 fill-primary stroke-transparent " />
-          new Folder
-        </Button>
+        <Button {...props}>{children}</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>

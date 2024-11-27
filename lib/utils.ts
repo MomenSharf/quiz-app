@@ -1,7 +1,9 @@
+import { SORT_OPTIONS } from "@/constants";
+import { SortOption } from "@/types";
 import { type ClassValue, clsx } from "clsx";
 import { formatDistanceToNow } from "date-fns";
 
-import qs from "query-string";
+import { intervalToDuration } from "date-fns";
 import { twMerge } from "tailwind-merge";
 
 export function formatTimeAgo(date: Date | string): string {
@@ -19,7 +21,7 @@ export function cn(...inputs: ClassValue[]) {
 export const convertFileToUrl = (file: File) => URL.createObjectURL(file);
 
 export function toCapitalize(str: string) {
-  if (!str || typeof str !== 'string') return '';
+  if (!str || typeof str !== "string") return "";
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
@@ -32,15 +34,13 @@ export function shuffleArray(array: any[]): any[] {
   return newArray; // Return the shuffled copy
 }
 
-import { formatDuration, intervalToDuration } from "date-fns";
-
 // Utility function to format milliseconds as "Xmin Ys"
 export const formatToMinSec = (time: number) => {
-  const end = time < 1000 ? 1000 : time
-  const duration = intervalToDuration({ start: 0, end  });
+  const end = time < 1000 ? 1000 : time;
+  const duration = intervalToDuration({ start: 0, end });
 
-  const minutes = duration.minutes ? `${duration.minutes}min` : '';
-  const seconds = duration.seconds ? `${duration.seconds}s` : '';
+  const minutes = duration.minutes ? `${duration.minutes}min` : "";
+  const seconds = duration.seconds ? `${duration.seconds}s` : "";
 
   // Return formatted string with proper spacing
   return `${minutes} ${seconds}`.trim();
@@ -49,3 +49,8 @@ export const formatToMinSec = (time: number) => {
 export function generateVerificationCode() {
   return Math.floor(100000 + Math.random() * 900000).toString();
 }
+
+// Function that takes a SortOption and returns the correct sorting logic
+export const isValidSortOption = (value: unknown): value is SortOption => {
+  return SORT_OPTIONS.includes(value as SortOption);
+};

@@ -6,22 +6,40 @@ import { formatTimeAgo } from "@/lib/utils";
 import { DashboardFoldersWithQuiz, DashboardQuiz } from "@/types";
 import { Edit, EllipsisVertical, Layers } from "lucide-react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import React from "react";
+import { useDashboardContext } from "@/components/Dashboard/Context";
+import QuizMenu from "./Quiz/QuizMenu";
 
 export default function DataCard({
   data,
 }: {
   data: DashboardQuiz | DashboardFoldersWithQuiz;
 }) {
+  const {
+    state: { selectedQuizzesIds },
+    toggleQuizSelection,
+  } = useDashboardContext();
+  const router = useRouter();
   const isFolder = "parentId" in data;
   return (
     <tr className="bg-white p-3 rounded-lg mb-3">
       <td className="p-2 pr-0 rounded-tl-md rounded-bl-md">
-        {!isFolder && <Checkbox id="terms" />}
+        <div className="flex justify-center items-center">
+          {!isFolder && (
+            <Checkbox
+              checked={selectedQuizzesIds.includes(data.id)}
+              onClick={() => toggleQuizSelection(data.id)}
+            />
+          )}
+        </div>
       </td>
 
-      <td className="w-full flex justify-start gap-2 p-2">
-        <div className="flex flex-col rounded-md overflow-hidden">
+      <td className="max-w-full flex justify-start gap-2 p-2">
+        <div
+          className="flex flex-col rounded-md overflow-hidden cursor-pointer"
+          onClick={() => router.push(`/quiz/${data.id}`)}
+        >
           {!isFolder ? (
             data.image && data.image.url ? (
               <Image
@@ -36,18 +54,24 @@ export default function DataCard({
                 className="rounded-md"
               />
             ) : (
-              <div className="w-[100px] h-[75px] flex justify-center items-center object-contain rounded-md overflow-hidden min-w-16 sm:min-w-20 bg-[hsl(var(--primary)_/_10%)] ">
+              <div className="w-[80px] h-[60px] sm:w-[100px] sm:h-[75px] flex justify-center items-center object-contain rounded-md overflow-hidden min-w-16 sm:min-w-20 bg-[hsl(var(--primary)_/_10%)] ">
                 <Icons.quizzes className="w-7 h-7 fill-primary" />
               </div>
             )
           ) : (
-            <div className="w-[100px] h-[75px] flex justify-center items-center object-contain rounded-md overflow-hidden min-w-16 sm:min-w-20 bg-[hsl(var(--primary)_/_10%)] ">
+            <div className="w-[80px] h-[60px] sm:w-[100px] sm:h-[75px] flex justify-center items-center object-contain rounded-md overflow-hidden min-w-16 sm:min-w-20 bg-[hsl(var(--primary)_/_10%)] ">
               <Icons.folder className="w-7 h-7 fill-primary" />
             </div>
           )}
         </div>
         <div className="flex flex-col gap-1 justify-center">
-          <p className="truncate font-medium">{data.title}</p>
+          <p
+            className="truncate max-w-44 sm:max-w-60  font-medium cursor-pointer hover:text-primary transition-colors text-xs sm:text-base"
+            onClick={() => router.push(`/quiz/${data.id}`)}
+            title={data.title}
+          >
+            {data.title}
+          </p>
           <div className="flex gap-1">
             {isFolder ? (
               <Badge className="bg-primary/30 hover:bg-primary/30 text-primary items-center gap-0.5">
@@ -72,19 +96,36 @@ export default function DataCard({
       <td className="hidden sm:table-cell p-2">
         {!isFolder && (
           <div className="flex gap-2 justify-center">
-            <Button size="icon" className="">
+            <Button
+              size="icon"
+              className=""
+              onClick={() => router.push(`/play/${data.id}`)}
+            >
               <Icons.play className="w-4 h-4 fill-white" />
             </Button>
-            <Button size="icon" variant="outline">
+            <Button
+              size="icon"
+              variant="outline"
+              onClick={() => router.push(`/editor/${data.id}`)}
+            >
               <Edit className="w-4 h-4" />
             </Button>
           </div>
         )}
       </td>
       <td className="p-2 rounded-tr-md rounded-br-md">
-        <Button size="icon" variant="ghost" className="p-0 w-4">
-          <EllipsisVertical className="w-4 h-4" />
-        </Button>
+        <div className="flex justify-center items-center">
+
+        {isFolder ? (
+          <Button size="icon" variant="ghost" className="p-0 w-4">
+            <EllipsisVertical className="w-4 h-4" />
+          </Button>
+        ) : (
+          <QuizMenu pathname="/dashboard" quiz={data} className="p-0 w-4" size="icon" variant="ghost" contentPostionClasses="right-5">
+            <EllipsisVertical className="w-4 h-4" />
+          </QuizMenu>
+        )}
+        </div>
       </td>
     </tr>
   );

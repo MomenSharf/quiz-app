@@ -1,4 +1,5 @@
 import { Icons } from "@/components/icons";
+import { SortOption } from "@/types";
 import { THEME_COLORS as colorsType } from "@/types/theme";
 import { Category, QuestionType } from "@prisma/client";
 import { LucideProps } from "lucide-react";
@@ -6,6 +7,24 @@ import { BookOpen, Cpu, Calendar, Globe, PenTool, Code, Heart, Layers, User, Lig
 
 
 export const UNSAVED_ID_PREFIX = "unsaved-";
+
+export const SORT_OPTIONS: SortOption[] = [
+  "alphabetical",
+  "reverseAlphabetical",
+  "recentUpdate",
+  "recentCreate",
+  "oldestCreate",
+  "oldestUpdate",
+];
+
+export const SORT_OPTIONS_WITH_LABEL: {value: SortOption, label: string}[] = [
+  { value: "alphabetical", label: "Alphabetical" },
+  { value: "reverseAlphabetical", label: "Reverse Alphabetical" },
+  { value: "recentUpdate", label: "Recently Updated" },
+  { value: "recentCreate", label: "Recently Created" },
+  { value: "oldestCreate", label: "Oldest Created" },
+  { value: "oldestUpdate", label: "Oldest Updated" }
+]
 
 export const COLORS: colorsType[] = [
   "zinc",

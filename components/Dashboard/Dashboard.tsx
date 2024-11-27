@@ -4,6 +4,7 @@ import EmptyDashboard from './EmptyDashboard'
 import Header from './Header'
 import { Separator } from '../ui/separator'
 import Table from './Table'
+import Toolbar from './Toolbar'
 
 export default function Dashboard() {
 
@@ -16,6 +17,7 @@ export default function Dashboard() {
     <div className='flex flex-col gap-5 p-3 w-full'>
       <Header />
       <Separator />
+      <Toolbar />
       <Table />
     </div>
   )

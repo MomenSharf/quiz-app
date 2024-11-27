@@ -3,6 +3,14 @@ import { Prisma } from "@prisma/client";
 
 export type QuestionType = (typeof QUESTION_TYPES)[number];
 
+export type SortOption = 
+  | "alphabetical" 
+  | "reverseAlphabetical" 
+  | "recentUpdate" 
+  | "recentCreate" 
+  | "oldestCreate"
+  | "oldestUpdate";
+
 export type QuizGalleryWithQuestionsCount = Prisma.QuizGetPayload<{
   select: {
     id: true;
