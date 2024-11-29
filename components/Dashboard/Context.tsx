@@ -74,7 +74,7 @@ type DashboardContextType = {
     folderId,
     pathname,
   }: {
-    folderId?: string | null;
+    folderId?: string ;
     pathname: string;
   }) => Promise<void>;
   createFolder: ({
@@ -83,7 +83,7 @@ type DashboardContextType = {
     pathname,
   }: {
     title: string;
-    parentId?: string | null;
+    parentId?: string ;
     pathname: string;
   }) => Promise<void>;
   toggleQuizSelection: (quizId: string) => void;
@@ -200,14 +200,16 @@ export const DashboardProvider = ({
 
   const createFolder = async ({
     title,
-    parentId = null,
+    parentId ,
     pathname,
   }: {
     title: string;
-    parentId?: string | null;
+    parentId?: string ;
     pathname: string;
   }) => {
     dispatch({ type: "SET_IS_CREATING_Folder", payload: true });
+    console.log(parentId);
+    
 
     const { success, message } = await newFolder({ title, parentId, pathname });
 
@@ -223,10 +225,10 @@ export const DashboardProvider = ({
     }
   };
   const createQuiz = async ({
-    folderId = null,
+    folderId ,
     pathname,
   }: {
-    folderId?: string | null;
+    folderId?: string ;
     pathname: string;
   }) => {
     dispatch({ type: "SET_IS_CREATING_QUIZ", payload: true });
@@ -285,7 +287,7 @@ export const DashboardProvider = ({
     });
 
     if (success) {
-      toast({ description: "Quiz deleted successfully" });
+      toast({ description: `${ids.length === 1 ? 'Quiz' : 'Quizzes'} deleted successfully` });
     } else {
       toast({
         description: message,

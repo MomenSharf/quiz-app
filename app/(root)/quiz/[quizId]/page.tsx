@@ -8,11 +8,7 @@ export default async function page({
 }: {
   params: { quizId: string };
 }) {
-  const session = await getCurrentUser();
-
-  if (!session) {
-    return redirect("/login");
-  }
+ 
 
   const quiz = await getEditorQuiz(quizId);
 

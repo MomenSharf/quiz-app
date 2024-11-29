@@ -14,15 +14,14 @@ export default function Toolbar() {
   return (
     <div className="flex gap-3 items-center">
       <div className="w-full flex gap-3 items-center">
-        <DeleteQuizButton
+       {selectedQuizzesIds.length !== 0 && <DeleteQuizButton
           pathname="/dashboard"
           className={cn(buttonVariants({size: 'sm', variant: 'destructive'}),"gap-1 text-xs rounded-xl disabled:cursor-not-allowed cursor-pointer")}
-          disabled={selectedQuizzesIds.length === 0}
           ids={selectedQuizzesIds}
         >
           <Trash2 className="w-4 h-4" />
           Delete
-        </DeleteQuizButton>
+        </DeleteQuizButton>}
         {selectedQuizzesIds.length !== 0 && (
           <div className="text-xs text-gray-medium">
             {selectedQuizzesIds.length} selected{" "}

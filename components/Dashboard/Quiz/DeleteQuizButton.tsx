@@ -25,6 +25,7 @@ export default function DeleteQuizButton({
   children,
   pathname,
   ids,
+  disabled,
   ...props
 }: DeleteQuizButtonProps) {
   const {
@@ -35,7 +36,7 @@ export default function DeleteQuizButton({
 
   return (
     <Dialog>
-      <DialogTrigger asChild>
+      <DialogTrigger  asChild>
         <div {...props}>{children}</div>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px] max-h-[85vh]">

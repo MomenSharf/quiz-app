@@ -1,4 +1,4 @@
-import { Trash2 } from "lucide-react";
+import { PenLine, Trash2 } from "lucide-react";
 
 import {
   DropdownMenu,
@@ -17,6 +17,7 @@ import { HTMLProps } from "react";
 import { useDashboardContext } from "../Context";
 import DeleteFolderButton from "./DeleteFolderButton";
 import { buttonVariants } from "@/components/ui/button";
+import RenameFolder from "./RenameFolder";
 
 type FolderMenuProps = HTMLProps<HTMLDivElement> & {
   contentPostionClasses?: string;
@@ -31,15 +32,8 @@ export default function FolderMenu({
   folder,
   ...props
 }: FolderMenuProps) {
-  const {
-    dispatch,
-    state: { isDeletingQuiz, isDuplicatingQuiz, isResettingQuiz },
-    deleteQuizzess,
-    duplicateQuiz,
-    resetQuiz,
-  } = useDashboardContext();
 
-  const router = useRouter();
+
 
   const shareLink = async () => {
     const searchUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/${folder.id}`;
@@ -66,22 +60,21 @@ export default function FolderMenu({
       <DropdownMenuContent
         className={cn(contentPostionClasses, "relative w-40 text-gray-medium cursor-pointer")}
       >
-        <DropdownMenuLabel className="text-gray-dark text-normal">
+        <DropdownMenuLabel className="text-gray-dark">
           {folder.title}
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-            {/* <RenameFolder quizId={quiz.id} className="w-full flex gap-2">
-              <PenLine className="w-4 h-4" />
-              <span className="font-semibold">Rename</span>
-            </RenameFolder> */}
+            <RenameFolder folderId={folder.id} className="w-full flex gap-2">
+              <PenLine className="w-5 h-5" />
+              <span className="font-semibold text-base">Rename</span>
+            </RenameFolder>
           </DropdownMenuItem>
         </DropdownMenuGroup>
-        <DropdownMenuGroup></DropdownMenuGroup>
         <DropdownMenuGroup>
           <DropdownMenuItem
-            className="p-0 py-1 transition-all"
+            className="p-0 transition-all"
             onClick={(e) => {
               e.preventDefault();
             }}
@@ -91,10 +84,10 @@ export default function FolderMenu({
               folderId={folder.id}
               className={cn(
                 buttonVariants({ size: "sm" , variant: "ghost"}),
-                " gap-1 w-full text-gray-extra-dark hover:text-white hover:bg-destructive transition-colors"
+                " gap-1 justify-start text-base w-full text-destructive hover:text-white hover:bg-destructive transition-colors"
               )}
             >
-              <Trash2 className="w-4 h-4" />
+              <Trash2 className="w-5 h-5" />
               Delete
             </DeleteFolderButton>
           </DropdownMenuItem>

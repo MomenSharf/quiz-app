@@ -29,7 +29,7 @@ export default function Table() {
               </div>
             </th>
             <th className="px-3">Name</th>
-            <th className="w-40 px-2">Last Updated</th>
+            <th className="w-40 hidden lg:table-cell px-2">Last Updated</th>
             <th className="w-40 hidden lg:table-cell px-2">Created At</th>
             <th className="w-40 px-2"></th>
             <th className="w-3 px-2"></th>

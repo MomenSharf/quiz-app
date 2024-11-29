@@ -3,9 +3,13 @@
 import { db } from "@/lib/db";
 import { getCurrentUser } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
-import { SortOption } from "@/types";
+import { FolderPathSegment, SortOption } from "@/types";
 
-export const getDashboardQuizzes = async (sortOption: SortOption) => {
+// Get
+export const getDashboardQuizzes = async (
+  sortOption: SortOption,
+  folderId?: string
+) => {
   const session = await getCurrentUser();
 
   if (!session) {
@@ -24,7 +28,7 @@ export const getDashboardQuizzes = async (sortOption: SortOption) => {
     const orderBy = orderByMap[sortOption];
 
     const quizzes = await db.quiz.findMany({
-      where: { userId: session.user.id, folderId: null },
+      where: { userId: session.user.id, folderId },
       include: {
         image: true,
         _count: {
@@ -35,6 +39,12 @@ export const getDashboardQuizzes = async (sortOption: SortOption) => {
       },
       orderBy: orderBy,
     });
+    if(!quizzes) {
+      return {
+        success: false,
+        message: "Failed to fetch quizzes. Please try again later.",
+      };
+    }
     return { success: true, quizzes };
   } catch (error) {
     return {
@@ -43,8 +53,10 @@ export const getDashboardQuizzes = async (sortOption: SortOption) => {
     };
   }
 };
+
 export const getDashboardFoldersWithQuizzes = async (
-  sortOption: SortOption
+  sortOption: SortOption,
+  parentId?: string
 ) => {
   const session = await getCurrentUser();
 
@@ -63,7 +75,53 @@ export const getDashboardFoldersWithQuizzes = async (
 
     const orderBy = orderByMap[sortOption];
     const folderWithQuizzes = await db.folder.findMany({
-      where: { userId: session.user.id },
+      where: { userId: session.user.id, parentId: parentId || null },
+      include: {
+        _count: {
+          select: {
+            quizzes: true,
+            subfolders: true,
+          },
+        },
+      },
+      orderBy: orderBy,
+    });
+    if(!folderWithQuizzes) {
+      return {
+        success: false,
+        message: "Failed to fetch folders. Please try again later.",
+      };
+    }
+    return { success: true, folderWithQuizzes };
+  } catch (error) {
+    return {
+      success: false,
+      message: "Failed to fetch folders. Please try again later.",
+    };
+  }
+};
+export const getDashboardFolder = async (
+  sortOption: SortOption,
+  folderId?: string
+) => {
+  const session = await getCurrentUser();
+
+  if (!session) {
+    return { success: false, message: "Unauthorized: User is not logged in." };
+  }
+  try {
+    const orderByMap: Record<SortOption, Record<string, string>> = {
+      alphabetical: { title: "asc" },
+      reverseAlphabetical: { title: "desc" },
+      recentUpdate: { updatedAt: "desc" },
+      recentCreate: { createdAt: "desc" },
+      oldestCreate: { createdAt: "asc" },
+      oldestUpdate: { updatedAt: "asc" },
+    };
+
+    const orderBy = orderByMap[sortOption];
+    const folder = await db.folder.findFirst({
+      where: { userId: session.user.id, id: folderId },
       include: {
         _count: {
           select: {
@@ -79,24 +137,137 @@ export const getDashboardFoldersWithQuizzes = async (
               },
             },
           },
+          orderBy: orderBy,
+        },
+        subfolders: {
+          include: {
+            _count: {
+              select: {
+                subfolders: true,
+                quizzes: true
+              },
+            },
+          },
+          orderBy: orderBy,
         },
       },
-      orderBy: orderBy,
     });
-    return { success: true, folderWithQuizzes };
+    if(!folder) {
+      return {
+        success: false,
+        message: "Failed to fetch folder. Please try again later.",
+      }
+    }
+    return { success: true, folder };
   } catch (error) {
     return {
       success: false,
-      message: "Failed to fetch folders. Please try again later.",
+      message: "Failed to fetch folder. Please try again later.",
     };
   }
 };
 
+export async function getFolderPath(folderId?: string): Promise<{
+  success: boolean;
+  message: string;
+  path?: FolderPathSegment[];
+}> {
+  try {
+    const folder = await db.folder.findUnique({
+      where: { id: folderId },
+      include: { parent: true }, // Include the parent folder for recursion
+    });
+
+    if (!folder) {
+      return {
+        success: false,
+        message: `Folder with ID ${folderId} not found.`,
+      };
+    }
+
+    if (!folder.parentId) {
+      // Base case: if the folder has no parent, return it as the root
+      return {
+        success: true,
+        message: "Folder path fetched successfully.",
+        path: [{ id: folder.id, title: folder.title }],
+      };
+    }
+
+    // Recursive case: Get the parent's path and append the current folder
+    const parentResponse = await getFolderPath(folder.parentId);
+
+    if (!parentResponse.success) {
+      return parentResponse; // Return the error response if the parent retrieval fails
+    }
+
+    return {
+      success: true,
+      message: "Folder path fetched successfully.",
+      path: [...parentResponse.path!, { id: folder.id, title: folder.title }],
+    };
+  } catch (error) {
+    console.error(error);
+    return {
+      success: false,
+      message: "An error occurred while fetching the folder path.",
+    };
+  }
+}
+// export async function getFolder(folderId?: string): Promise<{
+//   success: boolean;
+//   message: string;
+//   path?: FolderPathSegment[];
+// }> {
+//   try {
+//     const folder = await db.folder.findUnique({
+//       where: { id: folderId },
+//       include: { parent: true }, // Include the parent folder for recursion
+//     });
+
+//     if (!folder) {
+//       return {
+//         success: false,
+//         message: `Folder with ID ${folderId} not found.`,
+//       };
+//     }
+
+//     if (!folder.parentId) {
+//       // Base case: if the folder has no parent, return it as the root
+//       return {
+//         success: true,
+//         message: "Folder path fetched successfully.",
+//         path: [{ id: folder.id, title: folder.title }],
+//       };
+//     }
+
+//     // Recursive case: Get the parent's path and append the current folder
+//     const parentResponse = await getFolderPath(folder.parentId);
+
+//     if (!parentResponse.success) {
+//       return parentResponse; // Return the error response if the parent retrieval fails
+//     }
+
+//     return {
+//       success: true,
+//       message: "Folder path fetched successfully.",
+//       path: [...parentResponse.path!, { id: folder.id, title: folder.title }],
+//     };
+//   } catch (error) {
+//     console.error(error);
+//     return {
+//       success: false,
+//       message: "An error occurred while fetching the folder .",
+//     };
+//   }
+// }
+
+// Create
 export const newQuiz = async ({
-  folderId = null,
+  folderId,
   pathname,
 }: {
-  folderId: string | null;
+  folderId?: string;
   pathname: string;
 }) => {
   const session = await getCurrentUser();
@@ -134,11 +305,11 @@ export const newQuiz = async ({
 };
 export const newFolder = async ({
   title,
-  parentId = null,
+  parentId,
   pathname,
 }: {
   title: string;
-  parentId: string | null;
+  parentId?: string;
   pathname: string;
 }) => {
   const session = await getCurrentUser();
@@ -166,6 +337,7 @@ export const newFolder = async ({
   }
 };
 
+// duplicate
 export const duplicateQuiz = async ({
   quizId,
   pathname,
@@ -240,6 +412,8 @@ export const duplicateQuiz = async ({
     };
   }
 };
+
+// Delete
 export const deleteQuizzes = async ({
   quizzesIds,
   pathname,
@@ -266,7 +440,6 @@ export const deleteQuizzes = async ({
 
     return { success: true, quizzes };
   } catch (error) {
-
     return {
       success: false,
       message: `Failed to delete ${
@@ -299,13 +472,14 @@ export const deleteFolder = async ({
 
     return { success: true, folder };
   } catch (error) {
-
     return {
       success: false,
       message: `Failed to delete folder, Please try again later.`,
     };
   }
 };
+
+// Rename
 export const renameQuiz = async ({
   pathname,
   quizId,
@@ -327,7 +501,6 @@ export const renameQuiz = async ({
       },
       data: {
         title: newTitle,
-        
       },
     });
 
@@ -362,7 +535,6 @@ export const renameFolder = async ({
       },
       data: {
         title: newTitle,
-        
       },
     });
 
@@ -378,6 +550,8 @@ export const renameFolder = async ({
     };
   }
 };
+
+// Reset
 export const resetQuiz = async ({
   quizId,
   pathname,
@@ -409,11 +583,9 @@ export const resetQuiz = async ({
 
     return { success: true, quiz };
   } catch (error) {
-
     return {
       success: false,
       message: `Failed to reset Quiz. Please try again later.`,
     };
   }
 };
-

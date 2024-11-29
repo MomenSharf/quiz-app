@@ -11,6 +11,8 @@ import React from "react";
 import { useDashboardContext } from "@/components/Dashboard/Context";
 import QuizMenu from "./Quiz/QuizMenu";
 import FolderMenu from "./Folder/FolderMenu";
+import QuizDrawer from "./Quiz/QuizDrawer";
+import FolderDrawer from "./Folder/FolderDrawer";
 
 export default function DataCard({
   data,
@@ -23,6 +25,7 @@ export default function DataCard({
   } = useDashboardContext();
   const router = useRouter();
   const isFolder = "parentId" in data;
+  const dataPath = `/${isFolder ? 'dashboard/folders' : 'quiz'}/${data.id}`
   return (
     <tr className="bg-white p-3 rounded-lg mb-3">
       <td className="p-2 pr-0 rounded-tl-md rounded-bl-md">
@@ -36,10 +39,10 @@ export default function DataCard({
         </div>
       </td>
 
-      <td className="max-w-full flex justify-start gap-2 p-2">
+      <td className="w-full flex justify-start gap-2 p-2">
         <div
           className="flex flex-col rounded-md overflow-hidden cursor-pointer"
-          onClick={() => router.push(`/quiz/${data.id}`)}
+          onClick={() => router.push(dataPath)}
         >
           {!isFolder ? (
             data.image && data.image.url ? (
@@ -67,18 +70,25 @@ export default function DataCard({
         </div>
         <div className="flex flex-col gap-1 justify-center">
           <p
-            className="truncate max-w-44 sm:max-w-60  font-medium cursor-pointer hover:text-primary transition-colors text-xs sm:text-base"
-            onClick={() => router.push(`/quiz/${data.id}`)}
+            className="truncate  sm:max-w-60  font-medium cursor-pointer hover:text-primary transition-colors text-xs sm:text-base"
+            onClick={() => router.push(dataPath)}
             title={data.title}
           >
             {data.title}
           </p>
           <div className="flex gap-1">
             {isFolder ? (
+              <div className="flex gap-1">
+
               <Badge className="bg-primary/30 hover:bg-primary/30 text-primary items-center gap-0.5">
                 <Icons.quizzes className="w-3 h-3 fill-primary" />
                 {data._count.quizzes} Quizzes
               </Badge>
+              <Badge className="bg-primary/30 hover:bg-primary/30 text-primary items-center gap-0.5">
+                <Icons.folder className="w-3 h-3 fill-primary" />
+                {data._count.subfolders} Folder
+              </Badge>
+              </div>
             ) : (
               <Badge className="bg-primary/30 hover:bg-primary/30 text-primary items-center gap-0.5">
                 <Layers className="w-3 h-3 text-primary" />
@@ -88,7 +98,7 @@ export default function DataCard({
           </div>
         </div>
       </td>
-      <td className="hidden sm:table-cell p-2">
+      <td className="hidden lg:table-cell p-2">
         <p className="max-w-40 truncate">{formatTimeAgo(data.updatedAt)}</p>
       </td>
       <td className="hidden lg:table-cell truncate p-2">
@@ -117,22 +127,43 @@ export default function DataCard({
       <td className="p-2 rounded-tr-md rounded-br-md">
         <div className="flex justify-center items-center">
           {isFolder ? (
-            <FolderMenu
-              pathname="/dashboard"
-              folder={data}
-              className="p-0 w-4"
-            >
-              <EllipsisVertical className="w-4 h-4" />
-            </FolderMenu>
+            <>
+              <div className="hidden sm:block">
+                <FolderMenu
+                  pathname="/dashboard"
+                  folder={data}
+                  className="p-0 w-4"
+                >
+                  <EllipsisVertical className="w-4 h-4" />
+                </FolderMenu>
+              </div>
+              <div className="sm:hidden">
+                <FolderDrawer
+                  pathname="/dashboard"
+                  folder={data}
+                  className="p-0 w-4"
+                >
+                  <EllipsisVertical className="w-4 h-4" />
+                </FolderDrawer>
+              </div>
+            </>
           ) : (
-            <QuizMenu
-              pathname="/dashboard"
-              quiz={data}
-              className="p-0 w-4"
-              contentPostionClasses="right-5"
-            >
-              <EllipsisVertical className="w-4 h-4" />
-            </QuizMenu>
+            <>
+              <div className="hidden sm:block">
+                <QuizMenu pathname="/dashboard" quiz={data} className="p-0 w-4">
+                  <EllipsisVertical className="w-4 h-4" />
+                </QuizMenu>
+              </div>
+              <div className="sm:hidden">
+                <QuizDrawer
+                  pathname="/dashboard"
+                  quiz={data}
+                  className="p-0 w-4"
+                >
+                  <EllipsisVertical className="w-4 h-4" />
+                </QuizDrawer>
+              </div>
+            </>
           )}
         </div>
       </td>

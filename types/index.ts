@@ -3,11 +3,11 @@ import { Prisma } from "@prisma/client";
 
 export type QuestionType = (typeof QUESTION_TYPES)[number];
 
-export type SortOption = 
-  | "alphabetical" 
-  | "reverseAlphabetical" 
-  | "recentUpdate" 
-  | "recentCreate" 
+export type SortOption =
+  | "alphabetical"
+  | "reverseAlphabetical"
+  | "recentUpdate"
+  | "recentCreate"
   | "oldestCreate"
   | "oldestUpdate";
 
@@ -405,6 +405,16 @@ export type DashboardFoldersWithQuiz = Prisma.FolderGetPayload<{
     _count: {
       select: {
         quizzes: true;
+        subfolders: true;
+      };
+    };
+  };
+}>;
+export type DashboardFolder = Prisma.FolderGetPayload<{
+  include: {
+    _count: {
+      select: {
+        quizzes: true;
       };
     };
     quizzes: {
@@ -413,6 +423,16 @@ export type DashboardFoldersWithQuiz = Prisma.FolderGetPayload<{
         _count: {
           select: {
             questions: true;
+          };
+        };
+      };
+    };
+    subfolders: {
+      include: {
+        _count: {
+          select: {
+            subfolders: true;
+            quizzes: true
           };
         };
       };

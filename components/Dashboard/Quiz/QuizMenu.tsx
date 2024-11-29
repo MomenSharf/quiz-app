@@ -20,7 +20,7 @@ import {
 import { cn } from "@/lib/utils";
 import { Quiz } from "@prisma/client";
 import DeleteQuizButton from "./DeleteQuizButton";
-import { HTMLProps, MouseEvent, ReactNode, useState } from "react";
+import { HTMLProps, MouseEvent, ReactNode, useRef, useState } from "react";
 import { toast } from "@/components/ui/use-toast";
 import { newQuiz } from "@/lib/actions/quiz.actions";
 import { usePathname, useRouter } from "next/navigation";
@@ -31,7 +31,6 @@ import { useDashboardContext } from "../Context";
 import RenameQuiz from "./RenameQuiz";
 
 type QuizMenuProps = HTMLProps<HTMLDivElement> & {
-  contentPostionClasses?: string;
   pathname: string;
   quiz: DashboardQuiz;
 };
@@ -39,14 +38,11 @@ type QuizMenuProps = HTMLProps<HTMLDivElement> & {
 export default function QuizMenu({
   children,
   pathname,
-  contentPostionClasses,
   quiz,
   ...props
 }: QuizMenuProps) {
   const {
-    dispatch,
-    state: { isDeletingQuiz, isDuplicatingQuiz, isResettingQuiz },
-    deleteQuizzess,
+    state: { isDuplicatingQuiz, isResettingQuiz },
     duplicateQuiz,
     resetQuiz,
   } = useDashboardContext();
@@ -54,7 +50,7 @@ export default function QuizMenu({
   const router = useRouter();
 
   const shareLink = async () => {
-    const searchUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/play/${quiz.id}`;
+    const searchUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/quiz/${quiz.id}`;
 
     if (navigator.share) {
       try {
@@ -76,7 +72,7 @@ export default function QuizMenu({
         <div {...props}>{children}</div>
       </DropdownMenuTrigger>
       <DropdownMenuContent
-        className={cn(contentPostionClasses, "relative w-40 text-gray-medium cursor-pointer")}
+        className= "relative w-40 text-gray-medium cursor-pointer"
       >
         <DropdownMenuLabel className="text-gray-dark text-normal">
           {quiz.title}
@@ -95,7 +91,7 @@ export default function QuizMenu({
             onSelect={() => router.push(`/play/${quiz.id}`)}
           >
             <Edit className="w-4 h-4 " />
-            <span className="font-semibold">edit</span>
+            <span className="font-semibold">Edit</span>
           </DropdownMenuItem>
           <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
             <RenameQuiz quizId={quiz.id} className="w-full flex gap-2">
@@ -142,17 +138,17 @@ export default function QuizMenu({
         </DropdownMenuGroup>
         <DropdownMenuGroup>
           <DropdownMenuItem
-            className="p-0 py-1 transition-all"
+            className="p-0 transition-all"
             onClick={(e) => {
               e.preventDefault();
             }}
           >
             <DeleteQuizButton
               pathname={pathname}
-              className={cn(buttonVariants({variant: 'ghost', size: 'sm'}),"gap-1 w-full text-gray-extra-dark hover:text-white hover:bg-destructive")}
+              className={cn(buttonVariants({variant: 'ghost', size: 'sm'}),"gap-1 justify-start text-base w-full text-destructive hover:text-white hover:bg-destructive")}
               ids={[quiz.id]}
             >
-              <Trash2 className="w-4 h-4" />
+              <Trash2 className="w-5 h-5" />
               Delete
             </DeleteQuizButton>
           </DropdownMenuItem>

@@ -32,12 +32,12 @@ import { useDashboardContext } from "../Context";
 import Loader from "@/components/Layout/Loader";
 
 type NewFolderButtonProps = HTMLProps<HTMLDivElement> & {
-  parentId?: string | null;
+  parentId?: string ;
 };
 
 export default function NewFolderButton({
   children,
-  parentId = null,
+  parentId ,
   ...props
 }: NewFolderButtonProps) {
   const dialogCloseRef = useRef<HTMLButtonElement | null>(null);

@@ -1,18 +1,20 @@
 import DashboardProvider from "@/components/Dashboard/DashboardProvider";
 import {
+  getDashboardFolder,
   getDashboardFoldersWithQuizzes,
   getDashboardQuizzes,
+  getFolderPath,
 } from "@/lib/actions/dashboard";
 
 import { getCurrentUser } from "@/lib/auth";
 import { isValidSortOption } from "@/lib/utils";
-import { SortOption } from "@/types";
 import { redirect } from "next/navigation";
-import React from "react";
 
 export default async function page({
+  params: { folderId },
   searchParams,
 }: {
+  params: { folderId: string | undefined };
   searchParams: { [key: string]: string | string[] | undefined };
 }) {
   const session = await getCurrentUser();
@@ -24,31 +26,31 @@ export default async function page({
   const sortBy = isValidSortOption(searchParams.sortBy)
     ? searchParams.sortBy
     : "recentUpdate";
+  console.log(folderId);
 
-  const [quizzesResult, foldersResult] = await Promise.all([
-    getDashboardQuizzes(sortBy),
-    getDashboardFoldersWithQuizzes(sortBy),
+  const [folderResult, folderPathResult] = await Promise.all([
+    getDashboardFolder(sortBy, folderId),
+    getFolderPath(folderId),
   ]);
 
-  const { success: quizzesSuccess, quizzes } = quizzesResult;
-  const { success: folderWithQuizzesSuccess, folderWithQuizzes } =
-    foldersResult;
+  const { success: folderSuccess, folder } = folderResult
+  const { success: folderPathSuccess, path } = folderPathResult;
 
-  if (
-    !quizzesSuccess ||
-    !folderWithQuizzesSuccess ||
-    !quizzes ||
-    !folderWithQuizzes
-  ) {
+
+
+  if(!folderSuccess || !folder) {
     return <div>Failed to load dashboard folders and quizzes</div>;
+folder
   }
 
   return (
     <div className="flex w-full h-full">
       <DashboardProvider
-        quizzes={quizzes}
-        folderWithQuizzes={folderWithQuizzes}
-        title="DASHBOARD"
+        quizzes={folder.quizzes}
+        folderWithQuizzes={folder.subfolders}
+        path={path}
+        folderId={folderId}
+        title={folder.title}
       />
     </div>
   );

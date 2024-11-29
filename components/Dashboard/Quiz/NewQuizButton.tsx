@@ -6,7 +6,11 @@ import { useDashboardContext } from "../Context";
 import { cn } from "@/lib/utils";
 import { Icons } from "@/components/icons";
 
-export default function NewQuizButton({ className, ...props }: ButtonProps) {
+export default function NewQuizButton({
+  folderId,
+  className,
+  ...props
+}: ButtonProps & { folderId?: string }) {
   const {
     state: { isCreatingQuiz },
     createQuiz,
@@ -14,14 +18,21 @@ export default function NewQuizButton({ className, ...props }: ButtonProps) {
   return (
     <Button
       size="sm"
-      className={cn("rounded-xl items-center gap-1  border border-transparent text-xs hover:scale-[1.02] transition-transform", className)}
+      className={cn(
+        "rounded-xl items-center gap-1  border border-transparent text-xs hover:scale-[1.02] transition-transform",
+        className
+      )}
       disabled={isCreatingQuiz}
       onClick={() => {
-        createQuiz({ pathname: "/dashboard" });
+        createQuiz({ pathname: "/dashboard", folderId });
       }}
       {...props}
     >
-      {isCreatingQuiz ? <Loader /> : <Icons.plus className="w-4 h-4 bg-transparent fill-white stroke-white" />}
+      {isCreatingQuiz ? (
+        <Loader />
+      ) : (
+        <Icons.plus className="w-4 h-4 bg-transparent fill-white stroke-white" />
+      )}
       New Quiz
     </Button>
   );
