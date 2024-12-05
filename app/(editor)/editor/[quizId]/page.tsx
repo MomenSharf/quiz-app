@@ -1,5 +1,6 @@
-import Editor from "@/components/Editor/Editor";
-import { getEditorQuiz } from "@/lib/actions/quiz.actions";
+// import Editor from "@/components/Editor2/Editor";
+import EditorProvider from "@/components/Editor/EditorProvider";
+import { getEditorQuiz } from "@/lib/actions/editor";
 import { getCurrentUser } from "@/lib/auth";
 import { notFound, redirect } from "next/navigation";
 import React from "react";
@@ -15,12 +16,12 @@ export default async function page({
     return redirect("/login");
   }
 
-  const quiz = await getEditorQuiz(quizId);
+  const {success, initialQuiz} = await getEditorQuiz({quizId});
 
-  if (!quiz) {
+  if (!initialQuiz) {
     return notFound();
   }
-  
 
-  return <Editor quiz={quiz} />;
+  // return <Editor quiz={quiz} />;
+  return <EditorProvider initialQuiz={initialQuiz} />;
 }

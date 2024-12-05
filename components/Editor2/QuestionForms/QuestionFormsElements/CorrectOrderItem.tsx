@@ -1,10 +1,6 @@
-import { useEditorContext } from "@/components/Editor/EditorContext";
+import { useEditorContext } from "@/components/Editor2/EditorContext";
 import { Button } from "@/components/ui/button";
-import {
-  FormControl,
-  FormField,
-  FormItem
-} from "@/components/ui/form";
+import { FormControl, FormField, FormItem } from "@/components/ui/form";
 import { Input, InputProps } from "@/components/ui/input";
 import {
   Tooltip,

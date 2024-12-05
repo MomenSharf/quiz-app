@@ -1,4 +1,4 @@
-import { useEditorContext } from "@/components/Editor/EditorContext";
+import { useEditorContext } from "@/components/Editor2/EditorContext";
 import {
   FormControl,
   FormField,

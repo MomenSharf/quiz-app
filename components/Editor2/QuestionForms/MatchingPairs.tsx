@@ -1,4 +1,4 @@
-import { useEditorContext } from "@/components/Editor/EditorContext";
+import { useEditorContext } from "@/components/Editor2/EditorContext";
 import { Button } from "@/components/ui/button";
 import {
   FormControl,
@@ -66,8 +66,6 @@ export default function MatchingPairs({
   }, [question, questionIndex, setValue]);
 
   if (question.type !== "MATCHING_PAIRS") return;
-
-  
 
   const paires = question.items;
 

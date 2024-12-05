@@ -11,15 +11,9 @@ export type SortOption =
   | "oldestCreate"
   | "oldestUpdate";
 
-export type QuizGalleryWithQuestionsCount = Prisma.QuizGetPayload<{
-  select: {
-    id: true;
-    title: true;
+export type DashboardQuiz = Prisma.QuizGetPayload<{
+  include: {
     image: true;
-    visibility: true;
-    createdAt: true;
-    updatedAt: true;
-    folderId: true;
     _count: {
       select: {
         questions: true;
@@ -27,8 +21,64 @@ export type QuizGalleryWithQuestionsCount = Prisma.QuizGetPayload<{
     };
   };
 }>;
+export type DashboardFoldersWithQuiz = Prisma.FolderGetPayload<{
+  include: {
+    _count: {
+      select: {
+        quizzes: true;
+        subfolders: true;
+      };
+    };
+  };
+}>;
+export type DashboardFolder = Prisma.FolderGetPayload<{
+  include: {
+    _count: {
+      select: {
+        quizzes: true;
+      };
+    };
+    quizzes: {
+      include: {
+        image: true;
+        _count: {
+          select: {
+            questions: true;
+          };
+        };
+      };
+    };
+    subfolders: {
+      include: {
+        _count: {
+          select: {
+            subfolders: true;
+            quizzes: true;
+          };
+        };
+      };
+    };
+  };
+}>;
+export type FolderPathSegment = {
+  id: string;
+  title: string;
+};
 
 export type EditorQuiz = Prisma.QuizGetPayload<{
+  include: {
+    image: true,    
+    questions: {
+      include: {
+        items: true,
+        image: true,
+      },
+    },
+  }
+}>
+
+
+export type EditorQuiz2 = Prisma.QuizGetPayload<{
   select: {
     id: true;
     title: true;
@@ -66,113 +116,34 @@ export type PlayQuizType = Prisma.QuizProgressGetPayload<{
   };
 }>;
 
-export type gameBoardQuizzes = Prisma.QuizGetPayload<{
-  include: {
-    image: true;
-    questions: true;
-    user: true;
-  };
-}>;
-export type FolderGalleryWithQuizzesCount = Prisma.FolderGetPayload<{
-  select: {
-    id: true;
-    title: true;
-    createdAt: true;
-    updatedAt: true;
-    _count: {
-      select: {
-        quizzes: true;
-      };
-    };
-  };
-}>;
-
-export type FolderPathSegment = {
-  id: string;
-  title: string;
-};
-
-export type UnsplashPhoto = {
-  id: string;
-  created_at: string;
-  updated_at: string;
-  promoted_at?: string;
-  width: number;
-  height: number;
-  color: string;
-  blur_hash: string;
-  description: string | null;
-  alt_description: string | null;
-  urls: {
-    raw: string;
-    full: string;
-    regular: string;
-    small: string;
-    thumb: string;
-    small_s3: string;
-  };
-  links: {
-    self: string;
-    html: string;
-    download: string;
-    download_location: string;
-  };
-  categories: any[];
-  likes: number;
-  liked_by_user: boolean;
-  current_user_collections: any[];
-  sponsorship: any | null;
-  topic_submissions: Record<string, any>;
-  user: {
-    id: string;
-    updated_at: string;
-    username: string;
-    name: string;
-    first_name: string;
-    last_name: string | null;
-    twitter_username: string | null;
-    portfolio_url: string | null;
-    bio: string | null;
-    location: string | null;
-    links: {
-      self: string;
-      html: string;
-      photos: string;
-      likes: string;
-      portfolio: string;
-      following: string;
-      followers: string;
-    };
-    profile_image: {
-      small: string;
-      medium: string;
-      large: string;
-    };
-    instagram_username: string | null;
-    total_collections: number;
-    total_likes: number;
-    total_photos: number;
-    accepted_tos: boolean;
-    for_hire: boolean;
-    social: {
-      instagram_username: string | null;
-      portfolio_url: string | null;
-      twitter_username: string | null;
-      paypal_email?: string | null;
-    };
-  };
-};
-
-export type Photo = {
-  src: string;
-  srcSet?: string | string[];
-  sizes?: string | string[];
-  width: number;
-  height: number;
-  alt?: string;
-  key?: string;
-};
-
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 export type GiphyApiResponse = {
   type: string;
   id: string;
@@ -390,52 +361,83 @@ export type GiphyApiResponse = {
   };
 };
 
-export type DashboardQuiz = Prisma.QuizGetPayload<{
-  include: {
-    image: true;
-    _count: {
-      select: {
-        questions: true;
-      };
+export type UnsplashPhoto = {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  promoted_at?: string;
+  width: number;
+  height: number;
+  color: string;
+  blur_hash: string;
+  description: string | null;
+  alt_description: string | null;
+  urls: {
+    raw: string;
+    full: string;
+    regular: string;
+    small: string;
+    thumb: string;
+    small_s3: string;
+  };
+  links: {
+    self: string;
+    html: string;
+    download: string;
+    download_location: string;
+  };
+  categories: any[];
+  likes: number;
+  liked_by_user: boolean;
+  current_user_collections: any[];
+  sponsorship: any | null;
+  topic_submissions: Record<string, any>;
+  user: {
+    id: string;
+    updated_at: string;
+    username: string;
+    name: string;
+    first_name: string;
+    last_name: string | null;
+    twitter_username: string | null;
+    portfolio_url: string | null;
+    bio: string | null;
+    location: string | null;
+    links: {
+      self: string;
+      html: string;
+      photos: string;
+      likes: string;
+      portfolio: string;
+      following: string;
+      followers: string;
+    };
+    profile_image: {
+      small: string;
+      medium: string;
+      large: string;
+    };
+    instagram_username: string | null;
+    total_collections: number;
+    total_likes: number;
+    total_photos: number;
+    accepted_tos: boolean;
+    for_hire: boolean;
+    social: {
+      instagram_username: string | null;
+      portfolio_url: string | null;
+      twitter_username: string | null;
+      paypal_email?: string | null;
     };
   };
-}>;
-export type DashboardFoldersWithQuiz = Prisma.FolderGetPayload<{
-  include: {
-    _count: {
-      select: {
-        quizzes: true;
-        subfolders: true;
-      };
-    };
-  };
-}>;
-export type DashboardFolder = Prisma.FolderGetPayload<{
-  include: {
-    _count: {
-      select: {
-        quizzes: true;
-      };
-    };
-    quizzes: {
-      include: {
-        image: true;
-        _count: {
-          select: {
-            questions: true;
-          };
-        };
-      };
-    };
-    subfolders: {
-      include: {
-        _count: {
-          select: {
-            subfolders: true;
-            quizzes: true
-          };
-        };
-      };
-    };
-  };
-}>;
+};
+
+export type Photo = {
+  src: string;
+  srcSet?: string | string[];
+  sizes?: string | string[];
+  width: number;
+  height: number;
+  alt?: string;
+  key?: string;
+};

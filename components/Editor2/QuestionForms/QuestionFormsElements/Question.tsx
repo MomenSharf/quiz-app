@@ -7,7 +7,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Textarea, TextareaProps } from "@/components/ui/textarea";
-import { useEditorContext } from "@/components/Editor/EditorContext";
+import { useEditorContext } from "@/components/Editor2/EditorContext";
 import { Input, InputProps } from "@/components/ui/input";
 import {
   Tooltip,
