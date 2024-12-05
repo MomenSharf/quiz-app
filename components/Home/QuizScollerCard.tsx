@@ -66,7 +66,7 @@ export default function QuizzesScrollerCard({
       </div>
       <div className="p-2 pb-4 flex flex-col gap-2">
         <div className="flex items-center gap-1">
-          <UserAvatarImage imageUrl={quiz.user.image} className="w-6 h-6" />
+          {/* <UserAvatarImage imageUrl={quiz.user.image} className="w-6 h-6" /> */}
           <div className="flex flex-col gap-0 w-full">
             <Link
               href={`quiz/${quiz.id}`}
@@ -77,7 +77,7 @@ export default function QuizzesScrollerCard({
               {quiz.title}
             </Link>
             <p className="text-xs text-gray-medium max-w-[75%] truncate">
-              {quiz.user.username}
+              {/* {quiz.user.username} */}
             </p>
           </div>
         </div>

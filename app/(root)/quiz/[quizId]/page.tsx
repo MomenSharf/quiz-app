@@ -16,5 +16,5 @@ export default async function page({
     return notFound();
   }
 
-  return <Quiz quiz={quiz} />;
+  // return <Quiz quiz={quiz} />;
 }

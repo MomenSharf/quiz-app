@@ -48,7 +48,7 @@ export default function QuizCard({ quiz }: { quiz: EditorQuiz }) {
 
   const router = useRouter();
 
-  const isOner = quiz.user.id === sessiom.data?.user.id && false;
+  // const isOner = quiz.user.id === sessiom.data?.user.id && false;
 
   return (
     <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 justify-center p-5 bg-card rounded-xl">
@@ -57,8 +57,8 @@ export default function QuizCard({ quiz }: { quiz: EditorQuiz }) {
         <div className="flex items-center gap-1">
           <UserAvatarImage imageUrl={""} className="w-10 h-10" />
           <span className="text-xs text-gray-dark font-medium">
-            {quiz.user.username?.trim()}{" "}
-            {isOner && <Badge className="font-thin">You</Badge>}
+            {/* {quiz.user.username?.trim()}{" "} */}
+            {/* {isOner && <Badge className="font-thin">You</Badge>} */}
           </span>
         </div>
         <p className="text-lg font-medium truncate">{quiz.title.trim()}</p>
@@ -113,7 +113,7 @@ export default function QuizCard({ quiz }: { quiz: EditorQuiz }) {
           </div>
         </div>
         <div className="flex gap-1">
-          {isOner ? (
+          {/* {isOner ? (
             <Button
               className="group rounded-full hover:bg-destructive"
               size="icon"
@@ -142,7 +142,7 @@ export default function QuizCard({ quiz }: { quiz: EditorQuiz }) {
             <Button className="rounded-full" size="icon" variant="outline">
               <Copy className="w-4 h-4" />
             </Button>
-          )}
+          )} */}
 
           <Button
             className="flex-1 rounded-full max-w-40"

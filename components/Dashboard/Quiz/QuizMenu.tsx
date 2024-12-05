@@ -24,7 +24,7 @@ import { HTMLProps, MouseEvent, ReactNode, useRef, useState } from "react";
 import { toast } from "@/components/ui/use-toast";
 import { newQuiz } from "@/lib/actions/quiz.actions";
 import { usePathname, useRouter } from "next/navigation";
-import { DashboardQuiz, QuizGalleryWithQuestionsCount } from "@/types";
+import { DashboardQuiz,  } from "@/types";
 import { Button, ButtonProps, buttonVariants } from "@/components/ui/button";
 import { Icons } from "@/components/icons";
 import { useDashboardContext } from "../Context";
