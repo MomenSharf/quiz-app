@@ -1,19 +1,9 @@
-import { saveEditorQuiz } from "@/lib/actions/quiz.actions";
+import { saveEditorQuiz as saveEditorQuizServer } from "@/lib/actions/quiz.actions";
 import { mapQuestionByType } from "@/lib/utils";
-import {
-  fillInTheBlankSchema,
-  matchingPairsSchema,
-  pickAnswerSchema,
-  questionOrderSchema,
-  quizSchema,
-  quizSchemaType,
-  shortAnswerSchema,
-  trueFalseSchema,
-  unselectedSchema,
-} from "@/lib/validations/quizSchemas";
+import { quizSchema, quizSchemaType } from "@/lib/validations/quizSchemas";
 import { EditorQuiz } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Category, QuestionType } from "@prisma/client";
+import { Category } from "@prisma/client";
 import React, {
   createContext,
   MutableRefObject,
@@ -25,9 +15,8 @@ import React, {
   useReducer,
   useRef,
 } from "react";
-import { useForm, UseFormReturn } from "react-hook-form";
+import { useForm, UseFormReturn, useWatch } from "react-hook-form";
 import { DebouncedState, useDebouncedCallback } from "use-debounce";
-import { z } from "zod";
 
 type SaveStateType = "GOOD" | "BAD" | "WAITING";
 
@@ -54,8 +43,6 @@ type EditorActions =
     }
   | { type: "SET_CURRENT_QUESTION"; payload: string }
   | { type: "SET_IS_SETTINGS_OPEN"; payload: boolean }
-  // | { type: "SET_IS_UNDO_OR_REDO"; payload: boolean }
-  // | { type: "SET_IS_REORDERED"; payload: boolean }
   | {
       type: "SET_IS_IMAGE_EDITOR_OPEN";
       payload: {
@@ -70,9 +57,6 @@ type EditorContextType = {
   state: EditorState;
   dispatch: React.Dispatch<EditorActions>;
   historyIndex: MutableRefObject<number>;
-  // isUndoOrRedo: MutableRefObject<boolean>;
-  // headerRef: RefObject<HTMLDivElement>;
-  // sidebarRef: RefObject<HTMLDivElement>;
   form: UseFormReturn<quizSchemaType>;
   debounceSaveData: DebouncedState<(isReseting: boolean) => void>;
   redoFunction: () => void;
@@ -131,8 +115,6 @@ export const EditorProvider = ({
   const [state, dispatch] = useReducer(editorReducer, initialState);
   const historyIndex = useRef(0);
   const isUndoOrRedo = useRef(false);
-  // const headerRef = useRef<HTMLDivElement>(null);
-  // const sidebarRef = useRef<HTMLDivElement>(null);
 
   const { historyArray } = state;
 
@@ -157,7 +139,7 @@ export const EditorProvider = ({
     defaultValues: initialValue,
   });
 
-  const { getValues } = form;
+  const { getValues, watch, control } = form;
 
   useEffect(() => {
     dispatch({
@@ -166,14 +148,14 @@ export const EditorProvider = ({
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  const data = getValues()
 
-  const saveEditorQuizFun = useCallback(
+  const saveEditorQuiz = useCallback(
     async (isReseting: boolean) => {
-      const data = getValues();
       try {
         dispatch({ type: "SET_SAVE_SATAT", payload: "WAITING" });
 
-        const prismaQuiz = await saveEditorQuiz(
+        const prismaQuiz = await saveEditorQuizServer(
           initialQuiz.id,
           data,
           "pathname"
@@ -196,10 +178,10 @@ export const EditorProvider = ({
         dispatch({ type: "SET_SAVE_SATAT", payload: "BAD" });
       }
     },
-    [getValues, initialQuiz.id]
+    [data, historyArray, initialQuiz.id]
   );
   const debounceSaveData = useDebouncedCallback((isReseting: boolean) => {
-    saveEditorQuizFun(isReseting);
+    saveEditorQuiz(isReseting);
   }, 1500);
 
   const undoFunction = useCallback(() => {
@@ -220,15 +202,56 @@ export const EditorProvider = ({
     }
   }, [debounceSaveData, form, historyArray]);
 
+  useEffect(() => {
+    dispatch({
+      type: "SET_HISTORY_ARRAY",
+      payload: { quiz: initialValue, historyIndex: historyIndex.current },
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  useEffect(() => {
+    const subscription = watch((_, { name }) => {
+      if (
+        name &&
+        (name === "title" ||
+          name === "description" ||
+          name === "image" ||
+          name === "visibility" ||
+          name === "categories" ||
+          name.startsWith("questions") ||
+          name.startsWith("image"))
+      ) {
+        debounceSaveData(false);
+      }
+    });
+
+    return () => {
+      if (typeof subscription.unsubscribe === "function") {
+        subscription.unsubscribe();
+      }
+    };
+  }, [debounceSaveData, watch, form]);
+
+  useWatch({
+    control,
+    name: "questions",
+  });
+
+  useEffect(() => {
+    dispatch({
+      type: "SET_CURRENT_QUESTION",
+      payload: getValues("questions.0.id"),
+    });
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <EditorContext.Provider
       value={{
         state,
         dispatch,
         historyIndex,
-        // isUndoOrRedo,
-        // headerRef,
-        // sidebarRef,
         form,
         debounceSaveData,
         redoFunction,

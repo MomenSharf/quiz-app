@@ -82,7 +82,7 @@ export default function EditorSidebar() {
             type="button"
             variant="outline"
             onClick={newQuetion}
-            className="py-10 w-full min-w-20 min-h-20 relative hover:border-ring hover:bg-background"
+            className="py-10 w-14 h-14 relative hover:border-ring hover:bg-background"
           >
             <Plus className="w-4 h-4 text-muted-foreground" />
           </Button>

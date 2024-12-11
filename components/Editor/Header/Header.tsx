@@ -1,22 +1,23 @@
+import { Button } from "@/components/ui/button";
+import { FormField, FormItem } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import { revalidatePathInServer } from "@/lib/actions/quiz.actions";
 import { cn } from "@/lib/utils";
 import { ArrowLeft, Eye, Save } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Button } from "../ui/button";
-import { FormField, FormItem } from "../ui/form";
-import { Input } from "../ui/input";
-import { useEditorContext } from "./Context";
-import SaveState from "./Header//SaveState";
-import UndoRedo from "./Header/UndoRedo";
-import { Icons } from "../icons";
+import SaveState from "./SaveState";
+import UndoRedo from "./UndoRedo";
+import { Icons } from "@/components/icons";
+import { useEditorContext } from "../Context";
+
 
 export default function Header() {
   const [isEditingTitle, setIsEditingTitle] = useState(false);
 
   const {
     dispatch,
-    form: { setFocus, control, getValues, setValue, getFieldState },
+    form: { setFocus, control, getValues, setValue, reset },
   } = useEditorContext();
   const router = useRouter();
 
@@ -28,7 +29,7 @@ export default function Header() {
   }, [isEditingTitle]);
 
   return (
-    <header className="flex-shrink-0 flex items-center gap-1 md:gap-2 p-2">
+    <header className="flex-shrink-0 flex items-center gap-1 md:gap-2 p-2 border-b">
       <Button
         type="button"
         variant="ghost"
@@ -79,13 +80,19 @@ export default function Header() {
       <SaveState />
       <UndoRedo />
       <div className="ml-auto flex gap-1">
-        <Button variant="outline" className="gap-1 rounded-xl">
-          <Icons.settings className="w-4 h-4 fill-accent-foreground" />
-          <span className="hidden sm:inline-block">Settings</span>
+        <Button
+          variant="outline"
+          className="gap-1 rounded-xl"
+          onClick={() => {
+           setValue('title', 'gg')
+          }}
+        >
+          <Icons.settings className="w-4 h-4 fill-gray-medium" />
+          <span className="hidden sm:inline-block text-gray-medium">Settings</span>
         </Button>
         <Button variant="outline" className="gap-1 rounded-xl">
-          <Eye className="w-4 h-4 " />
-          <span className="hidden sm:inline-block">Preview</span>
+          <Eye className="w-4 h-4 text-primary" />
+          <span className="hidden sm:inline-block text-primary">Preview</span>
         </Button>
         <Button className="gap-1 rounded-xl">
           <Save className="w-4 h-4" />
