@@ -1,7 +1,7 @@
 import React from "react";
 import Header from "./Header/Header";
 import Content from "./Content";
-import Sidebar from "./Sidebar/Sidebar";
+import Sidebar from "@/components/Editor/Sidebar/Sidebar";
 import { Form } from "../ui/form";
 import { useEditorContext } from "./Context";
 
