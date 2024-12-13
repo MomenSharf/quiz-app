@@ -9,15 +9,18 @@ import PointsSelector from "./PointsSelector";
 import SelectorMenu from "./SelectorMenu";
 
 export default function Header({ questionIndex }: { questionIndex: number }) {
-  // const [isHeaderOpen, setIsHeaderOpen] = useState(true);
+  const [isHeaderOpen, setIsHeaderOpen] = useState(true);
   return (
-    <div className="bg-white relative">
-      <div
+    <div className="bg-white relative flex gap-3 p-2"
+>
+      {/* <div
         className={cn(
-          "overflow-hidden transition-all flex gap-3 p-2"
-          // isHeaderOpen ? "max-h-64" : "max-h-0" // Dynamic max-height
+          "flex gap-3 p-2",
+          {
+            'hidden': !isHeaderOpen
+          }
         )}
-      >
+      > */}
         <div className="block sm:hidden">
           <SelectorMenu questionIndex={questionIndex} />
         </div>
@@ -28,11 +31,11 @@ export default function Header({ questionIndex }: { questionIndex: number }) {
           <TimelimitSelector questionIndex={questionIndex} />
           <PointsSelector questionIndex={questionIndex} />
         </div>
-      </div>
+      {/* </div> */}
       {/* <Button
         size="icon"
         variant="outline"
-        className="absolute w-10 h-5 sm:w-14 sm:h-5 bg-white hover:bg-white border-0 rounded-tl-none rounded-tr-none  b-0 right-3 rounded-bl-md rounded-br-md"
+        className="absolute w-10 h-5 sm:w-14 sm:h-5 bg-white hover:bg-white border-0 rounded-tl-none rounded-tr-none  -bottom-5 right-3 rounded-bl-md rounded-br-md"
         onClick={() => setIsHeaderOpen((prev) => !prev)}
       >
         {isHeaderOpen ? (
