@@ -77,7 +77,7 @@ export default function EditorForm({ quiz }: EditorFormProps) {
   return (
     <Form {...form}>
       <form
-        className="h-screen flex flex-col root-background-white bg-background"
+        className="h-screen flex flex-col bg-background"
         onSubmit={handleSubmit(onSubmit)}
       >
         <EditorHeader />

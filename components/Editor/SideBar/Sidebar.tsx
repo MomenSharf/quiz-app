@@ -34,9 +34,9 @@ export default function Sidebar() {
         points: 1,
       },
     ]);
-    dispatch({ type: "SET_CURRENT_QUESTION", payload: id });
+    dispatch({ type: "SET_CURRENT_QUESTION_ID", payload: id });
   };
-  return <aside className="relative flex-shrink-0 border-t sm:border-t-0 sm:border-r flex flex-col">
+  return <aside className="relative flex-shrink-0 border-t sm:border-t-0 sm:border-r flex sm:flex-col">
             {isLeftVisible && (
           <div
             className="flex sm:hidden cursor-pointer group absolute z-[2] top-1/2 left-1 -translate-y-1/2 p-2 bg-card/70 hover:bg-card transition-all border rounded-full justify-center items-center"
@@ -48,8 +48,6 @@ export default function Sidebar() {
             />
           </div>
         )}
-     <div className="flex sm:flex-col"
-     style={{'strokeWidth': 'Initial'}}>
         <Reorder.Group
           axis={dimensions.width >= 640 ? "y" : "x"}
           onReorder={async (questions) => {
@@ -68,23 +66,23 @@ export default function Sidebar() {
           values={questions}
           style={{ height: 250, border: "1px solid black", overflowY: "auto" }}
           layoutScroll
-          className="p-1.5 sm:p-3 flex-1 !border-none flex sm:flex-col gap-2 !h-auto overflow-x-auto overflow-y-auto editor-sidebar"
+          className="p-1.5 sm:p-3 flex-1 sm:flex-none !border-none flex sm:flex-col gap-2 !h-auto overflow-auto editor-sidebar"
         >
-          {questions.map((question, i) => (
+          {questions.sort((a, b) => a.questionOrder - b.questionOrder).map((question, i) => (
             <SidebarItem
               key={question.id}
               question={question}
             />
           ))}
         </Reorder.Group>
-        <div className="border-l sm:border-t sm:border-l-0 p-1.5 flex justify-center items-center">
+        <div className="sm:flex-1  border-l sm:border-t sm:border-l-0 p-1.5 flex justify-start items-center sm:justify-center sm:items-start">
           <Button
             type="button"
             variant="outline"
             onClick={newQuetion}
             className="w-16 h-16 sm:w-20 sm:h-20  relative hover:border-ring hover:bg-background"
           >
-            <Plus strokeWidth={2} className="w-5 h-5 sm:w-7 sm:h-7  text-muted-foreground" />
+            <Plus strokeWidth={3} className="w-4 h-4 sm:w-5 sm:h-5  text-muted-foreground" />
           </Button>
         </div>
         {isRightVisible && (
@@ -95,6 +93,5 @@ export default function Sidebar() {
             <ChevronRight className="w-3 h-3 m:w-5 sm:h-5 group-hover:text-primary" />
           </div>
         )}
-      </div>
   </aside>;
 }

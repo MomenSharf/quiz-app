@@ -87,13 +87,10 @@ export default function ForgotPassword() {
                     <FormControl>
                       <Input
                         placeholder="Email..."
-                        className={cn(
-                          "transition-all bg-[hsl(var(--main-background))]",
-                          {
-                            "border-destructive bg-destructive/10 focus-visible:ring-destructive":
-                              form.getFieldState("email").error,
-                          }
-                        )}
+                        className={cn("transition-all main-background", {
+                          "border-destructive bg-destructive/10 focus-visible:ring-destructive":
+                            form.getFieldState("email").error,
+                        })}
                         {...field}
                       />
                     </FormControl>

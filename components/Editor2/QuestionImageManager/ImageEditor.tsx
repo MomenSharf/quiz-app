@@ -169,7 +169,7 @@ export default function ImageEditor() {
         dispatch({ type: "SET_IS_IMAGE_EDITOR_OPEN", payload: { isOpen: e } })
       }
     >
-      <DialogContent className="root-background-white max-w-xl py-4 min-w-32">
+      <DialogContent className="max-w-xl py-4 min-w-32">
         <div className="flex justify-between w-full">
           <p className="font-semibold">Edit</p>
         </div>

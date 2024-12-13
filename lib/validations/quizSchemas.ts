@@ -154,10 +154,8 @@ export const folderSchema = z.object({
 
 export type folderSchemaType = z.infer<typeof folderSchema>;
 export type quizSchemaType = z.infer<typeof quizSchema>;
-export type questionSchemaType = z.infer<
-  typeof quizSchema
->["questions"][number];
-export type questionsSchemaType = z.infer<typeof quizSchema>["questions"];
+export type questionsSchemaType =quizSchemaType["questions"];
+export type questionSchemaType = quizSchemaType["questions"][number];
 export type ItemSchemaType =
   | z.infer<typeof pickAnswerSchema>["items"][number]
   | z.infer<typeof matchingPairsSchema>["items"][number]

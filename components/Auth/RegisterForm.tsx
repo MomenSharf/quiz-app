@@ -87,13 +87,10 @@ export default function RegisterForm() {
                 <FormControl>
                   <Input
                     placeholder="Email..."
-                    className={cn(
-                      "transition-all bg-[hsl(var(--main-background))]",
-                      {
-                        "border-destructive bg-destructive/10 focus-visible:ring-destructive":
-                          form.getFieldState("email").error,
-                      }
-                    )}
+                    className={cn("transition-all main-background", {
+                      "border-destructive bg-destructive/10 focus-visible:ring-destructive":
+                        form.getFieldState("email").error,
+                    })}
                     {...field}
                   />
                 </FormControl>
@@ -112,20 +109,17 @@ export default function RegisterForm() {
                     <Input
                       placeholder="Passwored..."
                       type={showPassword ? "text" : "password"}
-                      className={cn(
-                        "transition-all pr-10 bg-[hsl(var(--main-background))]",
-                        {
-                          "border-destructive bg-destructive/10 focus-visible:ring-destructive":
-                            form.getFieldState("password").error,
-                        }
-                      )}
+                      className={cn("transition-all pr-10 main-background", {
+                        "border-destructive bg-destructive/10 focus-visible:ring-destructive":
+                          form.getFieldState("password").error,
+                      })}
                       {...field}
                     />
                     <Button
                       type="button"
                       variant="outline"
                       size="icon"
-                      className="absolute right-0 top-0 border-l-0 rounded-tl-none rounded-bl-none rounded-tr-md rounded-br-md bg-[hsl(var(--main-background))]"
+                      className="absolute right-0 top-0 border-l-0 rounded-tl-none rounded-bl-none rounded-tr-md rounded-br-md main-background"
                       onClick={togglePasswordVisibility}
                     >
                       {showPassword ? (
@@ -151,20 +145,17 @@ export default function RegisterForm() {
                     <Input
                       placeholder="Confirm passwored..."
                       type={showPassword ? "text" : "password"}
-                      className={cn(
-                        "transition-all pr-10 bg-[hsl(var(--main-background))]",
-                        {
-                          "border-destructive bg-destructive/10 focus-visible:ring-destructive":
-                            form.getFieldState("passwordConfirmation").error,
-                        }
-                      )}
+                      className={cn("transition-all pr-10 main-background", {
+                        "border-destructive bg-destructive/10 focus-visible:ring-destructive":
+                          form.getFieldState("passwordConfirmation").error,
+                      })}
                       {...field}
                     />
                     <Button
                       type="button"
                       variant="outline"
                       size="icon"
-                      className="absolute right-0 top-0 border-l-0 rounded-tl-none rounded-bl-none rounded-tr-md rounded-br-md bg-[hsl(var(--main-background))]"
+                      className="absolute right-0 top-0 border-l-0 rounded-tl-none rounded-bl-none rounded-tr-md rounded-br-md main-background"
                       onClick={togglePasswordVisibility}
                     >
                       {showPassword ? (
@@ -188,13 +179,10 @@ export default function RegisterForm() {
                 <FormControl>
                   <Input
                     placeholder="Full name..."
-                    className={cn(
-                      "transition-all bg-[hsl(var(--main-background))]",
-                      {
-                        "border-destructive bg-[hsl(var(--destructive)_/_10%)] focus-visible:ring-destructive":
-                          form.getFieldState("name").error,
-                      }
-                    )}
+                    className={cn("transition-all main-background", {
+                      "border-destructive bg-[hsl(var(--destructive)_/_10%)] focus-visible:ring-destructive":
+                        form.getFieldState("name").error,
+                    })}
                     {...field}
                   />
                 </FormControl>

@@ -41,7 +41,7 @@ type EditorActions =
       type: "SET_HISTORY_ARRAY";
       payload: { quiz: quizSchemaType; historyIndex: number };
     }
-  | { type: "SET_CURRENT_QUESTION"; payload: string }
+  | { type: "SET_CURRENT_QUESTION_ID"; payload: string }
   | { type: "SET_IS_SETTINGS_OPEN"; payload: boolean }
   | {
       type: "SET_IS_IMAGE_EDITOR_OPEN";
@@ -90,7 +90,8 @@ const editorReducer = (
           action.payload.quiz,
         ],
       };
-
+    case "SET_CURRENT_QUESTION_ID":
+      return {...state, currentQuestionId: action.payload };
     case "SET_IS_SETTINGS_OPEN":
       return { ...state, isSettingsOpen: action.payload };
     case "SET_IS_IMAGE_EDITOR_OPEN":
@@ -238,13 +239,13 @@ export const EditorProvider = ({
   });
 
   useEffect(() => {
+    
     dispatch({
-      type: "SET_CURRENT_QUESTION",
+      type: "SET_CURRENT_QUESTION_ID",
       payload: getValues("questions.0.id"),
     });
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [getValues]);
 
   return (
     <EditorContext.Provider

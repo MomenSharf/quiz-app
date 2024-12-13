@@ -26,7 +26,7 @@ export default function EditorMenu() {
           <Icons.menu className="w-5 h-5 stroke-foreground" />
         </Button>
       </SheetTrigger>
-      <SheetContent side="left" className="root-background-white">
+      <SheetContent side="left">
         <Button variant='ghost' onClick={() => router.replace('/')} className="text-muted-foreground w-full mt-3 justify-start gap-2">
           <Icons.home className="w-4 h-4 fill-muted-foreground" />
           Home

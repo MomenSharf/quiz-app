@@ -20,10 +20,8 @@ export default async function page({
     return notFound();
   }
 
-    
-
   return (
-    <div className="min-h-screen bg-[hsl(var(--main-background))]">
+    <div className="min-h-screen main-background">
       <Provider quizProgress={quizProgress} />
     </div>
   );

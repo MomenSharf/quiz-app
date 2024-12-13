@@ -11,12 +11,12 @@ import UndoRedo from "./UndoRedo";
 import { Icons } from "@/components/icons";
 import { useEditorContext } from "../Context";
 
-
 export default function Header() {
   const [isEditingTitle, setIsEditingTitle] = useState(false);
 
   const {
     dispatch,
+    state: { isSettingsOpen },
     form: { setFocus, control, getValues, setValue, reset },
   } = useEditorContext();
   const router = useRouter();
@@ -82,13 +82,20 @@ export default function Header() {
       <div className="ml-auto flex gap-1">
         <Button
           variant="outline"
-          className="gap-1 rounded-xl"
+          className={cn("gap-1 rounded-xl", 
+          {  'border-primary border-2': isSettingsOpen }
+          )}
           onClick={() => {
-           setValue('title', 'gg')
+            if (!isSettingsOpen)
+              dispatch({ type: "SET_IS_SETTINGS_OPEN", payload: true });
           }}
         >
-          <Icons.settings className="w-4 h-4 fill-gray-medium" />
-          <span className="hidden sm:inline-block text-gray-medium">Settings</span>
+          <Icons.settings className={cn("w-4 h-4 fill-gray-medium", 
+           { 'fill-primary' : isSettingsOpen   }        )} />
+          <span className={cn("hidden sm:inline-block text-gray-medium", 
+           { 'text-primary' : isSettingsOpen && false  }        )}>
+            Settings
+          </span>
         </Button>
         <Button variant="outline" className="gap-1 rounded-xl">
           <Eye className="w-4 h-4 text-primary" />

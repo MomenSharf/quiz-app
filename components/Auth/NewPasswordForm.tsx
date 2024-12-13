@@ -87,20 +87,17 @@ export default function NewPasswordForm({ token }: { token: string }) {
                     <Input
                       placeholder="New passwored..."
                       type={showPassword ? "text" : "password"}
-                      className={cn(
-                        "transition-all pr-10 bg-[hsl(var(--main-background))]",
-                        {
-                          "border-destructive bg-destructive/10 focus-visible:ring-destructive":
-                            form.getFieldState("password").error,
-                        }
-                      )}
+                      className={cn("transition-all pr-10 main-background", {
+                        "border-destructive bg-destructive/10 focus-visible:ring-destructive":
+                          form.getFieldState("password").error,
+                      })}
                       {...field}
                     />
                     <Button
                       type="button"
                       variant="outline"
                       size="icon"
-                      className="absolute right-0 top-0 border-l-0 rounded-tl-none rounded-bl-none rounded-tr-md rounded-br-md bg-[hsl(var(--main-background))]"
+                      className="absolute right-0 top-0 border-l-0 rounded-tl-none rounded-bl-none rounded-tr-md rounded-br-md main-background"
                       onClick={togglePasswordVisibility}
                     >
                       {showPassword ? (
@@ -126,20 +123,17 @@ export default function NewPasswordForm({ token }: { token: string }) {
                     <Input
                       placeholder="Confirm passwored..."
                       type={showPassword ? "text" : "password"}
-                      className={cn(
-                        "transition-all pr-10 bg-[hsl(var(--main-background))]",
-                        {
-                          "border-destructive bg-destructive/10 focus-visible:ring-destructive":
-                            form.getFieldState("passwordConfirmation").error,
-                        }
-                      )}
+                      className={cn("transition-all pr-10 main-background", {
+                        "border-destructive bg-destructive/10 focus-visible:ring-destructive":
+                          form.getFieldState("passwordConfirmation").error,
+                      })}
                       {...field}
                     />
                     <Button
                       type="button"
                       variant="outline"
                       size="icon"
-                      className="absolute right-0 top-0 border-l-0 rounded-tl-none rounded-bl-none rounded-tr-md rounded-br-md bg-[hsl(var(--main-background))]"
+                      className="absolute right-0 top-0 border-l-0 rounded-tl-none rounded-bl-none rounded-tr-md rounded-br-md main-background"
                       onClick={togglePasswordVisibility}
                     >
                       {showPassword ? (
