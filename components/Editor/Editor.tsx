@@ -1,7 +1,7 @@
 import React from "react";
 import Header from "./Header/Header";
-import Sidebar from "./Sidebar/Sidebar";
 import Content from "./Content";
+import Sidebar from "./Sidebar/Sidebar";
 
 export default function Editor() {
   return (
