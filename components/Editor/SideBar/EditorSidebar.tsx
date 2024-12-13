@@ -6,7 +6,7 @@ import { useEditorContext } from "../Context";
 import SidebarItem from "./SidebarItem";
 import { useScroller } from "@/hooks/useScroller";
 
-export default function Sidebar() {
+export default function EditorSidebar() {
   const {
     dispatch,
     form: {
