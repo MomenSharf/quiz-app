@@ -9,7 +9,6 @@ import { useScroller } from "@/hooks/useScroller";
 export default function Sidebar() {
   const {
     dispatch,
-    state: { currentQuestionId },
     form: {
       setValue,
       getValues,
