@@ -1,7 +1,6 @@
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ImageUploader from "./ImageUploader";
-import StockPhotos from "./StockPhotos";
 import { useEditorContext } from "../../Context";
 import { Icons } from "@/components/icons";
 import { Button } from "@/components/ui/button";
