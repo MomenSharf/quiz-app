@@ -97,11 +97,11 @@ export default function Header() {
             Settings
           </span>
         </Button>
-        <Button variant="outline" className="gap-1 rounded-xl">
+        <Button type="button" variant="outline" className="gap-1 rounded-xl">
           <Eye className="w-4 h-4 text-primary" />
           <span className="hidden sm:inline-block text-primary">Preview</span>
         </Button>
-        <Button className="gap-1 rounded-xl">
+        <Button type="submit" className="gap-1 rounded-xl">
           <Save className="w-4 h-4" />
           Publish
         </Button>

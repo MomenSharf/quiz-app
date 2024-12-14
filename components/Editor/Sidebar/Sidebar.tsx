@@ -99,12 +99,12 @@ export default function Sidebar() {
           values={questions}
           style={{ height: 250, border: "1px solid black", overflowY: "auto" }}
           layoutScroll
-          className="p-1.5 sm:p-3 flex-1 sm:flex-none !border-none flex sm:flex-col gap-2 !h-auto overflow-auto editor-sidebar"
+          className="p-1.5 sm:p-3 flex-1 sm:flex-none !border-none flex sm:flex-col gap-2 !h-auto editor-sidebar z-10 !overflow-y-visible"
         >
           {questions
             .sort((a, b) => a.questionOrder - b.questionOrder)
             .map((question, i) => (
-              <SidebarItem key={question.id} question={question} />
+              <SidebarItem key={question.id} question={question} questionIndex={i} />
             ))}
         </Reorder.Group>
         <div className="sm:flex-1  border-l sm:border-t sm:border-l-0 p-1.5 flex justify-start items-center sm:justify-center sm:items-start">

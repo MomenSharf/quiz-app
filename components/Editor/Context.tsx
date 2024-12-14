@@ -26,6 +26,7 @@ type EditorState = {
   historyArray: quizSchemaType[];
   currentQuestionId: string | null;
   isSettingsOpen: boolean;
+  isQuestionImageManagerTabsOpen: boolean;
   isImageEditorOpenWithFiles: {
     isOpen: boolean;
     files?: File[];
@@ -43,6 +44,7 @@ type EditorActions =
     }
   | { type: "SET_CURRENT_QUESTION_ID"; payload: string }
   | { type: "SET_IS_SETTINGS_OPEN"; payload: boolean }
+  | { type: "SET_IS_QUESTIONS_IMAGE_MANAGER_OPEN"; payload: boolean }
   | {
       type: "SET_IS_IMAGE_EDITOR_OPEN";
       payload: {
@@ -68,10 +70,9 @@ const initialState: EditorState = {
   saveState: "GOOD",
   historyArray: [],
   currentQuestionId: null,
-  // isEditingTitle: false,
+  isQuestionImageManagerTabsOpen: false,
   isSettingsOpen: false,
   isImageEditorOpenWithFiles: { isOpen: false },
-  // isImageManagerOpen: false,
 };
 
 // Reducer function to handle state updates
@@ -91,7 +92,9 @@ const editorReducer = (
         ],
       };
     case "SET_CURRENT_QUESTION_ID":
-      return {...state, currentQuestionId: action.payload };
+      return { ...state, currentQuestionId: action.payload };
+    case "SET_IS_QUESTIONS_IMAGE_MANAGER_OPEN":
+      return { ...state, isQuestionImageManagerTabsOpen: action.payload };
     case "SET_IS_SETTINGS_OPEN":
       return { ...state, isSettingsOpen: action.payload };
     case "SET_IS_IMAGE_EDITOR_OPEN":
@@ -149,7 +152,7 @@ export const EditorProvider = ({
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  const data = getValues()
+  const data = getValues();
 
   const saveEditorQuiz = useCallback(
     async (isReseting: boolean) => {
@@ -239,12 +242,10 @@ export const EditorProvider = ({
   });
 
   useEffect(() => {
-    
     dispatch({
       type: "SET_CURRENT_QUESTION_ID",
       payload: getValues("questions.0.id"),
     });
-
   }, [getValues]);
 
   return (

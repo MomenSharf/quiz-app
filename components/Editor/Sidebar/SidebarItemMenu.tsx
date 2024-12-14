@@ -38,6 +38,8 @@ export default function SidebarItemMenu({ question }: SidebarItemMenuBrops) {
   const index = questions.find((q) => q.id === question.id)?.questionOrder;
 
   const reset = () => {
+    console.log('gg');
+    
     if(index)
       resetField(`questions.${index}`);
   };
@@ -76,6 +78,7 @@ export default function SidebarItemMenu({ question }: SidebarItemMenuBrops) {
       "questions",
       questions.filter((q) => q.id !== question.id)
     );
+    dispatch({type: "SET_CURRENT_QUESTION_ID", payload: questions[0].id })
   };
 
   return (

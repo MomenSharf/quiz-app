@@ -1,20 +1,30 @@
+import { cn } from "@/lib/utils";
 import {
   FormControl,
   FormField,
   FormItem,
-  FormMessage
+  FormLabel,
+  FormMessage,
 } from "@/components/ui/form";
-import { Textarea } from "@/components/ui/textarea";
-import { cn } from "@/lib/utils";
-import { useEditorContext } from "../Context";
+import { Textarea, TextareaProps } from "@/components/ui/textarea";
+import { useEditorContext } from "@/components/Editor2/EditorContext";
+import { Input, InputProps } from "@/components/ui/input";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { Icons } from "@/components/icons";
 
-export default function QuestionInput({
+type QuestionProps = TextareaProps & { questionIndex: number };
+
+export default function Question({
   questionIndex,
-}: {
-  questionIndex: number;
-}) {
+  className,
+  ...props
+}: QuestionProps) {
   const {
-    form: { control, getValues, getFieldState },
+    form: { control, getFieldState, getValues },
   } = useEditorContext();
 
   return (
@@ -23,21 +33,23 @@ export default function QuestionInput({
       name={`questions.${questionIndex}.question`}
       render={({ field }) => (
         <FormItem className="space-y-1 flex w-full flex-col relative">
+          {/* <FormLabel>Question</FormLabel> */}
           <FormControl>
             <Textarea
               className={cn(
-                "resize-none font-bold focus:z-10 text-lg min-h-14 rounded-tr-none rounded-br-none h-14",
+                "resize-none font-bold focus:z-10 text-lg min-h-14",
                 {
                   "border-destructive bg-[hsl(var(--destructive)_/_10%)] focus-visible:ring-destructive":
                     getFieldState(`questions.${questionIndex}.question`).error,
-                }
+                },
+                className
               )}
               placeholder="Type your Question..."
               {...field}
               value={getValues(`questions.${questionIndex}.question`)}
+              {...props}
             />
           </FormControl>
-          <FormMessage  className="text-xs"/>
         </FormItem>
       )}
     />

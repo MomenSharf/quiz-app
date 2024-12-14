@@ -4,6 +4,15 @@ import { questionSchemaType } from "@/lib/validations/quizSchemas";
 import { useEditorContext } from "../Context";
 import { cn } from "@/lib/utils";
 import QuestionInput from "./QuestionInput";
+import PickAnswer from "./QuestionForms/PickAnswer";
+import TrueFalse from "./QuestionForms/TrueFalse";
+import ShortAnswer from "./QuestionForms/ShortAnswer";
+import CorrectOrder from "./QuestionForms/CorrectOrder";
+import FillInTheBlanks from "./QuestionForms/FillInTheBlanks";
+import MatchingPairs from "./QuestionForms/MatchingPairs";
+import TypeSelector from "../TypeSelector";
+import QuestionImageManagerTabs from "./QuestionImageManager/QuestionImageManagerTabs";
+import { Button } from "@/components/ui/button";
 
 export default function Question({
   question,
@@ -13,33 +22,36 @@ export default function Question({
   questionIndex: number;
 }) {
   const {
+    dispatch
     // form: { getValues, getFieldState },
   } = useEditorContext();
 
   const Form = useCallback(() => {
     switch (question.type) {
       case "PICK_ANSWER":
-        return "PICK_ANSWER";
+        return <PickAnswer questionIndex={questionIndex} />;
 
       case "TRUE_FALSE":
-        return "TRUE_FALSE";
+        return <TrueFalse questionIndex={questionIndex} />;
       case "SHORT_ANSWER":
-        return "SHORT_ANSWER";
+        return <ShortAnswer questionIndex={questionIndex} />;
       case "MATCHING_PAIRS":
-        return "MATCHING_PAIRS";
+        return <MatchingPairs questionIndex={questionIndex} />;
       case "ORDER":
-        return "ORDER";
+        return <CorrectOrder questionIndex={questionIndex} />;
       case "FILL_IN_THE_BLANK":
-        return "FILL_IN_THE_BLANK";
+        return <FillInTheBlanks questionIndex={questionIndex} />;
       default:
-        "no type";
+        <TypeSelector questionIndex={questionIndex}/>;
         break;
     }
-  }, [question.type]);
+  }, [question.type, questionIndex]);
   return (
     <div className="flex flex-col">
       <Header questionIndex={questionIndex} />
       {question.type !== "UNSELECTED" && (
+        <div className="flex justify-center">
+
         <div
           className={cn(
             "p-1.5 sm:p-3 grid sm:grid-cols-2 gap-3 w-full max-w-3xl",
@@ -58,20 +70,13 @@ export default function Question({
             <div className="flex flex-col gap-1">
               <div className="flex">
                 <div className="flex flex-col gap-1 w-full">
+                  <p className="text-sm font-medium">Quesion</p>
                   <div className="flex w-full">
+
                     <QuestionInput questionIndex={questionIndex} />
-                    {/* <QuestionImageManagerTabs
-              trigger={
-                <Button
-                  type="button"
-                  size="icon"
-                  variant="outline"
-                  className="rounded-tl-none rounded-bl-none border-l-0 h-full"
-                >
-                  <Icons.picture  className="w-5 h-5" />
-                </Button>
-              }
-            /> */}
+                    <QuestionImageManagerTabs
+           
+            />
                   </div>
                 </div>
               </div>
@@ -79,6 +84,7 @@ export default function Question({
             </div>
             <Form />
           </div>
+        </div>
         </div>
       )}
     </div>

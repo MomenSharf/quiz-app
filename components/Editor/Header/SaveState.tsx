@@ -24,7 +24,7 @@ export default function SaveState() {
             ) : // ) : saveState === "OFFLINE" ? (
             //   <Icons.Offline className="w-6 h-6 fill-muted-foreground " />
             saveState === "BAD" ? (
-              <Icons.alert className="w-6 h-6 fill-[#FFC107] stroke-background" />
+              <Icons.alert className="w-6 h-6 fill-amber stroke-background" />
             ) : (
               <Icons.check className="w-6 h-6 fill-success" />
             )}
