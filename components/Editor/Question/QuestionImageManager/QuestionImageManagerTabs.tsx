@@ -7,7 +7,11 @@ import { Button } from "@/components/ui/button";
 
 type QuestionImageManagerTabs = {};
 
-export default function QuestionImageManagerTabs({}: QuestionImageManagerTabs) {
+export default function QuestionImageManagerTabs({
+  questionIndex,
+}: {
+  questionIndex: number;
+}) {
   const {
     dispatch,
     state: { isQuestionImageManagerTabsOpen },
@@ -41,7 +45,7 @@ export default function QuestionImageManagerTabs({}: QuestionImageManagerTabs) {
             <TabsTrigger value="giphy-GIFS" className="basis-1/3">giphy GIFS</TabsTrigger>
           </TabsList>
           <TabsContent value="upload" className="h-full">
-            <ImageUploader />
+            <ImageUploader questionIndex={questionIndex} />
           </TabsContent>
           <TabsContent
             value="stock-photos"

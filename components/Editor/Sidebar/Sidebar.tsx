@@ -39,8 +39,8 @@ export default function Sidebar() {
         id,
         type: "UNSELECTED",
         questionOrder: questions.length,
-        timeLimit: 5000,
-        points: 1,
+        timeLimit: 15000,
+        points: 10,
       },
     ]);
     dispatch({ type: "SET_CURRENT_QUESTION_ID", payload: id });

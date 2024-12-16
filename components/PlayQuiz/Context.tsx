@@ -113,14 +113,7 @@ export const PlayQuizProvider = ({
   quizProgress: PlayQuizType;
 }) => {
   const [state, dispatch] = useReducer(quizRoomReducer, initialState);
-  const {
-    userAnswer,
-    timeTakenArray,
-    quizMode,
-    playQuizQuestions,
-    currentQuestion,
-    isResultSheetOpen,
-  } = state;
+  const { userAnswer, quizMode, playQuizQuestions, currentQuestion } = state;
 
   const playRightWorngAnswerSound = (isAnswerRight: boolean | null) => {
     if (isAnswerRight === null) return;
@@ -128,7 +121,6 @@ export const PlayQuizProvider = ({
       "/assets/sounds/zapsplat_multimedia_game_sound_slot_machine_mallet_chime_positive_win_001_65507.mp3"
     );
     console.log(audio);
-    // Adjust the path to your sound file
     if (isAnswerRight) audio.play();
   };
 
@@ -299,9 +291,12 @@ export const PlayQuizProvider = ({
           newPlayQuizQuestions = playQuizQuestions.map((question, i) => {
             if (currentQuestion === i && userAnswer.answer) {
               const blanks = question.items.filter((item) => item.isBlank);
-              isAnswerRight = userAnswer.answer.every(
-                (answer, i) => answer.item.id === blanks[i].id
-              );
+              console.log(question.items);
+
+              isAnswerRight =
+                userAnswer.answer.every(
+                  (answer, i) => answer.item.id === blanks[i].id
+                ) && userAnswer.answer.length > 0;
               return {
                 ...question,
                 isAnswerRight,

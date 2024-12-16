@@ -18,16 +18,18 @@ export default function PickAnswer({
       formState: { errors },
       trigger,
     },
-    
   } = useEditorContext();
 
   const question = getValues(`questions.${questionIndex}`);
 
   useEffect(() => {
-    
     if (question.type === "PICK_ANSWER") {
       console.log(question.items);
-      if (!question.items || 'isBlank' in question.items[0]) {
+      if (
+        !question.items ||
+        question.items.length === 0 ||
+        (question.items[0] && "isBlank" in question.items[0])
+      ) {
         setValue(`questions.${questionIndex}.items`, [
           {
             id: crypto.randomUUID(),

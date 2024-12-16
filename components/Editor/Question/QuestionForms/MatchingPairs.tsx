@@ -29,7 +29,9 @@ export default function MatchingPairs({
 
   useEffect(() => {
     if (question.type === "MATCHING_PAIRS") {
-      if (!question.items || 'isBlank' in question.items[0]) {
+      if ( !question.items ||
+        question.items.length === 0 ||
+        (question.items[0] && "isBlank" in question.items[0])) {
         setValue(`questions.${questionIndex}`, {
           ...question,
           items: [

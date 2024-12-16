@@ -16,7 +16,7 @@ export default function FillInTheBlanks({
       setValue,
       watch,
       formState: { errors },
-      trigger
+      trigger,
     },
   } = useEditorContext();
   const question = getValues(`questions.${questionIndex}`);
@@ -28,13 +28,16 @@ export default function FillInTheBlanks({
     const parts = input.split(specialChars);
     return parts.filter((part) => part === "\n" || part.trim() !== "");
   }
+  
 
   useEffect(() => {
-    if (question.type !== "FILL_IN_THE_BLANK") return;    
+    if (question.type !== "FILL_IN_THE_BLANK") return;
+    console.log(question.items);
+
     if (question.question) {
       setValue(
         `questions.${questionIndex}.items`,
-        question.question !== ''
+        question.question !== ""
           ? splitString(question.question).map((e, i) => {
               return {
                 id: crypto.randomUUID(),
@@ -49,8 +52,10 @@ export default function FillInTheBlanks({
             })
           : []
       );
+    } else {
+      setValue(`questions.${questionIndex}.items`, []);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [questionIndex, watchQuestion]);
 
   const setIsBlank = (index: number) => {
@@ -68,8 +73,8 @@ export default function FillInTheBlanks({
         }
       })
     );
-    if(oneBlankError?.items.oneBlank) {
-      trigger(`questions.${questionIndex}`)
+    if (oneBlankError?.items.oneBlank) {
+      trigger(`questions.${questionIndex}`);
     }
   };
 
@@ -83,16 +88,14 @@ export default function FillInTheBlanks({
       };
     });
 
-
   return (
     <div className="flex flex-col gap-1">
-      <p className="font-semibold mb-3">Blanks :</p>
+      <p className="font-semibold mb-3">Blanks</p>
       <div className="flex items-end gap-3 flex-wrap">
-        {question.items ?
+        {question.items &&
           question.items.map((e, i) => {
             if (e.text === "\n") return <div key={e.id} className="w-full" />;
             if (specialChars.test(e.text)) return e.text + " ";
-            if (i === 4) return <br key={e.id} />;
             return (
               <Button
                 type="button"
@@ -109,10 +112,21 @@ export default function FillInTheBlanks({
                 )}
               </Button>
             );
-          }): 
-          <p>Type question to add Blanks!</p>}
+          })}
       </div>
-      <ErrorSpan error={oneBlankError?.items.oneBlank} />
+      {question.question && (
+        <ErrorSpan
+          error={oneBlankError?.items && oneBlankError?.items.oneBlank}
+        />
+      )}
+      {question.items && question.items.length === 0 && (
+        <ErrorSpan
+          error={{
+            message: "Type question to add Blanks!",
+            type: "required",
+          }}
+        />
+      )}
     </div>
   );
 }

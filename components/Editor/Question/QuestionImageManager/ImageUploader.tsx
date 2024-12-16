@@ -20,7 +20,11 @@ type FileUploaderProps = {
   index: number;
 };
 
-export default function ImageUploader() {
+export default function ImageUploader({
+  questionIndex,
+}: {
+  questionIndex: number;
+}) {
   const {
     dispatch,
   } = useEditorContext();

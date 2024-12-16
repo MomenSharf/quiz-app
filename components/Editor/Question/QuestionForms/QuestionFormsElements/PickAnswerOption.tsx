@@ -79,22 +79,24 @@ OprionProps) {
           control={control}
           name={`questions.${questionIndex}.items.${itemIndex}.text`}
           render={({ field }) => (
-            <FormItem className="space-y-1 flex w-full flex-col tepri">
+            <FormItem className="space-y-1 flex w-full flex-col bg-whte">
               <FormControl>
-                <Input
-                  className={cn(
-                    "h-12 font-semibold rounded-tr-none rounded-br-none focus:z-10",
-                    {
-                      "border-destructive bg-[hsl(var(--destructive)_/_10%)] focus-visible:ring-destructive":
-                        error,
-                    }
-                  )}
-                  placeholder={`Option ${itemIndex + 1}...`}
-                  {...field}
-                  value={getValues(
-                    `questions.${questionIndex}.items.${itemIndex}.text`
-                  )}
-                />
+                <div className="bg-white rounded-tl-md rounded-bl-md">
+                  <Input
+                    className={cn(
+                      "h-12 font-semibold rounded-tr-none rounded-br-none focus:z-10",
+                      {
+                        "border-destructive bg-[hsl(var(--destructive)_/_10%)] focus-visible:ring-destructive":
+                          error,
+                      }
+                    )}
+                    placeholder={`Option ${itemIndex + 1}...`}
+                    {...field}
+                    value={getValues(
+                      `questions.${questionIndex}.items.${itemIndex}.text`
+                    )}
+                  />
+                </div>
               </FormControl>
               <FormMessage className="text-xs" />
             </FormItem>

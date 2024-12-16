@@ -67,21 +67,18 @@ export default function Question({
             </div>
           )}
           <div className="sm:col-span-2 flex flex-col gap-3">
-            <div className="flex flex-col gap-1">
+            {/* <div className="flex flex-col gap-1">
               <div className="flex">
                 <div className="flex flex-col gap-1 w-full">
                   <p className="text-sm font-medium">Quesion</p>
                   <div className="flex w-full">
 
-                    <QuestionInput questionIndex={questionIndex} />
-                    <QuestionImageManagerTabs
-           
-            />
+                    
                   </div>
                 </div>
               </div>
-              {/* <ErrorSpan error={error} /> */}
-            </div>
+            </div> */}
+                    <QuestionInput questionIndex={questionIndex} />
             <Form />
           </div>
         </div>

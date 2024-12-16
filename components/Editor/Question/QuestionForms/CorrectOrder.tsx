@@ -22,7 +22,9 @@ export default function CorrectOrder({
 
   useEffect(() => {
     if (question.type === "ORDER") {
-      if (!question.items || 'isBlank' in question.items[0]) {
+      if ( !question.items ||
+        question.items.length === 0 ||
+        (question.items[0] && "isBlank" in question.items[0])) {
         setValue(`questions.${questionIndex}.items`, [
           {
             id: crypto.randomUUID(),

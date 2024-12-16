@@ -22,7 +22,13 @@ export default function ResultSheet() {
 
   const isRight =
     playQuizQuestions[currentQuestion] &&
-    playQuizQuestions[currentQuestion].isAnswerRight;
+    playQuizQuestions[currentQuestion].isAnswerRight === null &&
+    playQuizQuestions.length !== 0
+      ? playQuizQuestions[currentQuestion - 1] &&
+        playQuizQuestions[currentQuestion - 1].isAnswerRight
+      : playQuizQuestions[currentQuestion] &&
+        playQuizQuestions[currentQuestion].isAnswerRight;
+
   return (
     <Sheet open={isResultSheetOpen}>
       <SheetContent
