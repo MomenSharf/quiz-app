@@ -15,9 +15,9 @@ import { createRef, useEffect, useRef, useState } from "react";
 import Cropper, { ReactCropperElement } from "react-cropper";
 import { useUploadThing } from "@/lib/uploadthing";
 import { toast } from "sonner";
-import { saveImage } from "@/lib/actions/quiz.actions";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { useEditorContext } from "../../Context";
+import { saveImage } from "@/lib/actions/editor";
 
 export default function ImageEditor() {
   const [image, setImage] = useState("");
@@ -36,20 +36,18 @@ export default function ImageEditor() {
   };
   const {
     dispatch,
-    state: {
-      isImageEditorOpenWithFiles: { isOpen, files, url },
-      currentQuestionId,
-    },
+    state: { isImageEditorOpenWithFiles, currentQuestionId },
     form: { setValue, getValues },
   } = useEditorContext();
 
   useEffect(() => {
-    if (files) {
-      handleFile(files);
-    } else if (url) {
-      setImage(url);
-    }
-  }, [files, url]);
+    if ("files" in isImageEditorOpenWithFiles)
+      if (isImageEditorOpenWithFiles.files) {
+        handleFile(isImageEditorOpenWithFiles.files);
+        // } else if (url) {
+        //   setImage(url);
+      }
+  }, [isImageEditorOpenWithFiles]);
 
   const handleZoomIn = () => {
     if (!cropperRef.current) return;
@@ -100,85 +98,93 @@ export default function ImageEditor() {
   };
 
   const imageDropQuality = () => {
-    if (!(files && files[0])) return 0.5;
-    if (files[0].size > 1000000) {
-      return 0.3;
-    } else if (files[0].size > 500000) {
-      return 0.5;
-    } else {
-      return 0.7;
+    if ("files" in isImageEditorOpenWithFiles) {
+      const { files } = isImageEditorOpenWithFiles;
+      if (!(files && files[0])) return 0.5;
+      if (files[0].size > 1000000) {
+        return 0.3;
+      } else if (files[0].size > 500000) {
+        return 0.5;
+      } else {
+        return 0.7;
+      }
     }
   };
 
   const { startUpload } = useUploadThing("imageUploader");
 
   const getCropData = async () => {
-    if (!cropperRef.current) return;
+    if ("files" in isImageEditorOpenWithFiles) {
+      const {  questionIndex } = isImageEditorOpenWithFiles;
+      if (!cropperRef.current) return;
 
-    cropperRef.current.cropper.getCroppedCanvas().toBlob(
-      async (blob) => {
-        if (!blob) return;
+      cropperRef.current.cropper.getCroppedCanvas().toBlob(
+        async (blob) => {
+          if (!blob) return;
 
-        const file = new File([blob], "cropped-image.webp", {
-          type: "image/webp",
-        });
+          const file = new File([blob], "cropped-image.webp", {
+            type: "image/webp",
+          });
 
-        try {
-          setIsUploading(true);
-          const uploadedImage = await startUpload([file]);
-          if (uploadedImage) {
-            const index = getValues("questions").findIndex(
-              (e) => e.id === currentQuestionId
-            );
-            const image = await saveImage({
-              uploadthingId: uploadedImage[0].customId || "",
-              url: uploadedImage[0].url,
-            });
+          try {
+            setIsUploading(true);
+            const uploadedImage = await startUpload([file]);
+            if (uploadedImage) {
+              console.log(uploadedImage);
+              console.log(questionIndex);
+              
+              const quesionId = getValues(`questions.${questionIndex}`).id;
 
-            if (image) {
-              setValue(`questions.${index}.image`, {
-                id: "",
-                uploadthingId: uploadedImage[0].customId || "",
-                url: uploadedImage[0].url,
-                userId: "",
-              });
-              dispatch({
-                type: "SET_IS_IMAGE_EDITOR_OPEN",
-                payload: { isOpen: false },
-              });
+
+              const image = await saveImage(
+                uploadedImage[0].url,
+                quesionId
+              );
+
+              if (image) {
+                setValue(`questions.${questionIndex}.image`, {
+                  id: "",
+                  url: uploadedImage[0].url,
+                });
+                dispatch({
+                  type: "SET_IS_IMAGE_EDITOR_OPEN",
+                  payload: { isOpen: false },
+                });
+              } else {
+                toast("something wrong with save img");
+              }
             } else {
-              toast("something wrong with save img");
+              toast("something wrong with apluading img");
             }
-          } else {
+          } catch (error) {
             toast("something wrong with apluading img");
+          } finally {
+            setIsUploading(false);
           }
-        } catch (error) {
-          toast("something wrong with apluading img");
-        } finally {
-          setIsUploading(false);
-        }
-      },
-      "image/webp",
-      imageDropQuality
-    );
+        },
+        "image/webp",
+        imageDropQuality
+      );
+    }
   };
 
   return (
     <Sheet
-      open={isOpen}
+      open={isImageEditorOpenWithFiles.isOpen}
       onOpenChange={(e) =>
         dispatch({ type: "SET_IS_IMAGE_EDITOR_OPEN", payload: { isOpen: e } })
       }
     >
       <SheetContent className="" side="bottom">
         <p className="font-semibold">Edit</p>
-        {files || url ? (
+        {"files" in isImageEditorOpenWithFiles ? (
+          // || url ?
           <div className="flex flex-col w-full items-center">
             <div className="" ref={containerRef}>
               <Cropper
                 ref={cropperRef}
                 style={{
-                  height: '400px',
+                  height: "400px",
                   width: "100%",
                 }}
                 initialAspectRatio={1}

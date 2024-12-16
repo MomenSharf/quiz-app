@@ -395,7 +395,6 @@ export const saveEditorQuiz = async (
                 create: question.image
                   ? {
                       url: question.image.url,
-                      uploadthingId: question.image.uploadthingId,
                     }
                   : undefined,
               },
@@ -729,7 +728,8 @@ export async function getFolderPath(
 }
 
 export const saveImage = async (
-  image: Pick<imageSchemaType, "url" | "uploadthingId">
+  url: string,
+  questionId: string
 ) => {
   const session = await getCurrentUser();
 
@@ -737,10 +737,17 @@ export const saveImage = async (
     throw new Error("Unauthorized: User is not logged in.");
   }
 
+  // const image = await db.image.findFirst({
+  //   where: {
+  //     questionId, 
+      
+  //   }
+  // })
+
   return await db.image.create({
     data: {
-      userId: session.user.id,
-      ...image,
+      questionId,
+      url,
     },
   });
 };

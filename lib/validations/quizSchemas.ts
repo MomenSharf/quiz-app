@@ -9,9 +9,7 @@ const visibilityEnum = z.enum(Object.values(Visibility) as [Visibility, ...Visib
 
 export const imageSchema = z.object({
   id: z.string(),
-  uploadthingId: z.string(),
   url: z.string(),
-  userId: z.string().nullable(),
 });
 
 export const unselectedSchema = z.object({

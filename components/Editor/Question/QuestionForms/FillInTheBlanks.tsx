@@ -28,12 +28,9 @@ export default function FillInTheBlanks({
     const parts = input.split(specialChars);
     return parts.filter((part) => part === "\n" || part.trim() !== "");
   }
-  
 
   useEffect(() => {
     if (question.type !== "FILL_IN_THE_BLANK") return;
-    console.log(question.items);
-
     if (question.question) {
       setValue(
         `questions.${questionIndex}.items`,

@@ -13,6 +13,7 @@ import MatchingPairs from "./QuestionForms/MatchingPairs";
 import TypeSelector from "../TypeSelector";
 import QuestionImageManagerTabs from "./QuestionImageManager/QuestionImageManagerTabs";
 import { Button } from "@/components/ui/button";
+import QuestionImage from "./QuestionImageManager/QuestionImage";
 
 export default function Question({
   question,
@@ -21,10 +22,7 @@ export default function Question({
   question: questionSchemaType;
   questionIndex: number;
 }) {
-  const {
-    dispatch
-    // form: { getValues, getFieldState },
-  } = useEditorContext();
+  
 
   const Form = useCallback(() => {
     switch (question.type) {
@@ -63,7 +61,7 @@ export default function Question({
           {question.image?.url && (
             <div className="flex flex-col gap-3 w-full items-center">
               image
-              {/* <QuestionImage imageUrl={question.image?.url} /> */}
+              <QuestionImage imageUrl={question.image?.url} />
             </div>
           )}
           <div className="sm:col-span-2 flex flex-col gap-3">

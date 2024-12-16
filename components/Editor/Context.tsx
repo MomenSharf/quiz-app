@@ -27,12 +27,14 @@ type EditorState = {
   currentQuestionId: string | null;
   isSettingsOpen: boolean;
   isQuestionImageManagerTabsOpen: boolean;
-  isImageEditorOpenWithFiles: {
-    isOpen: boolean;
-    files?: File[];
-    questionIndex?: number;
-    url?: string;
-  };
+  isImageEditorOpenWithFiles:
+    | {
+        isOpen: boolean;
+        files: File[];
+        // url: string;
+        questionIndex: number;
+      }
+    | { isOpen: boolean };
 };
 
 // Define action types
@@ -50,8 +52,9 @@ type EditorActions =
       payload: {
         isOpen: boolean;
         files?: File[];
-        url?: string;
-      };
+        // url?: string;
+        questinIndex: number;
+      } | {isOpen: boolean;};
     };
 
 // Define the context type

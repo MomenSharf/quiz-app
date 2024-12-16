@@ -64,11 +64,11 @@ model Quiz {
   imageId      String?
   questions    Question[]
   folder       Folder?        @relation(fields: [folderId], references: [id], onDelete: Cascade)
-  image        Image?         @relation(fields: [imageId], references: [id])
   user         User           @relation(fields: [userId], references: [id])
   rates        Rate[]
   QuizProgress QuizProgress[]
   bookmark     Bookmark[]
+  image        Image?
 
   @@index([title, createdAt]) // Index for faster querying by title and creation date
 }
@@ -85,8 +85,9 @@ model Question {
   items         Item[]
   timeLimit     Int
   points        Int
-  image         Image?       @relation(fields: [imageId], references: [id], onDelete: Cascade)
-  quiz          Quiz         @relation(fields: [quizId], references: [id], onDelete: Cascade)
+
+  quiz  Quiz   @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  image Image?
 }
 
 model Item {
@@ -102,13 +103,14 @@ model Item {
 }
 
 model Image {
-  id            String     @id @default(cuid())
-  uploadthingId String
+  id            String    @id @default(cuid())
   url           String
-  userId        String?
-  User          User?      @relation(fields: [userId], references: [id])
-  Question      Question[]
-  Quiz          Quiz[]
+  userId        String?   @unique
+  User          User?     @relation(fields: [userId], references: [id])
+  questionId    String?   @unique
+  Question      Question? @relation(fields: [questionId], references: [id])
+  quizId        String?   @unique
+  Quiz          Quiz?     @relation(fields: [quizId], references: [id])
 }
 
 model Rate {
@@ -122,7 +124,7 @@ model Rate {
 
 model Bookmark {
   id     String @id @default(cuid())
-  quiz   Quiz   @relation(fields: [quizId], references: [id] , onDelete: Cascade)
+  quiz   Quiz   @relation(fields: [quizId], references: [id], onDelete: Cascade)
   quizId String
   user   User   @relation(fields: [userId], references: [id])
   userId String

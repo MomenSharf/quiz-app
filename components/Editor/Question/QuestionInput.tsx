@@ -26,7 +26,7 @@ export default function QuestionInput({
       render={({ field }) => (
         <FormItem className="space-y-1 flex w-full flex-col relative">
           <FormLabel className="text-inherit">Question</FormLabel>
-          <FormControl className="bg-white">
+          <FormControl className="bg-white rounded-md">
             <div className="flex">
               <Textarea
                 className={cn(

@@ -1,3 +1,4 @@
+'use server'
 import {
   ItemSchemaType,
   questionSchemaType,
@@ -67,8 +68,8 @@ export const saveEditorQuiz = async (
         "image" in question && question.image
           ? {
               create: {
-                uploadthingId: question.image.uploadthingId,
                 url: question.image.url,
+                questionId: question.id,
               },
             }
           : undefined,
@@ -172,5 +173,40 @@ export const saveEditorQuiz = async (
   } catch (error: any) {
     console.error(error);
     return { success: false, message: `An error occurred: ${error.message}` };
+  }
+};
+
+export const saveImage = async (url: string, questionId: string) => {
+  const session = await getCurrentUser();
+
+  if (!session) {
+    return { success: false, message: "Unauthorized: User is not logged in." };
+  }
+
+  // const image = await db.image.findFirst({
+  //   where: {
+  //     questionId,
+
+  //   }
+  // })
+
+  try {
+    const image = await db.image.create({
+      data: {
+        questionId,
+        url,
+      },
+    });
+    if (!image) {
+      return {
+        success: false,
+        message: "Failed to save image. Please try again.",
+      };
+    }
+  } catch (error) {
+    return {
+      success: false,
+      message: "Failed to save image. Please try again.",
+    };
   }
 };

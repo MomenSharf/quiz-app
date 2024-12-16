@@ -37,7 +37,7 @@ export default function QuestionImageManagerTabs({
           <Icons.picture className="w-5 h-5" />
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-3xl h-[80vh] flex flex-col px-8">
+      <DialogContent className="max-w-3xl h-[85git vh] flex flex-col px-8">
         <Tabs defaultValue="upload" className="h-full">
           <TabsList className="flex">
             <TabsTrigger value="upload" className="basis-1/3">Upload</TabsTrigger>

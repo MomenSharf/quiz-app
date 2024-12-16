@@ -24,7 +24,6 @@ export default function PickAnswer({
 
   useEffect(() => {
     if (question.type === "PICK_ANSWER") {
-      console.log(question.items);
       if (
         !question.items ||
         question.items.length === 0 ||

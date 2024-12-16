@@ -4,6 +4,7 @@ import { useEditorContext } from "./Context";
 import { motion } from "framer-motion";
 import TypeSelector from "./TypeSelector";
 import Question from "./Question/Question";
+import ImageEditor from "./Question/QuestionImageManager/ImageEditor";
 
 export default function Content() {
   const {
@@ -49,7 +50,7 @@ export default function Content() {
             ) : (
              <Question question={question} questionIndex={i} />
             )}
-            {/* <ImageEditor /> */}
+            {/* <ImageEditor/> */}
           </motion.div>
         );
       })}
