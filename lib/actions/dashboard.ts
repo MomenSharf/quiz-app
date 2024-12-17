@@ -30,7 +30,7 @@ export const getDashboardQuizzes = async (
     const quizzes = await db.quiz.findMany({
       where: { userId: session.user.id, folderId },
       include: {
-        image: true,
+       image: true,
         _count: {
           select: {
             questions: true,

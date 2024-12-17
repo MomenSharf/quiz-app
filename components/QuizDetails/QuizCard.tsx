@@ -1,6 +1,5 @@
 "use client";
 import { cn, formatToMinSec } from "@/lib/utils";
-import { EditorQuiz } from "@/types";
 import {
   ArrowDownIcon,
   ArrowUpIcon,
@@ -19,14 +18,15 @@ import { Icons } from "../icons";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import QuizImage from "./QuizImage";
+import { QuizDetails } from "@/types";
+import { copyQuiz as copyQuizServer } from "@/lib/actions/quizDetails";
+import { toast } from "../ui/use-toast";
 
-export default function QuizCard({ quiz }: { quiz: EditorQuiz }) {
-  console.log(quiz);
-  
+export default function QuizCard({ quiz }: { quiz: QuizDetails }) {
   const sessiom = useSession();
-  // console.log(quiz);
   const [isDescriptionOpen, setIsDescriptionOpen] = useState(false);
   const [isShowMoreVisible, setIsShowMoreVisible] = useState(false);
+  const [isCopyingQuiz, setIsCopiyngQuiz] = useState(false);
   const descriptionRef = useRef<HTMLParagraphElement>(null);
   const quizTime = quiz.questions.reduce(
     (acc, curr) => acc + curr.timeLimit,
@@ -46,9 +46,24 @@ export default function QuizCard({ quiz }: { quiz: EditorQuiz }) {
     }
   }, []);
 
+  const copyQuiz = async () => {
+    setIsCopiyngQuiz(true);
+    const { success, message } = await copyQuizServer(quiz.id);
+    if (!success ) {
+      {
+        setIsCopiyngQuiz(false);
+        toast({ variant: "destructive", description: message });
+      }
+    } else {
+      setIsCopiyngQuiz(false);
+      toast({ description: message });
+      // router.push(`/editor/${newQuiz.id}`);
+    }
+  };
+
   const router = useRouter();
 
-  // const isOner = quiz.user.id === sessiom.data?.user.id && false;
+  const isOner = quiz.user.id === sessiom.data?.user.id && false;
 
   return (
     <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 justify-center p-5 bg-card rounded-xl">
@@ -57,8 +72,8 @@ export default function QuizCard({ quiz }: { quiz: EditorQuiz }) {
         <div className="flex items-center gap-1">
           <UserAvatarImage imageUrl={""} className="w-10 h-10" />
           <span className="text-xs text-gray-dark font-medium">
-            {/* {quiz.user.username?.trim()}{" "} */}
-            {/* {isOner && <Badge className="font-thin">You</Badge>} */}
+            {quiz.user.username?.trim()}{" "}
+            {isOner && <Badge className="font-thin">You</Badge>}
           </span>
         </div>
         <p className="text-lg font-medium truncate">{quiz.title.trim()}</p>
@@ -113,7 +128,39 @@ export default function QuizCard({ quiz }: { quiz: EditorQuiz }) {
           </div>
         </div>
         <div className="flex gap-1">
-          {/* {isOner ? (
+          <Button
+            className="flex-1 rounded-full max-w-40"
+            onClick={() => router.push(`/play/${quiz.id}`)}
+          >
+            Play
+          </Button>
+          {isOner ? (
+            <Button
+              className="group rounded-full flex-1  max-w-40 gap-2"
+              variant="outline"
+              onClick={() => router.push(`/editor/${quiz.id}`)}
+            >
+              <Edit className="w-4 h-4 " />
+              <span>Edit</span>
+            </Button>
+          ) : (
+            <Button className="rounded-full" size="icon" variant="outline"
+            onClick={copyQuiz}
+            disabled={isCopyingQuiz}
+            >
+              {isCopyingQuiz ? (
+                <Icons.Loader className="w-4 h-4 animate-spin stroke-foreground" />
+              ) : (
+                <Copy className="w-4 h-4" />
+              )}
+            </Button>
+          )}
+
+          <Button className="rounded-full" size="icon" variant="outline">
+            <Icons.share className="w-4 h-4 stroke-black fill-black" />
+          </Button>
+
+          {isOner ? (
             <Button
               className="group rounded-full hover:bg-destructive"
               size="icon"
@@ -126,30 +173,6 @@ export default function QuizCard({ quiz }: { quiz: EditorQuiz }) {
               <Bookmark className="w-4 h-4" />
             </Button>
           )}
-          <Button className="rounded-full" size="icon" variant="outline">
-            <Icons.share className="w-4 h-4 stroke-black fill-black" />
-          </Button>
-          {isOner ? (
-            <Button
-              className="group rounded-full flex-1  max-w-40 gap-2"
-              variant="outline"
-              onClick={() => router.push(`/editor/${quiz.id}`)}
-            >
-              <Edit className="w-4 h-4 " />
-              <span>Edit</span>
-            </Button>
-          ) : (
-            <Button className="rounded-full" size="icon" variant="outline">
-              <Copy className="w-4 h-4" />
-            </Button>
-          )} */}
-
-          <Button
-            className="flex-1 rounded-full max-w-40"
-            onClick={() => router.push(`/play/${quiz.id}`)}
-          >
-            Play
-          </Button>
         </div>
       </div>
     </div>

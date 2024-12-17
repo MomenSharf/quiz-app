@@ -1,8 +1,8 @@
 "use client";
 import { useScroller } from "@/hooks/useScroller";
 import React from "react";
-import Quiz from "../Quiz/Quiz";
-import QuizCard from "../Quiz/QuizCard";
+import Quiz from "../QuizDetails/Quiz";
+import QuizCard from "../QuizDetails/QuizCard";
 import QuizzesScrollerCard from "./QuizScollerCard";
 import { EditorQuiz, PlayQuizType } from "@/types";
 import { ChevronLeft, ChevronRight } from "lucide-react";
@@ -10,7 +10,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 export default function QuizzesScroller() {
   const { isLeftVisible, isRightVisible, sliderRef, goLeft, goRight } =
     useScroller(300);
-  const quizzes: EditorQuiz[] = []
+  const quizzes: EditorQuiz[] = [];
 
   return (
     <div className="flex flex-col">

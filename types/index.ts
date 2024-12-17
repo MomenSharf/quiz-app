@@ -77,6 +77,22 @@ export type EditorQuiz = Prisma.QuizGetPayload<{
   }
 }>
 
+export type QuizDetails = Prisma.QuizGetPayload<{
+  include: {
+    user: true,
+    image: true,
+    questions: {
+      include: {
+        image: true,
+        _count: true,
+        items: true,
+      },
+    },
+  },
+}>
+
+
+
 
 export type EditorQuiz2 = Prisma.QuizGetPayload<{
   select: {

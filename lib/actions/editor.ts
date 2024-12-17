@@ -1,4 +1,4 @@
-'use server'
+"use server";
 import {
   ItemSchemaType,
   questionSchemaType,
@@ -188,21 +188,29 @@ export const saveImage = async (url: string, questionId: string) => {
   //     questionId,
 
   //   }
+
   // })
 
   try {
-    const image = await db.image.create({
+    const newImage = await db.image.create({
       data: {
-        questionId,
-        url,
+        url, // Set the image URL
+        Question: {
+          // Connect the image to the question using questionId
+          connect: {
+            id: questionId,
+          },
+        },
       },
     });
-    if (!image) {
+
+    if (!newImage) {
       return {
         success: false,
         message: "Failed to save image. Please try again.",
       };
     }
+    return { success: true, message: "Success saving image" };
   } catch (error) {
     return {
       success: false,

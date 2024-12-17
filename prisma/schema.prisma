@@ -20,7 +20,6 @@ model User {
   name          String?
   email         String          @unique
   emailVerified DateTime?
-  image         String?
   username      String?         @unique
   createdAt     DateTime        @default(now())
   updatedAt     DateTime        @updatedAt
@@ -28,12 +27,13 @@ model User {
   accounts      Account[]
   Authenticator Authenticator[]
   folders       Folder[]
-  images        Image[]
   quizzes       Quiz[]
   sessions      Session[]
   rates         Rate[]
   QuizProgress  QuizProgress[]
   bookmark      Bookmark[]
+  imageId       String?
+  image         Image?          @relation(fields: [imageId], references: [id])
 
   @@index([email]) // Index for faster email lookups
 }
@@ -61,14 +61,14 @@ model Quiz {
   visibility   Visibility     @default(PUBLIC)
   folderId     String?
   userId       String
-  imageId      String?
   questions    Question[]
   folder       Folder?        @relation(fields: [folderId], references: [id], onDelete: Cascade)
   user         User           @relation(fields: [userId], references: [id])
   rates        Rate[]
   QuizProgress QuizProgress[]
   bookmark     Bookmark[]
-  image        Image?
+  imageId      String?
+  image        Image?         @relation(fields: [imageId], references: [id])
 
   @@index([title, createdAt]) // Index for faster querying by title and creation date
 }
@@ -81,13 +81,13 @@ model Question {
   quizId        String
   questionOrder Int
   categories    Category[] // Array of categories (enum)
-  imageId       String?
   items         Item[]
   timeLimit     Int
   points        Int
 
-  quiz  Quiz   @relation(fields: [quizId], references: [id], onDelete: Cascade)
-  image Image?
+  quiz    Quiz    @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  image   Image?  @relation(fields: [imageId], references: [id])
+  imageId String?
 }
 
 model Item {
@@ -98,19 +98,20 @@ model Item {
   order      Int?
   isBlank    Boolean?
   questionId String?
-  imageId    String?
   Question   Question? @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  image      Image?    @relation(fields: [imageId], references: [id])
+
+  imageId String?
 }
 
 model Image {
-  id            String    @id @default(cuid())
-  url           String
-  userId        String?   @unique
-  User          User?     @relation(fields: [userId], references: [id])
-  questionId    String?   @unique
-  Question      Question? @relation(fields: [questionId], references: [id])
-  quizId        String?   @unique
-  Quiz          Quiz?     @relation(fields: [quizId], references: [id])
+  id       String     @id @default(cuid())
+  url      String
+  Item     Item[]
+  User     User[]
+  userId   String?
+  Quiz     Quiz[]
+  Question Question[]
 }
 
 model Rate {
