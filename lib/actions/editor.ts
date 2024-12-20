@@ -25,11 +25,9 @@ export const getEditorQuiz = async ({ quizId }: { quizId: string }) => {
         userId: session.user.id,
       },
       include: {
-        image: true,
         questions: {
           include: {
             items: true,
-            image: true,
           },
         },
       },
@@ -64,15 +62,7 @@ export const saveEditorQuiz = async (
       questionOrder: question.questionOrder,
       timeLimit: question.timeLimit,
       points: question.points,
-      image:
-        "image" in question && question.image
-          ? {
-              create: {
-                url: question.image.url,
-                questionId: question.id,
-              },
-            }
-          : undefined,
+      imageUrl: "imageUrl" in question ? question.imageUrl : undefined,
     };
 
     switch (question.type) {
@@ -173,48 +163,5 @@ export const saveEditorQuiz = async (
   } catch (error: any) {
     console.error(error);
     return { success: false, message: `An error occurred: ${error.message}` };
-  }
-};
-
-export const saveImage = async (url: string, questionId: string) => {
-  const session = await getCurrentUser();
-
-  if (!session) {
-    return { success: false, message: "Unauthorized: User is not logged in." };
-  }
-
-  // const image = await db.image.findFirst({
-  //   where: {
-  //     questionId,
-
-  //   }
-
-  // })
-
-  try {
-    const newImage = await db.image.create({
-      data: {
-        url, // Set the image URL
-        Question: {
-          // Connect the image to the question using questionId
-          connect: {
-            id: questionId,
-          },
-        },
-      },
-    });
-
-    if (!newImage) {
-      return {
-        success: false,
-        message: "Failed to save image. Please try again.",
-      };
-    }
-    return { success: true, message: "Success saving image" };
-  } catch (error) {
-    return {
-      success: false,
-      message: "Failed to save image. Please try again.",
-    };
   }
 };

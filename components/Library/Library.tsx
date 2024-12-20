@@ -8,7 +8,8 @@ import Toolbar from "./Toolbar";
 import BreadcrumbDemoFolderPath from "./Folder/BreadcrumbFolderPath";
 import { FolderPathSegment } from "@/types";
 
-export default function Dashboard({
+export default function Library
+({
   path,
   folderId,
   title

@@ -54,14 +54,14 @@ export default function Question({
           className={cn(
             "p-1.5 sm:p-3 grid sm:grid-cols-2 gap-3 w-full max-w-3xl",
             {
-              "sm:grid-cols-3 max-w-4xl": question.image?.url,
+              "sm:grid-cols-3 max-w-4xl": question.imageUrl,
             }
           )}
         >
-          {question.image?.url && (
+          {question.imageUrl && (
             <div className="flex flex-col gap-3 w-full items-center">
               image
-              <QuestionImage imageUrl={question.image?.url} />
+              <QuestionImage imageUrl={question.imageUrl} />
             </div>
           )}
           <div className="sm:col-span-2 flex flex-col gap-3">

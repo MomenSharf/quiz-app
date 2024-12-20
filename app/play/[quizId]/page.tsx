@@ -1,5 +1,5 @@
 import Provider from "@/components/PlayQuiz/Provider";
-import { getPlayQuiz } from "@/lib/actions/quiz.actions";
+import { getPlayQuiz } from "@/lib/actions/playQuiz";
 import { getCurrentUser } from "@/lib/auth";
 import { notFound, redirect } from "next/navigation";
 
@@ -14,9 +14,9 @@ export default async function page({
     return redirect("/login");
   }
 
-  const quizProgress = await getPlayQuiz(quizId);
+  const {success, quizProgress} = await getPlayQuiz(quizId);
 
-  if (!quizProgress) {
+  if (!success ||!quizProgress) {
     return notFound();
   }
 

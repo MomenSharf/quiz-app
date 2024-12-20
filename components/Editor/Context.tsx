@@ -1,4 +1,4 @@
-import { saveEditorQuiz as saveEditorQuizServer } from "@/lib/actions/quiz.actions";
+import { saveEditorQuiz as saveEditorQuizServer } from "@/lib/actions/editor";
 import { mapQuestionByType } from "@/lib/utils";
 import { quizSchema, quizSchemaType } from "@/lib/validations/quizSchemas";
 import { EditorQuiz } from "@/types";
@@ -134,7 +134,7 @@ export const EditorProvider = ({
       id: initialQuiz.id,
       title: initialQuiz.title,
       description: initialQuiz.description,
-      image: initialQuiz.image || undefined,
+      imageUrl: initialQuiz.imageUrl || undefined ,
       visibility: initialQuiz.visibility,
       categories: initialQuiz.categories as Category[],
       questions: mappedQuestions,
@@ -222,7 +222,7 @@ export const EditorProvider = ({
         name &&
         (name === "title" ||
           name === "description" ||
-          name === "image" ||
+          name === "imageUrl" ||
           name === "visibility" ||
           name === "categories" ||
           name.startsWith("questions") ||

@@ -13,7 +13,6 @@ export type SortOption =
 
 export type DashboardQuiz = Prisma.QuizGetPayload<{
   include: {
-    image: true;
     _count: {
       select: {
         questions: true;
@@ -40,7 +39,6 @@ export type DashboardFolder = Prisma.FolderGetPayload<{
     };
     quizzes: {
       include: {
-        image: true;
         _count: {
           select: {
             questions: true;
@@ -67,11 +65,9 @@ export type FolderPathSegment = {
 
 export type EditorQuiz = Prisma.QuizGetPayload<{
   include: {
-    image: true,    
     questions: {
       include: {
         items: true,
-        image: true,
       },
     },
   }
@@ -118,10 +114,8 @@ export type PlayQuizType = Prisma.QuizProgressGetPayload<{
   include: {
     quiz: {
       include: {
-        image: true;
         questions: {
           include: {
-            image: true;
             items: true;
           };
         };
@@ -131,6 +125,10 @@ export type PlayQuizType = Prisma.QuizProgressGetPayload<{
     user: true;
   };
 }>;
+
+export type SettingsUser = Prisma.UserGetPayload<{}>;
+
+
 
 //
 //

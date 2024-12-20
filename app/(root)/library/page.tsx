@@ -1,4 +1,4 @@
-import DashboardProvider from "@/components/Dashboard/DashboardProvider";
+import LibraryProvider from "@/components/Library/LibraryProvider";
 import {
   getDashboardFoldersWithQuizzes,
   getDashboardQuizzes,
@@ -6,9 +6,7 @@ import {
 
 import { getCurrentUser } from "@/lib/auth";
 import { isValidSortOption } from "@/lib/utils";
-import { SortOption } from "@/types";
 import { redirect } from "next/navigation";
-import React from "react";
 
 export default async function page({
   searchParams,
@@ -45,10 +43,10 @@ export default async function page({
 
   return (
     <div className="flex w-full h-full">
-      <DashboardProvider
+      <LibraryProvider
         quizzes={quizzes}
         folderWithQuizzes={folderWithQuizzes}
-        title="DASHBOARD"
+        title="LIBRERY"
       />
     </div>
   );

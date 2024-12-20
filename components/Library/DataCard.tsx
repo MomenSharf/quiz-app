@@ -8,7 +8,7 @@ import { Edit, EllipsisVertical, Layers } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React from "react";
-import { useDashboardContext } from "@/components/Dashboard/Context";
+import { useDashboardContext } from "@/components/Library/Context";
 import QuizMenu from "./Quiz/QuizMenu";
 import FolderMenu from "./Folder/FolderMenu";
 import QuizDrawer from "./Quiz/QuizDrawer";
@@ -25,7 +25,7 @@ export default function DataCard({
   } = useDashboardContext();
   const router = useRouter();
   const isFolder = "parentId" in data;
-  const dataPath = `/${isFolder ? 'dashboard/folders' : 'quiz'}/${data.id}`
+  const dataPath = `/${isFolder ? "dashboard/folders" : "quiz"}/${data.id}`;
   return (
     <tr className="bg-white p-3 rounded-lg mb-3">
       <td className="p-2 pr-0 rounded-tl-md rounded-bl-md">
@@ -45,9 +45,9 @@ export default function DataCard({
           onClick={() => router.push(dataPath)}
         >
           {!isFolder ? (
-            data.image && data.image.url ? (
+            data.imageUrl ? (
               <Image
-                src={data.image.url}
+                src={data.imageUrl}
                 alt="question Image"
                 width={100}
                 height={75}
@@ -79,15 +79,14 @@ export default function DataCard({
           <div className="flex gap-1">
             {isFolder ? (
               <div className="flex gap-1">
-
-              <Badge className="bg-primary/30 hover:bg-primary/30 text-primary items-center gap-0.5">
-                <Icons.quizzes className="w-3 h-3 fill-primary" />
-                {data._count.quizzes} Quizzes
-              </Badge>
-              <Badge className="bg-primary/30 hover:bg-primary/30 text-primary items-center gap-0.5">
-                <Icons.folder className="w-3 h-3 fill-primary" />
-                {data._count.subfolders} Folder
-              </Badge>
+                <Badge className="bg-primary/30 hover:bg-primary/30 text-primary items-center gap-0.5">
+                  <Icons.quizzes className="w-3 h-3 fill-primary" />
+                  {data._count.quizzes} Quizzes
+                </Badge>
+                <Badge className="bg-primary/30 hover:bg-primary/30 text-primary items-center  gap-0.5">
+                  <Icons.folder className="w-3 h-3 fill-primary" />
+                  {data._count.subfolders} Folder
+                </Badge>
               </div>
             ) : (
               <Badge className="bg-primary/30 hover:bg-primary/30 text-primary items-center gap-0.5">

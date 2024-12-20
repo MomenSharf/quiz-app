@@ -32,8 +32,7 @@ model User {
   rates         Rate[]
   QuizProgress  QuizProgress[]
   bookmark      Bookmark[]
-  imageId       String?
-  image         Image?          @relation(fields: [imageId], references: [id])
+  imageUrl      String?
 
   @@index([email]) // Index for faster email lookups
 }
@@ -67,8 +66,7 @@ model Quiz {
   rates        Rate[]
   QuizProgress QuizProgress[]
   bookmark     Bookmark[]
-  imageId      String?
-  image        Image?         @relation(fields: [imageId], references: [id])
+  imageUrl     String?
 
   @@index([title, createdAt]) // Index for faster querying by title and creation date
 }
@@ -84,10 +82,8 @@ model Question {
   items         Item[]
   timeLimit     Int
   points        Int
-
-  quiz    Quiz    @relation(fields: [quizId], references: [id], onDelete: Cascade)
-  image   Image?  @relation(fields: [imageId], references: [id])
-  imageId String?
+  quiz          Quiz         @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  imageUrl      String?
 }
 
 model Item {
@@ -99,19 +95,7 @@ model Item {
   isBlank    Boolean?
   questionId String?
   Question   Question? @relation(fields: [questionId], references: [id], onDelete: Cascade)
-  image      Image?    @relation(fields: [imageId], references: [id])
-
-  imageId String?
-}
-
-model Image {
-  id       String     @id @default(cuid())
-  url      String
-  Item     Item[]
-  User     User[]
-  userId   String?
-  Quiz     Quiz[]
-  Question Question[]
+  imageUrl   String?
 }
 
 model Rate {

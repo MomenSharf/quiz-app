@@ -1,8 +1,8 @@
 "use client";
-import { DashboardFoldersWithQuiz, DashboardQuiz, FolderPathSegment} from "@/types";
+import { DashboardFoldersWithQuiz, DashboardQuiz, FolderPathSegment } from "@/types";
 import { DashboardProvider as Provider } from "./Context";
-import Dashboard from "./Dashboard";
-export default function DashboardProvider({
+import Library from "./Library";
+export default function LibraryProvider({
   quizzes,
   folderWithQuizzes,
   path,
@@ -17,7 +17,7 @@ export default function DashboardProvider({
 }) {
   return (
     <Provider quizzes={quizzes} folderWithQuizzes={folderWithQuizzes}>
-      <Dashboard path={path} folderId={folderId}  title={title}/>
+      <Library path={path} folderId={folderId}  title={title}/>
     </Provider>
   );
 }

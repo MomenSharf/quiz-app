@@ -33,11 +33,7 @@ export default async function Header() {
           <>
             <UserAvatar
               isLoggedIn={!!session?.user}
-              user={{
-                name: session?.user.name || null,
-                email: session?.user.email || "",
-                image: session?.user.image || null,
-              }}
+              user={session.user}
             />
           </>
         ) : (

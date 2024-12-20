@@ -1,9 +1,7 @@
-import DashboardProvider from "@/components/Dashboard/DashboardProvider";
+import LibraryProvider from "@/components/Library/LibraryProvider";
 import {
   getDashboardFolder,
-  getDashboardFoldersWithQuizzes,
-  getDashboardQuizzes,
-  getFolderPath,
+  getFolderPath
 } from "@/lib/actions/dashboard";
 
 import { getCurrentUser } from "@/lib/auth";
@@ -33,19 +31,17 @@ export default async function page({
     getFolderPath(folderId),
   ]);
 
-  const { success: folderSuccess, folder } = folderResult
+  const { success: folderSuccess, folder } = folderResult;
   const { success: folderPathSuccess, path } = folderPathResult;
 
-
-
-  if(!folderSuccess || !folder) {
+  if (!folderSuccess || !folder) {
     return <div>Failed to load dashboard folders and quizzes</div>;
-folder
+    folder;
   }
 
   return (
     <div className="flex w-full h-full">
-      <DashboardProvider
+      <LibraryProvider
         quizzes={folder.quizzes}
         folderWithQuizzes={folder.subfolders}
         path={path}

@@ -21,6 +21,7 @@ import QuizImage from "./QuizImage";
 import { QuizDetails } from "@/types";
 import { copyQuiz as copyQuizServer } from "@/lib/actions/quizDetails";
 import { toast } from "../ui/use-toast";
+import DeleteDialog from "./DeleteDiaolg";
 
 export default function QuizCard({ quiz }: { quiz: QuizDetails }) {
   const sessiom = useSession();
@@ -57,13 +58,13 @@ export default function QuizCard({ quiz }: { quiz: QuizDetails }) {
     } else {
       setIsCopiyngQuiz(false);
       toast({ description: message });
-      // router.push(`/editor/${newQuiz.id}`);
+      router.push(`/editor/${quiz.id}`);
     }
   };
 
   const router = useRouter();
 
-  const isOner = quiz.user.id === sessiom.data?.user.id && false;
+  const isOner = quiz.user.id === sessiom.data?.user.id ;
 
   return (
     <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 justify-center p-5 bg-card rounded-xl">
@@ -161,13 +162,7 @@ export default function QuizCard({ quiz }: { quiz: QuizDetails }) {
           </Button>
 
           {isOner ? (
-            <Button
-              className="group rounded-full hover:bg-destructive"
-              size="icon"
-              variant="outline"
-            >
-              <Trash2 className="w-4 h-4 text-destructive group-hover:text-white" />
-            </Button>
+           <DeleteDialog quizId={quiz.id}/>
           ) : (
             <Button className="rounded-full" size="icon" variant="outline">
               <Bookmark className="w-4 h-4" />

@@ -16,10 +16,8 @@ export const getQuizDetails = async ({ quizId }: { quizId: string }) => {
       where: { id: quizId },
       include: {
         user: true,
-        image: true,
         questions: {
           include: {
-            image: true,
             _count: true,
             items: true,
           },
@@ -58,7 +56,6 @@ export const getQuizDetails = async ({ quizId }: { quizId: string }) => {
 //     originalQuiz;
 // };
 
-
 import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
@@ -76,10 +73,8 @@ export const copyQuiz = async (quizId: string) => {
     const originalQuiz = await prisma.quiz.findUnique({
       where: { id: quizId },
       include: {
-        image: true, // Fetch quiz image
         questions: {
           include: {
-            image: true, // Fetch question images
             items: true, // Fetch question items
           },
         },
@@ -97,12 +92,11 @@ export const copyQuiz = async (quizId: string) => {
       updatedAt,
       userId,
       folderId,
-      imageId,
-      image,
       visibility,
       questions,
       ...quizDataToCopy
     } = originalQuiz;
+
 
     // 4. Copy the quiz
     const newQuiz = await prisma.quiz.create({
@@ -111,56 +105,24 @@ export const copyQuiz = async (quizId: string) => {
         title: `${quizDataToCopy.title} (Copy)`, // Append "(Copy)" to the title
         userId: session.user.id, // Assign ownership to the current user
         visibility: "PRIVATE", // Set visibility to PRIVATE
-        createdAt: new Date(),
-        updatedAt: new Date(),
-    
-        // Copy the quiz image using connectOrCreate
-        image: image
-          ? {
-              connectOrCreate: {
-                where: { id: image.id },
-                create: { url: image.url },
-              },
-            }
-          : undefined, // Use undefined instead of null
-    
-        // Copy all questions
         questions: {
           create: originalQuiz.questions.map((question) => {
             const {
               id: originalQuestionId,
-              image,
               items,
               quizId,
-              imageId,
+
               ...questionDataToCopy
             } = question;
-    
+
             return {
               ...questionDataToCopy,
-              createdAt: new Date(),
-              updatedAt: new Date(),
-    
-              // Copy question image
-              // image: image
-              //   ? {
-              //       connectOrCreate: {
-              //         where: { id: image.id },
-              //         create: { url: image.url },
-              //       },
-              //     }
-              //   : undefined, // Use undefined instead of null
-    
-              // Copy question items
               items: {
-                create: 
-                items.map((item) => {
-                  const { id, imageId, ...itemDataToCopy } = item;
-    
+                create: items.map((item) => {
+                  const { id,questionId, ...itemDataToCopy } = item;
+
                   return {
                     ...itemDataToCopy,
-                    createdAt: new Date(),
-                    updatedAt: new Date(),
                   };
                 }),
               },
@@ -169,8 +131,6 @@ export const copyQuiz = async (quizId: string) => {
         },
       },
     });
-    
-    
 
     // 5. Return the new quiz
     return {
@@ -187,4 +147,3 @@ export const copyQuiz = async (quizId: string) => {
     };
   }
 };
-

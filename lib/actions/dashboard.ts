@@ -30,7 +30,6 @@ export const getDashboardQuizzes = async (
     const quizzes = await db.quiz.findMany({
       where: { userId: session.user.id, folderId },
       include: {
-       image: true,
         _count: {
           select: {
             questions: true,
@@ -130,7 +129,6 @@ export const getDashboardFolder = async (
         },
         quizzes: {
           include: {
-            image: true,
             _count: {
               select: {
                 questions: true,
@@ -438,7 +436,7 @@ export const deleteQuizzes = async ({
 
     revalidatePath(pathname);
 
-    return { success: true, quizzes };
+    return { success: true, quizzes , message: 'Successfly deleted!' };
   } catch (error) {
     return {
       success: false,

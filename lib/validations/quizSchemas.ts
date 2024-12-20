@@ -7,10 +7,7 @@ const CategoryEnum = z.enum(Object.values(Category) as [Category, ...Category[]]
 const visibilityEnum = z.enum(Object.values(Visibility) as [Visibility, ...Visibility[]]);
 
 
-export const imageSchema = z.object({
-  id: z.string(),
-  url: z.string(),
-});
+
 
 export const unselectedSchema = z.object({
   id: z.string(),
@@ -26,7 +23,7 @@ export const pickAnswerSchema = z.object({
   questionOrder: z.number(),
   timeLimit: z.number(),
   points: z.number(),
-  image: imageSchema.optional(),
+  imageUrl: z.string().optional(),
   question: z.string().min(1, "Question is required"),
   items: z
     .array(
@@ -49,7 +46,7 @@ export const trueFalseSchema = z.object({
   questionOrder: z.number(),
   timeLimit: z.number(),
   points: z.number(),
-  image: imageSchema.optional(),
+  imageUrl: z.string().optional(),
   question: z.string().min(1, "Question is required"),
   correctAnswer: z.union([z.literal("true"), z.literal("false")]),
 });
@@ -60,7 +57,7 @@ export const fillInTheBlankSchema = z.object({
   questionOrder: z.number(),
   timeLimit: z.number(),
   points: z.number(),
-  image: imageSchema.optional(),
+  imageUrl: z.string().optional(),
   question: z.string().min(1, "Question is required"),
   items: z
     .array(
@@ -83,7 +80,7 @@ export const shortAnswerSchema = z.object({
   questionOrder: z.number(),
   timeLimit: z.number(),
   points: z.number(),
-  image: imageSchema.optional(),
+  imageUrl: z.string().optional(),
   question: z.string().min(1, "Question is required"),
   correctAnswer: z.string().min(1, "Correct answer is required"),
 });
@@ -94,7 +91,7 @@ export const matchingPairsSchema = z.object({
   questionOrder: z.number(),
   timeLimit: z.number(),
   points: z.number(),
-  image: imageSchema.optional(),
+  imageUrl: z.string().optional(),
   question: z.string().min(1, "Question is required"),
   items: z
     .array(
@@ -113,7 +110,7 @@ export const questionOrderSchema = z.object({
   questionOrder: z.number(),
   timeLimit: z.number(),
   points: z.number(),
-  image: imageSchema.optional(),
+  imageUrl: z.string().optional(),
   question: z.string().min(1, "Question is required"),
   items: z.array(
     z.object({
@@ -128,7 +125,7 @@ export const quizSchema = z.object({
   id: z.string(),
   title: z.string().min(1, "Title is required"),
   description: z.string().optional(),
-  image: imageSchema.optional(),
+  imageUrl: z.string().optional(),
   categories: z.array(CategoryEnum),
   visibility: visibilityEnum,
   questions: z
@@ -163,4 +160,3 @@ export type ItemsSchemaType =
   | z.infer<typeof matchingPairsSchema>["items"]
   | z.infer<typeof questionOrderSchema>["items"];
 
-export type imageSchemaType = z.infer<typeof imageSchema>;

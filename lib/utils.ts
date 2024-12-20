@@ -70,7 +70,7 @@ export const mapQuestionByType = (question: EditorQuiz["questions"][number]) => 
     questionOrder: question.questionOrder,
     timeLimit: question.timeLimit,
     points: question.points,
-    image: question.image || undefined,
+    imageUrl: question.imageUrl  || undefined,
     question: question.question ?? "",
   };
 

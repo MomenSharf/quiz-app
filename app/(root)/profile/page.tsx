@@ -1,5 +1,7 @@
 "use client";
 
+import Profile from "@/components/Profile/Profile";
+
 export default function Page() {
-  return <div></div>;
+  return <Profile />;
 }

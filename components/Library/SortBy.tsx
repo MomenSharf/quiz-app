@@ -29,7 +29,7 @@ export default function SortBy() {
   
   return (
     <Select defaultValue={sortBy} onValueChange={handleSearch}>
-      <SelectTrigger className="w-[160px]">
+      <SelectTrigger className="w-[130px] sm:w-[160px]">
         <SelectValue placeholder="Sort by" />
       </SelectTrigger>
       <SelectContent>

@@ -62,6 +62,7 @@ const config = withUt({
         "light-green": "hsl(var(--light-green))",
         blue: "hsl(var(--blue))",
         "blue-dark": "hsl(var(--blue-dark))",
+        "blue-extra-dark": "hsl(var(--blue-extra-dark))",
         teal: "hsl(var(--teal))",
         "pink-dark": "hsl(var(--pink-dark))",
         pink: "hsl(var(--pink))",

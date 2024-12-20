@@ -61,13 +61,13 @@ export const DESKTOP_SIDEBAR_ITEMS = [
     icon: Icons.home, // Replace with actual SVG icon component or path
   },
   {
-    route: "/dashboard",
-    label: "Dashboard",
-    icon: Icons.dashboard, // Replace with actual SVG icon component or path
+    route: "/library",
+    label: "Library",
+    icon: Icons.library, // Replace with actual SVG icon component or path
   },
   {
-    route: "/quizzes",
-    label: "Quizzes",
+    route: "/explorer",
+    label: "Explorer",
     icon: Icons.quizzes, // Replace with actual SVG icon component or path
   },
   {
@@ -76,19 +76,9 @@ export const DESKTOP_SIDEBAR_ITEMS = [
     icon: Icons.settings, // Replace with actual SVG icon component or path
   },
   {
-    route: "/profile",
-    label: "Profile",
-    icon: Icons.profile, // Replace with actual SVG icon component or path
-  },
-  {
     route: "/bookmarked",
     label: "Bookmarked",
     icon: Icons.bookmark, // Replace with actual SVG icon component or path
-  },
-  {
-    route: "/notifications",
-    label: "Notifications",
-    icon: Icons.notification, // Replace with actual SVG icon component or path
   },
 ];
 
