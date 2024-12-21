@@ -1,7 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { FormField, FormItem } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { revalidatePathInServer } from "@/lib/actions/quiz.actions";
 import { cn } from "@/lib/utils";
 import { ArrowLeft, Eye, Save } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -10,6 +9,7 @@ import SaveState from "./SaveState";
 import UndoRedo from "./UndoRedo";
 import { Icons } from "@/components/icons";
 import { useEditorContext } from "../Context";
+import { revalidatePathInServer } from "@/lib/actions/utils";
 
 export default function Header() {
   const [isEditingTitle, setIsEditingTitle] = useState(false);

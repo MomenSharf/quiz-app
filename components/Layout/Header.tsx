@@ -15,11 +15,7 @@ export default async function Header() {
     <header className="z-20 w-full p-2 flex bg-card shadow-sm">
       <div className="sm:hidden w-full flex items-center  gap-1">
         <MobileSideBar
-          user={{
-            email: session?.user.email || "",
-            image: session?.user.image || null,
-            name: session?.user.name || null,
-          }}
+          user={session ? session.user : null}
           isLoggedIn={!!session?.user}
         />
         <Logo />
@@ -31,10 +27,7 @@ export default async function Header() {
         <SearchInput />
         {session?.user ? (
           <>
-            <UserAvatar
-              isLoggedIn={!!session?.user}
-              user={session.user}
-            />
+            <UserAvatar isLoggedIn={!!session?.user} user={session.user} />
           </>
         ) : (
           <>
@@ -53,4 +46,3 @@ export default async function Header() {
     </header>
   );
 }
-

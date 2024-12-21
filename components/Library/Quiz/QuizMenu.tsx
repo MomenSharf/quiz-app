@@ -3,11 +3,12 @@ import {
   Edit,
   ExternalLink,
   PenLine,
-  Play,
   RotateCcw,
-  Trash2,
+  Trash2
 } from "lucide-react";
 
+import { Icons } from "@/components/icons";
+import { buttonVariants } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -17,17 +18,13 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { cn } from "@/lib/utils";
-import { Quiz } from "@prisma/client";
-import DeleteQuizButton from "./DeleteQuizButton";
-import { HTMLProps, MouseEvent, ReactNode, useRef, useState } from "react";
 import { toast } from "@/components/ui/use-toast";
-import { newQuiz } from "@/lib/actions/quiz.actions";
-import { usePathname, useRouter } from "next/navigation";
-import { DashboardQuiz,  } from "@/types";
-import { Button, ButtonProps, buttonVariants } from "@/components/ui/button";
-import { Icons } from "@/components/icons";
+import { cn } from "@/lib/utils";
+import { DashboardQuiz, } from "@/types";
+import { useRouter } from "next/navigation";
+import { HTMLProps } from "react";
 import { useDashboardContext } from "../Context";
+import DeleteQuizButton from "./DeleteQuizButton";
 import RenameQuiz from "./RenameQuiz";
 
 type QuizMenuProps = HTMLProps<HTMLDivElement> & {

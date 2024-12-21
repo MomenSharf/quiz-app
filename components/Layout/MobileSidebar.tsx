@@ -10,14 +10,14 @@ import {
 } from "@/components/ui/sheet";
 import { DESKTOP_SIDEBAR_ITEMS } from "@/constants";
 import { cn } from "@/lib/utils";
-import { User } from "@prisma/client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import SignOut from "../Auth/SignOut";
 import { Icons } from "../icons";
 import { UserAvatarImage } from "../User/UserAvatar";
+import { User } from "next-auth";
 type MobileSideBarProps = {
-  user: Pick<User, "image" | "email" | "name">;
+  user: User | null;
   isLoggedIn: boolean;
 };
 
@@ -39,9 +39,9 @@ export default function MobileSideBar({
         className="flex flex-col bg-[var(--navbar)] text-primary-foreground border-none p-0"
       >
         <SheetHeader className="bg-[#252834]">
-          {isLoggedIn ? (
+          {user ? (
             <div className="flex gap-3 p-5 items-center">
-              <UserAvatarImage imageUrl={user.image} />
+              <UserAvatarImage imageUrl={user.image || null} />
               <div className="flex flex-col text-start max-w-32">
                 <p className="font-semibold truncate">{user.name}</p>
                 <p className="font-semibold truncate">{user.email}</p>

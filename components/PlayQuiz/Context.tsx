@@ -1,4 +1,4 @@
-import { saveQuizProgress } from "@/lib/actions/quiz.actions";
+import { saveQuizProgress } from "@/lib/actions/playQuiz";
 import { EditorQuiz, PlayQuizType } from "@/types";
 import {
   createContext,

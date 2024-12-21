@@ -9,7 +9,6 @@ import { revalidatePath } from "next/cache";
 import { getCurrentUser } from "../auth";
 import { db } from "../db";
 
-type QuestionCreateWithoutQuizInput = Prisma.QuestionCreateWithoutQuizInput;
 
 export const getEditorQuiz = async ({ quizId }: { quizId: string }) => {
   const session = await getCurrentUser();

@@ -1,5 +1,5 @@
 import { Icons } from "@/components/icons";
-import { Button, ButtonProps, buttonVariants } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogClose,
@@ -9,11 +9,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { toast } from "@/components/ui/use-toast";
-import { deleteQuizzes } from "@/lib/actions/quiz.actions";
-import { cn } from "@/lib/utils";
 import { Trash2 } from "lucide-react";
-import { HTMLProps, ReactNode, useEffect, useState } from "react";
+import { HTMLProps } from "react";
 import { useDashboardContext } from "../Context";
 
 type DeleteQuizButtonProps = HTMLProps<HTMLDivElement>  & {

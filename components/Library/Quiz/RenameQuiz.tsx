@@ -9,16 +9,14 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { toast } from "@/components/ui/use-toast";
-import { newFolder } from "@/lib/actions/quiz.actions";
 import { cn } from "@/lib/utils";
 import { folderSchema, folderSchemaType } from "@/lib/validations/quizSchemas";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Plus } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { HTMLProps, ReactNode, useRef, useState } from "react";
+import { HTMLProps, useRef } from "react";
 import { useForm } from "react-hook-form";
 
+import Loader from "@/components/Layout/Loader";
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -26,10 +24,7 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
-import { Icons } from "@/components/icons";
-import { Button, ButtonProps } from "@/components/ui/button";
 import { useDashboardContext } from "../Context";
-import Loader from "@/components/Layout/Loader";
 
 type NewQuizButtonProps = HTMLProps<HTMLDivElement> & {
   quizId: string ;

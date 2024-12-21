@@ -17,7 +17,6 @@ import { useUploadThing } from "@/lib/uploadthing";
 import { toast } from "sonner";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { useEditorContext } from "../../Context";
-import { saveImage } from "@/lib/actions/editor";
 
 export default function ImageEditor() {
   const [image, setImage] = useState("");
@@ -136,16 +135,16 @@ export default function ImageEditor() {
               const quesionId = getValues(`questions.${questionIndex}`).id;
 
 
-              const image = await saveImage(
-                uploadedImage[0].url,
-                quesionId
-              );
+              // const image = await saveImage(
+              //   uploadedImage[0].url,
+              //   quesionId
+              // );
 
               if (image) {
-                setValue(`questions.${questionIndex}.image`, {
-                  id: "",
-                  url: uploadedImage[0].url,
-                });
+                // setValue(`questions.${questionIndex}.image`, {
+                //   id: "",
+                //   url: uploadedImage[0].url,
+                // });
                 dispatch({
                   type: "SET_IS_IMAGE_EDITOR_OPEN",
                   payload: { isOpen: false },

@@ -1,4 +1,3 @@
-import { VISIBILITY_OPTIONS } from "@/constants";
 import { Category, QuestionType, Visibility } from "@prisma/client";
 import { z } from "zod";
 

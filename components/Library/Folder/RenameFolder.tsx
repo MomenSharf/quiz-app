@@ -10,7 +10,6 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/use-toast";
-import { newFolder } from "@/lib/actions/quiz.actions";
 import { cn } from "@/lib/utils";
 import { folderSchema, folderSchemaType } from "@/lib/validations/quizSchemas";
 import { zodResolver } from "@hookform/resolvers/zod";

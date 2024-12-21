@@ -1,3 +1,5 @@
+'use server'
+import { PlayQuizQuestion } from "@/components/PlayQuiz/Context";
 import { getCurrentUser } from "../auth";
 import { db } from "../db";
 
@@ -64,4 +66,41 @@ export const getPlayQuiz = async (quizId: string) => {
   } catch (error) {
     return {success: false, message: 'Error while loading quiz data', error}
   }
-};
+}
+export const saveQuizProgress = async (
+  quizId: string,
+  data: {
+    playQuizQuestions: PlayQuizQuestion[];
+    currentQuestion: number;
+    isCompleted: boolean;
+  }
+) => {
+  const session = await getCurrentUser();
+
+  if (!session) {
+    return { success: false, message: "Unauthorized: User is not logged in." };
+  }
+
+  const filteredQuestions = data.playQuizQuestions.filter(
+    (question) => question !== null
+  );
+
+  try {
+    const quizProgress = await db.quizProgress.update({
+      where: {
+        userId_quizId: {
+          userId: session.user.id,
+          quizId,
+        },
+      },
+      data: {
+        currentQuestion: data.currentQuestion,
+        playQuizQuestions: filteredQuestions,
+        isCompleted: data.isCompleted,
+      },
+    });
+    return { success: true, quizProgress };
+  } catch (error) {
+   return {success : false, message : 'Failed to get quiz'}
+  }
+};;
