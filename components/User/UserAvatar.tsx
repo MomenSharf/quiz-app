@@ -52,7 +52,7 @@ export function UserAvatar({ isLoggedIn, user }: UserAvatarProps) {
         </DropdownMenuGroup>
 
         <DropdownMenuSeparator />
-        <DropdownMenuItem asChild>
+        <DropdownMenuItem>
           <SignOut className="w-full justify-start" variant="ghost" />
         </DropdownMenuItem>
       </DropdownMenuContent>

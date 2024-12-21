@@ -38,28 +38,28 @@ export default function NewPasswordForm({ token }: { token: string }) {
 
   const onSubmit = async (data: z.infer<typeof NewPasswordSchema>) => {
     try {
-      const res = await resetPassword({ ...data, token });
-      if (res?.error) {
+      const {success, message} = await resetPassword({ ...data, token });
+      if (success) {
+        toast({ description: message });
+        router.push("/login");
+      }else {
         toast({
           title: "Error",
-          description: res.error,
+          description: message,
           variant: "destructive",
         });
+
       }
-      if (res?.success) {
-        toast({ description: res.success });
-        router.push("/login");
-      }
+  
     } catch (error: any) {
       toast({
         title: "Error",
-        description: error.massege,
+        description: "Something went wrong! try again later",
         variant: "destructive",
       });
     }
   };
 
-  useEffect(() => {});
 
   const togglePasswordVisibility = () => {
     setShowPassword((prevState) => !prevState);

@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { getCurrentUser } from "../auth";
 import { db } from "../db";
 import { ProfileShemaType } from "../validations/userShemas";
@@ -19,7 +20,10 @@ export const getSettingsUser = async () => {
   }
 };
 
-export const UpdateUserProfile = async (user: ProfileShemaType) => {
+export const UpdateUserProfile = async (
+  user: ProfileShemaType,
+  pathname?: string
+) => {
   const session = await getCurrentUser();
 
   if (!session) {
@@ -34,8 +38,10 @@ export const UpdateUserProfile = async (user: ProfileShemaType) => {
     if (!updatedUserr) {
       return { success: false, message: "User not found" };
     }
+    
+    if (pathname) revalidatePath(pathname);
 
-    return { success: true,  user };
+    return { success: true, user };
   } catch (error) {
     return { success: false, message: "can't update profile." };
   }

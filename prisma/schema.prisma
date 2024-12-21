@@ -46,7 +46,7 @@ model Folder {
   parentId   String?
   parent     Folder?  @relation("Subfolders", fields: [parentId], references: [id], onDelete: Cascade)
   subfolders Folder[] @relation("Subfolders")
-  user       User     @relation(fields: [userId], references: [id])
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   quizzes    Quiz[]
 }
 
@@ -62,7 +62,7 @@ model Quiz {
   userId       String
   questions    Question[]
   folder       Folder?        @relation(fields: [folderId], references: [id], onDelete: Cascade)
-  user         User           @relation(fields: [userId], references: [id])
+  user         User           @relation(fields: [userId], references: [id], onDelete: Cascade)
   rates        Rate[]
   QuizProgress QuizProgress[]
   bookmark     Bookmark[]
@@ -100,9 +100,9 @@ model Item {
 
 model Rate {
   id     String @id @default(cuid())
-  quiz   Quiz   @relation(fields: [quizId], references: [id])
+  quiz   Quiz   @relation(fields: [quizId], references: [id], onDelete: Cascade )
   quizId String
-  user   User   @relation(fields: [userId], references: [id])
+  user   User   @relation(fields: [userId], references: [id],  onDelete: Cascade)
   userId String
   rate   Int
 }
@@ -111,7 +111,7 @@ model Bookmark {
   id     String @id @default(cuid())
   quiz   Quiz   @relation(fields: [quizId], references: [id], onDelete: Cascade)
   quizId String
-  user   User   @relation(fields: [userId], references: [id])
+  user   User   @relation(fields: [userId], references: [id] , onDelete: Cascade)
   userId String
   rate   Int
 }
@@ -126,7 +126,7 @@ model QuizProgress {
   completedAt       DateTime? // Time when the quiz was completed, null if not completed
   lastUpdated       DateTime  @updatedAt // Time of the last update to the progress
   playQuizQuestions Json[]
-  user              User      @relation(fields: [userId], references: [id])
+  user              User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   quiz              Quiz      @relation(fields: [quizId], references: [id], onDelete: Cascade)
 
   @@unique([userId, quizId]) // Ensures only one progress record per quiz per user

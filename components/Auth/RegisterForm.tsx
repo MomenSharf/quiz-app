@@ -40,18 +40,17 @@ export default function RegisterForm() {
 
   const onSubmit = async (data: z.infer<typeof RegisterSchema>) => {
     try {
-      const res = await register(data);
-      if (res?.error) {
-        toast({
-          title: "Error",
-          description: res.error,
-          variant: "destructive",
-        });
-      }
-      if (res?.success) {
-        toast({ description: res.success });
+      const { success, message } = await register(data);
+      if (success) {
+        toast({ description: message });
 
         router.push("/login");
+      } else {
+        toast({
+          title: "Error",
+          description: message,
+          variant: "destructive",
+        });
       }
     } catch (error: any) {
       toast({

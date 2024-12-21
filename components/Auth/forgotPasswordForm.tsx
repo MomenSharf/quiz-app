@@ -56,7 +56,7 @@ export default function ForgotPassword() {
     } catch (error: any) {
       toast({
         title: "Error",
-        description: error.massege,
+        description: '"Something went wrong! try again later"',
         variant: "destructive",
       });
     }
@@ -65,7 +65,7 @@ export default function ForgotPassword() {
   if (token) return <NewPasswordForm token={token} />;
 
   return (
-    <div>
+    <>
       {!isSendVerificationEmailSuccess ? (
         <CardWrapper
           title="Reset Password"
@@ -124,7 +124,7 @@ export default function ForgotPassword() {
                   className="font-bold text-primary hover:underline text-xs"
                   href="mailto:mwmnshrfaldinpse@gmail.com"
                 >
-                  {"momefsadf asfdas@.fsadf"}
+                  {form.getValues('email')}
                 </Link>{" "}
                 with further instructions.
               </p>
@@ -132,6 +132,6 @@ export default function ForgotPassword() {
           </CardWrapper>
         </motion.div>
       )}
-    </div>
+    </>
   );
 }

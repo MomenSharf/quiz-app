@@ -5,10 +5,9 @@ import { NextAuthOptions, getServerSession } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import FacebookProvider from "next-auth/providers/facebook";
 import CredentialsProvider from "next-auth/providers/credentials";
-import bcrypt from 'bcrypt'
+import bcrypt from "bcrypt";
 import { getUserByEmail, getUserById } from "./actions/user.actions";
 import { LoginSchema } from "./validations/authSchemas";
-
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(db),
@@ -36,36 +35,32 @@ export const authOptions: NextAuthOptions = {
       },
       async authorize(credentials) {
         try {
-          
-          const validatedCredentials = LoginSchema.safeParse(credentials)
+          const validatedCredentials = LoginSchema.safeParse(credentials);
 
           if (!validatedCredentials.success) {
-            throw new Error('Invalid input data')
+            throw new Error("Invalid input data");
           }
 
           const { email, password } = validatedCredentials.data;
-
-  
 
           // Ensure credentials are provided
           if (!email || !password) {
             throw new Error("Missing email or password");
           }
-    
+
           // Find the user in the database
           const user = await getUserByEmail(email);
-    
+
           if (!user || !user.password) {
             throw new Error("No user found with the provided credentials");
           }
-    
+
           // Verify the password
           const isValid = await bcrypt.compare(password, user.password);
           if (!isValid) {
             throw new Error("Invalid password");
           }
-          
-    
+
           // Return the user object upon successful validation
           return { id: user.id, name: user.name, email: user.email };
         } catch (error: any) {
@@ -73,11 +68,9 @@ export const authOptions: NextAuthOptions = {
           throw new Error(error.message || "Authorization failed");
         }
       },
-    })
-    
+    }),
   ],
   callbacks: {
-
     async session({ token, session }) {
       if (token) {
         session.user.id = token.id;
@@ -91,7 +84,7 @@ export const authOptions: NextAuthOptions = {
     },
 
     async jwt({ token, user }) {
-      const dbUser = await getUserByEmail(token.email|| '')
+      const dbUser = await getUserByEmail(token.email || "");
 
       if (!dbUser) {
         token.id = user!.id;
@@ -104,7 +97,7 @@ export const authOptions: NextAuthOptions = {
             id: dbUser.id,
           },
           data: {
-            username: nanoid(10),
+            username: ` ${dbUser.email.split('@')[0]}-${nanoid(5)}`,
           },
         });
       }
@@ -113,11 +106,11 @@ export const authOptions: NextAuthOptions = {
         id: dbUser.id,
         name: dbUser.name,
         email: dbUser.email,
-        picture: dbUser.image,
+        picture: dbUser.imageUrl,
         username: dbUser.username,
       };
     },
-    redirect({url}) {
+    redirect({ url }) {
       return url;
     },
   },

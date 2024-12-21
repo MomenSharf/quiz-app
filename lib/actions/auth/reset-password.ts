@@ -1,6 +1,6 @@
 "use server";
 
-import { sendVerificationEmailResetPassword } from "@/lib/auth/mail";
+import { sendVerificationEmailDeleteAccount, sendVerificationEmailResetPassword } from "@/lib/auth/mail";
 import { generateVerificationToken } from "@/lib/auth/token";
 import { db } from "@/lib/db";
 import bcrypt from "bcrypt";
@@ -17,7 +17,7 @@ export async function resetPassword({
 }) {
   try {
     if (password !== passwordConfirmation) {
-      return { error: "Passwords do not match" };
+      return { success: false,  message: "Passwords do not match" };
     }
 
     const existingToken = await db.verificationToken.findFirst(({
@@ -27,14 +27,13 @@ export async function resetPassword({
     }))
 
     if(!existingToken)  {
-      return { error: "Unauthorized access. Please check your credentials or the token" };
+      return { success: false,  message: "Unauthorized access. Please check your credentials or the token" };
     }
 
     const hasExpired = new Date(existingToken.expires) < new Date()
 
     if(hasExpired) {
-      return { error: "Unauthorized access. Please check your credentials or the token" };
-        // return redirect('/')
+      return { success: false,  message: "Unauthorized access. Please check your credentials or the token" };
     }
 
     const userExists = await db.user.findFirst({
@@ -44,7 +43,7 @@ export async function resetPassword({
     });
 
     if (!userExists) {
-      return { error: "user not exist" };
+      return { success: false,  message: "user not exist" };
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -64,9 +63,9 @@ export async function resetPassword({
       }
     })
 
-    return { success: "Your password has been reset successfully!" };
+    return { success: true,  message: "Your password has been reset successfully!" };
   } catch (error) {
-    return { error: "An unexpected error occurred. Please try again later." };
+    return { success: false,  message: "An unexpected error occurred. Please try again later." };
   }
 }
 

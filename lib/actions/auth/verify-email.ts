@@ -16,18 +16,18 @@ export async function VerifyEmail(email: string ) {
     });
 
     if (!userExists) {
-      return { error: "user not exist" };
+      return {  success: false,  message: "user not exist" };
     }
     const verificationToken = await generateVerificationToken(email);
 
     await sendVerificationEmail(email, verificationToken.token);
 
-    return { success: "Email Verification was sent" };
+    return {  success: true,  message: "Email Verification was sent" };
 
   } catch (error) {
     console.log(error);
     
-    return { error: "An unexpected error occurred. Please try again later." };
+    return {  success: false,  message: "An unexpected error occurred. Please try again later." };
   }
 }
 
@@ -43,13 +43,13 @@ export async function VerifyPrismaEmail (token: string)  {
     }))
 
     if(!existingToken)  {
-      return { error: "Unauthorized access. Please check your credentials or the token" };
+      return {  success: false,  message: "Unauthorized access. Please check your credentials or the token" };
     }
 
     const hasExpired = new Date(existingToken.expires) < new Date()
 
     if(hasExpired) {
-      return { error: "Unauthorized access. Please check your credentials or the token" };
+      return { success: false,  message: "Unauthorized access. Please check your credentials or the token" };
         // return redirect('/')
     }
 
@@ -60,11 +60,11 @@ export async function VerifyPrismaEmail (token: string)  {
     });
 
     if (!userExists) {
-      return { error: "user not exist" };
+      return { success: false,  message: "user not exist" };
     }
 
     if(userExists.emailVerified) {
-      return { success: "the user aready verified" }
+      return { success: false,  message: "the user aready verified" }
     }
 
 
@@ -83,10 +83,10 @@ export async function VerifyPrismaEmail (token: string)  {
       }
     })
 
-    return { success: "Your password has been reset successfully!" };
+    return { success: true,  message: "Your password has been reset successfully!" };
   } catch (error) {console.log(error);
   
-    return { error: "An unexpected error occurred. Please try again later." };
+    return { success: false,  message: "An unexpected error occurred. Please try again later." };
   }
 }
 

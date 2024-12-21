@@ -29,6 +29,6 @@
     "quiz-app",
     "insertData.js",
     "app/(auth)/forgot-password"
-  ],
+, "app/(auth)/reset-password"  ],
   "exclude": ["node_modules"]
 }
