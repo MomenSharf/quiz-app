@@ -32,7 +32,7 @@ export default function Cards() {
               Play Exciting Quizzes Powered by AI!
             </p>
             <Button className="self-start mt-auto rounded-xl" size="sm">
-              Create with AI
+              Play with AI
             </Button>
             <Icons.aiStars className="absolute w-6 h-6 sm:w-10 sm:h-10 fill-primary right-3 bottom-3" />
           </div>

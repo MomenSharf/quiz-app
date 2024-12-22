@@ -1,30 +1,62 @@
-
-'use client'
-import { motion } from "framer-motion";
-import { Input } from "../ui/input";
-import { Search } from "lucide-react";
-import { Button } from "../ui/button";
-import { useRef, useState } from "react";
+"use client";
+import { useOnClickOutside } from "@/hooks/use-on-click-outside";
 import { cn } from "@/lib/utils";
+import { motion } from "framer-motion";
+import { Search } from "lucide-react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
+import { useDebouncedCallback } from "use-debounce";
+import { Button } from "../ui/button";
+import { Input } from "../ui/input";
 
 export default function SearchInput() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const searchInputContainerRef = useRef<HTMLInputElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
+  useOnClickOutside(searchInputContainerRef, () => {
+    setIsSearchOpen(false);
+  });
+
+  const searchParams = useSearchParams();
+  const { replace, push } = useRouter();
+  const pathname = usePathname();
+
+  const handleSearch = useDebouncedCallback((term: string) => {
+    const params = new URLSearchParams(searchParams);
+
+    if (pathname === "/search") {
+      if (term) {
+        params.set("query", term);
+      } else {
+        params.delete("query");
+      }
+      replace(`${pathname}?${params.toString()}`);
+    }
+  }, 500);
+
+  useEffect(() => {
+    if (searchParams.has("query")) {
+      setIsSearchOpen(true);
+    } else {
+      setIsSearchOpen(false);
+    }
+  }, [searchParams])
+
   return (
-    <div className="flex items-center ml-auto">
+    <div className="flex items-center ml-auto" ref={searchInputContainerRef}>
       <motion.div
         initial={{ width: 0 }}
-        animate={{ width: isSearchOpen ? "" : 0 }}
+        animate={{ width: isSearchOpen ? "auto" : 0 }}
         transition={{ type: "spring", stiffness: 300, damping: 30 }}
       >
         <Input
           placeholder="Search"
           className="rounded-tr-none rounded-br-none rounded-tl-full rounded-bl-full border-r-0"
           ref={searchInputRef}
-          onBlur={() => {
-            
-            setIsSearchOpen(false);
+          onChange={(e) => {
+            handleSearch(e.target.value.trim());
           }}
+          defaultValue={searchParams.get('query') || ''}
         />
       </motion.div>
       <Button
@@ -35,7 +67,14 @@ export default function SearchInput() {
         })}
         aria-label="Search"
         onClick={() => {
-          if (isSearchOpen) {
+          if (
+            isSearchOpen &&
+            searchInputRef &&
+            searchInputRef.current?.value !== "" &&
+            pathname !== "/search"
+          ) {
+            push(`/search?query=${searchInputRef.current?.value}`);
+            // setIsSearchOpen(false);
           } else {
             setIsSearchOpen(true);
             searchInputRef.current?.focus();

@@ -8,7 +8,7 @@ import { getCurrentUser } from "@/lib/auth";
 import { isValidSortOption } from "@/lib/utils";
 import { redirect } from "next/navigation";
 
-export default async function page({
+export default async function Page({
   params: { folderId },
   searchParams,
 }: {

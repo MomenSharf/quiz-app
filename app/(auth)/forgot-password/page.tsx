@@ -3,7 +3,7 @@ import { TokenHasExpired } from "@/lib/actions/auth/token-expires";
 import { getCurrentUser } from "@/lib/auth";
 import { redirect } from "next/navigation";
 
-export default async function page() {
+export default async function Page() {
   const session = await getCurrentUser();
 
   if(session) {

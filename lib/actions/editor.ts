@@ -9,7 +9,6 @@ import { revalidatePath } from "next/cache";
 import { getCurrentUser } from "../auth";
 import { db } from "../db";
 
-
 export const getEditorQuiz = async ({ quizId }: { quizId: string }) => {
   const session = await getCurrentUser();
 
@@ -121,8 +120,11 @@ export const saveEditorQuiz = async (
             })),
           },
         };
+
       default:
-        throw new Error("Invalid question type");
+        return {
+          ...base,
+        };
     }
   };
 

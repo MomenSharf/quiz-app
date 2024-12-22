@@ -6,8 +6,8 @@ import GoogleProvider from "next-auth/providers/google";
 import FacebookProvider from "next-auth/providers/facebook";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcrypt";
-import { getUserByEmail, getUserById } from "./actions/user.actions";
 import { LoginSchema } from "./validations/authSchemas";
+import { getUserByEmail } from "./actions/user";
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(db),

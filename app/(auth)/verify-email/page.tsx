@@ -6,35 +6,42 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { TokenHasExpired } from "@/lib/actions/auth/token-expires";
 import { VerifyPrismaEmail } from "@/lib/actions/auth/verify-email";
 import { getCurrentUser } from "@/lib/auth";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
-export default async function page({
-  searchParams,
-}: {
-  searchParams: { [key: string]: string | string[] | undefined };
+export default async function Page(props: {
+  searchParams?: Promise<{
+    token?: string;
+  }>;
 }) {
   const session = await getCurrentUser();
 
-  const token = searchParams && searchParams.token;
+  const searchParams = await props.searchParams;
+  const token = searchParams?.token || "";
 
-  if (token && typeof token === "string") {
+  const hasExpired = await TokenHasExpired(token);
+
+  if (hasExpired) {
+    if (!session) {
+      return redirect("/forgot-password");
+    }
+    return redirect("/");
+  } else {
     const { success, message } = await VerifyPrismaEmail(token);
     if (success) {
       return (
         <Card>
           <CardHeader>
             <CardTitle>Account Verified</CardTitle>
-            <CardDescription>
-              {message}
-            </CardDescription>
+            <CardDescription>{message}</CardDescription>
           </CardHeader>
 
           <CardContent className="flex justify-center">
-            <Link className={cn(buttonVariants())} href="/" >
+            <Link className={cn(buttonVariants())} href="/">
               Go back home
             </Link>
           </CardContent>
@@ -45,9 +52,7 @@ export default async function page({
         <Card>
           <CardHeader>
             <CardTitle>Verified field</CardTitle>
-            <CardDescription>
-            {message}
-            </CardDescription>
+            <CardDescription>{message}</CardDescription>
           </CardHeader>
 
           <CardContent className="flex justify-center">
@@ -58,11 +63,5 @@ export default async function page({
         </Card>
       );
     }
-  }
-
-  if (session) {
-    return redirect("/");
-  } else {
-    return redirect("/login");
   }
 }

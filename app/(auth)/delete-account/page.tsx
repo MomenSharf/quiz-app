@@ -5,14 +5,16 @@ import { TokenHasExpired } from "@/lib/actions/auth/token-expires";
 import { getCurrentUser } from "@/lib/auth";
 import { redirect } from "next/navigation";
 
-export default async function page({
-  searchParams,
-}: {
-  searchParams: { [key: string]: string | string[] | undefined };
+export default async function Page(props: {
+  searchParams?: Promise<{
+    token?: string;
+  }>;
 }) {
   const session = await getCurrentUser();
+  
+  const searchParams = await props.searchParams;
+  const token = searchParams?.token || "";
 
-  const token = searchParams && searchParams.token;
 
   if (token && typeof token === "string") {
     const hasExpired = await TokenHasExpired(token);

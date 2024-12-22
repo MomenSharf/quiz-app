@@ -2,7 +2,7 @@ import Quiz from "@/components/QuizDetails/Quiz";
 import { getQuizDetails } from "@/lib/actions/quizDetails";
 import { notFound } from "next/navigation";
 
-export default async function page({
+export default async function Page({
   params: { quizId },
 }: {
   params: { quizId: string };

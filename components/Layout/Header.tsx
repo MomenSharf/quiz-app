@@ -23,7 +23,7 @@ export default async function Header() {
         <SearchInput />
       </div>
       <div className="hidden container sm:flex  items-center justify-end gap-3">
-        <Logo />
+        {/* <Logo /> */}
         <SearchInput />
         {session?.user ? (
           <>

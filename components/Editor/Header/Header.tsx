@@ -17,7 +17,7 @@ export default function Header() {
   const {
     dispatch,
     state: { isSettingsOpen },
-    form: { setFocus, control, getValues, setValue, reset },
+    form: { setFocus, control, getValues, setValue },
   } = useEditorContext();
   const router = useRouter();
 

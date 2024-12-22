@@ -56,7 +56,7 @@ export default function LoginForm() {
       if (res?.error) {
         toast({
           title: "Error",
-          description: res?.error,
+          description: "Something went wrong! try again later",
           variant: "destructive",
         });
       }
