@@ -4,7 +4,6 @@ import DataCard from "./DataCard";
 
 export default function Table() {
   const {
-    dispatch,
     state: { selectedQuizzesIds },
     quizzes,
     folderWithQuizzes,
@@ -16,7 +15,7 @@ export default function Table() {
       <table className="w-full table-auto border-separate border-spacing-y-4">
         <thead className="hidden sm:table-header-group">
           <tr className="*:text-start text-sm">
-            <th className="sm:min-w-3 px-2">
+            <th className="w-10 px-2">
               <div className="flex justify-center items-center">
                 <Checkbox
                   checked={

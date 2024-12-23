@@ -67,6 +67,7 @@ model Quiz {
   QuizProgress QuizProgress[]
   bookmark     Bookmark[]
   imageUrl     String?
+  playCount    Int            @default(0) // Field to track how many times the quiz has been played
 
   @@index([title, createdAt]) // Index for faster querying by title and creation date
 }
@@ -100,9 +101,9 @@ model Item {
 
 model Rate {
   id     String @id @default(cuid())
-  quiz   Quiz   @relation(fields: [quizId], references: [id], onDelete: Cascade )
+  quiz   Quiz   @relation(fields: [quizId], references: [id], onDelete: Cascade)
   quizId String
-  user   User   @relation(fields: [userId], references: [id],  onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String
   rate   Int
 }
@@ -111,9 +112,10 @@ model Bookmark {
   id     String @id @default(cuid())
   quiz   Quiz   @relation(fields: [quizId], references: [id], onDelete: Cascade)
   quizId String
-  user   User   @relation(fields: [userId], references: [id] , onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String
-  rate   Int
+
+  @@unique([userId, quizId])
 }
 
 model QuizProgress {

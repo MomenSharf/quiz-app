@@ -44,7 +44,6 @@ export const getEditorQuiz = async ({ quizId }: { quizId: string }) => {
 export const saveEditorQuiz = async (
   quizId: string,
   data: quizSchemaType,
-  pathname: string
 ): Promise<{ success: boolean; message: string; quiz?: Quiz }> => {
   const session = await getCurrentUser();
 
@@ -153,7 +152,6 @@ export const saveEditorQuiz = async (
     });
 
     if (quiz) {
-      revalidatePath(pathname);
       return { success: true, message: "Quiz updated successfully.", quiz };
     } else {
       return {
@@ -162,7 +160,6 @@ export const saveEditorQuiz = async (
       };
     }
   } catch (error: any) {
-    console.error(error);
     return { success: false, message: `An error occurred: ${error.message}` };
   }
 };

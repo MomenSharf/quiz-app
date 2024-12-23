@@ -28,7 +28,7 @@ export default function DataCard({
   const dataPath = `/${isFolder ? "dashboard/folders" : "quiz"}/${data.id}`;
   return (
     <tr className="bg-white p-3 rounded-lg mb-3">
-      <td className="p-2 pr-0 rounded-tl-md rounded-bl-md">
+      <td className="p-2 rounded-tl-md rounded-bl-md">
         <div className="flex justify-center items-center">
           {!isFolder && (
             <Checkbox
@@ -39,7 +39,7 @@ export default function DataCard({
         </div>
       </td>
 
-      <td className="w-full flex justify-start gap-2 p-2">
+      <td className="w-full flex justify-start gap-2 p-2 pl-0">
         <div
           className="flex flex-col rounded-md overflow-hidden cursor-pointer"
           onClick={() => router.push(dataPath)}

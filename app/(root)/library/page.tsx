@@ -5,8 +5,9 @@ import {
 } from "@/lib/actions/dashboard";
 
 import { getCurrentUser } from "@/lib/auth";
-import { isValidSortOption } from "@/lib/utils";
+import { isValidLibrarySortOption } from "@/lib/utils";
 import { redirect } from "next/navigation";
+
 
 export default async function Page({
   searchParams,
@@ -19,7 +20,7 @@ export default async function Page({
     return redirect("/login");
   }
 
-  const sortBy = isValidSortOption(searchParams.sortBy)
+  const sortBy = isValidLibrarySortOption(searchParams.sortBy)
     ? searchParams.sortBy
     : "recentUpdate";
 

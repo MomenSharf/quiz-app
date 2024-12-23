@@ -22,8 +22,19 @@ import { QuizDetails } from "@/types";
 import { copyQuiz as copyQuizServer } from "@/lib/actions/quizDetails";
 import { toast } from "../ui/use-toast";
 import DeleteDialog from "./DeleteDiaolg";
+import { toggleBookmark } from "@/lib/actions/bookmark";
+import { revalidatePathInServer } from "@/lib/actions/utils";
+import BookmarkButton from "../Quiz/BookmarkButton";
 
-export default function QuizCard({ quiz }: { quiz: QuizDetails }) {
+export default function QuizCard({
+  quiz,
+  isBookmarked,
+  pathname,
+}: {
+  quiz: QuizDetails;
+  isBookmarked?: boolean;
+  pathname: string;
+}) {  
   const sessiom = useSession();
   const [isDescriptionOpen, setIsDescriptionOpen] = useState(false);
   const [isShowMoreVisible, setIsShowMoreVisible] = useState(false);
@@ -50,7 +61,7 @@ export default function QuizCard({ quiz }: { quiz: QuizDetails }) {
   const copyQuiz = async () => {
     setIsCopiyngQuiz(true);
     const { success, message } = await copyQuizServer(quiz.id);
-    if (!success ) {
+    if (!success) {
       {
         setIsCopiyngQuiz(false);
         toast({ variant: "destructive", description: message });
@@ -62,9 +73,11 @@ export default function QuizCard({ quiz }: { quiz: QuizDetails }) {
     }
   };
 
+
+
   const router = useRouter();
 
-  const isOner = quiz.user.id === sessiom.data?.user.id ;
+  const isOner = quiz.user.id === sessiom.data?.user.id;
 
   return (
     <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 justify-center p-5 bg-card rounded-xl">
@@ -145,9 +158,12 @@ export default function QuizCard({ quiz }: { quiz: QuizDetails }) {
               <span>Edit</span>
             </Button>
           ) : (
-            <Button className="rounded-full" size="icon" variant="outline"
-            onClick={copyQuiz}
-            disabled={isCopyingQuiz}
+            <Button
+              className="rounded-full"
+              size="icon"
+              variant="outline"
+              onClick={copyQuiz}
+              disabled={isCopyingQuiz}
             >
               {isCopyingQuiz ? (
                 <Icons.Loader className="w-4 h-4 animate-spin stroke-foreground" />
@@ -162,11 +178,9 @@ export default function QuizCard({ quiz }: { quiz: QuizDetails }) {
           </Button>
 
           {isOner ? (
-           <DeleteDialog quizId={quiz.id}/>
+            <DeleteDialog quizId={quiz.id} />
           ) : (
-            <Button className="rounded-full" size="icon" variant="outline">
-              <Bookmark className="w-4 h-4" />
-            </Button>
+            <BookmarkButton quizId={quiz.id} pathname={pathname} isBookmarked={isBookmarked}/>
           )}
         </div>
       </div>

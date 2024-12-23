@@ -1,30 +1,26 @@
-import { EditorQuiz, PlayQuizType } from "@/types";
-import Image from "next/image";
-import React from "react";
-import { UserAvatarImage } from "../User/UserAvatar";
-import { Icons } from "../icons";
-import { Button, buttonVariants } from "../ui/button";
-import { useRouter } from "next/navigation";
-import { Badge } from "../ui/badge";
-import { Timer } from "lucide-react";
+import { MotionDiv } from "@/hooks/useMotion";
 import { cn, formatToMinSec } from "@/lib/utils";
-import { motion } from "framer-motion";
+import { SearchQuiz } from "@/types";
+import { Timer } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
+import { Icons } from "../icons";
+import { Badge } from "../ui/badge";
+import { buttonVariants } from "../ui/button";
 
-export default function QuizzesScrollerCard({
+export default function QuizzesCard({
   quiz,
   index,
 }: {
-  quiz: EditorQuiz;
+  quiz: SearchQuiz;
   index: number;
 }) {
-  const router = useRouter();
   const quizTime = quiz.questions.reduce(
     (acc, curr) => acc + curr.timeLimit,
     0
   );
   return (
-    <motion.div
+    <MotionDiv
       variants={{
         hidden: { opacity: 0 },
         visible: { opacity: 1 },
@@ -37,7 +33,7 @@ export default function QuizzesScrollerCard({
         duration: 0.3,
       }}
       viewport={{ amount: 0 }}
-      className="min-w-52 bg-white rounded-xl flex flex-col"
+      className="min-w-52 bg-card rounded-xl flex flex-col"
     >
       <div className="group relative flex flex-col w-full rounded-xl  rounded-bl-none rounded-br-none overflow-hidden">
         <Image
@@ -101,6 +97,6 @@ export default function QuizzesScrollerCard({
           </div>
         </div>
       </div>
-    </motion.div>
+    </MotionDiv>
   );
 }

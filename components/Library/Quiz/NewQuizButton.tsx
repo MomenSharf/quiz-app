@@ -24,7 +24,7 @@ export default function NewQuizButton({
       )}
       disabled={isCreatingQuiz}
       onClick={() => {
-        createQuiz({ pathname: "/dashboard", folderId });
+        createQuiz({ pathname: "/library", folderId });
       }}
       {...props}
     >

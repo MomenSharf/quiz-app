@@ -1,4 +1,4 @@
-import { SORT_OPTIONS } from "@/constants";
+import { CATEGORY_OPTIONS_LIST, LIBRARY_SORT_OPTIONS, SEARCH_SORT_OPTIONS } from "@/constants";
 import {
   fillInTheBlankSchema,
   matchingPairsSchema,
@@ -8,8 +8,8 @@ import {
   trueFalseSchema,
   unselectedSchema
 } from "@/lib/validations/quizSchemas";
-import { EditorQuiz, SortOption } from "@/types";
-import { QuestionType } from "@prisma/client";
+import { EditorQuiz, LibrarySortOption, SearchSortOption } from "@/types";
+import { Category, QuestionType } from "@prisma/client";
 import { type ClassValue, clsx } from "clsx";
 import { formatDistanceToNow, intervalToDuration } from "date-fns";
 import { twMerge } from "tailwind-merge";
@@ -59,8 +59,14 @@ export function generateVerificationCode() {
 }
 
 // Function that takes a SortOption and returns the correct sorting logic
-export const isValidSortOption = (value: unknown): value is SortOption => {
-  return SORT_OPTIONS.includes(value as SortOption);
+export const isValidLibrarySortOption = (value: unknown): value is LibrarySortOption => {
+  return LIBRARY_SORT_OPTIONS.includes(value as LibrarySortOption);
+};
+export const isValidSearchSortOption = (value: unknown): value is SearchSortOption => {
+  return SEARCH_SORT_OPTIONS.includes(value as SearchSortOption);
+};
+export const isValidCategoryOption = (value: unknown): value is Category => {
+  return CATEGORY_OPTIONS_LIST.map(e => e.value).includes(value as Category);
 };
 
 export const mapQuestionByType = (question: EditorQuiz["questions"][number]) => {

@@ -3,11 +3,11 @@
 import { db } from "@/lib/db";
 import { getCurrentUser } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
-import { FolderPathSegment, SortOption } from "@/types";
+import { FolderPathSegment, LibrarySortOption,  } from "@/types";
 
 // Get
 export const getDashboardQuizzes = async (
-  sortOption: SortOption,
+  sortOption: LibrarySortOption,
   folderId?: string
 ) => {
   const session = await getCurrentUser();
@@ -16,7 +16,7 @@ export const getDashboardQuizzes = async (
     return { success: false, message: "Unauthorized: User is not logged in." };
   }
   try {
-    const orderByMap: Record<SortOption, Record<string, string>> = {
+    const orderByMap: Record<LibrarySortOption, Record<string, string>> = {
       alphabetical: { title: "asc" },
       reverseAlphabetical: { title: "desc" },
       recentUpdate: { updatedAt: "desc" },
@@ -54,7 +54,7 @@ export const getDashboardQuizzes = async (
 };
 
 export const getDashboardFoldersWithQuizzes = async (
-  sortOption: SortOption,
+  sortOption: LibrarySortOption,
   parentId?: string
 ) => {
   const session = await getCurrentUser();
@@ -63,7 +63,7 @@ export const getDashboardFoldersWithQuizzes = async (
     return { success: false, message: "Unauthorized: User is not logged in." };
   }
   try {
-    const orderByMap: Record<SortOption, Record<string, string>> = {
+    const orderByMap: Record<LibrarySortOption, Record<string, string>> = {
       alphabetical: { title: "asc" },
       reverseAlphabetical: { title: "desc" },
       recentUpdate: { updatedAt: "desc" },
@@ -100,7 +100,7 @@ export const getDashboardFoldersWithQuizzes = async (
   }
 };
 export const getDashboardFolder = async (
-  sortOption: SortOption,
+  sortOption: LibrarySortOption,
   folderId?: string
 ) => {
   const session = await getCurrentUser();
@@ -109,7 +109,7 @@ export const getDashboardFolder = async (
     return { success: false, message: "Unauthorized: User is not logged in." };
   }
   try {
-    const orderByMap: Record<SortOption, Record<string, string>> = {
+    const orderByMap: Record<LibrarySortOption, Record<string, string>> = {
       alphabetical: { title: "asc" },
       reverseAlphabetical: { title: "desc" },
       recentUpdate: { updatedAt: "desc" },

@@ -1,3 +1,4 @@
+"use client";
 import {
   Select,
   SelectContent,
@@ -5,35 +6,33 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { LIBRARY_SORT_OPTIONS_WITH_LABEL } from "@/constants";
-import { usePathname, useSearchParams, useRouter } from "next/navigation";
+import { CATEGORY_OPTIONS_LIST, SEARCH_SORT_OPTIONS_WITH_LABEL } from "@/constants";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
-export default function SortBy() {
-  
+export default function CategorySelector() {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const { replace } = useRouter();
-  
-  const sortBy = searchParams.get('sortBy') || '';
+
+  const category = searchParams.get("category") || "";
 
   function handleSearch(term: string) {
     const params = new URLSearchParams(searchParams);
     if (term) {
-      params.set('sortBy', term);
+      params.set("category", term);
     } else {
-      params.delete('sortBy');
+      params.delete("category");
     }
     replace(`${pathname}?${params.toString()}`);
   }
-  
-  
+
   return (
-    <Select defaultValue={sortBy} onValueChange={handleSearch}>
+    <Select defaultValue={category} onValueChange={handleSearch}>
       <SelectTrigger className="w-[130px] sm:w-[160px]">
-        <SelectValue placeholder="Sort by" />
+        <SelectValue placeholder="Category" />
       </SelectTrigger>
       <SelectContent>
-        {LIBRARY_SORT_OPTIONS_WITH_LABEL.map(({value, label}) => {
+        {CATEGORY_OPTIONS_LIST.map(({ value, label }) => {
           return (
             <SelectItem value={value} key={value}>
               {label}

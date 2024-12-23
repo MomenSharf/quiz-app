@@ -1,5 +1,5 @@
 import { Icons } from "@/components/icons";
-import { SortOption } from "@/types";
+import { LibrarySortOption, SearchSortOption } from "@/types";
 import { THEME_COLORS as colorsType } from "@/types/theme";
 import { Category, QuestionType } from "@prisma/client";
 import { LucideProps } from "lucide-react";
@@ -25,7 +25,7 @@ import {
 
 export const UNSAVED_ID_PREFIX = "unsaved-";
 
-export const SORT_OPTIONS: SortOption[] = [
+export const LIBRARY_SORT_OPTIONS: LibrarySortOption[] = [
   "alphabetical",
   "reverseAlphabetical",
   "recentUpdate",
@@ -33,14 +33,30 @@ export const SORT_OPTIONS: SortOption[] = [
   "oldestCreate",
   "oldestUpdate",
 ];
+export const SEARCH_SORT_OPTIONS: SearchSortOption[] = [
+  "highestRated",
+  "mostRecent",
+  "mostPlayed",
+];
 
-export const SORT_OPTIONS_WITH_LABEL: { value: SortOption; label: string }[] = [
+export const LIBRARY_SORT_OPTIONS_WITH_LABEL: {
+  value: LibrarySortOption;
+  label: string;
+}[] = [
   { value: "alphabetical", label: "Alphabetical" },
   { value: "reverseAlphabetical", label: "Reverse Alphabetical" },
   { value: "recentUpdate", label: "Recently Updated" },
   { value: "recentCreate", label: "Recently Created" },
   { value: "oldestCreate", label: "Oldest Created" },
   { value: "oldestUpdate", label: "Oldest Updated" },
+];
+export const SEARCH_SORT_OPTIONS_WITH_LABEL: {
+  value: SearchSortOption;
+  label: string;
+}[] = [
+  { value: "highestRated", label: "Highes Rated" },
+  { value: "mostPlayed", label: "Most Played" },
+  { value: "mostRecent", label: "Most Recent" },
 ];
 
 export const COLORS: colorsType[] = [

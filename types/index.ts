@@ -1,15 +1,22 @@
 import { QUESTION_TYPES } from "@/constants";
+import { db } from "@/lib/db";
 import { Prisma } from "@prisma/client";
 
 export type QuestionType = (typeof QUESTION_TYPES)[number];
 
-export type SortOption =
+export type LibrarySortOption =
   | "alphabetical"
   | "reverseAlphabetical"
   | "recentUpdate"
   | "recentCreate"
   | "oldestCreate"
   | "oldestUpdate";
+
+export type SearchSortOption =
+  | "highestRated"
+  | "mostRecent"
+  | "mostPlayed"
+
 
 export type DashboardQuiz = Prisma.QuizGetPayload<{
   include: {
@@ -67,47 +74,35 @@ export type EditorQuiz = Prisma.QuizGetPayload<{
   include: {
     questions: {
       include: {
-        items: true,
-      },
-    },
-  }
-}>
-
-export type QuizDetails = Prisma.QuizGetPayload<{
-  include: {
-    user: true,
-    questions: {
-      include: {
-        _count: true,
-        items: true,
-      },
-    },
-  },
-}>
-
-
-
-
-export type EditorQuiz2 = Prisma.QuizGetPayload<{
-  select: {
-    id: true;
-    title: true;
-    description: true;
-    image: true;
-    visibility: true;
-    categories: true;
-    createdAt: true;
-    updatedAt: true;
-    questions: {
-      include: {
-        image: true;
         items: true;
       };
     };
-    user: true;
-    rates: true;
   };
 }>;
+
+export type QuizDetails = Prisma.QuizGetPayload<{
+  include: {
+    user: true;
+    questions: {
+      include: {
+        _count: true;
+      };
+    };
+  };
+}>;
+
+export type SearchQuiz = Prisma.QuizGetPayload<{
+  include: {
+    user: true,
+   questions: {
+    include: {
+      _count: true
+    }
+   },
+   rates: true
+  },
+}>;
+
 export type PlayQuizType = Prisma.QuizProgressGetPayload<{
   include: {
     quiz: {
@@ -125,8 +120,6 @@ export type PlayQuizType = Prisma.QuizProgressGetPayload<{
 }>;
 
 export type SettingsUser = Prisma.UserGetPayload<{}>;
-
-
 
 //
 //

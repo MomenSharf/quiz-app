@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import TypeSelector from "./TypeSelector";
 import Question from "./Question/Question";
 import ImageEditor from "./Question/QuestionImageManager/ImageEditor";
+import Settings from "./Settings/Settings";
 
 export default function Content() {
   const {
@@ -44,7 +45,7 @@ export default function Content() {
             key={question.id}
           >
             {isSettingsOpen ? (
-              "Settings"
+              <Settings />
             ) : question.type === "UNSELECTED" ? (
               <TypeSelector key={question.id} questionIndex={i} />
             ) : (

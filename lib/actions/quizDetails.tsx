@@ -19,7 +19,6 @@ export const getQuizDetails = async ({ quizId }: { quizId: string }) => {
         questions: {
           include: {
             _count: true,
-            items: true,
           },
         },
       },

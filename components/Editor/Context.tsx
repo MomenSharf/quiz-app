@@ -165,7 +165,6 @@ export const EditorProvider = ({
         const prismaQuiz = await saveEditorQuizServer(
           initialQuiz.id,
           data,
-          "pathname"
         );
 
         if (prismaQuiz) {

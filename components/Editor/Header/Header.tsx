@@ -82,6 +82,7 @@ export default function Header() {
       <div className="ml-auto flex gap-1">
         <Button
           variant="outline"
+          type="button"
           className={cn("gap-1 rounded-xl", 
           {  'border-primary border-2': isSettingsOpen }
           )}
