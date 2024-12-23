@@ -2,15 +2,10 @@ generator client {
   provider = "prisma-client-js"
 }
 
-// datasource db {
-//   provider = "postgresql"
-//   url      = env("DATABASE_URL")
-//   // directUrl = env("DIRECT_URL") 
-// }
-
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+
   // uncomment next line if you use Prisma <5.10
   // directUrl = env("DATABASE_URL_UNPOOLED")
 }
@@ -29,7 +24,7 @@ model User {
   folders       Folder[]
   quizzes       Quiz[]
   sessions      Session[]
-  rates         Rate[]
+  ratings       Rating[]
   QuizProgress  QuizProgress[]
   bookmark      Bookmark[]
   imageUrl      String?
@@ -63,7 +58,7 @@ model Quiz {
   questions    Question[]
   folder       Folder?        @relation(fields: [folderId], references: [id], onDelete: Cascade)
   user         User           @relation(fields: [userId], references: [id], onDelete: Cascade)
-  rates        Rate[]
+  ratings      Rating[]
   QuizProgress QuizProgress[]
   bookmark     Bookmark[]
   imageUrl     String?
@@ -99,13 +94,15 @@ model Item {
   imageUrl   String?
 }
 
-model Rate {
-  id     String @id @default(cuid())
-  quiz   Quiz   @relation(fields: [quizId], references: [id], onDelete: Cascade)
-  quizId String
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId String
-  rate   Int
+model Rating {
+  id        String   @id @default(cuid())
+  quiz      Quiz     @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  quizId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  createdAt DateTime @default(now())
+
+  rating Int
 }
 
 model Bookmark {

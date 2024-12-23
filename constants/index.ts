@@ -104,8 +104,8 @@ export const DESKTOP_SIDEBAR_ITEMS = [
     icon: Icons.settings, // Replace with actual SVG icon component or path
   },
   {
-    route: "/bookmarked",
-    label: "Bookmarked",
+    route: "/bookmarks",
+    label: "Bookmarks",
     icon: Icons.bookmark, // Replace with actual SVG icon component or path
   },
 ];

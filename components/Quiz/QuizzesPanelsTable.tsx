@@ -1,11 +1,11 @@
-import { SearchQuiz } from "@/types";
+import { SearchQuiz, SearchQuizWithIsBookmark } from "@/types";
 import React from "react";
 import QuizPanel from "./QuizPanel";
 
 export default function QuizzesPanelsTable({
   quizzes,
 }: {
-  quizzes: SearchQuiz[];
+  quizzes: SearchQuizWithIsBookmark[];
 }) {
   return (
     <div className="flex flex-col gap-1">

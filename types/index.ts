@@ -12,11 +12,7 @@ export type LibrarySortOption =
   | "oldestCreate"
   | "oldestUpdate";
 
-export type SearchSortOption =
-  | "highestRated"
-  | "mostRecent"
-  | "mostPlayed"
-
+export type SearchSortOption = "highestRated" | "mostRecent" | "mostPlayed";
 
 export type DashboardQuiz = Prisma.QuizGetPayload<{
   include: {
@@ -82,26 +78,33 @@ export type EditorQuiz = Prisma.QuizGetPayload<{
 
 export type QuizDetails = Prisma.QuizGetPayload<{
   include: {
+    user: true,
+    bookmark: true,
+    questions: {
+      include: {
+        _count: true,
+      },
+    },
+    ratings: true,
+  },
+  
+}>;
+export type QuizDetailsWithIsBookmark = QuizDetails & { isBookmark: boolean }
+
+export type SearchQuiz = Prisma.QuizGetPayload<{
+  include: {
     user: true;
+    bookmark: true;
     questions: {
       include: {
         _count: true;
       };
     };
+    ratings: true;
   };
 }>;
 
-export type SearchQuiz = Prisma.QuizGetPayload<{
-  include: {
-    user: true,
-   questions: {
-    include: {
-      _count: true
-    }
-   },
-   rates: true
-  },
-}>;
+export type SearchQuizWithIsBookmark = SearchQuiz & { isBookmark: boolean };
 
 export type PlayQuizType = Prisma.QuizProgressGetPayload<{
   include: {
@@ -112,7 +115,7 @@ export type PlayQuizType = Prisma.QuizProgressGetPayload<{
             items: true;
           };
         };
-        rates: true;
+        ratings: true;
       };
     };
     user: true;

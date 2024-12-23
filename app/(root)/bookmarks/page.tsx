@@ -1,6 +1,7 @@
 import QuizzesPanelsTable from "@/components/Quiz/QuizzesPanelsTable";
 import CategorySelector from "@/components/Search/CategorySelector";
 import SortBySelector from "@/components/Search/SortBySelector";
+import { bookmarksQuizzes } from "@/lib/actions/bookmark";
 import { searchQuizzes } from "@/lib/actions/search";
 import { isValidCategoryOption, isValidSearchSortOption } from "@/lib/utils";
 
@@ -18,7 +19,7 @@ export default async function Page(props: {
     : undefined;
   const category = isValidCategoryOption(searchParams?.category) ? searchParams?.category : undefined;
 
-  const { success, message, quizzes } = await searchQuizzes({
+  const { success, message, quizzes } = await bookmarksQuizzes({
     query,
     sortOption,
     category,
@@ -29,9 +30,9 @@ export default async function Page(props: {
   }
   return (
     <div className="flex flex-col gap-3 p-2 sm:p-3">
-      <h1 className="font-semibold max-w-full truncate">
+      {query && <h1 className="font-semibold max-w-full truncate">
         Showing results for {`'${query}'`}
-      </h1>
+      </h1>}
       <div className="flex justify-end gap-1 sm:gap-3">
         <SortBySelector />
         <CategorySelector />

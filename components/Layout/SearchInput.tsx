@@ -14,7 +14,10 @@ export default function SearchInput() {
   const searchInputContainerRef = useRef<HTMLInputElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
   useOnClickOutside(searchInputContainerRef, () => {
-    setIsSearchOpen(false);
+    console.log(searchParams.get("query"));
+
+    if (!searchParams.get("query") && searchParams.get("query") !== "")
+      setIsSearchOpen(false);
   });
 
   const searchParams = useSearchParams();
@@ -24,7 +27,7 @@ export default function SearchInput() {
   const handleSearch = useDebouncedCallback((term: string) => {
     const params = new URLSearchParams(searchParams);
 
-    if (pathname === "/search") {
+    if (pathname === "/search" || pathname === "/bookmarks") {
       if (term) {
         params.set("query", term);
       } else {
@@ -37,10 +40,8 @@ export default function SearchInput() {
   useEffect(() => {
     if (searchParams.has("query")) {
       setIsSearchOpen(true);
-    } else {
-      setIsSearchOpen(false);
     }
-  }, [searchParams])
+  }, [searchParams]);
 
   return (
     <div className="flex items-center ml-auto" ref={searchInputContainerRef}>
@@ -51,12 +52,12 @@ export default function SearchInput() {
       >
         <Input
           placeholder="Search"
-          className="rounded-tr-none rounded-br-none rounded-tl-full rounded-bl-full border-r-0"
+          className="rounded-tr-none rounded-br-none rounded-tl-full rounded-bl-full border-r-0 focus-visible:ring- focus-visible:ring-transparent"
           ref={searchInputRef}
           onChange={(e) => {
             handleSearch(e.target.value.trim());
           }}
-          defaultValue={searchParams.get('query') || ''}
+          defaultValue={searchParams.get("query") || ""}
         />
       </motion.div>
       <Button

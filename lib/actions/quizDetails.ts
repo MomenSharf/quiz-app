@@ -6,26 +6,44 @@ import { db } from "../db";
 
 export const getQuizDetails = async ({ quizId }: { quizId: string }) => {
   const session = await getCurrentUser();
-
-  if (!session) {
-    return { success: false, message: "Unauthorized: User is not logged in." };
-  }
+  const userId = session?.user.id;
 
   try {
     const quizDetails = await db.quiz.findFirst({
       where: { id: quizId },
       include: {
         user: true,
+        bookmark: userId
+          ? {
+              where: { userId }, // Include bookmarks only if userId exists
+            }
+          : false,
         questions: {
           include: {
             _count: true,
           },
         },
+        ratings: true,
       },
     });
 
-    return { success: true, quizDetails };
+    const quizDetailsWithIsBookmark = quizDetails
+      ? {
+          ...quizDetails,
+          isBookmark:
+            userId && quizDetails && quizDetails.bookmark
+              ? quizDetails.bookmark.length > 0
+              : false,
+        }
+      : null;
+
+    return {
+      success: true,
+      quizDetails: quizDetailsWithIsBookmark,
+    };
   } catch (error) {
+    console.log(error);
+
     return { success: false, message: "Could not retrieve quiz details" };
   }
 };
@@ -96,7 +114,6 @@ export const copyQuiz = async (quizId: string) => {
       ...quizDataToCopy
     } = originalQuiz;
 
-
     // 4. Copy the quiz
     const newQuiz = await prisma.quiz.create({
       data: {
@@ -118,7 +135,7 @@ export const copyQuiz = async (quizId: string) => {
               ...questionDataToCopy,
               items: {
                 create: items.map((item) => {
-                  const { id,questionId, ...itemDataToCopy } = item;
+                  const { id, questionId, ...itemDataToCopy } = item;
 
                   return {
                     ...itemDataToCopy,

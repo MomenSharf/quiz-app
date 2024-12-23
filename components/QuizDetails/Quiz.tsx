@@ -1,12 +1,16 @@
-import { EditorQuiz, QuizDetails } from "@/types";
-import React from "react";
-import QuizImage from "./QuizImage";
+import { QuizDetailsWithIsBookmark } from "@/types";
 import QuizCard from "./QuizCard";
-export default function Quiz({ quiz, isBookmarked, pathname }: { quiz: QuizDetails , isBookmarked?: boolean, pathname: string}) {
-  
+export default function Quiz({
+  quiz,
+  pathname,
+}: {
+  quiz: QuizDetailsWithIsBookmark;
+  pathname: string;
+}) {
+  quiz.questions
   return (
     <div className="flex flex-col p-3 items-center w-full ">
-      <QuizCard quiz={quiz} isBookmarked={isBookmarked} pathname={pathname}/>
+      <QuizCard quiz={quiz} pathname={pathname} />
     </div>
   );
 }

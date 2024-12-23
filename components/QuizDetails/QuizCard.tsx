@@ -1,40 +1,34 @@
 "use client";
+import { copyQuiz as copyQuizServer } from "@/lib/actions/quizDetails";
 import { cn, formatToMinSec } from "@/lib/utils";
+import { QuizDetailsWithIsBookmark } from "@/types";
 import {
   ArrowDownIcon,
   ArrowUpIcon,
-  Bookmark,
   Copy,
   Edit,
   Layers,
   Timer,
-  Trash2,
 } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import BookmarkButton from "../Quiz/BookmarkButton";
 import { UserAvatarImage } from "../User/UserAvatar";
 import { Icons } from "../icons";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
-import QuizImage from "./QuizImage";
-import { QuizDetails } from "@/types";
-import { copyQuiz as copyQuizServer } from "@/lib/actions/quizDetails";
 import { toast } from "../ui/use-toast";
 import DeleteDialog from "./DeleteDiaolg";
-import { toggleBookmark } from "@/lib/actions/bookmark";
-import { revalidatePathInServer } from "@/lib/actions/utils";
-import BookmarkButton from "../Quiz/BookmarkButton";
+import QuizImage from "./QuizImage";
 
 export default function QuizCard({
   quiz,
-  isBookmarked,
   pathname,
 }: {
-  quiz: QuizDetails;
-  isBookmarked?: boolean;
+  quiz: QuizDetailsWithIsBookmark;
   pathname: string;
-}) {  
+}) {
   const sessiom = useSession();
   const [isDescriptionOpen, setIsDescriptionOpen] = useState(false);
   const [isShowMoreVisible, setIsShowMoreVisible] = useState(false);
@@ -60,20 +54,16 @@ export default function QuizCard({
 
   const copyQuiz = async () => {
     setIsCopiyngQuiz(true);
-    const { success, message } = await copyQuizServer(quiz.id);
-    if (!success) {
-      {
-        setIsCopiyngQuiz(false);
-        toast({ variant: "destructive", description: message });
-      }
+    const { success, message, newQuiz } = await copyQuizServer(quiz.id);
+    if (!success || !newQuiz) {
+      setIsCopiyngQuiz(false);
+      toast({ variant: "destructive", description: message });
     } else {
       setIsCopiyngQuiz(false);
       toast({ description: message });
-      router.push(`/editor/${quiz.id}`);
+      router.push(`/editor/${newQuiz.id}`);
     }
   };
-
-
 
   const router = useRouter();
 
@@ -180,7 +170,11 @@ export default function QuizCard({
           {isOner ? (
             <DeleteDialog quizId={quiz.id} />
           ) : (
-            <BookmarkButton quizId={quiz.id} pathname={pathname} isBookmarked={isBookmarked}/>
+            <BookmarkButton
+              quizId={quiz.id}
+              pathname={pathname}
+              isBookmarked={quiz.isBookmark}
+            />
           )}
         </div>
       </div>

@@ -2,8 +2,113 @@
 import { revalidatePath } from "next/cache";
 import { getCurrentUser } from "../auth";
 import { db } from "../db";
+import { SearchSortOption } from "@/types";
+import { Category } from "@prisma/client";
 
-export const toggleBookmark = async ({ quizId, pathname }: { quizId: string, pathname: string }) => {
+export const bookmarksQuizzes = async ({
+  page = 1,
+  pageSize = 10,
+  query,
+  sortOption,
+  category,
+}: {
+  page?: number;
+  pageSize?: number;
+  query?: string;
+  sortOption?: SearchSortOption;
+  category?: Category;
+}) => {
+  const session = await getCurrentUser();
+
+  if (!session) {
+    return { success: false, message: "Unauthorized: User is not logged in." };
+  }
+
+  const userId = session.user.id;
+
+  const orderByMap: Record<SearchSortOption | "random", Record<string, any>> = {
+    highestRated: { createdAt: "desc" },
+    random: { createdAt: "desc" },
+    mostPlayed: { playCount: "desc" },
+    mostRecent: { createdAt: "asc" },
+  };
+  const orderBy = sortOption ? orderByMap[sortOption] : undefined;
+
+  try {
+    // Fetch quizzes from bookmarks
+    const bookmarkedQuizzes = await db.bookmark.findMany({
+      where: {
+        userId,
+        quiz: {
+          AND: [
+            {
+              OR: [
+                {
+                  title: {
+                    contains: query,
+                    mode: "insensitive",
+                  },
+                },
+                {
+                  description: {
+                    contains: query,
+                    mode: "insensitive",
+                  },
+                },
+              ],
+            },
+            ...(category
+              ? [
+                  {
+                    categories: {
+                      has: category,
+                    },
+                  },
+                ]
+              : []),
+          ],
+        },
+      },
+      include: {
+        quiz: {
+          include: {
+            user: true,
+            bookmark: true,
+            questions: {
+              include: {
+                _count: true,
+              },
+            },
+            ratings: true,
+          },
+        },
+      },
+      skip: (page - 1) * pageSize,
+      take: pageSize,
+      orderBy: {
+        quiz: orderBy,
+      },
+    });
+
+    const quizzesWithIsBookmarked = bookmarkedQuizzes.map(({ quiz }) => ({
+      ...quiz,
+      isBookmark: true,
+    }));
+
+    return { success: true, quizzes: quizzesWithIsBookmarked };
+  } catch (error) {
+    console.error(error);
+    return { success: false, message: "Error searching quizzes." };
+  }
+};
+
+export const toggleBookmark = async ({
+  quizId,
+  pathname,
+}: {
+  quizId: string;
+  pathname: string;
+}) => {
   const session = await getCurrentUser();
   if (!session) {
     return { success: false, message: "Unauthorized: User is not logged in." };
@@ -41,7 +146,7 @@ export const toggleBookmark = async ({ quizId, pathname }: { quizId: string, pat
         },
       });
 
-      revalidatePath(pathname)
+      revalidatePath(pathname);
 
       return {
         success: true,
@@ -57,16 +162,14 @@ export const toggleBookmark = async ({ quizId, pathname }: { quizId: string, pat
   }
 };
 
-
-export const isBoojkmarked = async ({
-  quizId,
-}: {
-  quizId: string;
-}) => {
+export const isBoojkmarked = async ({ quizId }: { quizId: string }) => {
   try {
     const session = await getCurrentUser();
     if (!session) {
-      return { success: false, message: "Unauthorized: User is not logged in." };
+      return {
+        success: false,
+        message: "Unauthorized: User is not logged in.",
+      };
     }
     const userId = session.user.id;
     // Check if the quiz is bookmarked
@@ -81,7 +184,7 @@ export const isBoojkmarked = async ({
       return {
         success: true,
         message: "Quiz is already bookmarked.",
-      isBookmarked: true,
+        isBookmarked: true,
       };
     } else {
       return {
