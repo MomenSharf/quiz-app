@@ -13,11 +13,11 @@ export const getQuizDetails = async ({ quizId }: { quizId: string }) => {
       where: { id: quizId },
       include: {
         user: true,
-        bookmark: userId
+        bookmarks: userId
           ? {
               where: { userId }, // Include bookmarks only if userId exists
             }
-          : false,
+          : undefined,
         questions: {
           include: {
             _count: true,
@@ -31,8 +31,8 @@ export const getQuizDetails = async ({ quizId }: { quizId: string }) => {
       ? {
           ...quizDetails,
           isBookmark:
-            userId && quizDetails && quizDetails.bookmark
-              ? quizDetails.bookmark.length > 0
+            userId && quizDetails && quizDetails.bookmarks
+              ? quizDetails.bookmarks.length > 0
               : false,
         }
       : null;

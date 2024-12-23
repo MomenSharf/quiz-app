@@ -1,13 +1,14 @@
+import { QUESTION_MARK_TIMES } from "@/constants";
+import { formatToMinSec } from "@/lib/utils";
+import { motion } from "framer-motion";
 import { Medal, TimerIcon } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { Icons } from "../icons";
 import { Button } from "../ui/button";
 import ResultProgress from "./circular-bar/ResultProgress";
 import { usePlayQuizContext } from "./Context";
-import { formatToMinSec } from "@/lib/utils";
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { QUESTION_MARK_TIMES } from "@/constants";
-import { motion } from "framer-motion";
+import RateDialog from "./RateDialog";
 
 export default function QuizResult() {
   const {
@@ -89,7 +90,7 @@ export default function QuizResult() {
 
         <div className="grid grid-cols-3 gap-3 justify-center">
           <motion.div
-            initial={{ opacity: 0, x: 30 }} // Start slightly from the right
+            initial={{ opacity: 0, x: 10 }} // Start slightly from the right
             animate={{ opacity: 1, x: 0 }} // Move to original position and become visible
             transition={{
               delay: 0 * 0.3, // Delay for each item based on its index
@@ -107,7 +108,7 @@ export default function QuizResult() {
             </div>
           </motion.div>
           <motion.div
-            initial={{ opacity: 0, x: 30 }} // Start slightly from the right
+            initial={{ opacity: 0, x: 10 }} // Start slightly from the right
             animate={{ opacity: 1, x: 0 }} // Move to original position and become visible
             transition={{
               delay: 1 * 0.3, // Delay for each item based on its index
@@ -124,7 +125,7 @@ export default function QuizResult() {
             </div>
           </motion.div>
           <motion.div
-            initial={{ opacity: 0, x: 30 }} // Start slightly from the right
+            initial={{ opacity: 0, x: 10 }} // Start slightly from the right
             animate={{ opacity: 1, x: 0 }} // Move to original position and become visible
             transition={{
               delay: 2 * 0.3, // Delay for each item based on its index
@@ -143,7 +144,7 @@ export default function QuizResult() {
         </div>
         <div className="flex gap-3 justify-center">
           <motion.div
-            initial={{ opacity: 0, y: -30 }} // Start above the screen
+            initial={{ opacity: 0, y: -10 }} // Start above the screen
             animate={{ opacity: 1, y: 0 }} // Move to original position and become visible
             transition={{
               delay: 0 * 0.3, // Delay for each item based on its index
@@ -162,7 +163,7 @@ export default function QuizResult() {
             </Button>
           </motion.div>
           <motion.div
-            initial={{ opacity: 0, y: -30 }} // Start above the screen
+            initial={{ opacity: 0, y: -10 }} // Start above the screen
             animate={{ opacity: 1, y: 0 }} // Move to original position and become visible
             transition={{
               delay: 1 * 0.3, // Delay for each item based on its index
@@ -170,13 +171,10 @@ export default function QuizResult() {
             }}
             className="animated-item"
           >
-            <Button className="w-20 h-20 sm:w-28 sm:h-28 flex-col gap-1 bg-[#FFC107] hover:bg-[#FFC107]/90">
-              <Icons.star className="w-10 h-10 sm:w-14 sm:h-14 fill-white" />
-              <span className="text-xs">Rate</span>
-            </Button>
+           <RateDialog />
           </motion.div>
           <motion.div
-            initial={{ opacity: 0, y: -30 }} // Start above the screen
+            initial={{ opacity: 0, y: -10 }} // Start above the screen
             animate={{ opacity: 1, y: 0 }} // Move to original position and become visible
             transition={{
               delay: 2 * 0.3, // Delay for each item based on its index
@@ -184,13 +182,14 @@ export default function QuizResult() {
             }}
             className="animated-item"
           >
-            <Button className="w-20 h-20 sm:w-28 sm:h-28 flex-col gap-1 bg-[#e91e63] hover:bg-[#e91e63]/90">
+            <Button className="w-20 h-20 sm:w-28 sm:h-28 flex-col gap-1 bg-pink hover:bg-pink/90">
               <Icons.send className="w-10 h-10 sm:w-14 sm:h-14 fill-white" />
               <span className="text-xs">Share</span>
             </Button>
           </motion.div>
         </div>
       </div>
+      
     </div>
   );
 }

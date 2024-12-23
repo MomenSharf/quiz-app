@@ -70,16 +70,12 @@ export const searchQuizzes = async ({
       },
       include: {
         user: true,
-        bookmark: userId
+        bookmarks: userId
           ? {
               where: { userId }, // Include bookmarks only if userId exists
             }
-          : false,
-        questions: {
-          include: {
-            _count: true,
-          },
-        },
+          : undefined,
+        questions: true,
         ratings: true,
       },
       skip: (page - 1) * pageSize,
@@ -92,7 +88,7 @@ export const searchQuizzes = async ({
     }
     const quizzesWithIsBookmarked = quizzes.map((quiz) => ({
       ...quiz,
-      isBookmark: userId && quiz.bookmark ? quiz.bookmark.length > 0 : false, // Add isBookmark based on the user
+      isBookmark: userId && quiz.bookmarks ? quiz.bookmarks.length > 0 : false, // Add isBookmark based on the user
     }));
 
     return { success: true, quizzes: quizzesWithIsBookmarked };

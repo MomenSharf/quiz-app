@@ -1,18 +1,18 @@
-import { SearchQuiz, SearchQuizWithIsBookmark } from "@/types";
-import Image from "next/image";
-import Link from "next/link";
-import { Badge } from "../ui/badge";
-import { Icons } from "../icons";
-import { cn, formatToMinSec } from "@/lib/utils";
-import { Copy, Layers, Timer } from "lucide-react";
 import { MotionDiv } from "@/hooks/useMotion";
 import { getCurrentUser } from "@/lib/auth";
+import { cn, formatToMinSec } from "@/lib/utils";
+import { BookmarkQuizIsBookmark, SearchQuizWithIsBookmark } from "@/types";
+import { Layers, Timer } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { Icons } from "../icons";
+import { Badge } from "../ui/badge";
 import BookmarkButton from "./BookmarkButton";
 export default async function QuizPanel({
   quiz,
   index,
 }: {
-  quiz: SearchQuizWithIsBookmark;
+  quiz: SearchQuizWithIsBookmark | BookmarkQuizIsBookmark;
   index: number;
 }) {
   const sesstion = await getCurrentUser();
@@ -20,6 +20,7 @@ export default async function QuizPanel({
     (acc, curr) => acc + curr.timeLimit,
     0
   );
+
   return (
     <MotionDiv
       variants={{

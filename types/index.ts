@@ -78,31 +78,32 @@ export type EditorQuiz = Prisma.QuizGetPayload<{
 
 export type QuizDetails = Prisma.QuizGetPayload<{
   include: {
-    user: true,
-    bookmark: true,
-    questions: {
-      include: {
-        _count: true,
-      },
-    },
-    ratings: true,
-  },
-  
+    user: true;
+    bookmarks: true | undefined;
+    questions: true;
+    ratings: true;
+  };
 }>;
-export type QuizDetailsWithIsBookmark = QuizDetails & { isBookmark: boolean }
+export type QuizDetailsWithIsBookmark = QuizDetails & { isBookmark: boolean };
 
 export type SearchQuiz = Prisma.QuizGetPayload<{
   include: {
     user: true;
-    bookmark: true;
-    questions: {
-      include: {
-        _count: true;
-      };
-    };
+    bookmarks: true | undefined;
+    questions: true;
     ratings: true;
   };
 }>;
+
+export type BookmarkQuiz = Prisma.QuizGetPayload<{
+  include: {
+    user: true,
+    questions: true,
+    ratings: true,
+  },
+}>
+
+export type BookmarkQuizIsBookmark = BookmarkQuiz & { isBookmark: boolean };
 
 export type SearchQuizWithIsBookmark = SearchQuiz & { isBookmark: boolean };
 
@@ -122,7 +123,20 @@ export type PlayQuizType = Prisma.QuizProgressGetPayload<{
   };
 }>;
 
-export type SettingsUser = Prisma.UserGetPayload<{}>;
+export type SettingsUser = Prisma.UserGetPayload<{}> ;
+
+export type UserProfile = Prisma.UserGetPayload<{
+  include: {
+    quizzes: {
+      include: {
+        user: true;
+        bookmarks: true;
+        questions: true;
+        ratings: true;
+      };
+    };
+  };
+}> ;
 
 //
 //

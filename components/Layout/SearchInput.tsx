@@ -24,7 +24,7 @@ export default function SearchInput() {
   const { replace, push } = useRouter();
   const pathname = usePathname();
 
-  const handleSearch = useDebouncedCallback((term: string) => {
+  const handleSearch = (term: string) => {
     const params = new URLSearchParams(searchParams);
 
     if (pathname === "/search" || pathname === "/bookmarks") {
@@ -35,13 +35,15 @@ export default function SearchInput() {
       }
       replace(`${pathname}?${params.toString()}`);
     }
-  }, 500);
+  };
 
   useEffect(() => {
     if (searchParams.has("query")) {
       setIsSearchOpen(true);
     }
   }, [searchParams]);
+
+  const handleSearchWidthDebounce = useDebouncedCallback(handleSearch, 500);
 
   return (
     <div className="flex items-center ml-auto" ref={searchInputContainerRef}>
@@ -55,7 +57,21 @@ export default function SearchInput() {
           className="rounded-tr-none rounded-br-none rounded-tl-full rounded-bl-full border-r-0 focus-visible:ring- focus-visible:ring-transparent"
           ref={searchInputRef}
           onChange={(e) => {
-            handleSearch(e.target.value.trim());
+            handleSearchWidthDebounce(e.target.value.trim());
+          }}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              e.preventDefault();
+              if (
+                isSearchOpen &&
+                searchInputRef &&
+                searchInputRef.current?.value !== "" &&
+                pathname !== "/search" &&
+                pathname !== "/bookmarks"
+              ) {
+                push(`/search?query=${e.currentTarget?.value}`);
+              }
+            }
           }}
           defaultValue={searchParams.get("query") || ""}
         />
@@ -72,10 +88,10 @@ export default function SearchInput() {
             isSearchOpen &&
             searchInputRef &&
             searchInputRef.current?.value !== "" &&
-            pathname !== "/search"
+            pathname !== "/search" &&
+            pathname !== "/bookmarks"
           ) {
             push(`/search?query=${searchInputRef.current?.value}`);
-            // setIsSearchOpen(false);
           } else {
             setIsSearchOpen(true);
             searchInputRef.current?.focus();

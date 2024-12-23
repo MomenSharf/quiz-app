@@ -34,7 +34,7 @@ export const authOptions: NextAuthOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        try {
+        // try {
           const validatedCredentials = LoginSchema.safeParse(credentials);
 
           if (!validatedCredentials.success) {
@@ -47,26 +47,28 @@ export const authOptions: NextAuthOptions = {
           if (!email || !password) {
             throw new Error("Missing email or password");
           }
-
+          
+          
           // Find the user in the database
           const user = await getUserByEmail(email);
-
+          
           if (!user || !user.password) {
             throw new Error("No user found with the provided credentials");
           }
-
+          
           // Verify the password
           const isValid = await bcrypt.compare(password, user.password);
           if (!isValid) {
+            console.log(11111111111);
             throw new Error("Invalid password");
           }
 
           // Return the user object upon successful validation
           return { id: user.id, name: user.name, email: user.email };
-        } catch (error: any) {
-          console.error("Error during user authorization:", error.message);
-          throw new Error(error.message || "Authorization failed");
-        }
+        // } catch (error: any) {
+        //   console.error("Error during user authorization:", error.message);
+        //   throw new Error(error.massage);
+        // }
       },
     }),
   ],

@@ -1,4 +1,4 @@
-'use server'
+"use server";
 import { PlayQuizQuestion } from "@/components/PlayQuiz/Context";
 import { getCurrentUser } from "../auth";
 import { db } from "../db";
@@ -27,7 +27,11 @@ export const getPlayQuiz = async (quizId: string) => {
                 items: true,
               },
             },
-            ratings: true,
+            ratings: {
+              where: {
+                userId: session.user.id,
+              },
+            },
           },
         },
         user: true,
@@ -60,13 +64,13 @@ export const getPlayQuiz = async (quizId: string) => {
       });
     }
 
-    return {success : true, quizProgress}
+    return { success: true, quizProgress };
 
     // Return the quiz progress data (or handle it as needed)
   } catch (error) {
-    return {success: false, message: 'Error while loading quiz data', error}
+    return { success: false, message: "Error while loading quiz data", error };
   }
-}
+};
 export const saveQuizProgress = async (
   quizId: string,
   data: {
@@ -101,6 +105,6 @@ export const saveQuizProgress = async (
     });
     return { success: true, quizProgress };
   } catch (error) {
-   return {success : false, message : 'Failed to get quiz'}
+    return { success: false, message: "Failed to get quiz" };
   }
-};;
+};

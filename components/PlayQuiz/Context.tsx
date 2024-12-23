@@ -57,6 +57,7 @@ type PlayQuizContextType = {
   state: PlayQuizState;
   dispatch: React.Dispatch<PlayQuizActions>;
   resetQuiz: () => void;
+  quiz: PlayQuizType['quiz']
 };
 
 const initialState: PlayQuizState = {
@@ -67,6 +68,7 @@ const initialState: PlayQuizState = {
   quizMode: "waiting",
   userAnswer: null,
   timeTakenArray: null,
+  
 };
 
 const quizRoomReducer = (
@@ -114,6 +116,7 @@ export const PlayQuizProvider = ({
 }) => {
   const [state, dispatch] = useReducer(quizRoomReducer, initialState);
   const { userAnswer, quizMode, playQuizQuestions, currentQuestion } = state;
+
 
   const playRightWorngAnswerSound = (isAnswerRight: boolean | null) => {
     if (isAnswerRight === null) return;
@@ -328,8 +331,10 @@ export const PlayQuizProvider = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [quizMode]);
 
+  // const userRate = session.data && quizProgress.quiz.ratings.find(e => e.userId === session.data.user.id)?.rating || 0;
+
   return (
-    <QuizRoomContext.Provider value={{ state, dispatch, resetQuiz }}>
+    <QuizRoomContext.Provider value={{ state, dispatch, resetQuiz, quiz: quizProgress.quiz  }}>
       {children}
     </QuizRoomContext.Provider>
   );

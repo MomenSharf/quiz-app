@@ -73,12 +73,7 @@ export const bookmarksQuizzes = async ({
         quiz: {
           include: {
             user: true,
-            bookmark: true,
-            questions: {
-              include: {
-                _count: true,
-              },
-            },
+            questions: true,
             ratings: true,
           },
         },

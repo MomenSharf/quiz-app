@@ -39,33 +39,25 @@ export default function LoginForm() {
   });
 
   const onSubmit = async (data: z.infer<typeof LoginSchema>) => {
-    try {
-      const res = await signIn("credentials", {
-        ...data,
-        redirect: false,
+    const res = await signIn("credentials", {
+      ...data,
+      redirect: false,
+    });
+    console.log(res?.ok);
+    if (res?.ok) {
+      toast({
+        description:
+          "Login successful! Welcome back! We're glad to see you again—let's dive in",
       });
-      console.log(res?.ok);
-      if (res?.ok) {
-        toast({
-          description:
-            "Login successful! Welcome back! We're glad to see you again—let's dive in",
-        });
 
-        router.push("/");
-      }
-      if (res?.error) {
-        toast({
-          title: "Error",
-          description: "Something went wrong! try again later",
-          variant: "destructive",
-        });
-      }
-    } catch (error: any) {
-      console.log(error);
-
+      router.push("/");
+    }
+    if (res?.error) {
+      console.log(res.error);
+      
       toast({
         title: "Error",
-        description: "Something went wrong! try again later",
+        description: res.error ,
         variant: "destructive",
       });
     }

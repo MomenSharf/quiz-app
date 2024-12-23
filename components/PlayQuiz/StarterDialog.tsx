@@ -19,34 +19,23 @@ export default function SaveProgressDialog() {
     resetQuiz,
   } = usePlayQuizContext();
 
-  const isStarted = isStarterDialogOpen.isStarted || currentQuestion === 0
+  const isStarted = isStarterDialogOpen.isStarted || currentQuestion === 0;
 
   return (
     <Dialog open={isStarterDialogOpen.open}>
       <DialogContent className="sm:max-w-[425px]" hideClose>
         <DialogHeader>
           <DialogTitle className="text-center">
-            {!isStarted
-              ? "Start from beginning or continue?"
-              : "Are You ready ?"}
+            {!isStarted ? "Back for More?" : "Let's Get Started!"}
           </DialogTitle>
+          <DialogDescription>
+            {!isStarted
+              ? "Ready to challenge yourself? Test your knowledge and see how well you do with the topics ahead. Let's go!"
+              : "Ready to test your knowledge? Start from the beginning and see how well you know the topics. Good luck!"}
+          </DialogDescription>
         </DialogHeader>
-        <DialogFooter className="py-5 sm:justify-center">
-          <div className="flex gap-3">
-            {!isStarted && (
-              <Button
-                type="button"
-                onClick={() => {
-                  dispatch({
-                    type: "SET_IS_STARTER_DIALOG_OPEN",
-                    payload: { open: false },
-                  });
-                  resetQuiz();
-                }}
-              >
-                Start
-              </Button>
-            )}
+        <div className="flex justify-center gap-3">
+          {!isStarted && (
             <Button
               type="button"
               onClick={() => {
@@ -54,16 +43,28 @@ export default function SaveProgressDialog() {
                   type: "SET_IS_STARTER_DIALOG_OPEN",
                   payload: { open: false },
                 });
-                dispatch({
-                  type: "SET_QUIZ_MODE",
-                  payload: "playing",
-                });
+                resetQuiz();
               }}
             >
-              {!isStarted ? "Continue" : "Start "}
+              Start
             </Button>
-          </div>
-        </DialogFooter>
+          )}
+          <Button
+            type="button"
+            onClick={() => {
+              dispatch({
+                type: "SET_IS_STARTER_DIALOG_OPEN",
+                payload: { open: false },
+              });
+              dispatch({
+                type: "SET_QUIZ_MODE",
+                payload: "playing",
+              });
+            }}
+          >
+            {!isStarted ? "Continue" : "Start "}
+          </Button>
+        </div>
       </DialogContent>
     </Dialog>
   );

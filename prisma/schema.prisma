@@ -26,7 +26,7 @@ model User {
   sessions      Session[]
   ratings       Rating[]
   QuizProgress  QuizProgress[]
-  bookmark      Bookmark[]
+  bookmarks      Bookmark[]
   imageUrl      String?
 
   @@index([email]) // Index for faster email lookups
@@ -56,11 +56,11 @@ model Quiz {
   folderId     String?
   userId       String
   questions    Question[]
-  folder       Folder?        @relation(fields: [folderId], references: [id], onDelete: Cascade)
+  foldersn       Folder?        @relation(fields: [folderId], references: [id], onDelete: Cascade)
   user         User           @relation(fields: [userId], references: [id], onDelete: Cascade)
   ratings      Rating[]
   QuizProgress QuizProgress[]
-  bookmark     Bookmark[]
+  bookmarks     Bookmark[]
   imageUrl     String?
   playCount    Int            @default(0) // Field to track how many times the quiz has been played
 

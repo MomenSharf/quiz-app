@@ -31,6 +31,13 @@ export const UpdateUserProfile = async (
   }
 
   try {
+    const existingUser = await db.user.findUnique({
+      where: { username: user.username },
+    });
+
+    if (existingUser && existingUser.id !== session.user.id) {
+      return { success: false, message: "Username already exists." };
+    }
     const updatedUserr = await db.user.update({
       where: { id: session.user.id },
       data: user,
@@ -38,7 +45,7 @@ export const UpdateUserProfile = async (
     if (!updatedUserr) {
       return { success: false, message: "User not found" };
     }
-    
+
     if (pathname) revalidatePath(pathname);
 
     return { success: true, user };
