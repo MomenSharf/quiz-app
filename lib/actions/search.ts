@@ -1,8 +1,7 @@
 "use server";
 
-import { SearchSortOption } from "@/types";
+import { Category, SearchSortOption } from "@/types";
 import { db } from "../db";
-import { Category } from "@prisma/client";
 import { getCurrentUser } from "../auth";
 
 export const searchQuizzes = async ({

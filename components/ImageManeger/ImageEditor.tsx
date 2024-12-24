@@ -27,7 +27,7 @@ export default function ImageEditor({
 }: {
   open: boolean;
   onOpenChange: (e: boolean) => void;
-  files: File[] | null;
+  files: File[] | string |null;
   afterUpload: (uploadedImage: ClientUploadedFileData<null>[]) => void;
   aspectRatio: number 
 }) {
@@ -48,8 +48,10 @@ export default function ImageEditor({
 
   useEffect(() => {
     if (files)
-      if (files) {
+      if (Array.isArray(files)) {
         handleFile(files);
+      } else if (typeof files === "string") {
+        setImage(files); // Directly set the image URL if files is a string
       }
   }, [files]);
 
@@ -103,15 +105,19 @@ export default function ImageEditor({
 
   const imageDropQuality = () => {
     if (files) {
-      if (!(files && files[0])) return 0.5;
-      if (files[0].size > 1000000) {
-        return 0.3;
-      } else if (files[0].size > 500000) {
-        return 0.5;
-      } else {
-        return 0.7;
+      if (Array.isArray(files) && files[0]) {
+        if (files[0].size > 1000000) {
+          return 0.3;
+        } else if (files[0].size > 500000) {
+          return 0.5;
+        } else {
+          return 0.7;
+        }
+      } else if (typeof files === "string") {
+        return 0.7; // Default quality for URLs
       }
     }
+    return 0.5; // Default quality if no files
   };
 
   const { startUpload } = useUploadThing("imageUploader");

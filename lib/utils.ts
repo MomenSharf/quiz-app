@@ -8,8 +8,8 @@ import {
   trueFalseSchema,
   unselectedSchema
 } from "@/lib/validations/quizSchemas";
-import { EditorQuiz, LibrarySortOption, SearchSortOption } from "@/types";
-import { Category, QuestionType } from "@prisma/client";
+import { Category, EditorQuiz, LibrarySortOption, SearchSortOption } from "@/types";
+import {  QuestionType } from "@prisma/client";
 import { type ClassValue, clsx } from "clsx";
 import { formatDistanceToNow, intervalToDuration } from "date-fns";
 import { twMerge } from "tailwind-merge";

@@ -1,11 +1,7 @@
-import { Category, QuestionType, Visibility } from "@prisma/client";
+import {  QuestionType, Visibility } from "@prisma/client";
 import { z } from "zod";
-
 // Define schemas for different question types
-const CategoryEnum = z.enum(Object.values(Category) as [Category, ...Category[]]);
 const visibilityEnum = z.enum(Object.values(Visibility) as [Visibility, ...Visibility[]]);
-
-
 
 
 export const unselectedSchema = z.object({
@@ -125,7 +121,7 @@ export const quizSchema = z.object({
   title: z.string().min(1, "Title is required"),
   description: z.string().optional(),
   imageUrl: z.string().optional(),
-  categories: z.array(CategoryEnum),
+  categories: z.array(z.string()),
   visibility: visibilityEnum,
   questions: z
     .array(

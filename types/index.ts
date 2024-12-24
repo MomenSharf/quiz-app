@@ -4,6 +4,31 @@ import { Prisma } from "@prisma/client";
 
 export type QuestionType = (typeof QUESTION_TYPES)[number];
 
+export type Category = 
+  | 'SCIENCE'
+  | 'MATH'
+  | 'HISTORY'
+  | 'GEOGRAPHY'
+  | 'LITERATURE'
+  | 'TECHNOLOGY'
+  | 'SPORTS'
+  | 'ART'
+  | 'LANGUAGE'
+  | 'GENERAL_KNOWLEDGE'
+  | 'POLITICS'
+  | 'ECONOMICS'
+  | 'PHILOSOPHY'
+  | 'PSYCHOLOGY'
+  | 'BIOLOGY'
+  | 'CHEMISTRY'
+  | 'PHYSICS'
+  | 'COMPUTER_SCIENCE'
+  | 'RELIGION'
+  | 'NATURE'
+  | 'EDUCATION';
+
+
+
 export type LibrarySortOption =
   | "alphabetical"
   | "reverseAlphabetical"

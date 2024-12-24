@@ -1,9 +1,8 @@
 import { saveEditorQuiz as saveEditorQuizServer } from "@/lib/actions/editor";
 import { mapQuestionByType } from "@/lib/utils";
 import { quizSchema, quizSchemaType } from "@/lib/validations/quizSchemas";
-import { EditorQuiz } from "@/types";
+import { Category, EditorQuiz } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Category } from "@prisma/client";
 import React, {
   createContext,
   MutableRefObject,
@@ -26,13 +25,12 @@ type EditorState = {
   historyArray: quizSchemaType[];
   currentQuestionId: string | null;
   isSettingsOpen: boolean;
-  isQuestionImageManagerTabsOpen: boolean;
+  isImageManagerTabsOpen: boolean;
   isImageEditorOpenWithFiles:
     | {
         isOpen: boolean;
-        files: File[];
-        // url: string;
-        questionIndex: number;
+        files: File[] | string;
+        field: "imageUrl" | `questions.${number}.imageUrl`;
       }
     | { isOpen: boolean };
 };
@@ -47,14 +45,16 @@ type EditorActions =
   | { type: "SET_CURRENT_QUESTION_ID"; payload: string }
   | { type: "SET_IS_SETTINGS_OPEN"; payload: boolean }
   | { type: "SET_IS_QUESTIONS_IMAGE_MANAGER_OPEN"; payload: boolean }
+  | { type: "SET_IS_IMAGE_MANAGER_TABS_OPEN"; payload: boolean }
   | {
       type: "SET_IS_IMAGE_EDITOR_OPEN";
-      payload: {
-        isOpen: boolean;
-        files?: File[];
-        // url?: string;
-        questinIndex: number;
-      } | {isOpen: boolean;};
+      payload:
+        | {
+            isOpen: boolean;
+            files: File[] | string;
+            field: "imageUrl" | `questions.${number}.imageUrl`;
+          }
+        | { isOpen: boolean };
     };
 
 // Define the context type
@@ -73,8 +73,8 @@ const initialState: EditorState = {
   saveState: "GOOD",
   historyArray: [],
   currentQuestionId: null,
-  isQuestionImageManagerTabsOpen: false,
   isSettingsOpen: false,
+  isImageManagerTabsOpen: false,
   isImageEditorOpenWithFiles: { isOpen: false },
 };
 
@@ -96,10 +96,14 @@ const editorReducer = (
       };
     case "SET_CURRENT_QUESTION_ID":
       return { ...state, currentQuestionId: action.payload };
-    case "SET_IS_QUESTIONS_IMAGE_MANAGER_OPEN":
-      return { ...state, isQuestionImageManagerTabsOpen: action.payload };
     case "SET_IS_SETTINGS_OPEN":
       return { ...state, isSettingsOpen: action.payload };
+    case "SET_IS_IMAGE_MANAGER_TABS_OPEN": {
+      return {
+        ...state,
+        isImageManagerTabsOpen: false,
+      };
+    }
     case "SET_IS_IMAGE_EDITOR_OPEN":
       return { ...state, isImageEditorOpenWithFiles: action.payload };
 
@@ -134,7 +138,7 @@ export const EditorProvider = ({
       id: initialQuiz.id,
       title: initialQuiz.title,
       description: initialQuiz.description,
-      imageUrl: initialQuiz.imageUrl || undefined ,
+      imageUrl: initialQuiz.imageUrl || undefined,
       visibility: initialQuiz.visibility,
       categories: initialQuiz.categories as Category[],
       questions: mappedQuestions,
@@ -162,10 +166,7 @@ export const EditorProvider = ({
       try {
         dispatch({ type: "SET_SAVE_SATAT", payload: "WAITING" });
 
-        const prismaQuiz = await saveEditorQuizServer(
-          initialQuiz.id,
-          data,
-        );
+        const prismaQuiz = await saveEditorQuizServer(initialQuiz.id, data);
 
         if (prismaQuiz) {
           dispatch({ type: "SET_SAVE_SATAT", payload: "GOOD" });

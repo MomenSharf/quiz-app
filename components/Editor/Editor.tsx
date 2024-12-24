@@ -5,14 +5,18 @@ import Sidebar from "@/components/Editor/Sidebar/Sidebar";
 import { Form } from "../ui/form";
 import { useEditorContext } from "./Context";
 import { quizSchemaType } from "@/lib/validations/quizSchemas";
-import ImageEditor from "./Question/QuestionImageManager/ImageEditor";
+import ImageEditor from "../ImageManeger/ImageEditor";
 
 export default function Editor() {
-  const { form } = useEditorContext();
-  
-  const onSubmit = ( values: quizSchemaType) => {
+  const {
+    dispatch,
+    form,
+    state: { isImageEditorOpenWithFiles },
+  } = useEditorContext();
+
+  const onSubmit = (values: quizSchemaType) => {
     console.log(values);
-  }
+  };
   return (
     <Form {...form}>
       <form
@@ -26,7 +30,29 @@ export default function Editor() {
             <Content />
           </div>
         </div>
-        <ImageEditor />
+        {"files" in isImageEditorOpenWithFiles && (
+          <ImageEditor
+            open={isImageEditorOpenWithFiles.isOpen}
+            afterUpload={(uploadedImage) => {
+              form.setValue(
+                isImageEditorOpenWithFiles.field,
+                uploadedImage[0].url
+              );
+              dispatch({
+                type: "SET_IS_IMAGE_EDITOR_OPEN",
+                payload: { isOpen: false },
+              });
+            }}
+            aspectRatio={4 / 3}
+            files={isImageEditorOpenWithFiles.files}
+            onOpenChange={(e) =>
+              dispatch({
+                type: "SET_IS_IMAGE_EDITOR_OPEN",
+                payload: { isOpen: e },
+              })
+            }
+          />
+        )}
       </form>
     </Form>
   );

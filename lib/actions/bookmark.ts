@@ -2,8 +2,7 @@
 import { revalidatePath } from "next/cache";
 import { getCurrentUser } from "../auth";
 import { db } from "../db";
-import { SearchSortOption } from "@/types";
-import { Category } from "@prisma/client";
+import { Category, SearchSortOption } from "@/types";
 
 export const bookmarksQuizzes = async ({
   page = 1,

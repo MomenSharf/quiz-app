@@ -17,6 +17,7 @@ export default function PointsSelector({
   const {
     form: { setValue, getValues },
   } = useEditorContext();
+  
 
   const points = getValues(`questions.${questionIndex}.points`);
   return (
