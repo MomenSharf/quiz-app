@@ -39,7 +39,7 @@ export default function Sidebar() {
         id,
         type: "UNSELECTED",
         questionOrder: questions.length,
-        timeLimit: 15000,
+        timeLimit: 10000,
         points: 10,
       },
     ]);

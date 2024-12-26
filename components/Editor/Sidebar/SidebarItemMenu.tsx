@@ -39,9 +39,7 @@ export default function SidebarItemMenu({ question }: SidebarItemMenuBrops) {
 
   const reset = () => {
     console.log('gg');
-    
-    if(index)
-      resetField(`questions.${index}`);
+  
   };
 
   const duplicate = () => {
@@ -60,18 +58,18 @@ export default function SidebarItemMenu({ question }: SidebarItemMenuBrops) {
     });
   };
 
-  const Rearrange = (newIndex: number) => {
-    if(!index) return
-    const updatedQuestions = [...questions];
-    const [movedItem] = updatedQuestions.splice(index, 1);
-    updatedQuestions.splice(newIndex, 0, movedItem).map((question, i) => {
-      return {
-        ...question,
-        questionOrder: i,
-      };
-    });
-    setValue("questions", updatedQuestions);
-  };
+  // const Rearrange = (newIndex: number) => {
+  //   if(!index) return
+  //   const updatedQuestions = [...questions];
+  //   const [movedItem] = updatedQuestions.splice(index, 1);
+  //   updatedQuestions.splice(newIndex, 0, movedItem).map((question, i) => {
+  //     return {
+  //       ...question,
+  //       questionOrder: i,
+  //     };
+  //   });
+  //   setValue("questions", updatedQuestions);
+  // };
 
   const deleteQuestion = () => {
     setValue(
@@ -112,14 +110,14 @@ export default function SidebarItemMenu({ question }: SidebarItemMenuBrops) {
             <CopyPlus className="w-3 h-3 sm:w-4 sm:h-4" />
             <span className="font-semibold text-xs sm:text-sm">Duplicate</span>
           </DropdownMenuItem>
-          <DropdownMenuItem className="flex gap-2 cursor-pointer">
+          {/* <DropdownMenuItem className="flex gap-2 cursor-pointer">
             <PenLine className="w-3 h-3 sm:w-4 sm:h-4" />
             <span className="font-semibold text-xs sm:text-sm">
               {" "}
               Copy to...
             </span>
-          </DropdownMenuItem>
-          <DropdownMenuSub>
+          </DropdownMenuItem> */}
+          {/* <DropdownMenuSub>
             <DropdownMenuSubTrigger className="flex gap-2 cursor-pointer">
               <ArrowLeftRight className="w-3 h-3 sm:w-4 sm:h-4" />
               <span className="font-semibold text-xs sm:text-sm">
@@ -143,22 +141,10 @@ export default function SidebarItemMenu({ question }: SidebarItemMenuBrops) {
                     </DropdownMenuItem>
                   );
                 })}
-                {/* <DropdownMenuItem>
-                  <Mail />
-                  <span>Email</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <MessageSquare />
-                  <span>Message</span>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem>
-                  <PlusCircle />
-                  <span>More...</span>
-                </DropdownMenuItem> */}
+      
               </DropdownMenuSubContent>
             </DropdownMenuPortal>
-          </DropdownMenuSub>
+          </DropdownMenuSub> */}
 
           <DropdownMenuSeparator />
         </DropdownMenuGroup>

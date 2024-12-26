@@ -4,10 +4,10 @@ import { db } from '../db';
 
 export const rateQuiz = async ({
   quizId,
-  rating,
+  rate,
 }: {
   quizId: string;
-  rating: number;
+  rate: number;
 }) => {
   const session = await getCurrentUser();
   const userId = session?.user.id;
@@ -26,7 +26,7 @@ export const rateQuiz = async ({
       // Update the rating if it already exists
       await db.rating.update({
         where: { id: existingRating.id },
-        data: { rating },
+        data: { rate },
       });
     } else {
       // Create a new rating if it doesn't exist
@@ -34,7 +34,7 @@ export const rateQuiz = async ({
         data: {
           quizId,
           userId,
-          rating,
+          rate,
         },
       });
     }

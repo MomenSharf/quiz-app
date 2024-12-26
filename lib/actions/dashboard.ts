@@ -212,53 +212,7 @@ export async function getFolderPath(folderId?: string): Promise<{
     };
   }
 }
-// export async function getFolder(folderId?: string): Promise<{
-//   success: boolean;
-//   message: string;
-//   path?: FolderPathSegment[];
-// }> {
-//   try {
-//     const folder = await db.folder.findUnique({
-//       where: { id: folderId },
-//       include: { parent: true }, // Include the parent folder for recursion
-//     });
 
-//     if (!folder) {
-//       return {
-//         success: false,
-//         message: `Folder with ID ${folderId} not found.`,
-//       };
-//     }
-
-//     if (!folder.parentId) {
-//       // Base case: if the folder has no parent, return it as the root
-//       return {
-//         success: true,
-//         message: "Folder path fetched successfully.",
-//         path: [{ id: folder.id, title: folder.title }],
-//       };
-//     }
-
-//     // Recursive case: Get the parent's path and append the current folder
-//     const parentResponse = await getFolderPath(folder.parentId);
-
-//     if (!parentResponse.success) {
-//       return parentResponse; // Return the error response if the parent retrieval fails
-//     }
-
-//     return {
-//       success: true,
-//       message: "Folder path fetched successfully.",
-//       path: [...parentResponse.path!, { id: folder.id, title: folder.title }],
-//     };
-//   } catch (error) {
-//     console.error(error);
-//     return {
-//       success: false,
-//       message: "An error occurred while fetching the folder .",
-//     };
-//   }
-// }
 
 // Create
 export const newQuiz = async ({
@@ -284,7 +238,7 @@ export const newQuiz = async ({
           create: {
             type: "UNSELECTED",
             questionOrder: 0,
-            timeLimit: 5000,
+            timeLimit: 10000,
             points: 10,
           },
         },

@@ -1,5 +1,10 @@
 import { MotionDiv } from "@/hooks/useMotion";
-import { cn, formatToMinSec } from "@/lib/utils";
+import {
+  calculateQuizRatings,
+  cn,
+  formatAsKMB,
+  formatToMinSec,
+} from "@/lib/utils";
 import { BookmarkQuiz, SearchQuiz, UserProfile } from "@/types";
 import { Timer } from "lucide-react";
 import Image from "next/image";
@@ -20,6 +25,8 @@ export default function QuizzesCard({
     (acc, curr) => acc + curr.timeLimit,
     0
   );
+
+  const { averageRating, totalRatings } = calculateQuizRatings(quiz.ratings);
   return (
     <MotionDiv
       variants={{
@@ -34,7 +41,7 @@ export default function QuizzesCard({
         duration: 0.3,
       }}
       viewport={{ amount: 0 }}
-      className="min-w-52 bg-card rounded-xl flex flex-col"
+      className="w-52 bg-card rounded-xl flex flex-col"
     >
       <div className="group relative flex flex-col w-full rounded-xl  rounded-bl-none rounded-br-none overflow-hidden">
         <Image
@@ -90,12 +97,12 @@ export default function QuizzesCard({
         <div className="flex justify-between gap-1 w-full">
           <div className="flex gap-1 items-center">
             <Icons.star className="w-3 h-3 fill-yellow" />
-            <span className="text-xs">4.5</span>
+            <span className="text-xs">{averageRating}</span>
+            <span className="text-xs">({totalRatings} retings) </span>
           </div>
-          <div className="flex gap-1 items-center">
-            <span className="text-xs">10.6k</span>
-            <span className="text-xs">plays</span>
-          </div>
+          <span className="text-xs">
+            {`${formatAsKMB(quiz.playCount)}`} plays
+          </span>
         </div>
       </div>
     </MotionDiv>

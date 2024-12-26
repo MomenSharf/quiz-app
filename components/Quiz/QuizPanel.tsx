@@ -1,6 +1,12 @@
 import { MotionDiv } from "@/hooks/useMotion";
 import { getCurrentUser } from "@/lib/auth";
-import { cn, formatAsKMB, formatTimeAgo, formatToMinSec } from "@/lib/utils";
+import {
+  calculateQuizRatings,
+  cn,
+  formatAsKMB,
+  formatTimeAgo,
+  formatToMinSec,
+} from "@/lib/utils";
 import { BookmarkQuiz, SearchQuiz, UserProfile } from "@/types";
 import { Layers, Timer } from "lucide-react";
 import Image from "next/image";
@@ -26,6 +32,8 @@ export default async function QuizPanel({
     sessiom && sessiom.user.id && quiz.bookmarks
       ? quiz.bookmarks.length > 0
       : false;
+
+  const { averageRating, totalRatings } = calculateQuizRatings(quiz.ratings);
 
   return (
     <MotionDiv
@@ -91,11 +99,16 @@ export default async function QuizPanel({
             <span> - </span>
             <div className="flex gap-1 items-center">
               <Icons.star className="w-3 h-3 fill-yellow" />
-              <span className="text-xs">4.5</span>
+              <span className="text-xs">{averageRating}</span>
+              <span className="text-xs">
+                ({formatAsKMB(totalRatings)} retings)
+              </span>
             </div>
             <span> - </span>
             <div className="flex gap-1 items-center">
-              <span className="text-xs">{`${formatAsKMB(quiz.playCount)}`} plays</span>
+              <span className="text-xs">
+                {`${formatAsKMB(quiz.playCount)}`} plays
+              </span>
             </div>
           </div>
           {!isCurrentUser && (

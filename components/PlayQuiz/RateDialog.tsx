@@ -17,7 +17,7 @@ import { toast } from "../ui/use-toast";
 export default function RateDialog() {
   const [isRating, setIsRating] = useState(false);
   const [open, setOpen] = useState(false);
-  const [rating, setRating] = useState(3);
+  const [rate, setRate] = useState<number>(3);
   const [hovered, setHovered] = useState(0);
   const [isMouseEnter, setIsMouseEnter] = useState(false);
 
@@ -27,23 +27,24 @@ export default function RateDialog() {
   useEffect(() => {
     const userRate =
       (session.data &&
-        quiz.ratings.find((e) => e.userId === session.data.user.id)?.rating) ||
-      0;
-    setRating(userRate);
+        quiz.ratings.find((e) => e.userId === session.data.user.id)?.rate) ||
+      null;
+
+    if (userRate) {
+      setRate(userRate);
+    } else {
+      setTimeout(() => {
+        setOpen(true);
+      }, 2000);
+    }
   }, [quiz, session.data]);
 
-  useEffect(() => {
-    setTimeout(() => {
-      setOpen(true);
-    }, 2000);
-  }, []);
-
   const rateQuiz = async () => {
-    if (rating !== 0) {
+    if (rate !== 0) {
       setIsRating(true);
       const { success, message } = await rateQuizServer({
         quizId: quiz.id,
-        rating,
+        rate,
       });
       if (!success) {
         setOpen(false);
@@ -83,7 +84,7 @@ export default function RateDialog() {
               <Button
                 key={e}
                 className="group flex gap-1 items- bg-transparent hover:bg-transparent px-2"
-                onClick={() => setRating(e)}
+                onClick={() => setRate(e)}
                 onMouseEnter={() => {
                   setIsMouseEnter(true);
                   setHovered(e);
@@ -95,7 +96,7 @@ export default function RateDialog() {
               >
                 <Icons.star
                   className={cn("w-10 h-10 fill-gray-light transition-colors", {
-                    "fill-amber": isMouseEnter ? e <= hovered : e <= rating,
+                    "fill-amber": isMouseEnter ? e <= hovered : e <= rate,
                   })}
                 />
               </Button>

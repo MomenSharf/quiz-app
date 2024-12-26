@@ -4,11 +4,11 @@ import {
   ExternalLink,
   PenLine,
   RotateCcw,
-  Trash2
+  Trash2,
 } from "lucide-react";
 
 import { Icons } from "@/components/icons";
-import { buttonVariants } from "@/components/ui/button";
+import { Button, ButtonProps, buttonVariants } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -19,15 +19,15 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { toast } from "@/components/ui/use-toast";
-import { cn } from "@/lib/utils";
-import { DashboardQuiz, } from "@/types";
+import { cn, shareLink } from "@/lib/utils";
+import { DashboardQuiz } from "@/types";
 import { useRouter } from "next/navigation";
 import { HTMLProps } from "react";
 import { useDashboardContext } from "../Context";
 import DeleteQuizButton from "./DeleteQuizButton";
 import RenameQuiz from "./RenameQuiz";
 
-type QuizMenuProps = HTMLProps<HTMLDivElement> & {
+type QuizMenuProps = ButtonProps & {
   pathname: string;
   quiz: DashboardQuiz;
 };
@@ -46,31 +46,12 @@ export default function QuizMenu({
 
   const router = useRouter();
 
-  const shareLink = async () => {
-    const searchUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/quiz/${quiz.id}`;
-
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: "Check this out!",
-          text: `I found this search: ${searchUrl}`,
-          url: searchUrl,
-        });
-      } catch (error) {
-        toast({ description: "Error sharing link." });
-      }
-    } else {
-      toast({ description: "Sharing is not supported on your device." });
-    }
-  };
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <div {...props}>{children}</div>
+        <Button {...props}>{children}</Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent
-        className= "relative w-40 text-gray-medium cursor-pointer"
-      >
+      <DropdownMenuContent className="relative w-40 text-gray-medium cursor-pointer">
         <DropdownMenuLabel className="text-gray-dark text-normal">
           {quiz.title}
         </DropdownMenuLabel>
@@ -96,7 +77,16 @@ export default function QuizMenu({
               <span className="font-semibold">Rename</span>
             </RenameQuiz>
           </DropdownMenuItem>
-          <DropdownMenuItem className=" flex gap-2" onSelect={shareLink}>
+          <DropdownMenuItem
+            className=" flex gap-2"
+            onSelect={() =>
+              shareLink({
+                url: `${process.env.NEXT_PUBLIC_BASE_URL}/quiz/${quiz.id}`,
+                title: "Check out this quiz!",
+                text: `I found this great quiz: ${quiz.title}`,
+              })
+            }
+          >
             <ExternalLink className="w-5 h-5" />
             <span className="font-semibold">Shere</span>
           </DropdownMenuItem>
@@ -142,7 +132,10 @@ export default function QuizMenu({
           >
             <DeleteQuizButton
               pathname={pathname}
-              className={cn(buttonVariants({variant: 'ghost', size: 'sm'}),"gap-1 justify-start text-base w-full text-destructive hover:text-white hover:bg-destructive")}
+              className={cn(
+                buttonVariants({ variant: "ghost", size: "sm" }),
+                "gap-1 justify-start text-base w-full text-destructive hover:text-white hover:bg-destructive"
+              )}
               ids={[quiz.id]}
             >
               <Trash2 className="w-5 h-5" />

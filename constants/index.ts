@@ -1,7 +1,7 @@
 import { Icons } from "@/components/icons";
 import { Category, LibrarySortOption, SearchSortOption } from "@/types";
 import { THEME_COLORS as colorsType } from "@/types/theme";
-import {  QuestionType } from "@prisma/client";
+import { QuestionType } from "@prisma/client";
 import { LucideProps } from "lucide-react";
 import {
   BookOpen,

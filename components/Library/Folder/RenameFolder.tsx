@@ -69,7 +69,7 @@ export default function RenameFolder({
           {children}
         </div>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[425px] rounded-lg">
         <DialogHeader>
           <DialogTitle>Rename Folder</DialogTitle>
           <DialogDescription></DialogDescription>

@@ -1,7 +1,7 @@
 import QuizzesPanelsTable from "@/components/Quiz/QuizzesPanelsTable";
 import CategorySelector from "@/components/Search/CategorySelector";
 import SortBySelector from "@/components/Search/SortBySelector";
-import { searchQuizzes } from "@/lib/actions/search";
+import { getSearchQuizzes } from "@/lib/actions/search";
 import { isValidCategoryOption, isValidSearchSortOption } from "@/lib/utils";
 
 export default async function Page(props: {
@@ -18,7 +18,7 @@ export default async function Page(props: {
     : undefined;
   const category = isValidCategoryOption(searchParams?.category) ? searchParams?.category : undefined;
 
-  const { success, message, quizzes } = await searchQuizzes({
+  const { success, message, quizzes } = await getSearchQuizzes({
     query,
     sortOption,
     category,

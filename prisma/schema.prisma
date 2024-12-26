@@ -102,7 +102,7 @@ model Rating {
   userId    String
   createdAt DateTime @default(now())
 
-  rating Int
+  rate Int
 }
 
 model Bookmark {

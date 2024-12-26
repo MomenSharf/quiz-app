@@ -9,7 +9,7 @@ import { FolderPathSegment } from "@/types";
 import BreadcrumbDemoFolderPath from "./Folder/BreadcrumbFolderPath";
 import { Separator } from "../ui/separator";
 
-export default function EmptyDashboard({
+export default function EmptyLibrary({
   folderId,
   path,
   title

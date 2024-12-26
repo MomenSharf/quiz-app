@@ -4,7 +4,7 @@ import {
   X
 } from "lucide-react";
 
-import { Button, buttonVariants } from "@/components/ui/button";
+import { Button, ButtonProps, buttonVariants } from "@/components/ui/button";
 import {
   Drawer,
   DrawerClose,
@@ -20,7 +20,7 @@ import { HTMLProps } from "react";
 import DeleteFolderButton from "./DeleteFolderButton";
 import RenameFolder from "./RenameFolder";
 
-type QuizMenuProps = HTMLProps<HTMLDivElement> & {
+type QuizMenuProps = ButtonProps & {
   pathname: string;
   folder: DashboardFoldersWithQuiz;
 };
@@ -37,7 +37,7 @@ export default function FolderDrawer({
   return (
     <Drawer>
       <DrawerTrigger asChild>
-        <div {...props}>{children}</div>
+      <Button {...props}>{children}</Button>
       </DrawerTrigger>
       <DrawerContent>
         <div className="flex justify-end px-3">

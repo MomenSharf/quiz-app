@@ -31,7 +31,7 @@ export default function NewQuizButton({
       {isCreatingQuiz ? (
         <Loader />
       ) : (
-        <Icons.plus className="w-4 h-4 bg-transparent fill-white stroke-white" />
+        <Icons.plus className="w-4 h-4 bg-transparent fill-primary" />
       )}
       New Quiz
     </Button>

@@ -1,4 +1,8 @@
-import { CATEGORY_OPTIONS_LIST, LIBRARY_SORT_OPTIONS, SEARCH_SORT_OPTIONS } from "@/constants";
+import {
+  CATEGORY_OPTIONS_LIST,
+  LIBRARY_SORT_OPTIONS,
+  SEARCH_SORT_OPTIONS,
+} from "@/constants";
 import {
   fillInTheBlankSchema,
   matchingPairsSchema,
@@ -6,15 +10,21 @@ import {
   questionOrderSchema,
   shortAnswerSchema,
   trueFalseSchema,
-  unselectedSchema
+  unselectedSchema,
 } from "@/lib/validations/quizSchemas";
-import { Category, EditorQuiz, LibrarySortOption, SearchSortOption } from "@/types";
-import {  QuestionType } from "@prisma/client";
+import {
+  Category,
+  EditorQuiz,
+  LibrarySortOption,
+  SearchSortOption,
+} from "@/types";
+import { QuestionType } from "@prisma/client";
 import { type ClassValue, clsx } from "clsx";
 import { formatDistanceToNow, intervalToDuration } from "date-fns";
 import { twMerge } from "tailwind-merge";
-import * as z from 'zod';
-import numeral from 'numeral'
+import * as z from "zod";
+import numeral from "numeral";
+import { toast } from "@/hooks/use-toast";
 export function formatTimeAgo(date: Date | string): string {
   if (typeof date === "string") {
     date = new Date(date);
@@ -60,24 +70,30 @@ export function generateVerificationCode() {
 }
 
 // Function that takes a SortOption and returns the correct sorting logic
-export const isValidLibrarySortOption = (value: unknown): value is LibrarySortOption => {
+export const isValidLibrarySortOption = (
+  value: unknown
+): value is LibrarySortOption => {
   return LIBRARY_SORT_OPTIONS.includes(value as LibrarySortOption);
 };
-export const isValidSearchSortOption = (value: unknown): value is SearchSortOption => {
+export const isValidSearchSortOption = (
+  value: unknown
+): value is SearchSortOption => {
   return SEARCH_SORT_OPTIONS.includes(value as SearchSortOption);
 };
 export const isValidCategoryOption = (value: unknown): value is Category => {
-  return CATEGORY_OPTIONS_LIST.map(e => e.value).includes(value as Category);
+  return CATEGORY_OPTIONS_LIST.map((e) => e.value).includes(value as Category);
 };
 
-export const mapQuestionByType = (question: EditorQuiz["questions"][number]) => {
+export const mapQuestionByType = (
+  question: EditorQuiz["questions"][number]
+) => {
   const baseQuestion = {
     id: question.id,
     type: question.type,
     questionOrder: question.questionOrder,
     timeLimit: question.timeLimit,
     points: question.points,
-    imageUrl: question.imageUrl  || undefined,
+    imageUrl: question.imageUrl || undefined,
     question: question.question ?? "",
   };
 
@@ -145,6 +161,38 @@ export const mapQuestionByType = (question: EditorQuiz["questions"][number]) => 
 };
 
 export function formatAsKMB(num: number) {
-
-  return numeral(num).format('0.0a').toUpperCase();
+  if (num > 999) return numeral(num).format("0.0a").toUpperCase();
+  else return numeral(num).format("0.a").toUpperCase();
 }
+
+export const calculateQuizRatings = (ratings: { rate: number }[]) => {
+  const totalRatings = ratings.length;
+  const averageRating =
+    totalRatings > 0
+      ? ratings.reduce((sum, rating) => sum + rating.rate, 0) / totalRatings
+      : 0;
+
+  return { averageRating, totalRatings };
+};
+
+export const shareLink = async (shareData: {
+  url: string;
+  title: string;
+  text: string;
+}) => {
+  // Ensure we're running in the client-side
+  if (typeof window !== "undefined") {
+    // Check if the browser supports the Web Share API
+    if (navigator.share) {
+      try {
+        await navigator.share(shareData);
+      } catch (error) {
+        toast({ description: "Error sharing the link. Please try again." });
+      }
+    } else {
+      toast({ description: "Sharing is not supported on your device." });
+    }
+  } else {
+    toast({ description: "This feature is not available on the server side." });
+  }
+};

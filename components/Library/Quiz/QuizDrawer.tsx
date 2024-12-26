@@ -9,7 +9,7 @@ import {
 } from "lucide-react";
 
 import { Icons } from "@/components/icons";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { Button, ButtonProps, buttonVariants } from "@/components/ui/button";
 import {
   Drawer,
   DrawerClose,
@@ -23,12 +23,11 @@ import { toast } from "@/components/ui/use-toast";
 import { cn } from "@/lib/utils";
 import { DashboardQuiz } from "@/types";
 import { useRouter } from "next/navigation";
-import { HTMLProps } from "react";
 import { useDashboardContext } from "../Context";
 import DeleteQuizButton from "./DeleteQuizButton";
 import RenameQuiz from "./RenameQuiz";
 
-type QuizMenuProps = HTMLProps<HTMLDivElement> & {
+type QuizMenuProps = ButtonProps& {
   pathname: string;
   quiz: DashboardQuiz;
 };
@@ -71,7 +70,7 @@ export default function QuizDrawer({
   return (
     <Drawer>
       <DrawerTrigger asChild>
-        <div>{children}</div>
+      <Button {...props}>{children}</Button>
       </DrawerTrigger>
       <DrawerContent>
         <div className="flex justify-end px-3">

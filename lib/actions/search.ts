@@ -4,7 +4,7 @@ import { Category, SearchSortOption } from "@/types";
 import { db } from "../db";
 import { getCurrentUser } from "../auth";
 
-export const searchQuizzes = async ({
+export const getSearchQuizzes = async ({
   page = 1,
   pageSize = 10,
   query,
@@ -85,10 +85,7 @@ export const searchQuizzes = async ({
     if (!quizzes) {
       return { success: false, message: "No Quizzes found" };
     }
-    // const quizzesWithIsBookmarked = quizzes.map((quiz) => ({
-    //   ...quiz,
-    //   isBookmark: userId && quiz.bookmarks ? quiz.bookmarks.length > 0 : false, // Add isBookmark based on the user
-    // }));
+
 
     return { success: true, quizzes };
   } catch (error) {

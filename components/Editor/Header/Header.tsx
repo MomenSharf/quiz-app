@@ -98,7 +98,7 @@ export default function Header() {
             Settings
           </span>
         </Button>
-        <Button type="button" variant="outline" className="gap-1 rounded-xl">
+        <Button type="submit" variant="outline" className="gap-1 rounded-xl">
           <Eye className="w-4 h-4 text-primary" />
           <span className="hidden sm:inline-block text-primary">Preview</span>
         </Button>

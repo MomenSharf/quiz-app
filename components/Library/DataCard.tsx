@@ -132,6 +132,8 @@ export default function DataCard({
                   pathname="/dashboard"
                   folder={data}
                   className="p-0 w-4"
+                  variant='ghost'
+
                 >
                   <EllipsisVertical className="w-4 h-4" />
                 </FolderMenu>
@@ -141,6 +143,7 @@ export default function DataCard({
                   pathname="/dashboard"
                   folder={data}
                   className="p-0 w-4"
+                  variant='ghost'
                 >
                   <EllipsisVertical className="w-4 h-4" />
                 </FolderDrawer>
@@ -149,7 +152,7 @@ export default function DataCard({
           ) : (
             <>
               <div className="hidden sm:block">
-                <QuizMenu pathname="/dashboard" quiz={data} className="p-0 w-4">
+                <QuizMenu pathname="/dashboard" quiz={data} className="p-0 w-4" variant='ghost'>
                   <EllipsisVertical className="w-4 h-4" />
                 </QuizMenu>
               </div>
@@ -157,7 +160,8 @@ export default function DataCard({
                 <QuizDrawer
                   pathname="/dashboard"
                   quiz={data}
-                  className="p-0 w-4"
+                  className="p-0 w-4 cursor-pointer"
+                  variant='ghost'
                 >
                   <EllipsisVertical className="w-4 h-4" />
                 </QuizDrawer>

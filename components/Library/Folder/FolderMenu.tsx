@@ -16,10 +16,10 @@ import { useRouter } from "next/navigation";
 import { HTMLProps } from "react";
 import { useDashboardContext } from "../Context";
 import DeleteFolderButton from "./DeleteFolderButton";
-import { buttonVariants } from "@/components/ui/button";
+import { Button, ButtonProps, buttonVariants } from "@/components/ui/button";
 import RenameFolder from "./RenameFolder";
 
-type FolderMenuProps = HTMLProps<HTMLDivElement> & {
+type FolderMenuProps = ButtonProps & {
   contentPostionClasses?: string;
   pathname: string;
   folder: DashboardFoldersWithQuiz;
@@ -32,9 +32,6 @@ export default function FolderMenu({
   folder,
   ...props
 }: FolderMenuProps) {
-
-
-
   const shareLink = async () => {
     const searchUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/${folder.id}`;
 
@@ -55,10 +52,13 @@ export default function FolderMenu({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <div {...props}>{children}</div>
+        <Button {...props}>{children}</Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent
-        className={cn(contentPostionClasses, "relative w-40 text-gray-medium cursor-pointer")}
+        className={cn(
+          contentPostionClasses,
+          "relative w-40 text-gray-medium cursor-pointer"
+        )}
       >
         <DropdownMenuLabel className="text-gray-dark">
           {folder.title}
@@ -83,7 +83,7 @@ export default function FolderMenu({
               pathname={pathname}
               folderId={folder.id}
               className={cn(
-                buttonVariants({ size: "sm" , variant: "ghost"}),
+                buttonVariants({ size: "sm", variant: "ghost" }),
                 " gap-1 justify-start text-base w-full text-destructive hover:text-white hover:bg-destructive transition-colors"
               )}
             >
