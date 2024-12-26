@@ -28,13 +28,9 @@ export const getProfile = async ({ username }: { username: string }) => {
     });
   
     if (!profile) {
-      console.log("No profile found for username:", username);
-      console.log('g', 'g');
-      
       return { success: false, message: "Profile not found" };
     }
-  
-    console.log("Fetched profile:", profile);
+
     return { success: true, profile };
   } catch (error) {
     console.error("Error fetching profile:", error);

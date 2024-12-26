@@ -1,7 +1,7 @@
 import { MotionDiv } from "@/hooks/useMotion";
 import { getCurrentUser } from "@/lib/auth";
-import { cn, formatToMinSec } from "@/lib/utils";
-import { BookmarkQuizIsBookmark, SearchQuizWithIsBookmark } from "@/types";
+import { cn, formatAsKMB, formatTimeAgo, formatToMinSec } from "@/lib/utils";
+import { BookmarkQuiz, SearchQuiz, UserProfile } from "@/types";
 import { Layers, Timer } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -12,14 +12,20 @@ export default async function QuizPanel({
   quiz,
   index,
 }: {
-  quiz: SearchQuizWithIsBookmark | BookmarkQuizIsBookmark;
+  quiz: SearchQuiz | BookmarkQuiz | UserProfile["quizzes"][number];
   index: number;
 }) {
-  const sesstion = await getCurrentUser();
+  const sessiom = await getCurrentUser();
+  const isCurrentUser = sessiom && quiz.user.id === sessiom.user.id;
+
   const quizTime = quiz.questions.reduce(
     (acc, curr) => acc + curr.timeLimit,
     0
   );
+  const isBookmarked =
+    sessiom && sessiom.user.id && quiz.bookmarks
+      ? quiz.bookmarks.length > 0
+      : false;
 
   return (
     <MotionDiv
@@ -56,22 +62,6 @@ export default async function QuizPanel({
         </Link>
 
         <div className="p-2 flex flex-col justify-center gap-1.5">
-          {/* <div className="flex items-center gap-1">
-          <UserAvatarImage imageUrl={quiz.user.imageUrl} className="w-6 h-6" />
-          <div className="flex flex-col gap-0 w-full">
-            <Link
-              href={`quiz/${quiz.id}`}
-              className={cn(
-                "text-sm font-bold max-w-[85%] truncate cursor-pointer hover:text-primary"
-              )}
-            >
-              {quiz.title}
-            </Link>
-            <p className="text-xs text-gray-medium max-w-[75%] truncate">
-              {quiz.user.username}
-            </p>
-          </div>
-        </div> */}
           <div className="flex gap-1">
             <Link
               href={`quiz/${quiz.id}`}
@@ -82,9 +72,7 @@ export default async function QuizPanel({
             >
               {quiz.title}
             </Link>
-            {sesstion?.user.id === quiz.user.id && (
-              <Badge className="text-xs">You</Badge>
-            )}
+            {isCurrentUser && <Badge className="text-xs">You</Badge>}
           </div>
           <div className="flex gap-1">
             <Badge className="bg-primary/30 hover:bg-primary/30 text-primary gap-0.5">
@@ -98,7 +86,7 @@ export default async function QuizPanel({
           </div>
           <div className="flex items-center gap-1">
             <span className="text-xs text-gray-medium">
-              {formatToMinSec(quiz.createdAt.getTime())}
+              {formatTimeAgo(quiz.createdAt)}
             </span>
             <span> - </span>
             <div className="flex gap-1 items-center">
@@ -107,17 +95,18 @@ export default async function QuizPanel({
             </div>
             <span> - </span>
             <div className="flex gap-1 items-center">
-              <span className="text-xs">10.6k</span>
-              <span className="text-xs">plays</span>
+              <span className="text-xs">{`${formatAsKMB(quiz.playCount)}`} plays</span>
             </div>
           </div>
-          <div className="absolute right-3 top-3">
-            <BookmarkButton
-              quizId={quiz.id}
-              pathname="/"
-              isBookmarked={quiz.isBookmark}
-            />
-          </div>
+          {!isCurrentUser && (
+            <div className="absolute right-3 top-3">
+              <BookmarkButton
+                quizId={quiz.id}
+                pathname="/"
+                isBookmarked={isBookmarked}
+              />
+            </div>
+          )}
         </div>
       </div>
     </MotionDiv>

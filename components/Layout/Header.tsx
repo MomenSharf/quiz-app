@@ -27,7 +27,7 @@ export default async function Header() {
         <SearchInput />
         {session?.user ? (
           <>
-            <UserAvatar isLoggedIn={!!session?.user} user={session.user} />
+            <UserAvatar user={session.user} />
           </>
         ) : (
           <>

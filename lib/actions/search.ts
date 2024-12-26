@@ -85,12 +85,12 @@ export const searchQuizzes = async ({
     if (!quizzes) {
       return { success: false, message: "No Quizzes found" };
     }
-    const quizzesWithIsBookmarked = quizzes.map((quiz) => ({
-      ...quiz,
-      isBookmark: userId && quiz.bookmarks ? quiz.bookmarks.length > 0 : false, // Add isBookmark based on the user
-    }));
+    // const quizzesWithIsBookmarked = quizzes.map((quiz) => ({
+    //   ...quiz,
+    //   isBookmark: userId && quiz.bookmarks ? quiz.bookmarks.length > 0 : false, // Add isBookmark based on the user
+    // }));
 
-    return { success: true, quizzes: quizzesWithIsBookmarked };
+    return { success: true, quizzes };
   } catch (error) {
     return { success: false, message: "Error searching Quizzes" };
   }

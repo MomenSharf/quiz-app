@@ -14,7 +14,7 @@ export default function CategoriesScroller() {
   return (
     <div className="flex flex-col">
       <h3>CATEGORIES</h3>
-      <div className="relative w-full p-1 overflow-hidden">
+      <div className="relative w-full overflow-hidden">
         {isLeftVisible && (
           <div
             className="cursor-pointer group absolute z-[2] top-1/2 left-1 -translate-y-1/2 p-2 bg-card/70 hover:bg-card transition-all border rounded-full flex justify-center items-center"
@@ -28,7 +28,7 @@ export default function CategoriesScroller() {
         )}
         <div
           ref={sliderRef}
-          className="flex gap-3 py-1 transition-transform overflow-x-scroll no-scrollbar "
+          className="flex gap-3 p-1 transition-transform overflow-x-scroll no-scrollbar "
         >
           {CATEGORY_OPTIONS_LIST.map(({ id, label, value, icon: Icon }) => (
             <Link

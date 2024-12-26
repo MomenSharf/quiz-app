@@ -38,6 +38,23 @@ export const getPlayQuiz = async (quizId: string) => {
       },
     });
 
+    if (quizProgress && quizProgress.isCompleted) {
+      await db.quiz.update({
+        where: { id: quizId },
+        data: {
+          playCount: {
+            increment: 1,
+          },
+        },
+      });
+      await db.quizProgress.update({
+        where: { id: quizProgress.id },
+        data: {
+          isCompleted: false,
+        },
+      });
+    }
+
     // If not found, create a new QuizProgress record
     if (!quizProgress) {
       quizProgress = await db.quizProgress.create({
@@ -60,6 +77,15 @@ export const getPlayQuiz = async (quizId: string) => {
             },
           },
           user: true,
+        },
+      });
+
+      await db.quiz.update({
+        where: { id: quizId },
+        data: {
+          playCount: {
+            increment: 1,
+          },
         },
       });
     }
@@ -101,8 +127,25 @@ export const saveQuizProgress = async (
         currentQuestion: data.currentQuestion,
         playQuizQuestions: filteredQuestions,
         isCompleted: data.isCompleted,
+        completedAt: new Date(),
+      },
+      include: {
+        quiz: { select: { id: true, completionCount: true, playCount: true } },
       },
     });
+
+    if (quizProgress && data.isCompleted) {
+      await db.quiz.update({
+        where: { id: quizProgress.quiz.id },
+        data: {
+          completionCount:
+            quizProgress.quiz.completionCount + 1 > quizProgress.quiz.playCount
+              ? quizProgress.quiz.playCount
+              : quizProgress.quiz.completionCount + 1,
+        },
+      });
+    }
+
     return { success: true, quizProgress };
   } catch (error) {
     return { success: false, message: "Failed to get quiz" };

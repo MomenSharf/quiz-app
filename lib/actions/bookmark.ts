@@ -1,10 +1,10 @@
 "use server";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, unstable_noStore as noStore } from "next/cache";
 import { getCurrentUser } from "../auth";
 import { db } from "../db";
 import { Category, SearchSortOption } from "@/types";
 
-export const bookmarksQuizzes = async ({
+export const getBookmarksQuizzes = async ({
   page = 1,
   pageSize = 10,
   query,
@@ -17,6 +17,7 @@ export const bookmarksQuizzes = async ({
   sortOption?: SearchSortOption;
   category?: Category;
 }) => {
+  noStore()
   const session = await getCurrentUser();
 
   if (!session) {
@@ -35,7 +36,7 @@ export const bookmarksQuizzes = async ({
 
   try {
     // Fetch quizzes from bookmarks
-    const bookmarkedQuizzes = await db.bookmark.findMany({
+    const bookmarks = await db.bookmark.findMany({
       where: {
         userId,
         quiz: {
@@ -73,6 +74,11 @@ export const bookmarksQuizzes = async ({
           include: {
             user: true,
             questions: true,
+            bookmarks: userId
+              ? {
+                  where: { userId }, // Include bookmarks only if userId exists
+                }
+              : undefined,
             ratings: true,
           },
         },
@@ -84,15 +90,16 @@ export const bookmarksQuizzes = async ({
       },
     });
 
-    const quizzesWithIsBookmarked = bookmarkedQuizzes.map(({ quiz }) => ({
-      ...quiz,
-      isBookmark: true,
-    }));
+    if (!bookmarks) {
+      return { success: false, message: "No Quizzes found" };
+    }
 
-    return { success: true, quizzes: quizzesWithIsBookmarked };
+    const quizzes = bookmarks.map((bookmark) => bookmark.quiz);
+
+    return { success: true, quizzes: quizzes };
   } catch (error) {
     console.error(error);
-    return { success: false, message: "Error searching quizzes." };
+    return { success: false, message: "Error geting quizzes." };
   }
 };
 

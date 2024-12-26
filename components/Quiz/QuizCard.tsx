@@ -1,18 +1,19 @@
 import { MotionDiv } from "@/hooks/useMotion";
 import { cn, formatToMinSec } from "@/lib/utils";
-import { SearchQuiz } from "@/types";
+import { BookmarkQuiz, SearchQuiz, UserProfile } from "@/types";
 import { Timer } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { Icons } from "../icons";
 import { Badge } from "../ui/badge";
 import { buttonVariants } from "../ui/button";
+import { UserAvatarImage } from "../User/UserAvatar";
 
 export default function QuizzesCard({
   quiz,
   index,
 }: {
-  quiz: SearchQuiz;
+  quiz: SearchQuiz | BookmarkQuiz | UserProfile["quizzes"][number];
   index: number;
 }) {
   const quizTime = quiz.questions.reduce(
@@ -62,7 +63,7 @@ export default function QuizzesCard({
       </div>
       <div className="p-2 pb-4 flex flex-col gap-2">
         <div className="flex items-center gap-1">
-          {/* <UserAvatarImage imageUrl={quiz.user.image} className="w-6 h-6" /> */}
+          <UserAvatarImage imageUrl={quiz.user.imageUrl} className="w-6 h-6" />
           <div className="flex flex-col gap-0 w-full">
             <Link
               href={`quiz/${quiz.id}`}
@@ -73,7 +74,7 @@ export default function QuizzesCard({
               {quiz.title}
             </Link>
             <p className="text-xs text-gray-medium max-w-[75%] truncate">
-              {/* {quiz.user.username} */}
+              {quiz.user.username}
             </p>
           </div>
         </div>

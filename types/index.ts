@@ -124,13 +124,12 @@ export type BookmarkQuiz = Prisma.QuizGetPayload<{
   include: {
     user: true,
     questions: true,
+    bookmarks: true | undefined,
     ratings: true,
   },
 }>
 
-export type BookmarkQuizIsBookmark = BookmarkQuiz & { isBookmark: boolean };
 
-export type SearchQuizWithIsBookmark = SearchQuiz & { isBookmark: boolean };
 
 export type PlayQuizType = Prisma.QuizProgressGetPayload<{
   include: {
@@ -155,13 +154,14 @@ export type UserProfile = Prisma.UserGetPayload<{
     quizzes: {
       include: {
         user: true;
-        bookmarks: true;
+        bookmarks: true | undefined,
         questions: true;
         ratings: true;
       };
     };
   };
 }> ;
+
 
 //
 //

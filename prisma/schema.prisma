@@ -63,6 +63,7 @@ model Quiz {
   bookmarks     Bookmark[]
   imageUrl     String?
   playCount    Int            @default(0) // Field to track how many times the quiz has been played
+  completionCount  Int         @default(0) // Total number of times the quiz has been completed
 
   @@index([title, createdAt]) // Index for faster querying by title and creation date
 }

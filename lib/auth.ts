@@ -99,7 +99,7 @@ export const authOptions: NextAuthOptions = {
             id: dbUser.id,
           },
           data: {
-            username: ` ${dbUser.email.split('@')[0]}-${nanoid(5)}`,
+            username: `${dbUser.email.split('@')[0]}-${nanoid(5)}`,
           },
         });
       }

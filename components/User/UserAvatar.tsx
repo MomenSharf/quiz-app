@@ -17,15 +17,11 @@ import { Avatar, AvatarImage } from "../ui/avatar";
 import { Icons } from "../icons";
 import { User } from "next-auth";
 
-type UserAvatarProps = {
-  isLoggedIn: boolean; // Check if user is logged in or not.
-  user: User;
-};
 type UserAvatarImageProps = AvatarProps & {
   imageUrl: string | null;
 };
 
-export function UserAvatar({ isLoggedIn, user }: UserAvatarProps) {
+export function UserAvatar({  user }: {user: User}) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>

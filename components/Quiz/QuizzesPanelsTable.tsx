@@ -1,11 +1,10 @@
-import { BookmarkQuizIsBookmark, SearchQuiz, SearchQuizWithIsBookmark } from "@/types";
-import React from "react";
+import { BookmarkQuiz, SearchQuiz, UserProfile } from "@/types";
 import QuizPanel from "./QuizPanel";
 
 export default function QuizzesPanelsTable({
   quizzes,
 }: {
-  quizzes: SearchQuizWithIsBookmark[] | BookmarkQuizIsBookmark[];
+  quizzes: SearchQuiz[] | BookmarkQuiz[] | UserProfile['quizzes'];
 }) {
   return (
     <div className="flex flex-col gap-1">

@@ -14,6 +14,7 @@ import { type ClassValue, clsx } from "clsx";
 import { formatDistanceToNow, intervalToDuration } from "date-fns";
 import { twMerge } from "tailwind-merge";
 import * as z from 'zod';
+import numeral from 'numeral'
 export function formatTimeAgo(date: Date | string): string {
   if (typeof date === "string") {
     date = new Date(date);
@@ -142,3 +143,8 @@ export const mapQuestionByType = (question: EditorQuiz["questions"][number]) => 
       >;
   }
 };
+
+export function formatAsKMB(num: number) {
+
+  return numeral(num).format('0.0a').toUpperCase();
+}

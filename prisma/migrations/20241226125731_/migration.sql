@@ -4,9 +4,6 @@ CREATE TYPE "Visibility" AS ENUM ('PUBLIC', 'PRIVATE');
 -- CreateEnum
 CREATE TYPE "QuestionType" AS ENUM ('UNSELECTED', 'PICK_ANSWER', 'TRUE_FALSE', 'FILL_IN_THE_BLANK', 'SHORT_ANSWER', 'MATCHING_PAIRS', 'ORDER');
 
--- CreateEnum
-CREATE TYPE "Category" AS ENUM ('SCIENCE', 'MATH', 'HISTORY', 'GEOGRAPHY', 'LITERATURE', 'TECHNOLOGY', 'SPORTS', 'ART', 'LANGUAGE', 'GENERAL_KNOWLEDGE', 'POLITICS', 'ECONOMICS', 'PHILOSOPHY', 'PSYCHOLOGY', 'BIOLOGY', 'CHEMISTRY', 'PHYSICS', 'COMPUTER_SCIENCE', 'RELIGION', 'NATURE', 'EDUCATION');
-
 -- CreateTable
 CREATE TABLE "User" (
     "id" TEXT NOT NULL,
@@ -46,6 +43,8 @@ CREATE TABLE "Quiz" (
     "folderId" TEXT,
     "userId" TEXT NOT NULL,
     "imageUrl" TEXT,
+    "playCount" INTEGER NOT NULL DEFAULT 0,
+    "completionCount" INTEGER NOT NULL DEFAULT 0,
 
     CONSTRAINT "Quiz_pkey" PRIMARY KEY ("id")
 );
@@ -58,7 +57,6 @@ CREATE TABLE "Question" (
     "correctAnswer" TEXT,
     "quizId" TEXT NOT NULL,
     "questionOrder" INTEGER NOT NULL,
-    "categories" "Category"[],
     "timeLimit" INTEGER NOT NULL,
     "points" INTEGER NOT NULL,
     "imageUrl" TEXT,
@@ -81,13 +79,14 @@ CREATE TABLE "Item" (
 );
 
 -- CreateTable
-CREATE TABLE "Rate" (
+CREATE TABLE "Rating" (
     "id" TEXT NOT NULL,
     "quizId" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
-    "rate" INTEGER NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "rating" INTEGER NOT NULL,
 
-    CONSTRAINT "Rate_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "Rating_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -95,7 +94,6 @@ CREATE TABLE "Bookmark" (
     "id" TEXT NOT NULL,
     "quizId" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
-    "rate" INTEGER NOT NULL,
 
     CONSTRAINT "Bookmark_pkey" PRIMARY KEY ("id")
 );
@@ -180,6 +178,9 @@ CREATE INDEX "User_email_idx" ON "User"("email");
 CREATE INDEX "Quiz_title_createdAt_idx" ON "Quiz"("title", "createdAt");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "Bookmark_userId_quizId_key" ON "Bookmark"("userId", "quizId");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "QuizProgress_userId_quizId_key" ON "QuizProgress"("userId", "quizId");
 
 -- CreateIndex
@@ -210,10 +211,10 @@ ALTER TABLE "Question" ADD CONSTRAINT "Question_quizId_fkey" FOREIGN KEY ("quizI
 ALTER TABLE "Item" ADD CONSTRAINT "Item_questionId_fkey" FOREIGN KEY ("questionId") REFERENCES "Question"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Rate" ADD CONSTRAINT "Rate_quizId_fkey" FOREIGN KEY ("quizId") REFERENCES "Quiz"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "Rating" ADD CONSTRAINT "Rating_quizId_fkey" FOREIGN KEY ("quizId") REFERENCES "Quiz"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Rate" ADD CONSTRAINT "Rate_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "Rating" ADD CONSTRAINT "Rating_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Bookmark" ADD CONSTRAINT "Bookmark_quizId_fkey" FOREIGN KEY ("quizId") REFERENCES "Quiz"("id") ON DELETE CASCADE ON UPDATE CASCADE;

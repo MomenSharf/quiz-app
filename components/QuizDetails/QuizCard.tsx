@@ -16,11 +16,12 @@ import { useEffect, useRef, useState } from "react";
 import BookmarkButton from "../Quiz/BookmarkButton";
 import { UserAvatarImage } from "../User/UserAvatar";
 import { Icons } from "../icons";
-import { Badge } from "../ui/badge";
+import { Badge, badgeVariants } from "../ui/badge";
 import { Button } from "../ui/button";
 import { toast } from "../ui/use-toast";
 import DeleteDialog from "./DeleteDiaolg";
 import QuizImage from "./QuizImage";
+import Link from "next/link";
 
 export default function QuizCard({
   quiz,
@@ -67,20 +68,25 @@ export default function QuizCard({
 
   const router = useRouter();
 
-  const isOner = quiz.user.id === sessiom.data?.user.id;
+  const isCurrentUser = quiz.user.id === sessiom.data?.user.id;
 
   return (
     <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 justify-center p-5 bg-card rounded-xl">
       <QuizImage imageUrl="" />
       <div className="lg:col-span-2 flex flex-col gap-2 justify-between">
-        <div className="flex items-center gap-1">
-          <UserAvatarImage imageUrl={""} className="w-10 h-10" />
-          <span className="text-xs text-gray-dark font-medium">
-            {quiz.user.username?.trim()}{" "}
-            {isOner && <Badge className="font-thin">You</Badge>}
-          </span>
-        </div>
         <p className="text-lg font-medium truncate">{quiz.title.trim()}</p>
+        <div className="flex items-center gap-1">
+          <Link href={`/profile/${quiz.user.username}`}>
+            <UserAvatarImage imageUrl={quiz.user.imageUrl} className="w-10 h-10" />
+          </Link>
+          <Link
+            href={`/profile/${quiz.user.username}`}
+            className="text-xs text-gray-dark font-medium hover:underline hover hover:text-primary transition-colors"
+          >
+            {quiz.user.username?.trim()}{" "}
+            {isCurrentUser && <Badge className="font-thin">You</Badge>}
+          </Link>
+        </div>
         <div className="flex gap-1 items-center">
           <Icons.star className="w-3 h-3 fill-yellow" />
           <span className="text-xs">4.5</span>
@@ -125,9 +131,9 @@ export default function QuizCard({
           <p className="text-sm">Categories :</p>
           <div className="flex gap-1 flex-wrap">
             {quiz.categories.map((category) => (
-              <Badge key={category} variant="outline">
+              <Link href={`search`} key={category} className={cn(badgeVariants({variant: 'outline'}))}>
                 {category.split("_").join(" ").toLocaleLowerCase()}
-              </Badge>
+              </Link>
             ))}
           </div>
         </div>
@@ -138,7 +144,7 @@ export default function QuizCard({
           >
             Play
           </Button>
-          {isOner ? (
+          {isCurrentUser ? (
             <Button
               className="group rounded-full flex-1  max-w-40 gap-2"
               variant="outline"
@@ -167,7 +173,7 @@ export default function QuizCard({
             <Icons.share className="w-4 h-4 stroke-black fill-black" />
           </Button>
 
-          {isOner ? (
+          {isCurrentUser ? (
             <DeleteDialog quizId={quiz.id} />
           ) : (
             <BookmarkButton
