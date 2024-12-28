@@ -26,7 +26,7 @@ export default function TypeSelector({ questionIndex }: { questionIndex: number 
               className="py-10"
               onClick={async () => {
                 setValue(`questions.${questionIndex}.type`, value);
-                if (errors.questions) {
+                if (errors.categories) {
                   await trigger();
                 }
               }}

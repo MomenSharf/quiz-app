@@ -22,6 +22,7 @@ import { toast } from "../ui/use-toast";
 import DeleteDialog from "./DeleteDiaolg";
 import QuizImage from "./QuizImage";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function QuizCard({
   quiz,
@@ -72,8 +73,19 @@ export default function QuizCard({
 
   return (
     <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 justify-center p-5 bg-card rounded-xl">
-      <QuizImage imageUrl="" />
-      <div className="lg:col-span-2 flex flex-col gap-2 justify-between">
+    <div className="flex flex-col w-full rounded-xl overflow-hidden">
+      <Image
+        src={quiz.imageUrl || "/assets/images/hero.webp"}
+        alt="question Image"
+        width={800} // Replace with your desired pixel width
+        height={600} // Replace with your desired pixel height
+        priority
+        style={{
+          aspectRatio: "4 / 3", // Maintains the 4:3 aspect ratio
+        }}
+        className="rounded-xl"
+      />
+    </div>      <div className="lg:col-span-2 flex flex-col gap-2 justify-between">
         <p className="text-lg font-medium truncate">{quiz.title.trim()}</p>
         <div className="flex items-center gap-1">
           <Link href={`/profile/${quiz.user.username}`}>

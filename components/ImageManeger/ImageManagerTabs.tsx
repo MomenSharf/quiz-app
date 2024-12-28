@@ -21,7 +21,7 @@ export default function ImageManagerTabs({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       {trigger && <DialogTrigger asChild>{trigger}</DialogTrigger>}
-      <DialogContent className="max-w-3xl h-[85git vh] flex flex-col px-8">
+      <DialogContent className="max-w-3xl h-[85vh] flex flex-col px-8">
         <Tabs defaultValue="upload" className="h-full">
           <TabsList className="flex">
             <TabsTrigger value="upload" className="basis-1/3">

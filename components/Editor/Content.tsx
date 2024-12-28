@@ -8,19 +8,14 @@ import Settings from "./Settings/Settings";
 
 export default function Content() {
   const {
-    dispatch,
-    state: { currentQuestionId, isSettingsOpen },
+    state: { currentQuestionId, settingsOpen },
     form,
-    debounceSaveData,
   } = useEditorContext();
 
-  const { getValues, watch, control, handleSubmit } = form;
+  const { getValues } = form;
   const variants = {
     hidden: { opacity: 0 },
     visible: { opacity: 1 },
-  };
-  const onSubmit = async () => {
-    console.log("fomtStat goood");
   };
 
   return (
@@ -31,7 +26,7 @@ export default function Content() {
             variants={variants}
             initial={{ opacity: 0 }}
             animate={
-              question.id === currentQuestionId || isSettingsOpen
+              question.id === currentQuestionId || settingsOpen.open
                 ? { opacity: 1 }
                 : { opacity: 0 }
             }
@@ -43,12 +38,12 @@ export default function Content() {
             }}
             key={question.id}
           >
-            {isSettingsOpen ? (
-              <Settings />
+            {settingsOpen.open ? (
+              <Settings type={settingsOpen.type} />
             ) : question.type === "UNSELECTED" ? (
               <TypeSelector key={question.id} questionIndex={i} />
             ) : (
-             <Question question={question} questionIndex={i} />
+              <Question question={question} questionIndex={i} />
             )}
           </motion.div>
         );

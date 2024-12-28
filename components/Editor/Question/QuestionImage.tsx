@@ -5,11 +5,11 @@ import React from "react";
 import { useEditorContext } from "../Context";
 
 export default function QuestionImage({
-  questionIndex,
+  field,
   imageUrl,
-  openImageManagerTabs
+  openImageManagerTabs,
 }: {
-  questionIndex: number;
+  field: "imageUrl" | `questions.${number}.imageUrl`;
   imageUrl: string;
   openImageManagerTabs: () => void;
 }) {
@@ -26,7 +26,7 @@ export default function QuestionImage({
           variant="destructive"
           className="w-8 h-8"
           onClick={() => {
-            setValue(`questions.${questionIndex}.imageUrl`, undefined);
+            setValue(field, undefined);
           }}
         >
           <Trash2 className="w-4 h-4" />
@@ -42,7 +42,7 @@ export default function QuestionImage({
               payload: {
                 isOpen: true,
                 files: imageUrl,
-                field: `questions.${questionIndex}.imageUrl`,
+                field,
               },
             });
           }}

@@ -161,7 +161,7 @@ export default function ImageEditor({
         <p className="font-semibold">Edit</p>
         {files ? (
           // || url ?
-          <div className="flex flex-col w-full items-center">
+          <div className="flex flex-col gap-3 w-full items-center">
             <div className="" ref={containerRef}>
               <Cropper
                 ref={cropperRef}

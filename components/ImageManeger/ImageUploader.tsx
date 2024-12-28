@@ -26,7 +26,7 @@ export default function ImageUploader({
       <div className="h-[calc(100%_-_2.5rem)]">
         <div
           {...getRootProps()}
-          className="flex justify-center items-center cursor-pointer overflow- h-[calc(100%_-_2.5rem)] mt-7"
+          className="flex justify-center items-center cursor-pointer h-[calc(100%_-_2.5rem)] mt-7"
         >
           <input {...getInputProps()} className="cursor-pointer" />
 

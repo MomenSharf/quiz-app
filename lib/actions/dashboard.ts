@@ -308,6 +308,10 @@ export const duplicateQuiz = async ({
         id: quizId,
         userId: session.user.id,
       },
+      include: {
+        questions: true,
+        
+      },
     });
 
     if (!originalQuiz) {
@@ -342,15 +346,25 @@ export const duplicateQuiz = async ({
 
     const newQuizTitle = `${copyPattern} (${maxCopyNumber + 1})`;
 
-    const { id, createdAt, updatedAt, visibility, title, ...data } =
+    const { id, createdAt, updatedAt, visibility, title, playCount,completionCount, questions : orignalQuestions, ...data } =
       originalQuiz;
+
+      const questions = orignalQuestions.map((question => {
+        const {id, quizId, ...questionData} = question
+        return questionData
+      }))
 
     const quiz = await db.quiz.create({
       data: {
         title: newQuizTitle,
         ...data,
+        questions: {
+          create: questions
+        }
       },
     });
+
+
 
     revalidatePath(pathname);
 

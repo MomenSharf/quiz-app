@@ -50,6 +50,8 @@ export const saveEditorQuiz = async (
   if (!session) {
     return { success: false, message: "Unauthorized: User is not logged in." };
   }
+  console.log(data.questions);
+  
 
   const mapQuestion = (
     question: questionSchemaType
@@ -133,6 +135,7 @@ export const saveEditorQuiz = async (
       title: data.title,
       description: data.description,
       visibility: data.visibility,
+      imageUrl : data.imageUrl,
     };
 
     const questions = data.questions.map(mapQuestion);
@@ -161,5 +164,48 @@ export const saveEditorQuiz = async (
     }
   } catch (error: any) {
     return { success: false, message: `An error occurred: ${error.message}` };
+  }
+};
+
+
+export const toggleVisibility = async ({ quizId }: { quizId: string }) => {
+  // Get the currently logged-in user
+  const session = await getCurrentUser();
+  const userId = session?.user.id;
+
+  if (!userId) {
+    return { success: false, message: "User not authenticated" };
+  }
+
+  try {
+    // Fetch the quiz to check ownership
+    const quiz = await db.quiz.findUnique({
+      where: { id: quizId },
+    });
+
+    if (!quiz) {
+      return { success: false, message: "Quiz not found" };
+    }
+
+    if (quiz.userId !== userId) {
+      return { success: false, message: "Access denied: You are not the owner of this quiz" };
+    }
+
+    // Toggle the visibility
+    const updatedQuiz = await db.quiz.update({
+      where: { id: quizId },
+      data: {
+        visibility: quiz.visibility === "PRIVATE" ? "PUBLIC" : "PRIVATE",
+      },
+    });
+
+    return {
+      success: true,
+      visibility: updatedQuiz.visibility,
+      message: `Visibility updated to ${updatedQuiz.visibility}`,
+    };
+  } catch (error) {
+    console.error("Error toggling visibility:", error);
+    return { success: false, message: "Failed to toggle visibility" };
   }
 };

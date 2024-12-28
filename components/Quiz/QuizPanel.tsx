@@ -53,7 +53,7 @@ export default async function QuizPanel({
       <div className="relative bg-card p-2 sm:p-3 flex rounded-lg">
         <Link
           href={`quiz/${quiz.id}`}
-          className="flex items-center rounded-xl overflow-hidden w-28"
+          className="flex items-center rounded-xl overflow-hidden w-28 min-w-28"
         >
           <Image
             // src={imageUrl}

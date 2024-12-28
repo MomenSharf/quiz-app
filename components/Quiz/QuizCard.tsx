@@ -6,21 +6,24 @@ import {
   formatToMinSec,
 } from "@/lib/utils";
 import { BookmarkQuiz, SearchQuiz, UserProfile } from "@/types";
-import { Timer } from "lucide-react";
+import { Layers, Timer } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { Icons } from "../icons";
 import { Badge } from "../ui/badge";
 import { buttonVariants } from "../ui/button";
 import { UserAvatarImage } from "../User/UserAvatar";
+import { getCurrentUser } from "@/lib/auth";
 
-export default function QuizzesCard({
+export default async function QuizzesCard({
   quiz,
   index,
 }: {
   quiz: SearchQuiz | BookmarkQuiz | UserProfile["quizzes"][number];
   index: number;
 }) {
+  const sessiom = await getCurrentUser();
+  const isCurrentUser = sessiom && quiz.user.id === sessiom.user.id;
   const quizTime = quiz.questions.reduce(
     (acc, curr) => acc + curr.timeLimit,
     0
@@ -41,12 +44,12 @@ export default function QuizzesCard({
         duration: 0.3,
       }}
       viewport={{ amount: 0 }}
-      className="w-52 bg-card rounded-xl flex flex-col"
+      className="w-44 sm:w-52 bg-card rounded-xl flex flex-col"
     >
       <div className="group relative flex flex-col w-full rounded-xl  rounded-bl-none rounded-br-none overflow-hidden">
         <Image
-          // src={imageUrl}
-          src="/assets/images/hero.webp"
+          src={quiz.imageUrl || "/assets/images/hero.webp"}
+          // src="/assets/images/hero.webp"
           alt="question Image"
           width={800} // Replace with your desired pixel width
           height={600} // Replace with your desired pixel height
@@ -80,14 +83,19 @@ export default function QuizzesCard({
             >
               {quiz.title}
             </Link>
-            <p className="text-xs text-gray-medium max-w-[75%] truncate">
-              {quiz.user.username}
-            </p>
+            <div className="flex gap-1">
+              <p className="text-xs text-gray-medium max-w-[65%] truncate">
+                {quiz.user.username}
+              </p>
+              {isCurrentUser && (
+                <span className="text-primary text-xs">(You)</span>
+              )}
+            </div>
           </div>
         </div>
         <div className="flex gap-1">
           <Badge className="bg-primary/30 hover:bg-primary/30 text-primary gap-0.5">
-            {quiz.questions.length} Question
+            {quiz.questions.length} <Layers className="w-3 h-3" />
           </Badge>
           <Badge className="bg-destructive/30 hover:bg-destructive/30 text-destructive gap-0.5">
             <Timer className="w-3 h-3 text-destructive" />

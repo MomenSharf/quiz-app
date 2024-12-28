@@ -10,14 +10,21 @@ import UndoRedo from "./UndoRedo";
 import { Icons } from "@/components/icons";
 import { useEditorContext } from "../Context";
 import { revalidatePathInServer } from "@/lib/actions/utils";
+import ToggleVisibility from "./ToggleVisibility";
 
 export default function Header() {
   const [isEditingTitle, setIsEditingTitle] = useState(false);
 
   const {
     dispatch,
-    state: { isSettingsOpen },
-    form: { setFocus, control, getValues, setValue },
+    state: { settingsOpen },
+    form: {
+      setFocus,
+      control,
+      getValues,
+      setValue,
+      formState: { errors },
+    },
   } = useEditorContext();
   const router = useRouter();
 
@@ -27,6 +34,8 @@ export default function Header() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isEditingTitle]);
+
+  const error = errors.description || errors.imageUrl || errors.categories;
 
   return (
     <header className="flex-shrink-0 flex items-center gap-1 md:gap-2 p-2 border-b">
@@ -77,34 +86,46 @@ export default function Header() {
           <span className="truncate max-w-40">{getValues("title")}</span>
         </Button>
       </div>
+      <ToggleVisibility />
       <SaveState />
       <UndoRedo />
-      <div className="ml-auto flex gap-1">
+      <div className="ml-auto flex gap-2">
         <Button
           variant="outline"
           type="button"
-          className={cn("gap-1 rounded-xl", 
-          {  'border-primary border-2': isSettingsOpen }
-          )}
+          className={cn("relative gap-1 rounded-xl", {
+            "border-primary border-2":
+              settingsOpen.open && settingsOpen.type === "settings",
+          })}
           onClick={() => {
-            if (!isSettingsOpen)
-              dispatch({ type: "SET_IS_SETTINGS_OPEN", payload: true });
+            if (!settingsOpen.open || settingsOpen.type !== "settings")
+              dispatch({
+                type: "SET_IS_SETTINGS_OPEN",
+                payload: { open: true, type: "settings" },
+              });
           }}
         >
-          <Icons.settings className={cn("w-4 h-4 fill-gray-medium", 
-           { 'fill-primary' : isSettingsOpen   }        )} />
-          <span className={cn("hidden sm:inline-block text-gray-medium", 
-           { 'text-primary' : isSettingsOpen && false  }        )}>
+          <Icons.settings
+            className={cn("w-4 h-4 fill-gray-medium", {
+              "fill-primary":
+                settingsOpen.open && settingsOpen.type === "settings",
+            })}
+          />
+          <span
+            className={cn("hidden sm:inline-block text-gray-medium", {
+              "text-primary":
+                settingsOpen.open && settingsOpen.type === "settings" && false,
+            })}
+          >
             Settings
           </span>
-        </Button>
-        <Button type="submit" variant="outline" className="gap-1 rounded-xl">
-          <Eye className="w-4 h-4 text-primary" />
-          <span className="hidden sm:inline-block text-primary">Preview</span>
+          {error && (
+            <Icons.alert className="absolute w-4 h-4 fill-amber stroke-background -top-2 -right-2" />
+          )}
         </Button>
         <Button type="submit" className="gap-1 rounded-xl">
-          <Save className="w-4 h-4" />
-          Publish
+          <Eye className="w-4 h-4" />
+          <span className="hidden sm:inline-block">Preview</span>
         </Button>
       </div>
     </header>

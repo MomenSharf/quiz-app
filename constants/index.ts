@@ -132,7 +132,11 @@ export const QUESTION_TYPES: QuestionType[] = [
   "ORDER",
 ] as const;
 
-export const VISIBILITY_OPTIONS = ["PUBLIC", "PRIVATE"] as const;
+export const VISIBILITY_TYPE = ["PUBLIC", "PRIVATE"] as const;
+export const VISIBILITY_OPTIONS = [
+  { value: "PUBLIC", label: "Public" },
+  { value: "PRIVATE", label: "Private" }
+] as const;
 
 export const QUESTION_TYPES_WITH_LABEL_AND_ICONS: {
   value: QuestionType;

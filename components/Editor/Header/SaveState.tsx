@@ -9,21 +9,25 @@ import { X } from "lucide-react";
 import { useEditorContext } from "../Context";
 import { Button } from "@/components/ui/button";
 import { Icons } from "@/components/icons";
+import { useRouter } from "next/navigation";
 
 export default function SaveState() {
   const {
-    state: { saveState },
+    state: {saveState},
   } = useEditorContext();
+
+  const router = useRouter();
+
   return (
     <div className="flex justify-center items-center mx-1">
       <Tooltip delayDuration={100}>
         <TooltipTrigger asChild>
           <Button variant="ghost" className="p-1 cursor-default">
-            {saveState === "WAITING" ? (
+            {saveState === "waiting" ? (
               <Icons.Loader className="w-6 h-6 stroke-muted-foreground animate-spin" />
-            ) : // ) : saveState === "OFFLINE" ? (
-            //   <Icons.Offline className="w-6 h-6 fill-muted-foreground " />
-            saveState === "BAD" ? (
+            ) : saveState === "offline" ? (
+              <Icons.Offline className="w-6 h-6 fill-muted-foreground " />
+            ) : saveState === "bad" ? (
               <Icons.alert className="w-6 h-6 fill-amber stroke-background" />
             ) : (
               <Icons.check className="w-6 h-6 fill-success" />
@@ -32,24 +36,18 @@ export default function SaveState() {
         </TooltipTrigger>
         <TooltipContent
           className={cn("text-xs relative", {
-            "border-destructive": saveState === "BAD",
+            "border-destructive": saveState === "bad",
           })}
         >
-          {saveState === "WAITING" ? (
+          {saveState === "waiting" ? (
             "Saving..."
-          ) : // ) : saveState === "OFFLINE" ? (
-          //   "You are offline"
-          saveState === "BAD" ? (
-            <div className="pt-2">
-              <Button
-                size="icon"
-                variant="ghost"
-                className="absolute top-0 right-0 p-1 w-auto h-auto self-end"
-              >
-                <X className="w-2.5 h-2.5" />
-              </Button>
+          ) : saveState === "offline" ? (
+            "You are offline"
+          ) : saveState === "bad" ? (
+            <>
               Something worng{" "}
               <button
+                type="button"
                 onClick={() => {
                   if (location) location.reload();
                 }}
@@ -57,15 +55,10 @@ export default function SaveState() {
               >
                 Refresh
               </button>
-            </div>
+            </>
           ) : (
             "all chenges saved"
           )}
-          <TooltipArrow
-            className={cn("fill-popover", {
-              "fill-destructive": saveState === "BAD",
-            })}
-          />
         </TooltipContent>
       </Tooltip>
     </div>

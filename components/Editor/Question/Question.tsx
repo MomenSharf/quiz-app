@@ -53,32 +53,23 @@ export default function Question({
             className={cn(
               "p-1.5 sm:p-3 grid sm:grid-cols-2 gap-3 w-full max-w-3xl",
               {
-                "sm:grid-cols-3 max-w-4xl": question.imageUrl,
+                "sm:grid-cols-5 max-w-4xl": question.imageUrl,
               }
             )}
           >
             {question.imageUrl && (
+              <div className="sm:col-span-2">
+
               <QuestionImage
                 imageUrl={question.imageUrl}
-                questionIndex={questionIndex}
+                field={`questions.${questionIndex}.imageUrl`}
                 openImageManagerTabs={() => {
-                  console.log(10);
                   setIsImageManagerTabs(true);
                 }}
-              />
-            )}
-            <div className="sm:col-span-2 flex flex-col gap-3">
-              {/* <div className="flex flex-col gap-1">
-              <div className="flex">
-                <div className="flex flex-col gap-1 w-full">
-                  <p className="text-sm font-medium">Quesion</p>
-                  <div className="flex w-full">
-
-                    
-                  </div>
+                />
                 </div>
-              </div>
-            </div> */}
+            )}
+            <div className="sm:col-span-3 flex flex-col gap-3">
               <QuestionInput
                 questionIndex={questionIndex}
                 isImageManagerTabs={isImageManagerTabs}

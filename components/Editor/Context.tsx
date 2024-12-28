@@ -17,14 +17,14 @@ import React, {
 import { useForm, UseFormReturn, useWatch } from "react-hook-form";
 import { DebouncedState, useDebouncedCallback } from "use-debounce";
 
-type SaveStateType = "GOOD" | "BAD" | "WAITING";
+type SaveStateType = "good" | "bad" | "waiting" | "offline";
 
 // Define the state shape
 type EditorState = {
   saveState: SaveStateType;
   historyArray: quizSchemaType[];
   currentQuestionId: string | null;
-  isSettingsOpen: boolean;
+  settingsOpen: { open: boolean; type: "settings" | "publish" };
   isImageManagerTabsOpen: boolean;
   isImageEditorOpenWithFiles:
     | {
@@ -43,7 +43,10 @@ type EditorActions =
       payload: { quiz: quizSchemaType; historyIndex: number };
     }
   | { type: "SET_CURRENT_QUESTION_ID"; payload: string }
-  | { type: "SET_IS_SETTINGS_OPEN"; payload: boolean }
+  | {
+      type: "SET_IS_SETTINGS_OPEN";
+      payload: { open: boolean; type: "settings" | "publish" };
+    }
   | { type: "SET_IS_QUESTIONS_IMAGE_MANAGER_OPEN"; payload: boolean }
   | { type: "SET_IS_IMAGE_MANAGER_TABS_OPEN"; payload: boolean }
   | {
@@ -70,10 +73,10 @@ type EditorContextType = {
 
 // Initial state
 const initialState: EditorState = {
-  saveState: "GOOD",
+  saveState: "good",
   historyArray: [],
   currentQuestionId: null,
-  isSettingsOpen: false,
+  settingsOpen: { open: false, type: "settings" },
   isImageManagerTabsOpen: false,
   isImageEditorOpenWithFiles: { isOpen: false },
 };
@@ -97,7 +100,7 @@ const editorReducer = (
     case "SET_CURRENT_QUESTION_ID":
       return { ...state, currentQuestionId: action.payload };
     case "SET_IS_SETTINGS_OPEN":
-      return { ...state, isSettingsOpen: action.payload };
+      return { ...state, settingsOpen: action.payload };
     case "SET_IS_IMAGE_MANAGER_TABS_OPEN": {
       return {
         ...state,
@@ -138,7 +141,7 @@ export const EditorProvider = ({
       id: initialQuiz.id,
       title: initialQuiz.title,
       description: initialQuiz.description,
-      imageUrl: initialQuiz.imageUrl || undefined,
+      imageUrl: initialQuiz.imageUrl || '',
       visibility: initialQuiz.visibility,
       categories: initialQuiz.categories as Category[],
       questions: mappedQuestions,
@@ -164,12 +167,12 @@ export const EditorProvider = ({
   const saveEditorQuiz = useCallback(
     async (isReseting: boolean) => {
       try {
-        dispatch({ type: "SET_SAVE_SATAT", payload: "WAITING" });
+        dispatch({ type: "SET_SAVE_SATAT", payload: "waiting" });
 
         const prismaQuiz = await saveEditorQuizServer(initialQuiz.id, data);
 
         if (prismaQuiz) {
-          dispatch({ type: "SET_SAVE_SATAT", payload: "GOOD" });
+          dispatch({ type: "SET_SAVE_SATAT", payload: "good" });
 
           if (!isReseting) {
             historyIndex.current = historyIndex.current + 1;
@@ -179,13 +182,13 @@ export const EditorProvider = ({
             });
           }
         } else {
-          dispatch({ type: "SET_SAVE_SATAT", payload: "BAD" });
+          dispatch({ type: "SET_SAVE_SATAT", payload: "bad" });
         }
       } catch (error: any) {
-        dispatch({ type: "SET_SAVE_SATAT", payload: "BAD" });
+        dispatch({ type: "SET_SAVE_SATAT", payload: "bad" });
       }
     },
-    [data, historyArray, initialQuiz.id]
+    [data, initialQuiz.id]
   );
   const debounceSaveData = useDebouncedCallback((isReseting: boolean) => {
     saveEditorQuiz(isReseting);
@@ -220,11 +223,11 @@ export const EditorProvider = ({
     const subscription = watch((_, { name }) => {
       if (
         name &&
-        (name === "title" ||
+        (name === "title" || //!! does not save correctly
           name === "description" ||
           name === "imageUrl" ||
           name === "visibility" ||
-          name === "categories" ||
+          name === "categories" || //!! does not save correctly
           name.startsWith("questions") ||
           name.startsWith("image"))
       ) {
