@@ -32,8 +32,8 @@ export default function QuizCard({
   pathname: string;
 }) {
   const sessiom = useSession();
-  const [isDescriptionOpen, setIsDescriptionOpen] = useState(false);
-  const [isShowMoreVisible, setIsShowMoreVisible] = useState(false);
+  const [isDescriptionOpen, setIsDescriptionOpen] = useState(true);
+  const [isShowMoreVisible, setIsShowMoreVisible] = useState(true);
   const [isCopyingQuiz, setIsCopiyngQuiz] = useState(false);
   const descriptionRef = useRef<HTMLParagraphElement>(null);
   const quizTime = quiz.questions.reduce(
@@ -73,30 +73,36 @@ export default function QuizCard({
 
   return (
     <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 justify-center p-5 bg-card rounded-xl">
-    <div className="flex flex-col w-full rounded-xl overflow-hidden">
-      <Image
-        src={quiz.imageUrl || "/assets/images/hero.webp"}
-        alt="question Image"
-        width={800} // Replace with your desired pixel width
-        height={600} // Replace with your desired pixel height
-        priority
-        style={{
-          aspectRatio: "4 / 3", // Maintains the 4:3 aspect ratio
-        }}
-        className="rounded-xl"
-      />
-    </div>      <div className="lg:col-span-2 flex flex-col gap-2 justify-between">
+      <div className="flex flex-col w-full rounded-xl overflow-hidden">
+        <Image
+          src={quiz.imageUrl || "/assets/images/hero.webp"}
+          alt="question Image"
+          width={800} // Replace with your desired pixel width
+          height={600} // Replace with your desired pixel height
+          priority
+          style={{
+            aspectRatio: "4 / 3", // Maintains the 4:3 aspect ratio
+          }}
+          className="rounded-xl"
+        />
+      </div>{" "}
+      <div className="lg:col-span-2 flex flex-col gap-2 justify-between">
         <p className="text-lg font-medium truncate">{quiz.title.trim()}</p>
         <div className="flex items-center gap-1">
           <Link href={`/profile/${quiz.user.username}`}>
-            <UserAvatarImage imageUrl={quiz.user.imageUrl} className="w-10 h-10" />
+            <UserAvatarImage
+              imageUrl={quiz.user.imageUrl}
+              className="w-10 h-10"
+            />
           </Link>
           <Link
             href={`/profile/${quiz.user.username}`}
             className="text-xs text-gray-dark font-medium hover:underline hover hover:text-primary transition-colors"
           >
             {quiz.user.username?.trim()}{" "}
-            {isCurrentUser && <Badge className="font-thin">You</Badge>}
+            {isCurrentUser && (
+              <span className="text-primary text-xs">(You)</span>
+            )}
           </Link>
         </div>
         <div className="flex gap-1 items-center">
@@ -122,7 +128,10 @@ export default function QuizCard({
             })}
             ref={descriptionRef}
           >
-            {quiz.description.trim()}
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellendus
+            pariatur totam mollitia impedit provident accusantium eum voluptatum
+            ipsa earum eos fugiat a voluptate laboriosam quibusdam harum quia
+            porro, deserunt rerum?
             {isShowMoreVisible && (
               <Button
                 className="absolute right-0 bottom-0 rounded-full w-6 h-6 opacity-70 hover:opacity-100"
@@ -143,7 +152,11 @@ export default function QuizCard({
           <p className="text-sm">Categories :</p>
           <div className="flex gap-1 flex-wrap">
             {quiz.categories.map((category) => (
-              <Link href={`search`} key={category} className={cn(badgeVariants({variant: 'outline'}))}>
+              <Link
+                href={`search`}
+                key={category}
+                className={cn(badgeVariants({ variant: "outline" }))}
+              >
                 {category.split("_").join(" ").toLocaleLowerCase()}
               </Link>
             ))}

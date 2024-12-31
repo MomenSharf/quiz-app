@@ -13,8 +13,8 @@ import { toast } from "@/components/ui/use-toast";
 import { cn } from "@/lib/utils";
 import { DashboardFoldersWithQuiz, DashboardQuiz } from "@/types";
 import { useRouter } from "next/navigation";
-import { HTMLProps } from "react";
-import { useDashboardContext } from "../Context";
+import { HTMLProps, useState } from "react";
+import { useLibraryContext } from "../Context";
 import DeleteFolderButton from "./DeleteFolderButton";
 import { Button, ButtonProps, buttonVariants } from "@/components/ui/button";
 import RenameFolder from "./RenameFolder";
@@ -32,56 +32,36 @@ export default function FolderMenu({
   folder,
   ...props
 }: FolderMenuProps) {
-  const shareLink = async () => {
-    const searchUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/${folder.id}`;
-
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: "Check this out!",
-          text: `I found this search: ${searchUrl}`,
-          url: searchUrl,
-        });
-      } catch (error) {
-        toast({ description: "Error sharing link." });
-      }
-    } else {
-      toast({ description: "Sharing is not supported on your device." });
-    }
-  };
+  const [renameDialogOpen, setRenameDialogOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button {...props}>{children}</Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent
-        className={cn(
-          contentPostionClasses,
-          "relative w-40 text-gray-medium cursor-pointer"
-        )}
-      >
-        <DropdownMenuLabel className="text-gray-dark">
-          {folder.title}
-        </DropdownMenuLabel>
-        <DropdownMenuSeparator />
-        <DropdownMenuGroup>
-          <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-            <RenameFolder folderId={folder.id} className="w-full flex gap-2">
+    <>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button {...props}>{children}</Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent
+          className={cn(
+            contentPostionClasses,
+            "relative w-40 text-gray-medium cursor-pointer"
+          )}
+        >
+          <DropdownMenuLabel className="text-gray-dark">
+            {folder.title}
+          </DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          <DropdownMenuGroup>
+            <DropdownMenuItem
+              onSelect={(e) => setRenameDialogOpen(true)}
+              className="gap-1"
+            >
               <PenLine className="w-5 h-5" />
               <span className="font-semibold text-base">Rename</span>
-            </RenameFolder>
-          </DropdownMenuItem>
-        </DropdownMenuGroup>
-        <DropdownMenuGroup>
-          <DropdownMenuItem
-            className="p-0 transition-all"
-            onClick={(e) => {
-              e.preventDefault();
-            }}
-          >
-            <DeleteFolderButton
-              pathname={pathname}
-              folderId={folder.id}
+            </DropdownMenuItem>
+          </DropdownMenuGroup>
+          <DropdownMenuGroup>
+            <DropdownMenuItem
+              onClick={(e) => setDeleteDialogOpen(true)}
               className={cn(
                 buttonVariants({ size: "sm", variant: "ghost" }),
                 " gap-1 justify-start text-base w-full text-destructive hover:text-white hover:bg-destructive transition-colors"
@@ -89,10 +69,20 @@ export default function FolderMenu({
             >
               <Trash2 className="w-5 h-5" />
               Delete
-            </DeleteFolderButton>
-          </DropdownMenuItem>
-        </DropdownMenuGroup>
-      </DropdownMenuContent>
-    </DropdownMenu>
+            </DropdownMenuItem>
+          </DropdownMenuGroup>
+        </DropdownMenuContent>
+      </DropdownMenu>
+      <DeleteFolderButton
+        folderId={folder.id}
+        open={deleteDialogOpen}
+        setOpen={setDeleteDialogOpen}
+      />
+      <RenameFolder
+        folderId={folder.id}
+        open={renameDialogOpen}
+        setOpen={setRenameDialogOpen}
+      />
+    </>
   );
 }

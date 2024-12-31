@@ -8,32 +8,62 @@ import { Edit, EllipsisVertical, Layers } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React from "react";
-import { useDashboardContext } from "@/components/Library/Context";
+import { useLibraryContext } from "@/components/Library/Context";
 import QuizMenu from "./Quiz/QuizMenu";
 import FolderMenu from "./Folder/FolderMenu";
 import QuizDrawer from "./Quiz/QuizDrawer";
 import FolderDrawer from "./Folder/FolderDrawer";
+import { motion } from "framer-motion";
 
 export default function DataCard({
   data,
+  index,
 }: {
   data: DashboardQuiz | DashboardFoldersWithQuiz;
+  index: number;
 }) {
   const {
+    dispatch,
     state: { selectedQuizzesIds },
-    toggleQuizSelection,
-  } = useDashboardContext();
+  } = useLibraryContext();
   const router = useRouter();
   const isFolder = "parentId" in data;
-  const dataPath = `/${isFolder ? "dashboard/folders" : "quiz"}/${data.id}`;
+  const dataPath = `/${isFolder ? "library/folders" : "quiz"}/${data.id}`;
+
   return (
-    <tr className="bg-white p-3 rounded-lg mb-3">
+    <motion.tr
+      variants={{
+        hidden: { opacity: 0 },
+        visible: { opacity: 1 },
+      }}
+      initial="hidden"
+      animate="visible"
+      transition={{
+        delay: index * 0.2,
+        ease: "easeInOut",
+        duration: 0.3,
+      }}
+      viewport={{ amount: 0 }}
+      className="bg-white p-3 rounded-lg mb-3"
+    >
       <td className="p-2 rounded-tl-md rounded-bl-md">
         <div className="flex justify-center items-center">
           {!isFolder && (
             <Checkbox
               checked={selectedQuizzesIds.includes(data.id)}
-              onClick={() => toggleQuizSelection(data.id)}
+              onClick={() => {
+                if (selectedQuizzesIds.includes(data.id)) {
+                  dispatch({
+                    type: "SET_SELECTED_QUIZZES_IDS",
+                    payload: selectedQuizzesIds.filter((id) => id !== data.id),
+                  });
+                } else {
+                  dispatch({
+                    type: "SET_SELECTED_QUIZZES_IDS",
+                    payload: [...selectedQuizzesIds, data.id],
+                  });
+                }
+              }}
             />
           )}
         </div>
@@ -58,7 +88,7 @@ export default function DataCard({
                 className="rounded-md"
               />
             ) : (
-              <div className="w-[80px] h-[60px] sm:w-[100px] sm:h-[75px] flex justify-center items-center object-contain rounded-md overflow-hidden min-w-16 sm:min-w-20 bg-[hsl(var(--primary)_/_10%)] ">
+              <div className="w-[100px] h-[75px] sm:w-[100px] sm:h-[75px] flex justify-center items-center object-contain rounded-md overflow-hidden min-w-16 sm:min-w-20 bg-[hsl(var(--primary)_/_10%)] ">
                 <Icons.quizzes className="w-7 h-7 fill-primary" />
               </div>
             )
@@ -81,17 +111,17 @@ export default function DataCard({
               <div className="flex gap-1">
                 <Badge className="bg-primary/30 hover:bg-primary/30 text-primary items-center gap-0.5">
                   <Icons.quizzes className="w-3 h-3 fill-primary" />
-                  {data._count.quizzes} Quizzes
+                  {data._count.quizzes}
                 </Badge>
                 <Badge className="bg-primary/30 hover:bg-primary/30 text-primary items-center  gap-0.5">
                   <Icons.folder className="w-3 h-3 fill-primary" />
-                  {data._count.subfolders} Folder
+                  {data._count.subfolders}
                 </Badge>
               </div>
             ) : (
               <Badge className="bg-primary/30 hover:bg-primary/30 text-primary items-center gap-0.5">
                 <Layers className="w-3 h-3 text-primary" />
-                {data._count.questions} Questions
+                {data._count.questions}
               </Badge>
             )}
           </div>
@@ -108,8 +138,8 @@ export default function DataCard({
           <div className="flex gap-2 justify-center">
             <Button
               size="icon"
-              className=""
               onClick={() => router.push(`/play/${data.id}`)}
+              className="rounded-lg"
             >
               <Icons.play className="w-4 h-4 fill-white" />
             </Button>
@@ -117,8 +147,9 @@ export default function DataCard({
               size="icon"
               variant="outline"
               onClick={() => router.push(`/editor/${data.id}`)}
+              className="rounded-lg"
             >
-              <Edit className="w-4 h-4" />
+              <Icons.penLine className="w-4 h-4 fill-gray-dark" />
             </Button>
           </div>
         )}
@@ -132,8 +163,7 @@ export default function DataCard({
                   pathname="/dashboard"
                   folder={data}
                   className="p-0 w-4"
-                  variant='ghost'
-
+                  variant="ghost"
                 >
                   <EllipsisVertical className="w-4 h-4" />
                 </FolderMenu>
@@ -143,7 +173,7 @@ export default function DataCard({
                   pathname="/dashboard"
                   folder={data}
                   className="p-0 w-4"
-                  variant='ghost'
+                  variant="ghost"
                 >
                   <EllipsisVertical className="w-4 h-4" />
                 </FolderDrawer>
@@ -152,16 +182,15 @@ export default function DataCard({
           ) : (
             <>
               <div className="hidden sm:block">
-                <QuizMenu pathname="/dashboard" quiz={data} className="p-0 w-4" variant='ghost'>
+                <QuizMenu quiz={data} className="p-0 w-4" variant="ghost">
                   <EllipsisVertical className="w-4 h-4" />
                 </QuizMenu>
               </div>
               <div className="sm:hidden">
                 <QuizDrawer
-                  pathname="/dashboard"
                   quiz={data}
                   className="p-0 w-4 cursor-pointer"
-                  variant='ghost'
+                  variant="ghost"
                 >
                   <EllipsisVertical className="w-4 h-4" />
                 </QuizDrawer>
@@ -170,6 +199,6 @@ export default function DataCard({
           )}
         </div>
       </td>
-    </tr>
+    </motion.tr>
   );
 }

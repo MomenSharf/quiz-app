@@ -5,10 +5,10 @@ import { Icons } from "../icons";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import { Checkbox } from "../ui/checkbox";
-import { useDashboardContext } from "./Context";
+import { useLibraryContext } from "./Context";
 
 export default function Table() {
-  const { quizzes, folderWithQuizzes } = useDashboardContext();
+  const { quizzes, folderWithQuizzes } = useLibraryContext();
 
   return (
     <div className="w-full table-auto border-separate border-spacing-3">

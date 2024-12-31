@@ -1,14 +1,14 @@
 import { Checkbox } from "../ui/checkbox";
-import { useDashboardContext } from "./Context";
+import { useLibraryContext } from "./Context";
 import DataCard from "./DataCard";
 
 export default function Table() {
   const {
+    dispatch,
     state: { selectedQuizzesIds },
     quizzes,
     folderWithQuizzes,
-    toggleSelectAll,
-  } = useDashboardContext();
+  } = useLibraryContext();
 
   return (
     <div className="w-full">
@@ -22,7 +22,19 @@ export default function Table() {
                     selectedQuizzesIds.length === quizzes.length &&
                     quizzes.length !== 0
                   }
-                  onClick={toggleSelectAll}
+                  onClick={() => {
+                    if (selectedQuizzesIds.length === quizzes.length) {
+                      dispatch({
+                        type: "SET_SELECTED_QUIZZES_IDS",
+                        payload: [],
+                      });
+                    } else {
+                      dispatch({
+                        type: "SET_SELECTED_QUIZZES_IDS",
+                        payload: quizzes.map((quiz) => quiz.id),
+                      });
+                    }
+                  }}
                   disabled={quizzes.length === 0}
                 />
               </div>
@@ -35,11 +47,12 @@ export default function Table() {
           </tr>
         </thead>
         <tbody>
-          {folderWithQuizzes.map((folder) => {
-            return <DataCard key={folder.id} data={folder} />;
+          {folderWithQuizzes.map((folder, i) => {
+            return <DataCard key={folder.id} data={folder} index={i} />;
           })}
-          {quizzes.map((quiz) => {
-            return <DataCard key={quiz.id} data={quiz} />;
+          {quizzes.map((quiz, i) => {
+            // const imageUrl = quiz.imageUrl ? quiz.imageUrl : qui
+            return <DataCard key={quiz.id} data={quiz} index={i} />;
           })}
         </tbody>
       </table>

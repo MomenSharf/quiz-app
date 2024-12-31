@@ -1,34 +1,52 @@
-import { Button, ButtonProps } from "@/components/ui/button";
-import React from "react";
-import Loader from "@/components/Layout/Loader";
-import { Plus } from "lucide-react";
-import { useDashboardContext } from "../Context";
-import { cn } from "@/lib/utils";
 import { Icons } from "@/components/icons";
+import { Button, ButtonProps } from "@/components/ui/button";
+import { toast } from "@/components/ui/use-toast";
+import { newQuiz } from "@/lib/actions/library";
+import { cn } from "@/lib/utils";
+import { useState } from "react";
+import { useLibraryContext } from "../Context";
+import Loader from "@/components/Layout/Loader";
 
 export default function NewQuizButton({
   folderId,
   className,
   ...props
 }: ButtonProps & { folderId?: string }) {
-  const {
-    state: { isCreatingQuiz },
-    createQuiz,
-  } = useDashboardContext();
+  const [loading, setLoading] = useState(false);
+  const createQuiz = async ({
+    folderId,
+    pathname,
+  }: {
+    folderId?: string;
+    pathname: string;
+  }) => {
+    setLoading(true);
+    const { success, message } = await newQuiz({ folderId, pathname });
+    if (success) {
+      toast({ description: "Quiz created successfully" });
+    } else {
+      toast({
+        description: message,
+        title: "error",
+        variant: "destructive",
+      });
+    }
+    setLoading(false);
+  };
   return (
     <Button
       size="sm"
       className={cn(
-        "rounded-xl items-center gap-1  border border-transparent text-xs hover:scale-[1.02] transition-transform",
+        "rounded-xl items-center gap-1 border border-transparent text-xs",
         className
       )}
-      disabled={isCreatingQuiz}
+      disabled={loading}
       onClick={() => {
         createQuiz({ pathname: "/library", folderId });
       }}
       {...props}
     >
-      {isCreatingQuiz ? (
+      {loading ? (
         <Loader />
       ) : (
         <Icons.plus className="w-4 h-4 bg-transparent fill-primary" />

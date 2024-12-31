@@ -25,8 +25,8 @@ export default function BreadcrumbDemoFolderPath({
   return (
     <Breadcrumb>
       <BreadcrumbList className="text-xs font-medium">
-        <Link href="/dashboard" className="hover:text-primary">
-          Dashboard
+        <Link href="/library" className="hover:text-primary">
+          LIBRARY
         </Link>
         <BreadcrumbSeparator />
         {path.map(({ id, title }) => (
@@ -35,7 +35,7 @@ export default function BreadcrumbDemoFolderPath({
               key={id}
               onClick={() => {
                 if (id !== currentFolderId) {
-                  router.push(`/dashboard/folders/${id}`);
+                  router.push(`/library/folders/${id}`);
                 }
               }}
               className={cn({

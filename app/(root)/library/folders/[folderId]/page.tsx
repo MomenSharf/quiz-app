@@ -2,7 +2,7 @@ import LibraryProvider from "@/components/Library/LibraryProvider";
 import {
   getDashboardFolder,
   getFolderPath
-} from "@/lib/actions/dashboard";
+} from "@/lib/actions/library";
 
 import { getCurrentUser } from "@/lib/auth";
 import { isValidLibrarySortOption } from "@/lib/utils";

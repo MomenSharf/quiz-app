@@ -138,9 +138,7 @@ export const quizSchema = z.object({
     .min(1, "At least one question is required"),
 });
 
-export const folderSchema = z.object({
-  title: z.string().min(1, "Title is required"),
-});
+export const folderSchema = quizSchema.pick({title: true});
 
 export type folderSchemaType = z.infer<typeof folderSchema>;
 export type quizSchemaType = z.infer<typeof quizSchema>;

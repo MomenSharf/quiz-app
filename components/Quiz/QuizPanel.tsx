@@ -56,8 +56,7 @@ export default async function QuizPanel({
           className="flex items-center rounded-xl overflow-hidden w-28 min-w-28"
         >
           <Image
-            // src={imageUrl}
-            src="/assets/images/hero.webp"
+            src={quiz.imageUrl || "/assets/images/hero.webp"}
             alt="question Image"
             width={800} // Replace with your desired pixel width
             height={600} // Replace with your desired pixel height
@@ -80,7 +79,9 @@ export default async function QuizPanel({
             >
               {quiz.title}
             </Link>
-            {isCurrentUser && <Badge className="text-xs">You</Badge>}
+            {isCurrentUser && (
+              <span className="text-primary text-xs">(You)</span>
+            )}
           </div>
           <div className="flex gap-1">
             <Badge className="bg-primary/30 hover:bg-primary/30 text-primary gap-0.5">

@@ -1,8 +1,4 @@
-import {
-  PenLine,
-  Trash2,
-  X
-} from "lucide-react";
+import { PenLine, Trash2, X } from "lucide-react";
 
 import { Button, ButtonProps, buttonVariants } from "@/components/ui/button";
 import {
@@ -16,7 +12,7 @@ import {
 } from "@/components/ui/drawer";
 import { cn } from "@/lib/utils";
 import { DashboardFoldersWithQuiz } from "@/types";
-import { HTMLProps } from "react";
+import { HTMLProps, useState } from "react";
 import DeleteFolderButton from "./DeleteFolderButton";
 import RenameFolder from "./RenameFolder";
 
@@ -31,56 +27,68 @@ export default function FolderDrawer({
   folder,
   ...props
 }: QuizMenuProps) {
-
-
+  const [renameDialogOpen, setRenameDialogOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [open, setOpen] = useState(false);
 
   return (
-    <Drawer>
-      <DrawerTrigger asChild>
-      <Button {...props}>{children}</Button>
-      </DrawerTrigger>
-      <DrawerContent>
-        <div className="flex justify-end px-3">
-          <DrawerClose className="" asChild>
-            <Button variant="outline" className="p-1" size="icon">
-              <X className="w-4 h-4" />
-            </Button>
-          </DrawerClose>
-        </div>
-        <div className="w-full">
-          <DrawerHeader>
-            <DrawerTitle>{folder.title}</DrawerTitle>
-          </DrawerHeader>
+    <>
+      <Drawer open={open} onOpenChange={setOpen}>
+        <DrawerTrigger asChild>
+          <Button {...props}>{children}</Button>
+        </DrawerTrigger>
+        <DrawerContent>
+          <div className="flex justify-end px-3">
+            <DrawerClose className="" asChild>
+              <Button variant="outline" className="p-1" size="icon">
+                <X className="w-4 h-4" />
+              </Button>
+            </DrawerClose>
+          </div>
+          <div className="w-full">
+            <DrawerHeader>
+              <DrawerTitle>{folder.title}</DrawerTitle>
+            </DrawerHeader>
 
-          <div className="flex flex-col w-full px-1">
-           
-            <Button
-              variant="ghost"
-              className="flex gap-2 px-3 py-4 w-full justify-start text-lg"
-            >
-              <RenameFolder folderId={folder.id} className="w-full flex gap-2">
+            <div className="flex flex-col w-full px-1">
+              <Button
+                variant="ghost"
+                className="flex gap-2 px-3 py-4 w-full justify-start text-lg"
+                onClick={() => {
+                  setOpen(false);
+                  setRenameDialogOpen(true);
+                }}
+              >
                 <PenLine className="w-6 h-6" />
                 <span className="font-semibold">Rename</span>
-              </RenameFolder>
-            </Button>
-
- 
+              </Button>
+            </div>
+            <DrawerFooter className="p-1">
+              <Button
+                className="gap-2 justify-start text-lg w-full"
+                variant="destructive"
+                onClick={() => {
+                  setOpen(false);
+                  setDeleteDialogOpen(true);
+                }}
+              >
+                <Trash2 className="w-6 h-6" />
+                Delete
+              </Button>
+            </DrawerFooter>
           </div>
-          <DrawerFooter className="p-1">
-            <DeleteFolderButton
-              pathname={pathname}
-              className={cn(
-                buttonVariants({ variant: "ghost", size: "sm" }),
-                "gap-2 justify-start text-lg w-full text-destructive hover:text-white hover:bg-destructive"
-              )}
-              folderId={folder.id}
-            >
-              <Trash2 className="w-6 h-6" />
-              Delete
-            </DeleteFolderButton>
-          </DrawerFooter>
-        </div>
-      </DrawerContent>
-    </Drawer>
+        </DrawerContent>
+      </Drawer>
+      <DeleteFolderButton
+        folderId={folder.id}
+        open={deleteDialogOpen}
+        setOpen={setDeleteDialogOpen}
+      />
+      <RenameFolder
+        folderId={folder.id}
+        open={renameDialogOpen}
+        setOpen={setRenameDialogOpen}
+      />
+    </>
   );
 }

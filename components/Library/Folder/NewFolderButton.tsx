@@ -4,20 +4,20 @@ import {
   DialogClose,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { toast } from "@/components/ui/use-toast";
 import { cn } from "@/lib/utils";
 import { folderSchema, folderSchemaType } from "@/lib/validations/quizSchemas";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Plus } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { HTMLProps, LegacyRef, ReactNode, useRef, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 
+import { Icons } from "@/components/icons";
+import { Button, ButtonProps, buttonVariants } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -25,26 +25,21 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
-import { Icons } from "@/components/icons";
-import { Button, ButtonProps } from "@/components/ui/button";
-import { useDashboardContext } from "../Context";
-import Loader from "@/components/Layout/Loader";
+import { toast } from "@/components/ui/use-toast";
+import { newFolder } from "@/lib/actions/library";
 
-type NewFolderButtonProps = HTMLProps<HTMLDivElement> & {
-  parentId?: string ;
+type NewFolderButtonProps = ButtonProps & {
+  parentId?: string;
 };
 
 export default function NewFolderButton({
   children,
-  parentId ,
+  parentId,
   ...props
 }: NewFolderButtonProps) {
-  const dialogCloseRef = useRef<HTMLButtonElement | null>(null);
+  const [open, setOpen] = useState(false);
 
-  const {
-    state: { isCreatingFolder },
-    createFolder,
-  } = useDashboardContext();
+  
 
   const form = useForm<folderSchemaType>({
     resolver: zodResolver(folderSchema),
@@ -53,21 +48,37 @@ export default function NewFolderButton({
     },
   });
 
-  const onSumbit = async (values: folderSchemaType) => {
-    await createFolder({ pathname: "/dashboard", parentId, title: values.title });
+  const onSumbit = async ({ title }: folderSchemaType) => {
+    const { success, message } = await newFolder({
+      title,
+      parentId,
+      pathname: "/library",
+    });
+
+    if (success) {
+      toast({ description: "Folder created successfully" });
+    } else {
+      toast({
+        description: message,
+        title: "error",
+        variant: "destructive",
+      });
+    }
     form.reset();
-    if (dialogCloseRef) dialogCloseRef.current?.click();
+    setOpen(false);
   };
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <div {...props}>{children}</div>
+        <Button {...props}>{children}</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px] rounded-xl">
         <DialogHeader>
-          <DialogTitle>Create Folder</DialogTitle>
-          <DialogDescription></DialogDescription>
+        <DialogTitle>Create New Folder</DialogTitle>
+          <DialogDescription>
+            Enter a title for the new folder
+          </DialogDescription>
         </DialogHeader>
         <Form {...form}>
           <form
@@ -93,17 +104,23 @@ export default function NewFolderButton({
                 </FormItem>
               )}
             />
-            <div className="flex gap-3 justify-end">
-              <DialogClose ref={dialogCloseRef}>
-                <Button variant="secondary" type="button">
-                  Cancel
-                </Button>
+            <DialogFooter className="flex gap-3 justify-end">
+              <DialogClose
+                className={cn(buttonVariants({ variant: "secondary" }))}
+              >
+                Cancel
               </DialogClose>
-              <Button type="submit" className="flex gap-2" disabled={isCreatingFolder}>
-                {isCreatingFolder ? <Loader /> : <Plus className="w-4 h-4" />}
+              <Button
+                type="submit"
+                className="flex gap-1"
+                disabled={form.formState.isSubmitting}
+              >
+                {form.formState.isSubmitting && (
+                  <Icons.Loader className="w-4 h-4 animate-spin stroke-primary-foreground" />
+                )}
                 Create
               </Button>
-            </div>
+            </DialogFooter>
           </form>
         </Form>
       </DialogContent>

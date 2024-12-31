@@ -3,10 +3,10 @@
 import { db } from "@/lib/db";
 import { getCurrentUser } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
-import { FolderPathSegment, LibrarySortOption,  } from "@/types";
+import { FolderPathSegment, LibrarySortOption } from "@/types";
 
 // Get
-export const getDashboardQuizzes = async (
+export const getLibraryQuizzes = async (
   sortOption: LibrarySortOption,
   folderId?: string
 ) => {
@@ -38,7 +38,7 @@ export const getDashboardQuizzes = async (
       },
       orderBy: orderBy,
     });
-    if(!quizzes) {
+    if (!quizzes) {
       return {
         success: false,
         message: "Failed to fetch quizzes. Please try again later.",
@@ -53,7 +53,7 @@ export const getDashboardQuizzes = async (
   }
 };
 
-export const getDashboardFoldersWithQuizzes = async (
+export const getLibraryFolders = async (
   sortOption: LibrarySortOption,
   parentId?: string
 ) => {
@@ -85,7 +85,7 @@ export const getDashboardFoldersWithQuizzes = async (
       },
       orderBy: orderBy,
     });
-    if(!folderWithQuizzes) {
+    if (!folderWithQuizzes) {
       return {
         success: false,
         message: "Failed to fetch folders. Please try again later.",
@@ -142,7 +142,7 @@ export const getDashboardFolder = async (
             _count: {
               select: {
                 subfolders: true,
-                quizzes: true
+                quizzes: true,
               },
             },
           },
@@ -150,11 +150,11 @@ export const getDashboardFolder = async (
         },
       },
     });
-    if(!folder) {
+    if (!folder) {
       return {
         success: false,
         message: "Failed to fetch folder. Please try again later.",
-      }
+      };
     }
     return { success: true, folder };
   } catch (error) {
@@ -212,7 +212,6 @@ export async function getFolderPath(folderId?: string): Promise<{
     };
   }
 }
-
 
 // Create
 export const newQuiz = async ({
@@ -310,7 +309,6 @@ export const duplicateQuiz = async ({
       },
       include: {
         questions: true,
-        
       },
     });
 
@@ -346,25 +344,32 @@ export const duplicateQuiz = async ({
 
     const newQuizTitle = `${copyPattern} (${maxCopyNumber + 1})`;
 
-    const { id, createdAt, updatedAt, visibility, title, playCount,completionCount, questions : orignalQuestions, ...data } =
-      originalQuiz;
+    const {
+      id,
+      createdAt,
+      updatedAt,
+      visibility,
+      title,
+      playCount,
+      completionCount,
+      questions: orignalQuestions,
+      ...data
+    } = originalQuiz;
 
-      const questions = orignalQuestions.map((question => {
-        const {id, quizId, ...questionData} = question
-        return questionData
-      }))
+    const questions = orignalQuestions.map((question) => {
+      const { id, quizId, ...questionData } = question;
+      return questionData;
+    });
 
     const quiz = await db.quiz.create({
       data: {
         title: newQuizTitle,
         ...data,
         questions: {
-          create: questions
-        }
+          create: questions,
+        },
       },
     });
-
-
 
     revalidatePath(pathname);
 
@@ -404,7 +409,7 @@ export const deleteQuizzes = async ({
 
     revalidatePath(pathname);
 
-    return { success: true, quizzes , message: 'Successfly deleted!' };
+    return { success: true, quizzes, message: "Successfly deleted!" };
   } catch (error) {
     return {
       success: false,
@@ -449,11 +454,11 @@ export const deleteFolder = async ({
 export const renameQuiz = async ({
   pathname,
   quizId,
-  newTitle,
+  title,
 }: {
   pathname: string;
   quizId: string;
-  newTitle: string;
+  title: string;
 }) => {
   const session = await getCurrentUser();
   if (!session) {
@@ -466,7 +471,7 @@ export const renameQuiz = async ({
         id: quizId,
       },
       data: {
-        title: newTitle,
+        title
       },
     });
 
@@ -483,11 +488,11 @@ export const renameQuiz = async ({
 export const renameFolder = async ({
   pathname,
   folderId,
-  newTitle,
+  title,
 }: {
   pathname: string;
   folderId: string;
-  newTitle: string;
+  title: string;
 }) => {
   const session = await getCurrentUser();
   if (!session) {
@@ -500,7 +505,7 @@ export const renameFolder = async ({
         id: folderId,
       },
       data: {
-        title: newTitle,
+        title
       },
     });
 

@@ -21,7 +21,7 @@ export default function UndoRedo() {
             <Button
               type="button"
               onClick={undoFunction}
-              disabled={historyIndex.current === 0 || saveState === "WAITING"}
+              disabled={historyIndex.current === 0 || saveState === "waiting"}
               size="icon"
               variant="ghost"
               className="disabled:cursor-not-allowed w-8"
@@ -46,7 +46,7 @@ export default function UndoRedo() {
               onClick={redoFunction}
               disabled={
                 historyIndex.current === historyArray.length - 1 ||
-                saveState === "WAITING"
+                saveState === "waiting"
               }
               size="icon"
               variant="ghost"

@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { useDashboardContext } from "./Context";
+import { useLibraryContext } from "./Context";
 import NewFolderButton from "./Folder/NewFolderButton";
 import NewQuizButton from "./Quiz/NewQuizButton";
 import { Icons } from "../icons";
@@ -12,7 +12,7 @@ import { Separator } from "../ui/separator";
 export default function EmptyLibrary({
   folderId,
   path,
-  title
+  title,
 }: {
   folderId?: string;
   path?: FolderPathSegment[];
@@ -23,8 +23,8 @@ export default function EmptyLibrary({
       <h1 className="text-lg">{title}</h1>
       {path && (
         <>
-        <BreadcrumbDemoFolderPath path={path} currentFolderId={folderId} />
-        <Separator />
+          <BreadcrumbDemoFolderPath path={path} currentFolderId={folderId} />
+          <Separator />
         </>
       )}
 
@@ -42,11 +42,9 @@ export default function EmptyLibrary({
         <div className="flex gap-3">
           <NewQuizButton folderId={folderId} />
           <NewFolderButton
-            className={cn(
-              buttonVariants({ size: "sm" }),
-              "rounded-xl items-center gap-1 bg-white hover:bg-white hover:scale-[1.02] transition-transform text-foreground text-xs cursor-pointer"
-            )}
+            className="rounded-xl items-center gap-1 text-foreground text-xs cursor-pointer"
             parentId={folderId}
+            variant="outline"
           >
             <Icons.folderPlus className="w-4 h-4 fill-gray-extra-dark stroke-transparent " />
             new Folder

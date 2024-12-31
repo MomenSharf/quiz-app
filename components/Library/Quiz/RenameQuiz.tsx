@@ -12,11 +12,11 @@ import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { folderSchema, folderSchemaType } from "@/lib/validations/quizSchemas";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { HTMLProps, useRef } from "react";
+import { HTMLProps, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import Loader from "@/components/Layout/Loader";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -24,25 +24,23 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
-import { useDashboardContext } from "../Context";
+import { useLibraryContext } from "../Context";
+import { renameQuiz } from "@/lib/actions/library";
+import { toast } from "@/components/ui/use-toast";
 
 type NewQuizButtonProps = HTMLProps<HTMLDivElement> & {
-  quizId: string ;
+  quizId: string;
 };
 
 export default function RenameQuiz({
-  children,
-  quizId ,
-  ...props
-}: NewQuizButtonProps) {
-
-  const dialogCloseRef = useRef<HTMLButtonElement | null>(null);
-
-  const {
-    state: {  isRenamingQuiz },
-    renameQuiz,
-  } = useDashboardContext();
-
+  quizId,
+  open,
+  setOpen,
+}: {
+  quizId: string;
+  open: boolean;
+  setOpen: (open: boolean) => void;
+}) {
   const form = useForm<folderSchemaType>({
     resolver: zodResolver(folderSchema),
     defaultValues: {
@@ -50,25 +48,34 @@ export default function RenameQuiz({
     },
   });
 
-  const onSumbit = async (values: folderSchemaType) => {
-    renameQuiz({ pathname: "/dashboard", quizId, newTitle: values.title });
+  const onSumbit = async ({ title }: folderSchemaType) => {
+    setOpen(true);
+
+    const { success, message } = await renameQuiz({
+      quizId,
+      title,
+      pathname: "/library",
+    });
+
+    if (success) {
+      toast({ description: "Quiz renamed successfully" });
+    } else {
+      toast({
+        description: message,
+        title: "error",
+        variant: "destructive",
+      });
+    }
     form.reset();
-    if (dialogCloseRef) dialogCloseRef.current?.click();
+    setOpen(false);
   };
 
   return (
-    <Dialog
-
-    >
-      <DialogTrigger asChild>
-        <div {...props}>
-          {children}
-        </div>
-      </DialogTrigger>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Rename Quiz</DialogTitle>
-          <DialogDescription></DialogDescription>
+          <DialogDescription>Enter a new name for the quiz</DialogDescription>
         </DialogHeader>
         <Form {...form}>
           <form
@@ -95,13 +102,17 @@ export default function RenameQuiz({
               )}
             />
             <div className="flex gap-3 justify-end">
-              <DialogClose ref={dialogCloseRef}>
-                <Button variant="secondary" type="button">
-                  Cancel
-                </Button>
+              <DialogClose
+                className={cn(buttonVariants({ variant: "secondary" }))}
+              >
+                Cancel
               </DialogClose>
-              <Button type="submit" className="flex gap-2" disabled={isRenamingQuiz}>
-                {isRenamingQuiz && <Loader />}
+              <Button
+                type="submit"
+                className="flex gap-2"
+                disabled={form.formState.isSubmitting}
+              >
+                {form.formState.isSubmitting && <Loader />}
                 Rename
               </Button>
             </div>

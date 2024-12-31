@@ -1,8 +1,8 @@
 import LibraryProvider from "@/components/Library/LibraryProvider";
 import {
-  getDashboardFoldersWithQuizzes,
-  getDashboardQuizzes,
-} from "@/lib/actions/dashboard";
+  getLibraryFolders,
+  getLibraryQuizzes,
+} from "@/lib/actions/library";
 
 import { getCurrentUser } from "@/lib/auth";
 import { isValidLibrarySortOption } from "@/lib/utils";
@@ -25,8 +25,8 @@ export default async function Page({
     : "recentUpdate";
 
   const [quizzesResult, foldersResult] = await Promise.all([
-    getDashboardQuizzes(sortBy),
-    getDashboardFoldersWithQuizzes(sortBy),
+    getLibraryQuizzes(sortBy),
+    getLibraryFolders(sortBy),
   ]);
 
   const { success: quizzesSuccess, quizzes } = quizzesResult;
