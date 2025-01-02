@@ -48,16 +48,6 @@ export default function MatchingPairs({
               text: "",
               match: "",
             },
-            {
-              id: crypto.randomUUID(),
-              text: "",
-              match: "",
-            },
-            {
-              id: crypto.randomUUID(),
-              text: "",
-              match: "",
-            },
           ],
         });
       }

@@ -11,6 +11,7 @@ import { Icons } from "@/components/icons";
 import { useEditorContext } from "../Context";
 import { revalidatePathInServer } from "@/lib/actions/utils";
 import ToggleVisibility from "./ToggleVisibility";
+import { quizSchema } from "@/lib/validations/quizSchemas";
 
 export default function Header() {
   const [isEditingTitle, setIsEditingTitle] = useState(false);
@@ -36,6 +37,7 @@ export default function Header() {
   }, [isEditingTitle]);
 
   const error = errors.description || errors.imageUrl || errors.categories;
+  const quizId = getValues("id");
 
   return (
     <header className="flex-shrink-0 flex items-center gap-1 md:gap-2 p-2 border-b">
@@ -122,7 +124,14 @@ export default function Header() {
             <Icons.alert className="absolute w-4 h-4 fill-amber stroke-background -top-2 -right-2" />
           )}
         </Button>
-        <Button type="submit" className="gap-1 rounded-xl">
+        <Button
+          type="submit"
+          className="gap-1 rounded-xl"
+          onClick={() => {
+            if (quizSchema.safeParse(getValues()).success)
+              router.push(`/play/${quizId}?mode=preview`);
+          }}
+        >
           <Eye className="w-4 h-4" />
           <span className="hidden sm:inline-block">Preview</span>
         </Button>

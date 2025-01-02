@@ -11,8 +11,8 @@ export default function PlayQuiz() {
 
   return (
     <div className="flex flex-col min-h-screen" >
-      <Header questions={playQuizQuestions} />
-      <Content questions={playQuizQuestions} />
+      <Header  />
+      <Content  />
       <StarterDialog />
       <ResultSheet />
     </div>

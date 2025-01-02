@@ -1,5 +1,5 @@
 import { saveEditorQuiz as saveEditorQuizServer } from "@/lib/actions/editor";
-import { mapQuestionByType } from "@/lib/utils";
+import { intQuiz, mapQuestionByType } from "@/lib/utils";
 import { quizSchema, quizSchemaType } from "@/lib/validations/quizSchemas";
 import { Category, EditorQuiz } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -45,7 +45,7 @@ type EditorActions =
   | { type: "SET_CURRENT_QUESTION_ID"; payload: string }
   | {
       type: "SET_IS_SETTINGS_OPEN";
-      payload:boolean;
+      payload: boolean;
     }
   | { type: "SET_IS_QUESTIONS_IMAGE_MANAGER_OPEN"; payload: boolean }
   | { type: "SET_IS_IMAGE_MANAGER_TABS_OPEN"; payload: boolean }
@@ -133,19 +133,7 @@ export const EditorProvider = ({
   const { historyArray } = state;
 
   const initialValue = useMemo(() => {
-    const mappedQuestions = initialQuiz.questions
-      .map(mapQuestionByType)
-      .sort((a, b) => a.questionOrder - b.questionOrder);
-
-    return {
-      id: initialQuiz.id,
-      title: initialQuiz.title,
-      description: initialQuiz.description,
-      imageUrl: initialQuiz.imageUrl || "",
-      visibility: initialQuiz.visibility,
-      categories: initialQuiz.categories as Category[],
-      questions: mappedQuestions,
-    };
+    return intQuiz(initialQuiz);
   }, [initialQuiz]);
 
   const form = useForm<quizSchemaType>({
@@ -223,7 +211,7 @@ export const EditorProvider = ({
     const subscription = watch((_, { name }) => {
       if (
         name &&
-        (name === "title" || 
+        (name === "title" ||
           name === "description" ||
           name === "imageUrl" ||
           name === "visibility" ||

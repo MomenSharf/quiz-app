@@ -1,12 +1,15 @@
 import Provider from "@/components/PlayQuiz/Provider";
 import { getPlayQuiz } from "@/lib/actions/playQuiz";
 import { getCurrentUser } from "@/lib/auth";
+import { intQuiz } from "@/lib/utils";
+import { quizSchema } from "@/lib/validations/quizSchemas";
 import { notFound, redirect } from "next/navigation";
 
-export default async function Page({
-  params: { quizId },
-}: {
+export default async function Page(props: {
   params: { quizId: string };
+  searchParams?: Promise<{
+    mode?: string;
+  }>;
 }) {
   const session = await getCurrentUser();
 
@@ -14,15 +17,28 @@ export default async function Page({
     return redirect("/login");
   }
 
-  const {success, quizProgress} = await getPlayQuiz(quizId);
+  const quizId = props.params.quizId;
+  const searchParams = await props.searchParams;
+  const mode = searchParams?.mode === "preview" ? "preview" : "play";
 
-  if (!success ||!quizProgress) {
+  const { success, quizProgress } = await getPlayQuiz(quizId, mode);
+
+  if (!success || !quizProgress) {
     return notFound();
   }
 
+  const quiz = intQuiz(quizProgress.quiz);
+
+  const preview =
+    searchParams?.mode === "preview" &&
+    session.user.id === quizProgress.quiz.userId &&
+    quizSchema.safeParse(quiz).success;
+
+  console.log(quizProgress);
+
   return (
     <div className="min-h-screen main-background">
-      <Provider quizProgress={quizProgress} />
+      <Provider quizProgress={quizProgress} preview={preview || false} />
     </div>
   );
 }

@@ -16,6 +16,7 @@ import {
   Category,
   EditorQuiz,
   LibrarySortOption,
+  PlayQuizType,
   SearchSortOption,
 } from "@/types";
 import { QuestionType } from "@prisma/client";
@@ -160,6 +161,22 @@ export const mapQuestionByType = (
   }
 };
 
+export const intQuiz = (initialQuiz: EditorQuiz | PlayQuizType["quiz"]) => {
+  const mappedQuestions = initialQuiz.questions
+    .map(mapQuestionByType)
+    .sort((a, b) => a.questionOrder - b.questionOrder);
+
+  return {
+    id: initialQuiz.id,
+    title: initialQuiz.title,
+    description: initialQuiz.description,
+    imageUrl: initialQuiz.imageUrl || "",
+    visibility: initialQuiz.visibility,
+    categories: initialQuiz.categories as Category[],
+    questions: mappedQuestions,
+  };
+};
+
 export function formatAsKMB(num: number) {
   if (num > 999) return numeral(num).format("0.0a").toUpperCase();
   else return numeral(num).format("0.a").toUpperCase();
@@ -196,5 +213,3 @@ export const shareLink = async (shareData: {
     toast({ description: "This feature is not available on the server side." });
   }
 };
-
-

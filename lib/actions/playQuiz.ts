@@ -3,7 +3,7 @@ import { PlayQuizQuestion } from "@/components/PlayQuiz/Context";
 import { getCurrentUser } from "../auth";
 import { db } from "../db";
 
-export const getPlayQuiz = async (quizId: string) => {
+export const getPlayQuiz = async (quizId: string, mode: "play" | "preview") => {
   const session = await getCurrentUser();
 
   if (!session) {
@@ -38,7 +38,7 @@ export const getPlayQuiz = async (quizId: string) => {
       },
     });
 
-    if (quizProgress && quizProgress.isCompleted) {
+    if (quizProgress && quizProgress.isCompleted && mode === "play") {
       await db.quiz.update({
         where: { id: quizId },
         data: {
@@ -79,15 +79,16 @@ export const getPlayQuiz = async (quizId: string) => {
           user: true,
         },
       });
-
-      await db.quiz.update({
-        where: { id: quizId },
-        data: {
-          playCount: {
-            increment: 1,
+      if (mode === "play") {
+        await db.quiz.update({
+          where: { id: quizId },
+          data: {
+            playCount: {
+              increment: 1,
+            },
           },
-        },
-      });
+        });
+      }
     }
 
     return { success: true, quizProgress };

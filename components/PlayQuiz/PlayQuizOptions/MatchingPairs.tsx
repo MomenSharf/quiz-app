@@ -99,7 +99,7 @@ export default function MatchingPairs({
   const [matches, setMatches] = useState(shuffledmatches);
 
   useEffect(() => {
-    if (quizMode === "answered") {
+    if (quizMode === "answered" && !playQuizQuestions[currentQuestion].isAnswerRight) {
       setTimeout(() => {
         setTexts(question.items);
         setMatches(question.items);

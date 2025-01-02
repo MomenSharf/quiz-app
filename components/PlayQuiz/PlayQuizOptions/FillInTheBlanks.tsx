@@ -44,6 +44,24 @@ export default function FillInTheBlanks({
     playQuizQuestions[currentQuestion].isAnswerRight &&
     userAnswer?.type === "FILL_IN_THE_BLANKS";
 
+    useEffect(() => {
+    if (quizMode === "answered" || quizMode === "timeOut") {
+       setTimeout(() => {
+         setBlanks(
+           question.items.sort(
+             (a, b) => (a.order ? a.order : 0) - (b.order ? b.order : 0)
+           )
+         );
+       }, 500);
+     } else if (
+       quizMode === "playing" &&
+       playQuizQuestions[currentQuestion].isAnswerRight === null &&
+       currentQuestion !== 0
+     ) {
+       setBlanks(shuffleArray([...question.items.filter(e => e.isBlank)]));
+     }
+    }, [ quizMode])
+
   return (
     <div className="flex flex-col gap-5">
       <div className="flex gap-1 flex-wrap">

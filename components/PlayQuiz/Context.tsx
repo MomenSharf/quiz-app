@@ -110,9 +110,10 @@ const QuizRoomContext = createContext<PlayQuizContextType | undefined>(
 export const PlayQuizProvider = ({
   children,
   quizProgress,
-}: {
+  preview,}: {
   children: React.ReactNode;
   quizProgress: PlayQuizType;
+  preview: boolean
 }) => {
   const [state, dispatch] = useReducer(quizRoomReducer, initialState);
   const { userAnswer, quizMode, playQuizQuestions, currentQuestion } = state;

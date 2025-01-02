@@ -15,23 +15,19 @@ const variants = {
   visible: { opacity: 1 },
 };
 
-export default function Content({
-  questions,
-}: {
-  questions: PlayQuizQuestion[];
-}) {
+export default function Content() {
   const {
-    dispatch,
-    state: { currentQuestion, quizMode, timeTakenArray },
+    state: { currentQuestion, quizMode, playQuizQuestions },
   } = usePlayQuizContext();
+  console.log(quizMode);
+  
 
-  const handleTimeUpdate = (timeTaken: number) => {};
-  return (
+ return (
     <div className="flex flex-col w-full flex-1  items-center">
       <div className="p-3 max-w-6xl flex-1 flex flex-col">
         {quizMode !== "ended" ? (
           <div className="flex-1 flex">
-            {questions
+            {playQuizQuestions
               .sort((a, b) => a.questionOrder - b.questionOrder)
               .map((question) => {
                 return (
