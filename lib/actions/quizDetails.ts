@@ -42,8 +42,6 @@ export const getQuizDetails = async ({ quizId }: { quizId: string }) => {
       quizDetails: quizDetailsWithIsBookmark,
     };
   } catch (error) {
-    console.log(error);
-
     return { success: false, message: "Could not retrieve quiz details" };
   }
 };
@@ -155,8 +153,6 @@ export const copyQuiz = async (quizId: string) => {
       newQuiz,
     };
   } catch (e) {
-    console.error("Error copying quiz:", e);
-
     return {
       success: false,
       message: "An error occurred while copying the quiz.",

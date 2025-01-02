@@ -2,9 +2,10 @@
 import {
   ItemSchemaType,
   questionSchemaType,
+  quizSchema,
   quizSchemaType,
 } from "@/lib/validations/quizSchemas";
-import { Prisma, QuestionType, Quiz } from "@prisma/client";
+import { Prisma, QuestionType, Quiz, Visibility } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { getCurrentUser } from "../auth";
 import { db } from "../db";
@@ -43,15 +44,16 @@ export const getEditorQuiz = async ({ quizId }: { quizId: string }) => {
 
 export const saveEditorQuiz = async (
   quizId: string,
-  data: quizSchemaType,
+  data: quizSchemaType
 ): Promise<{ success: boolean; message: string; quiz?: Quiz }> => {
   const session = await getCurrentUser();
 
   if (!session) {
     return { success: false, message: "Unauthorized: User is not logged in." };
   }
-  console.log(data.questions);
-  
+
+  const isValid = quizSchema.safeParse(data).success;
+  console.log(data.visibility);
 
   const mapQuestion = (
     question: questionSchemaType
@@ -134,8 +136,8 @@ export const saveEditorQuiz = async (
       categories: data.categories,
       title: data.title,
       description: data.description,
-      visibility: data.visibility,
-      imageUrl : data.imageUrl,
+      visibility: isValid ? data.visibility : "PUBLIC",
+      imageUrl: data.imageUrl,
     };
 
     const questions = data.questions.map(mapQuestion);
@@ -167,8 +169,13 @@ export const saveEditorQuiz = async (
   }
 };
 
-
-export const toggleVisibility = async ({ quizId }: { quizId: string }) => {
+export const toggleVisibility = async ({
+  quizId,
+  visibility,
+}: {
+  quizId: string;
+  visibility: Visibility;
+}) => {
   // Get the currently logged-in user
   const session = await getCurrentUser();
   const userId = session?.user.id;
@@ -188,14 +195,17 @@ export const toggleVisibility = async ({ quizId }: { quizId: string }) => {
     }
 
     if (quiz.userId !== userId) {
-      return { success: false, message: "Access denied: You are not the owner of this quiz" };
+      return {
+        success: false,
+        message: "Access denied: You are not the owner of this quiz",
+      };
     }
 
     // Toggle the visibility
     const updatedQuiz = await db.quiz.update({
       where: { id: quizId },
       data: {
-        visibility: quiz.visibility === "PRIVATE" ? "PUBLIC" : "PRIVATE",
+        visibility: visibility === "PRIVATE" ? "PUBLIC" : "PRIVATE",
       },
     });
 
@@ -205,7 +215,6 @@ export const toggleVisibility = async ({ quizId }: { quizId: string }) => {
       message: `Visibility updated to ${updatedQuiz.visibility}`,
     };
   } catch (error) {
-    console.error("Error toggling visibility:", error);
     return { success: false, message: "Failed to toggle visibility" };
   }
 };

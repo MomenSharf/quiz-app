@@ -24,7 +24,7 @@ type EditorState = {
   saveState: SaveStateType;
   historyArray: quizSchemaType[];
   currentQuestionId: string | null;
-  settingsOpen: { open: boolean; type: "settings" | "publish" };
+  isSettingsOpen: boolean;
   isImageManagerTabsOpen: boolean;
   isImageEditorOpenWithFiles:
     | {
@@ -45,7 +45,7 @@ type EditorActions =
   | { type: "SET_CURRENT_QUESTION_ID"; payload: string }
   | {
       type: "SET_IS_SETTINGS_OPEN";
-      payload: { open: boolean; type: "settings" | "publish" };
+      payload:boolean;
     }
   | { type: "SET_IS_QUESTIONS_IMAGE_MANAGER_OPEN"; payload: boolean }
   | { type: "SET_IS_IMAGE_MANAGER_TABS_OPEN"; payload: boolean }
@@ -76,7 +76,7 @@ const initialState: EditorState = {
   saveState: "good",
   historyArray: [],
   currentQuestionId: null,
-  settingsOpen: { open: false, type: "settings" },
+  isSettingsOpen: true,
   isImageManagerTabsOpen: false,
   isImageEditorOpenWithFiles: { isOpen: false },
 };
@@ -100,7 +100,7 @@ const editorReducer = (
     case "SET_CURRENT_QUESTION_ID":
       return { ...state, currentQuestionId: action.payload };
     case "SET_IS_SETTINGS_OPEN":
-      return { ...state, settingsOpen: action.payload };
+      return { ...state, isSettingsOpen: action.payload };
     case "SET_IS_IMAGE_MANAGER_TABS_OPEN": {
       return {
         ...state,
@@ -141,7 +141,7 @@ export const EditorProvider = ({
       id: initialQuiz.id,
       title: initialQuiz.title,
       description: initialQuiz.description,
-      imageUrl: initialQuiz.imageUrl || '',
+      imageUrl: initialQuiz.imageUrl || "",
       visibility: initialQuiz.visibility,
       categories: initialQuiz.categories as Category[],
       questions: mappedQuestions,
@@ -223,7 +223,7 @@ export const EditorProvider = ({
     const subscription = watch((_, { name }) => {
       if (
         name &&
-        (name === "title" || //!! does not save correctly
+        (name === "title" || 
           name === "description" ||
           name === "imageUrl" ||
           name === "visibility" ||

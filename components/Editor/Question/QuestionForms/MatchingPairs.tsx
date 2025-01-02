@@ -1,9 +1,5 @@
 import { Button } from "@/components/ui/button";
-import {
-  FormControl,
-  FormField,
-  FormItem
-} from "@/components/ui/form";
+import { FormControl, FormField, FormItem } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { Trash } from "lucide-react";
@@ -29,9 +25,11 @@ export default function MatchingPairs({
 
   useEffect(() => {
     if (question.type === "MATCHING_PAIRS") {
-      if ( !question.items ||
+      if (
+        !question.items ||
         question.items.length === 0 ||
-        (question.items[0] && "isBlank" in question.items[0])) {
+        (question.items[0] && "isBlank" in question.items[0])
+      ) {
         setValue(`questions.${questionIndex}`, {
           ...question,
           items: [
@@ -87,29 +85,31 @@ export default function MatchingPairs({
         question.items.map(({ id }, i) => {
           return (
             <div className="flex" key={id}>
-              <div className="flex flex-col w-full">
+              <div className="flex flex-col w-full z-[2]">
                 <FormField
                   control={control}
                   name={`questions.${questionIndex}.items.${i}.text`}
                   render={({ field }) => (
                     <FormItem className="space-y-1 flex w-full flex-col tepri">
                       <FormControl>
-                        <Input
-                          className={cn(
-                            "h-12 font-semibold rounded-tr-none rounded-bl-none rounded-br-none focus:z-10",
-                            {
-                              "border-destructive bg-[hsl(var(--destructive)_/_10%)] focus-visible:ring-destructive":
-                                getFieldState(
-                                  `questions.${questionIndex}.items.${i}.text`
-                                ).error,
-                            }
-                          )}
-                          placeholder={`Prompt ${i + 1}...`}
-                          {...field}
-                          value={getValues(
-                            `questions.${questionIndex}.items.${i}.text`
-                          )}
-                        />
+                        <div className="bg-card rounded-tl-md rounded-bl-md">
+                          <Input
+                            className={cn(
+                              "h-12 font-semibold rounded-tr-none rounded-bl-none rounded-br-none focus:z-10",
+                              {
+                                "border-destructive bg-destructive/10 focus-visible:ring-destructive":
+                                  getFieldState(
+                                    `questions.${questionIndex}.items.${i}.text`
+                                  ).error,
+                              }
+                            )}
+                            placeholder={`Prompt ${i + 1}...`}
+                            {...field}
+                            value={getValues(
+                              `questions.${questionIndex}.items.${i}.text`
+                            )}
+                          />
+                        </div>
                       </FormControl>
                     </FormItem>
                   )}
@@ -120,22 +120,24 @@ export default function MatchingPairs({
                   render={({ field }) => (
                     <FormItem className="space-y-1 flex w-full flex-col tepri">
                       <FormControl>
-                        <Input
-                          className={cn(
-                            "h-12 font-semibold border-t-0 rounded-tr-none rounded-tl-none rounded-br-none focus:z-10",
-                            {
-                              "border-destructive bg-[hsl(var(--destructive)_/_10%)] focus-visible:ring-destructive":
-                                getFieldState(
-                                  `questions.${questionIndex}.items.${i}.match`
-                                ).error,
-                            }
-                          )}
-                          placeholder={`Answer ${i + 1}...`}
-                          {...field}
-                          value={getValues(
-                            `questions.${questionIndex}.items.${i}.match`
-                          )}
-                        />
+                        <div className="bg-card rounded-tl-md rounded-bl-md">
+                          <Input
+                            className={cn(
+                              "h-12 font-semibold border-t-0 rounded-tr-none rounded-tl-none rounded-br-none focus:z-10",
+                              {
+                                "border-destructive bg-destructive/10 focus-visible:ring-destructive":
+                                  getFieldState(
+                                    `questions.${questionIndex}.items.${i}.match`
+                                  ).error,
+                              }
+                            )}
+                            placeholder={`Answer ${i + 1}...`}
+                            {...field}
+                            value={getValues(
+                              `questions.${questionIndex}.items.${i}.match`
+                            )}
+                          />
+                        </div>
                       </FormControl>
                       <div className="flex">
                         <ErrorSpan

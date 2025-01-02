@@ -63,7 +63,6 @@ export async function deleteAcount({ token }: { token: string }) {
       message: "Your account has been deleted successfully!",
     };
   } catch (error) {
-    console.error(error);
     return {
       success: false,
       message: "An unexpected error occurred. Please try again later.",
@@ -88,8 +87,6 @@ export async function VerifyEmailDeleteAccount({ email }: { email: string }) {
 
     return { success: "Email Verification was sent" };
   } catch (error) {
-    console.log(error);
-
     return { error: "An unexpected error occurred. Please try again later." };
   }
 }

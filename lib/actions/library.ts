@@ -205,7 +205,6 @@ export async function getFolderPath(folderId?: string): Promise<{
       path: [...parentResponse.path!, { id: folder.id, title: folder.title }],
     };
   } catch (error) {
-    console.error(error);
     return {
       success: false,
       message: "An error occurred while fetching the folder path.",
@@ -375,7 +374,6 @@ export const duplicateQuiz = async ({
 
     return { success: true, quiz };
   } catch (error) {
-    console.log(error);
 
     return {
       success: false,
@@ -513,7 +511,6 @@ export const renameFolder = async ({
 
     return { success: true, quiz };
   } catch (error) {
-    console.log(error);
 
     return {
       success: false,

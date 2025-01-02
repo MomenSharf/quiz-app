@@ -11,15 +11,14 @@ export default function Editor() {
   const {
     dispatch,
     form,
-    state: { isImageEditorOpenWithFiles, settingsOpen },
+    state: { isImageEditorOpenWithFiles, isSettingsOpen },
   } = useEditorContext();
 
   const onSubmit = (values: quizSchemaType) => {
-    console.log(values);
-    if (!settingsOpen.open || settingsOpen.type !== "publish")
+    if (!isSettingsOpen)
       dispatch({
         type: "SET_IS_SETTINGS_OPEN",
-        payload: { open: true, type: "publish" },
+        payload: true,
       });
   };
   return (
@@ -39,8 +38,6 @@ export default function Editor() {
           <ImageEditor
             open={isImageEditorOpenWithFiles.isOpen}
             afterUpload={(uploadedImage) => {
-              console.log(uploadedImage);
-
               form.setValue(
                 isImageEditorOpenWithFiles.field,
                 uploadedImage[0].url

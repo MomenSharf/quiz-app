@@ -91,7 +91,7 @@ export default function RenameFolder({
                     <Input
                       placeholder="title..."
                       className={cn("transition-all", {
-                        "border-destructive bg-[hsl(var(--destructive)_/_10%)] focus-visible:ring-destructive":
+                        "border-destructive bg-destructive/10 focus-visible:ring-destructive":
                           form.getFieldState("title").error,
                       })}
                       {...field}

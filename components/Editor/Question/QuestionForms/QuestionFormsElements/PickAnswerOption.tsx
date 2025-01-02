@@ -73,7 +73,9 @@ OprionProps) {
         style={{ y }}
         animate={{ border: "1px solid var(hsl(--primary))" }}
         dragControls={dragControls}
-        className="flex rounded group relative"
+        className={cn("flex rounded group relative", {
+          'mb-4': error
+        })}
       >
         <FormField
           control={control}
@@ -81,12 +83,12 @@ OprionProps) {
           render={({ field }) => (
             <FormItem className="space-y-1 flex w-full flex-col bg-whte">
               <FormControl>
-                <div className="bg-white rounded-tl-md rounded-bl-md">
+                <div className="bg-card rounded-tl-md rounded-bl-md z-[2]">
                   <Input
                     className={cn(
-                      "h-12 font-semibold rounded-tr-none rounded-br-none focus:z-10",
+                      "h-12 font-semibold rounded-tr-none rounded-br-none focus:z-20",
                       {
-                        "border-destructive bg-[hsl(var(--destructive)_/_10%)] focus-visible:ring-destructive":
+                        "border-destructive bg-destructive/10 focus-visible:ring-destructive":
                           error,
                       }
                     )}
@@ -98,7 +100,9 @@ OprionProps) {
                   />
                 </div>
               </FormControl>
-              <FormMessage className="text-xs" />
+              <div className="absolute -bottom-5">
+                <FormMessage className="text-xs" />
+              </div>
             </FormItem>
           )}
         />

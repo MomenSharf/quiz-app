@@ -20,7 +20,7 @@ export default function SidebarItem({
 }) {
   const {
     dispatch,
-    state: { currentQuestionId, settingsOpen },
+    state: { currentQuestionId, isSettingsOpen },
     form: { getFieldState },
   } = useEditorContext();
 
@@ -45,15 +45,15 @@ export default function SidebarItem({
         "w-16 h-16 sm:w-20 sm:h-20 relative hover:border-ring hover:bg-background cursor-pointer",
         {
           "border-ring bg-accent hover:bg-accent":
-            currentQuestionId === question.id && !settingsOpen.open,
+            currentQuestionId === question.id && !isSettingsOpen,
         }
       )}
       onClick={() => {
-        if (currentQuestionId !== question.id || settingsOpen.open) {
-          if (settingsOpen.open)
+        if (currentQuestionId !== question.id || isSettingsOpen) {
+          if (isSettingsOpen)
             dispatch({
               type: "SET_IS_SETTINGS_OPEN",
-              payload: {open: false, type: 'settings'},
+              payload: false,
             });
           dispatch({ type: "SET_CURRENT_QUESTION_ID", payload: question.id });
         }
@@ -65,7 +65,7 @@ export default function SidebarItem({
             "w-5 h-5 sm:w-7 sm:h-7 text-muted-foreground fill-gray-medium",
             {
               "text-primary fill-primary":
-                currentQuestionId === question.id && !settingsOpen.open,
+                currentQuestionId === question.id && !isSettingsOpen,
             }
           )}
         />

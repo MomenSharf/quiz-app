@@ -1,8 +1,4 @@
-import {
-  FormControl,
-  FormField,
-  FormItem
-} from "@/components/ui/form";
+import { FormControl, FormField, FormItem } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import ErrorSpan from "./QuestionFormsElements/ErrorSpan";
@@ -30,19 +26,22 @@ export default function ShortAnswer({
         render={({ field }) => (
           <FormItem className="space-y-1 flex w-full flex-col">
             <FormControl>
-              <Textarea
-                className={cn(
-                  "resize-none font-semibold focus:z-10 h-28 text-start",
-                  {
-                    "border-destructive bg-[hsl(var(--destructive)_/_10%)] focus-visible:ring-destructive":
-                      getFieldState(`questions.${questionIndex}.correctAnswer`)
-                        .error,
-                  }
-                )}
-                placeholder="Answer..."
-                {...field}
-                value={getValues(`questions.${questionIndex}.correctAnswer`)}
-              />
+              <div className="bg-card rounded-md">
+                <Textarea
+                  className={cn(
+                    "resize-none font-semibold focus:z-10 h-28 text-start",
+                    {
+                      "border-destructive bg-destructive/10 focus-visible:ring-destructive":
+                        getFieldState(
+                          `questions.${questionIndex}.correctAnswer`
+                        ).error,
+                    }
+                  )}
+                  placeholder="Answer..."
+                  {...field}
+                  value={getValues(`questions.${questionIndex}.correctAnswer`)}
+                />
+              </div>
             </FormControl>
           </FormItem>
         )}

@@ -145,7 +145,7 @@ export default function ProfileCard({ user }: { user: SettingsUser }) {
     }
   };
   return (
-    <div className="bg-white rounded-lg overflow-hidden">
+    <div className="bg-card rounded-lg overflow-hidden">
       <div className="bg-blue-extra-dark text-white gap-3 py-2 px-3">
         Profile
       </div>

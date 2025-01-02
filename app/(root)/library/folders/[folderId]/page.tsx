@@ -24,8 +24,7 @@ export default async function Page({
   const sortBy = isValidLibrarySortOption(searchParams.sortBy)
     ? searchParams.sortBy
     : "recentUpdate";
-  console.log(folderId);
-
+    
   const [folderResult, folderPathResult] = await Promise.all([
     getDashboardFolder(sortBy, folderId),
     getFolderPath(folderId),

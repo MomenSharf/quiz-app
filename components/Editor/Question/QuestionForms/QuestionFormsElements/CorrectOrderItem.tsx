@@ -55,13 +55,14 @@ export default function CorrectOrderItem({
           render={({ field }) => (
             <FormItem className="space-y-1 flex w-full flex-col tepri">
               <FormControl>
+              <div className="bg-card rounded-tl-md rounded-bl-md z-[2]">
                 <Input
                   className={cn(
                     "h-12 font-semibold rounded-tr-none rounded-br-none focus:z-10",
                     {
-                      "border-destructive bg-[hsl(var(--destructive)_/_10%)] focus-visible:ring-destructive":
+                      "border-destructive bg-destructive/10 focus-visible:ring-destructive":
                         error,
-                    },
+                      },
                     className
                   )}
                   placeholder={`item ${itemIndex + 1}...`}
@@ -69,7 +70,8 @@ export default function CorrectOrderItem({
                   value={getValues(
                     `questions.${questionIndex}.items.${itemIndex}.text`
                   )}
-                />
+                  />
+                  </div>
               </FormControl>
             </FormItem>
           )}

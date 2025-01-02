@@ -120,7 +120,8 @@ export const quizSchema = z.object({
   id: z.string(),
   title: z.string().min(3, "Title must be at least 3 characters long"),
   description: z.string().min(10, "Description must be at least 10 characters long"),
-  imageUrl: z.string().min(5, "Image URL must be at least 5 characters long"),
+  // imageUrl: z.string().min(5, "Thumbnail image is required"),
+  imageUrl: z.string().optional(),
   categories: z.array(z.string()).min(1, "At least one category is required"),
   visibility: visibilityEnum,
   questions: z

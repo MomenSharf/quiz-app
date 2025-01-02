@@ -12,13 +12,13 @@ export const register = async (data: z.infer<typeof RegisterSchema>) => {
     const validatedData = RegisterSchema.parse(data);
 
     if (!validatedData) {
-      return { success: false,  message: "Invalid input data" };
+      return { success: false, message: "Invalid input data" };
     }
 
     const { email, name, password, passwordConfirmation } = validatedData;
 
     if (password !== passwordConfirmation) {
-      return { success: false,  message: "Passwords do not match" };
+      return { success: false, message: "Passwords do not match" };
     }
 
     const userExists = await db.user.findFirst({
@@ -28,7 +28,10 @@ export const register = async (data: z.infer<typeof RegisterSchema>) => {
     });
 
     if (userExists) {
-      return { success: false,  message: "Email already is in use. Please try another one." };
+      return {
+        success: false,
+        message: "Email already is in use. Please try another one.",
+      };
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -42,26 +45,32 @@ export const register = async (data: z.infer<typeof RegisterSchema>) => {
       },
     });
 
-    const {success, message} = await VerifyEmail(lowerCaseEmail);
+    const { success, message } = await VerifyEmail(lowerCaseEmail);
 
     if (!success) {
-      return { success: false,  message};
+      return { success: false, message };
     }
 
-    return { success: true,  message: "Your account has been created successfully" };
+    return {
+      success: true,
+      message: "Your account has been created successfully",
+    };
   } catch (error) {
-    console.error("Database error:", error);
-
     if ((error as { code: string }).code === "ETIMEDOUT") {
       return {
-        success: false,  message: "Unable to connect to the database. Please try again later.",
+        success: false,
+        message: "Unable to connect to the database. Please try again later.",
       };
     } else if ((error as { code: string }).code === "503") {
       return {
-        success: false,  message: "Service temporarily unavailable. Please try again later.",
+        success: false,
+        message: "Service temporarily unavailable. Please try again later.",
       };
     } else {
-      return { success: false,  message: "An unexpected error occurred. Please try again later." };
+      return {
+        success: false,
+        message: "An unexpected error occurred. Please try again later.",
+      };
     }
   }
 };

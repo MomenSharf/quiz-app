@@ -12,7 +12,6 @@ export default async function Page({
   
   
   if (!profile || !success) {
-    console.log(message);
     return notFound();
     }
 

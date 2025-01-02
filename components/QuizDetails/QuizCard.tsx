@@ -49,8 +49,6 @@ export default function QuizCard({
     const contentHeight = descriptionRef.current.scrollHeight;
     if (contentHeight > lineHeight * 3) {
       setIsShowMoreVisible(true);
-      console.log(contentHeight);
-      console.log(lineHeight);
     }
   }, []);
 

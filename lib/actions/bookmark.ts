@@ -98,7 +98,6 @@ export const getBookmarksQuizzes = async ({
 
     return { success: true, quizzes: quizzes };
   } catch (error) {
-    console.error(error);
     return { success: false, message: "Error geting quizzes." };
   }
 };

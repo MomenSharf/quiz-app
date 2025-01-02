@@ -31,16 +31,10 @@ type SidebarItemMenuBrops = {
 export default function SidebarItemMenu({ question }: SidebarItemMenuBrops) {
   const {
     dispatch,
-    form: { getValues, resetField, setValue },
+    form: { getValues,  setValue },
   } = useEditorContext();
 
   const questions = getValues("questions");
-  const index = questions.find((q) => q.id === question.id)?.questionOrder;
-
-  const reset = () => {
-    console.log('gg');
-  
-  };
 
   const duplicate = () => {
     const id = `${UNSAVED_ID_PREFIX}${crypto.randomUUID()}`;
@@ -98,7 +92,6 @@ export default function SidebarItemMenu({ question }: SidebarItemMenuBrops) {
         >
           <DropdownMenuItem
             className="flex gap-2 cursor-pointer"
-            onSelect={reset}
           >
             <RotateCw className="w-3 h-3 sm:w-4 sm:h-4" />
             <span className="font-semibold text-xs sm:text-sm">Reset</span>

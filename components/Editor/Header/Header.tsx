@@ -17,7 +17,7 @@ export default function Header() {
 
   const {
     dispatch,
-    state: { settingsOpen },
+    state: { isSettingsOpen },
     form: {
       setFocus,
       control,
@@ -76,7 +76,7 @@ export default function Header() {
           variant="outline"
           type="button"
           className={cn(
-            "w-36 border-transparent justify-start hover:border-input font-semibold hover:bg-white cursor-text",
+            "w-36 border-transparent justify-start hover:border-input font-semibold hover:bg-card cursor-text",
             {
               hidden: isEditingTitle,
             }
@@ -94,27 +94,26 @@ export default function Header() {
           variant="outline"
           type="button"
           className={cn("relative gap-1 rounded-xl", {
-            "border-primary border-2":
-              settingsOpen.open && settingsOpen.type === "settings",
+            "border-primary": isSettingsOpen && !error,
+            "border-destructive bg-destructive/10 focus-visible:ring-destructive":
+              error,
           })}
           onClick={() => {
-            if (!settingsOpen.open || settingsOpen.type !== "settings")
+            if (!isSettingsOpen)
               dispatch({
                 type: "SET_IS_SETTINGS_OPEN",
-                payload: { open: true, type: "settings" },
+                payload: true,
               });
           }}
         >
           <Icons.settings
             className={cn("w-4 h-4 fill-gray-medium", {
-              "fill-primary":
-                settingsOpen.open && settingsOpen.type === "settings",
+              "fill-primary": isSettingsOpen && !error,
             })}
           />
           <span
             className={cn("hidden sm:inline-block text-gray-medium", {
-              "text-primary":
-                settingsOpen.open && settingsOpen.type === "settings" && false,
+              "text-primary": isSettingsOpen && !error,
             })}
           >
             Settings

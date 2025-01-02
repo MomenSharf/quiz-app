@@ -11,7 +11,7 @@ import SelectorMenu from "./SelectorMenu";
 export default function Header({ questionIndex }: { questionIndex: number }) {
   const [isHeaderOpen, setIsHeaderOpen] = useState(true);
   return (
-    <div className="bg-white relative flex gap-3 p-2"
+    <div className="bg-card relative flex gap-3 p-2 border-b"
 >
       {/* <div
         className={cn(

@@ -19,7 +19,7 @@ import QuestionImage from "../Question/QuestionImage";
 import ErrorSpan from "../Question/QuestionForms/QuestionFormsElements/ErrorSpan";
 import { cn } from "@/lib/utils";
 
-export default function Settings({ type }: { type: "settings" | "publish" }) {
+export default function Settings() {
   const [isImageManagerTabs, setIsImageManagerTabs] = useState(false);
 
   const {
@@ -31,7 +31,7 @@ export default function Settings({ type }: { type: "settings" | "publish" }) {
     },
   } = useEditorContext();
 
-  const imageUrl = getValues("imageUrl");
+  const imageUrl = getValues("imageUrl");  
 
   return (
     <div className="container max-w-3xl py-3 flex flex-col gap-3">
@@ -42,13 +42,13 @@ export default function Settings({ type }: { type: "settings" | "publish" }) {
           <FormItem className="space-y-1 flex w-full flex-col">
             <FormLabel className="text-inherit">Descrption</FormLabel>
             <FormControl>
-              <div className="bg-white rounded-tl-md rounded-bl-md">
+              <div className="bg-card rounded-tl-md rounded-bl-md">
                 <Textarea
                   placeholder="type descrption for your quiz..."
                   className={cn(
                     "h-full max-h-72 w-full resize-none transition-all",
                     {
-                      "border-destructive bg-[hsl(var(--destructive)_/_10%)] focus-visible:ring-destructive":
+                      "border-destructive bg-destructive/10 focus-visible:ring-destructive":
                         errors.description,
                     }
                   )}
@@ -86,15 +86,13 @@ export default function Settings({ type }: { type: "settings" | "publish" }) {
               )
             }
           />
-          <QuestionImage
+          {imageUrl && <QuestionImage
             imageUrl={imageUrl}
             openImageManagerTabs={() => {
-              console.log(10);
-
               setIsImageManagerTabs(true);
             }}
             field="imageUrl"
-          />
+          />}
 
           {errors && <ErrorSpan error={errors.imageUrl} />}
         </>

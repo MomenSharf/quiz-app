@@ -135,7 +135,7 @@ export const QUESTION_TYPES: QuestionType[] = [
 export const VISIBILITY_TYPE = ["PUBLIC", "PRIVATE"] as const;
 export const VISIBILITY_OPTIONS = [
   { value: "PUBLIC", label: "Public" },
-  { value: "PRIVATE", label: "Private" }
+  { value: "PRIVATE", label: "Private" },
 ] as const;
 
 export const QUESTION_TYPES_WITH_LABEL_AND_ICONS: {
@@ -213,6 +213,7 @@ export const POINTS_OPTIONS = [
   { label: "19 points", value: 19 },
   { label: "20 points", value: 20 },
 ];
+
 
 export const CATEGORY_OPTIONS_LIST: {
   label: string;

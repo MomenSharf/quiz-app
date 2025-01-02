@@ -59,16 +59,11 @@ export const authOptions: NextAuthOptions = {
           // Verify the password
           const isValid = await bcrypt.compare(password, user.password);
           if (!isValid) {
-            console.log(11111111111);
             throw new Error("Invalid password");
           }
 
           // Return the user object upon successful validation
           return { id: user.id, name: user.name, email: user.email };
-        // } catch (error: any) {
-        //   console.error("Error during user authorization:", error.message);
-        //   throw new Error(error.massage);
-        // }
       },
     }),
   ],

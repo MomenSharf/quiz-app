@@ -44,7 +44,7 @@ export default function DataCard({
         duration: 0.3,
       }}
       viewport={{ amount: 0 }}
-      className="bg-white p-3 rounded-lg mb-3"
+      className="bg-card p-3 rounded-lg mb-3"
     >
       <td className="p-2 rounded-tl-md rounded-bl-md">
         <div className="flex justify-center items-center">

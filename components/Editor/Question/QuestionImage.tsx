@@ -13,6 +13,7 @@ export default function QuestionImage({
   imageUrl: string;
   openImageManagerTabs: () => void;
 }) {
+  
   const {
     dispatch,
     form: { setValue },

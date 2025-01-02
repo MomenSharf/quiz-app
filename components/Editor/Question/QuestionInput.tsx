@@ -37,16 +37,16 @@ export default function QuestionInput({
       render={({ field }) => (
         <FormItem className="space-y-1 flex w-full flex-col relative">
           <FormLabel className="text-inherit">Question</FormLabel>
-          <FormControl className="bg-white rounded-md">
+          <FormControl className="bg-card rounded-md">
             <div className="flex">
               <Textarea
                 className={cn(
-                  "resize-none font-bold focus:z-10 text-lg min-h-14 h-14",
+                  "resize-none font-bold focus:z-10 text-md min-h-16 h-16",
                   {
                     "rounded-tr-none rounded-br-none": !hasImageUrl,
                   },
                   {
-                    "border-destructive bg-[hsl(var(--destructive)_/_10%)] focus-visible:ring-destructive ":
+                    "border-destructive bg-destructive/10 focus-visible:ring-destructive ":
                       getFieldState(`questions.${questionIndex}.question`)
                         .error,
                   }

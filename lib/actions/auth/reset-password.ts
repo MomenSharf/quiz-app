@@ -89,9 +89,7 @@ export async function VerifyEmailToResetPassword({ email }: { email: string }) {
 
     return { success: "Email Verification was sent" };
 
-  } catch (error) {
-    console.log(error);
-    
+  } catch (error) {    
     return { error: "An unexpected error occurred. Please try again later." };
   }
 }

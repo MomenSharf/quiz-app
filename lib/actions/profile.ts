@@ -5,8 +5,6 @@ import { db } from "../db";
 export const getProfile = async ({ username }: { username: string }) => {
   const session = await getCurrentUser();
   const userId = session?.user.id;
-  console.log("Starting getProfile for username:", username);
-  console.log("UserId from session:", userId);
   
   try {
     const profile = await db.user.findUnique({
@@ -33,7 +31,6 @@ export const getProfile = async ({ username }: { username: string }) => {
 
     return { success: true, profile };
   } catch (error) {
-    console.error("Error fetching profile:", error);
     return { success: false, message: "Could not fetch profile" };
   }
   

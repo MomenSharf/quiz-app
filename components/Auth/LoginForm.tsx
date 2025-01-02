@@ -43,7 +43,6 @@ export default function LoginForm() {
       ...data,
       redirect: false,
     });
-    console.log(res?.ok);
     if (res?.ok) {
       toast({
         description:
@@ -53,7 +52,6 @@ export default function LoginForm() {
       router.push("/");
     }
     if (res?.error) {
-      console.log(res.error);
       
       toast({
         title: "Error",

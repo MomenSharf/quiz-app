@@ -14,8 +14,6 @@ export default function SearchInput() {
   const searchInputContainerRef = useRef<HTMLInputElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
   useOnClickOutside(searchInputContainerRef, () => {
-    console.log(searchParams.get("query"));
-
     if (!searchParams.get("query") && searchParams.get("query") !== "")
       setIsSearchOpen(false);
   });

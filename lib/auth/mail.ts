@@ -32,10 +32,7 @@ export const sendVerificationEmail = async (email: string, token: string) => {
 
   try {
     const info = await transporter.sendMail(mailOptions);
-    console.log("Verification email sent: ", info.messageId);
-  } catch (error) {
-    console.error("Error sending verification email: ", error);
-  }
+  } catch (error) {}
 };
 
 // Send reset password email
@@ -64,24 +61,21 @@ export const sendVerificationEmailResetPassword = async (
   };
 
   try {
-    const info = await transporter.sendMail(mailOptions);
-    console.log("Reset password email sent: ", info.messageId);
-  } catch (error) {
-    console.error("Error sending reset password email: ", error);
-  }
+    await transporter.sendMail(mailOptions);
+  } catch (error) {}
 };
 
 export const sendVerificationEmailDeleteAccount = async (
-    email: string,
-    token: string
-  ) => {
-    const deleteAccountUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/delete-account?token=${token}`;
-  
-    const mailOptions = {
-      from: `"QuizzesUp Support" <${process.env.NODEMAILER_USER}>`, // Sender address
-      to: email, // Recipient address
-      subject: "Confirm Account Deletion", // Subject line
-      html: `
+  email: string,
+  token: string
+) => {
+  const deleteAccountUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/delete-account?token=${token}`;
+
+  const mailOptions = {
+    from: `"QuizzesUp Support" <${process.env.NODEMAILER_USER}>`, // Sender address
+    to: email, // Recipient address
+    subject: "Confirm Account Deletion", // Subject line
+    html: `
               <div style="font-family: 'Google Sans', sans-serif; color: #333; line-height: 1.6; text-align: center;">
                   <h2 style="color: #000;">Confirm Account Deletion</h2>
                   <p>We received a request to delete your QuizzesUp account. Please confirm this action by clicking the button below:</p>
@@ -93,13 +87,9 @@ export const sendVerificationEmailDeleteAccount = async (
                   <p>The QuizzesUp Team</p>
               </div>
           `,
-    };
-  
-    try {
-      const info = await transporter.sendMail(mailOptions);
-      console.log("Account deletion email sent: ", info.messageId);
-    } catch (error) {
-      console.error("Error sending account deletion email: ", error);
-    }
   };
-  
+
+  try {
+    await transporter.sendMail(mailOptions);
+  } catch (error) {}
+};

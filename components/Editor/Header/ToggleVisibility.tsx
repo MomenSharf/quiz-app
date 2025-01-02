@@ -19,8 +19,11 @@ export default function ToggleVisibility() {
       setValue,
       formState: { errors },
     },
+    state: { saveState },
   } = useEditorContext();
-  const visibility = getValues("visibility");
+  const currentVisibility = quizSchema.safeParse(getValues()).success
+    ? getValues("visibility")
+    : "PUBLIC";
   const quizId = getValues("id");
 
   const handleClick = async () => {
@@ -29,6 +32,7 @@ export default function ToggleVisibility() {
     try {
       const { success, visibility, message } = await toggleVisibility({
         quizId,
+        visibility: currentVisibility,
       });
 
       if (success && visibility) {
@@ -38,7 +42,7 @@ export default function ToggleVisibility() {
         toast({ description: message });
       }
     } catch (error) {
-      console.error("Error toggling visibility");
+      toast({ description: "Error toggling visibility" });
     } finally {
       setLoading(false);
     }
@@ -51,10 +55,12 @@ export default function ToggleVisibility() {
           variant="secondary"
           className="rounded-full p-1 w-8 h-8"
           type="submit"
+          disabled={saveState === "waiting"}
           onClick={() => {
-            if (!errors) {
+            if (!Object.keys(errors).length) {
               handleClick();
             } else {
+              console.log(Object.keys(errors).length);
               toast({
                 description: "Please fix the validation errors first.",
                 variant: "destructive",
@@ -64,7 +70,7 @@ export default function ToggleVisibility() {
         >
           {loading ? (
             <Icons.Loader className="w-4 h-4 animate-spin stroke-secondary-foreground" />
-          ) : visibility === "PRIVATE" ? (
+          ) : currentVisibility === "PRIVATE" ? (
             <Icons.lock className="w-4 h-4 fill-secondary-foreground" />
           ) : (
             <Icons.global className="w-4 h-4 fill-secondary-foreground" />
@@ -72,7 +78,7 @@ export default function ToggleVisibility() {
         </Button>
       </TooltipTrigger>
       <TooltipContent>
-        {visibility === "PRIVATE"
+        {currentVisibility === "PRIVATE"
           ? "This content is private and visible only to you."
           : "This content is public and visible to everyone."}{" "}
       </TooltipContent>

@@ -1,4 +1,4 @@
-'use server'
+"use server";
 
 import { revalidatePath } from "next/cache";
 
@@ -10,7 +10,9 @@ export async function revalidatePathInServer(pathname: string) {
       message: `Path ${pathname} revalidated successfully.`,
     };
   } catch (error) {
-    console.error(`Failed to revalidate path ${pathname}:`, error);
-    throw new Error(`Failed to revalidate path ${pathname}.`);
+    return {
+      success: false,
+      message: `Path ${pathname} does not validate properly.`,
+    };
   }
 }
