@@ -39,6 +39,7 @@ export const getSearchQuizzes = async ({
     }
     const quizzes = await db.quiz.findMany({
       where: {
+        visibility: 'PUBLIC',
         AND: [
           {
             OR: [

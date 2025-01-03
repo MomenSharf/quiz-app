@@ -23,6 +23,17 @@ import {
   Search,
 } from "lucide-react";
 
+export const AVATAR_COLORS = [
+  "#1ABC9C", // Turquoise
+  "#2ECC71", // Emerald
+  "#3498DB", // Peter River
+  "#9B59B6", // Amethyst
+  "#E74C3C", // Alizarin
+  "#F1C40F", // Sunflower
+  "#E67E22", // Carrot
+  "#34495E", // Wet Asphalt
+];
+
 export const UNSAVED_ID_PREFIX = "unsaved-";
 
 export const LIBRARY_SORT_OPTIONS: LibrarySortOption[] = [

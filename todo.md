@@ -1,3 +1,9 @@
 ### Play quiz :
-  
-  - show right answer or Short answer
+
+### Editor :
+  - Fix toggle visibility functionality
+
+### Settings :
+
+### Components/Auth :
+  - edit all funtion like try catch to just run directly

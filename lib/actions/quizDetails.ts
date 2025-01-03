@@ -9,8 +9,17 @@ export const getQuizDetails = async ({ quizId }: { quizId: string }) => {
   const userId = session?.user.id;
 
   try {
-    const quizDetails = await db.quiz.findFirst({
+    const quiz = await db.quiz.findUnique({
       where: { id: quizId },
+      include: {
+        user: true,
+      },
+    });
+    const quizDetails = await db.quiz.findFirst({
+      where: {
+        id: quizId,
+        visibility: userId === quiz?.user.id ? undefined : "PUBLIC",
+      },
       include: {
         user: true,
         bookmarks: userId
@@ -46,35 +55,6 @@ export const getQuizDetails = async ({ quizId }: { quizId: string }) => {
   }
 };
 
-// export const copyQuiz = async (quizId: string) => {
-//   const session = await getCurrentUser();
-
-//   if (!session) {
-//     return { success: false, message: "Unauthorized: User is not logged in." };
-//   }
-
-//   const originalQuiz = await db.quiz.findUnique({
-//     where: { id: quizId },
-//     include: {
-//       image: true,
-//       questions: {
-//         include: { image: true, items: true },
-//       },
-//     },
-//   });
-
-//   if (!originalQuiz) {
-//     return { success: false, message: "Quiz not found" };
-//   }
-
-//   const { id, createdAt, updatedAt, userId, folderId, ...dataToCopy } =
-//     originalQuiz;
-// };
-
-import { PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient();
-
 export const copyQuiz = async (quizId: string) => {
   const session = await getCurrentUser();
 
@@ -85,7 +65,7 @@ export const copyQuiz = async (quizId: string) => {
 
   try {
     // 2. Fetch the original quiz and its relations
-    const originalQuiz = await prisma.quiz.findUnique({
+    const originalQuiz = await db.quiz.findUnique({
       where: { id: quizId },
       include: {
         questions: {
@@ -113,7 +93,7 @@ export const copyQuiz = async (quizId: string) => {
     } = originalQuiz;
 
     // 4. Copy the quiz
-    const newQuiz = await prisma.quiz.create({
+    const newQuiz = await db.quiz.create({
       data: {
         ...quizDataToCopy,
         title: `${quizDataToCopy.title} (Copy)`, // Append "(Copy)" to the title

@@ -10,7 +10,8 @@ import {
   Layers,
   Timer,
 } from "lucide-react";
-import { useSession } from "next-auth/react";
+import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import BookmarkButton from "../Quiz/BookmarkButton";
@@ -20,18 +21,16 @@ import { Badge, badgeVariants } from "../ui/badge";
 import { Button } from "../ui/button";
 import { toast } from "../ui/use-toast";
 import DeleteDialog from "./DeleteDiaolg";
-import QuizImage from "./QuizImage";
-import Link from "next/link";
-import Image from "next/image";
 
 export default function QuizCard({
   quiz,
   pathname,
+  isCurrentUser,
 }: {
   quiz: QuizDetailsWithIsBookmark;
   pathname: string;
+  isCurrentUser?: boolean;
 }) {
-  const sessiom = useSession();
   const [isDescriptionOpen, setIsDescriptionOpen] = useState(true);
   const [isShowMoreVisible, setIsShowMoreVisible] = useState(true);
   const [isCopyingQuiz, setIsCopiyngQuiz] = useState(false);
@@ -67,8 +66,6 @@ export default function QuizCard({
 
   const router = useRouter();
 
-  const isCurrentUser = quiz.user.id === sessiom.data?.user.id;
-
   return (
     <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 justify-center p-5 bg-card rounded-xl">
       <div className="flex flex-col w-full rounded-xl overflow-hidden">
@@ -88,10 +85,7 @@ export default function QuizCard({
         <p className="text-lg font-medium truncate">{quiz.title.trim()}</p>
         <div className="flex items-center gap-1">
           <Link href={`/profile/${quiz.user.username}`}>
-            <UserAvatarImage
-              imageUrl={quiz.user.imageUrl}
-              className="w-10 h-10"
-            />
+            <UserAvatarImage user={quiz.user} />
           </Link>
           <Link
             href={`/profile/${quiz.user.username}`}

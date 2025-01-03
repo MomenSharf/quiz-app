@@ -23,7 +23,7 @@ export default function ToggleVisibility() {
   } = useEditorContext();
   const currentVisibility = quizSchema.safeParse(getValues()).success
     ? getValues("visibility")
-    : "PUBLIC";
+    : "PRIVATE";
   const quizId = getValues("id");
 
   const handleClick = async () => {
@@ -60,7 +60,6 @@ export default function ToggleVisibility() {
             if (!Object.keys(errors).length) {
               handleClick();
             } else {
-              console.log(Object.keys(errors).length);
               toast({
                 description: "Please fix the validation errors first.",
                 variant: "destructive",

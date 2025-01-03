@@ -7,15 +7,17 @@ datasource db {
   url      = env("DATABASE_URL")
 
   // uncomment next line if you use Prisma <5.10
-  directUrl = env("DATABASE_URL_UNPOOLED")
+  // directUrl = env("DATABASE_URL_UNPOOLED")
 }
 
 model User {
-  id            String          @id @default(cuid())
+  id            String    @id @default(cuid())
   name          String?
-  email         String          @unique
+  email         String    @unique
   emailVerified DateTime?
-  username      String?         @unique
+  username      String?   @unique
+  imageUrl      String?
+  avatarColor   String? 
   createdAt     DateTime        @default(now())
   updatedAt     DateTime        @updatedAt
   password      String?
@@ -26,8 +28,7 @@ model User {
   sessions      Session[]
   ratings       Rating[]
   QuizProgress  QuizProgress[]
-  bookmarks      Bookmark[]
-  imageUrl      String?
+  bookmarks     Bookmark[]
 
   @@index([email]) // Index for faster email lookups
 }
@@ -46,24 +47,24 @@ model Folder {
 }
 
 model Quiz {
-  id           String         @id @default(cuid())
-  title        String
-  createdAt    DateTime       @default(now())
-  updatedAt    DateTime       @updatedAt
-  categories   String[]
-  description  String
-  visibility   Visibility     @default(PUBLIC)
-  folderId     String?
-  userId       String
-  questions    Question[]
-  folder       Folder?        @relation(fields: [folderId], references: [id], onDelete: Cascade)
-  user         User           @relation(fields: [userId], references: [id], onDelete: Cascade)
-  ratings      Rating[]
-  QuizProgress QuizProgress[]
-  bookmarks     Bookmark[]
-  imageUrl     String?
-  playCount    Int            @default(0) // Field to track how many times the quiz has been played
-  completionCount  Int         @default(0) // Total number of times the quiz has been completed
+  id              String         @id @default(cuid())
+  title           String
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  categories      String[]
+  description     String
+  visibility      Visibility     @default(PUBLIC)
+  folderId        String?
+  userId          String
+  questions       Question[]
+  folder          Folder?        @relation(fields: [folderId], references: [id], onDelete: Cascade)
+  user            User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  ratings         Rating[]
+  QuizProgress    QuizProgress[]
+  bookmarks       Bookmark[]
+  imageUrl        String?
+  playCount       Int            @default(0) // Field to track how many times the quiz has been played
+  completionCount Int            @default(0) // Total number of times the quiz has been completed
 
   @@index([title, createdAt]) // Index for faster querying by title and creation date
 }
@@ -196,5 +197,3 @@ enum QuestionType {
   MATCHING_PAIRS
   ORDER
 }
-
-

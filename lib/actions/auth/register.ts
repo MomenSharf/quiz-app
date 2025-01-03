@@ -56,6 +56,7 @@ export const register = async (data: z.infer<typeof RegisterSchema>) => {
       message: "Your account has been created successfully",
     };
   } catch (error) {
+    console.error(error);
     if ((error as { code: string }).code === "ETIMEDOUT") {
       return {
         success: false,

@@ -53,8 +53,6 @@ export const saveEditorQuiz = async (
   }
 
   const isValid = quizSchema.safeParse(data).success;
-  console.log(data.visibility);
-
   const mapQuestion = (
     question: questionSchemaType
   ): Prisma.QuestionCreateWithoutQuizInput => {

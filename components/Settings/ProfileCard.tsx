@@ -26,6 +26,7 @@ import { ClientUploadedFileData } from "uploadthing/types";
 import { VerifyEmailToResetPassword as VerifyEmailToResetPasswordServer } from "@/lib/actions/auth/reset-password";
 import { VerifyEmailDeleteAccount as VerifyEmailDeleteAccountServer } from "@/lib/actions/auth/delete-account";
 import { Check } from "lucide-react";
+import { UserAvatarImage } from "../User/UserAvatar";
 
 export default function ProfileCard({ user }: { user: SettingsUser }) {
   const [isUpdatingProfile, setIsUpdatingProfile] = useState(false);
@@ -74,7 +75,7 @@ export default function ProfileCard({ user }: { user: SettingsUser }) {
   const afterUpload = async (uploadedImage: ClientUploadedFileData<null>[]) => {
     try {
       const { success, message } = await UpdateUserProfile(
-        { imageUrl: uploadedImage[0].url },
+        { imageUrl: uploadedImage[0].url , },
         "/settings"
       );
       if (!success) {
@@ -153,26 +154,7 @@ export default function ProfileCard({ user }: { user: SettingsUser }) {
         <div className="flex flex-col sm:flex-row gap-5">
           <div className="flex flex-col gap-2">
             <div className="flex flex-col justify-center items-center gap-2">
-              {user.imageUrl ? (
-                <div className="rounded-full overflow-hidden">
-                  <Image
-                    src={user.imageUrl}
-                    alt="user avatar"
-                    width={96}
-                    height={96}
-                    className="object-contain"
-                  />
-                </div>
-              ) : (
-                <button
-                  onClick={() => {
-                    setImageMangerOpen(true);
-                  }}
-                  className="w-24 h-24 flex justify-center items-center bg-rose-500 text-white text-4xl rounded-full"
-                >
-                  {user.name && user.name[0].toUpperCase()}
-                </button>
-              )}
+              <UserAvatarImage user={user} className="w-24 h-24 text-2xl" />
               <Button
                 size="sm"
                 variant="secondary"

@@ -34,8 +34,6 @@ export default async function Page(props: {
     session.user.id === quizProgress.quiz.userId &&
     quizSchema.safeParse(quiz).success;
 
-  console.log(quizProgress);
-
   return (
     <div className="min-h-screen main-background">
       <Provider quizProgress={quizProgress} preview={preview || false} />

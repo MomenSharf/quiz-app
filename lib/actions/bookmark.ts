@@ -40,6 +40,7 @@ export const getBookmarksQuizzes = async ({
       where: {
         userId,
         quiz: {
+          visibility: 'PUBLIC',
           AND: [
             {
               OR: [
@@ -162,41 +163,3 @@ export const toggleBookmark = async ({
   }
 };
 
-export const isBoojkmarked = async ({ quizId }: { quizId: string }) => {
-  try {
-    const session = await getCurrentUser();
-    if (!session) {
-      return {
-        success: false,
-        message: "Unauthorized: User is not logged in.",
-      };
-    }
-    const userId = session.user.id;
-    // Check if the quiz is bookmarked
-    const existingBookmark = await db.bookmark.findFirst({
-      where: {
-        userId,
-        quizId,
-      },
-    });
-
-    if (existingBookmark) {
-      return {
-        success: true,
-        message: "Quiz is already bookmarked.",
-        isBookmarked: true,
-      };
-    } else {
-      return {
-        success: false,
-        message: "Quiz is not bookmarked.",
-        isBookmarked: false,
-      };
-    }
-  } catch (error) {
-    return {
-      success: false,
-      message: "Error checking bookmark status.",
-    };
-  }
-};

@@ -10,6 +10,7 @@ import Logo from "./Logo";
 
 export default async function Header() {
   const session = await getCurrentUser();
+  
 
   return (
     <header className="z-20 w-full p-2 flex bg-card shadow-sm">

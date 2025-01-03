@@ -52,7 +52,6 @@ export const getLibraryQuizzes = async (
     };
   }
 };
-
 export const getLibraryFolders = async (
   sortOption: LibrarySortOption,
   parentId?: string
@@ -164,7 +163,6 @@ export const getDashboardFolder = async (
     };
   }
 };
-
 export async function getFolderPath(folderId?: string): Promise<{
   success: boolean;
   message: string;
@@ -232,6 +230,8 @@ export const newQuiz = async ({
         folderId,
         title: "My new Quiz",
         description: "",
+        visibility: 'PRIVATE',
+        categories: [],
         questions: {
           create: {
             type: "UNSELECTED",

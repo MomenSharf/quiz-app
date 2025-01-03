@@ -1,4 +1,5 @@
 import {
+  AVATAR_COLORS,
   CATEGORY_OPTIONS_LIST,
   LIBRARY_SORT_OPTIONS,
   SEARCH_SORT_OPTIONS,
@@ -213,3 +214,15 @@ export const shareLink = async (shareData: {
     toast({ description: "This feature is not available on the server side." });
   }
 };
+
+export function getRandomColor() {
+  return AVATAR_COLORS[Math.floor(Math.random() * AVATAR_COLORS.length)];
+}
+
+export function getInitials(name?: string | null) {
+  if (!name) return "U"; // Default to 'U' if no name is available
+  const parts = name.split(" ");
+  return parts.length > 1
+    ? parts[0][0].toUpperCase() + parts[1][0].toUpperCase()
+    : parts[0][0].toUpperCase();
+}

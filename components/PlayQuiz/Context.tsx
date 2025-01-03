@@ -162,8 +162,6 @@ export const PlayQuizProvider = ({
 
   useEffect(() => {
     if (isResultSheetOpen || quizMode === "ended")
-      console.log(playQuizQuestions.length - 1 === currentQuestion);
-
     saveQuizProgressFun({
       playQuizQuestions,
       currentQuestion:

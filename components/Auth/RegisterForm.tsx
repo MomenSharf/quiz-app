@@ -55,7 +55,7 @@ export default function RegisterForm() {
     } catch (error: any) {
       toast({
         title: "Error",
-        description: error.massege,
+        description: "Something went wrong! try again later",
         variant: "destructive",
       });
     }

@@ -32,7 +32,7 @@ export const UpdateUserProfile = async (
 
   try {
     const existingUser = await db.user.findUnique({
-      where: { username: user.username },
+      where: { id: session.user.id },
     });
 
     if (existingUser && existingUser.id !== session.user.id) {
@@ -50,6 +50,8 @@ export const UpdateUserProfile = async (
 
     return { success: true, user };
   } catch (error) {
+    console.error(error);
+
     return { success: false, message: "can't update profile." };
   }
 };
