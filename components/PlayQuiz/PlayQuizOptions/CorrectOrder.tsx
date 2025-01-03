@@ -102,6 +102,7 @@ export default function CorrectOrder({
       }, 500);
     } else if (
       quizMode === "playing" &&
+      playQuizQuestions[currentQuestion] &&
       playQuizQuestions[currentQuestion].isAnswerRight === null &&
       currentQuestion !== 0
     ) {

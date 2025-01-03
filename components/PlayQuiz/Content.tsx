@@ -20,9 +20,8 @@ export default function Content() {
     state: { currentQuestion, quizMode, playQuizQuestions },
   } = usePlayQuizContext();
   console.log(quizMode);
-  
 
- return (
+  return (
     <div className="flex flex-col w-full flex-1  items-center">
       <div className="p-3 max-w-6xl flex-1 flex flex-col">
         {quizMode !== "ended" ? (

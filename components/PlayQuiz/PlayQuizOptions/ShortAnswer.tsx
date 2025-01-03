@@ -25,12 +25,7 @@ export default function ShortAnswer({
 
   const {
     dispatch,
-    state: {
-      playQuizQuestions,
-      currentQuestion,
-      quizMode,
-      userAnswer,
-    },
+    state: { playQuizQuestions, currentQuestion, quizMode, userAnswer },
   } = usePlayQuizContext();
 
   const userInputSchama = z.object({
@@ -55,7 +50,6 @@ export default function ShortAnswer({
     userAnswer?.type === "SHORT_ANSWER";
 
   const onSubmit = (data: userInputSchamaType) => {
-
     if (question.correctAnswer) {
       if (quizMode === "playing") {
         dispatch({ type: "SET_QUIZ_MODE", payload: "answered" });
@@ -94,12 +88,13 @@ export default function ShortAnswer({
                     duration: 0.3,
                     ease: "easeInOut",
                   }}
+                  className="bg-card"
                 >
                   <Textarea
                     className={cn(
                       "resize-none font-semibold focus:z-10 h-28 text-start bg-background",
                       {
-                        "border-destructive focus-visible:ring-destructive":
+                        "bg-destructive/10 border-destructive focus-visible:ring-destructive":
                           getFieldState("userInput").error || isShaking,
                         "border-success focus-visible:ring-success": isCorrect,
                       }
@@ -113,6 +108,12 @@ export default function ShortAnswer({
             </FormItem>
           )}
         />
+        {(quizMode === "answered" || quizMode === "timeOut") && (
+          <div>
+            <h4 className="font-semibold text-lg">Right answer is :</h4>
+            <p>{question.correctAnswer}</p>
+          </div>
+        )}
         <Button className="self-end" type="submit">
           Submit
         </Button>

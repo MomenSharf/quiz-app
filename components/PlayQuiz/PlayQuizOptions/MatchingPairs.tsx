@@ -53,21 +53,16 @@ function MatchingPairsItem({
       >
         {type === "text" ? item.text : item.match}
       </div>
-      <Tooltip delayDuration={100}>
-        <TooltipTrigger asChild>
-          <Button
-            type="button"
-            size="icon"
-            className="rounded-tl-none rounded-bl-none focus:z-10  bg-card hover:bg-card"
-          >
-            <GripVertical
-              onPointerDown={(e) => dragControls.start(e)}
-              className="w-4 h-4 rounded-tl-none rounded-bl-none text-primary"
-            />
-          </Button>
-        </TooltipTrigger>
-        <TooltipContent className="text-xs">Reorder</TooltipContent>
-      </Tooltip>
+      <Button
+        type="button"
+        size="icon"
+        className="rounded-tl-none rounded-bl-none focus:z-10  bg-card hover:bg-card"
+      >
+        <GripVertical
+          onPointerDown={(e) => dragControls.start(e)}
+          className="w-4 h-4 rounded-tl-none rounded-bl-none text-primary"
+        />
+      </Button>
     </Reorder.Item>
   );
 }
@@ -99,13 +94,17 @@ export default function MatchingPairs({
   const [matches, setMatches] = useState(shuffledmatches);
 
   useEffect(() => {
-    if (quizMode === "answered" && !playQuizQuestions[currentQuestion].isAnswerRight) {
+    if (
+      quizMode === "answered" &&
+      !playQuizQuestions[currentQuestion].isAnswerRight
+    ) {
       setTimeout(() => {
         setTexts(question.items);
         setMatches(question.items);
       }, 300);
     } else if (
       quizMode === "playing" &&
+      playQuizQuestions[currentQuestion] &&
       playQuizQuestions[currentQuestion].isAnswerRight === null &&
       currentQuestion !== 0
     ) {

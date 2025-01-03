@@ -57,7 +57,7 @@ type PlayQuizContextType = {
   state: PlayQuizState;
   dispatch: React.Dispatch<PlayQuizActions>;
   resetQuiz: () => void;
-  quiz: PlayQuizType['quiz']
+  quiz: PlayQuizType["quiz"];
 };
 
 const initialState: PlayQuizState = {
@@ -68,7 +68,6 @@ const initialState: PlayQuizState = {
   quizMode: "waiting",
   userAnswer: null,
   timeTakenArray: null,
-  
 };
 
 const quizRoomReducer = (
@@ -110,14 +109,20 @@ const QuizRoomContext = createContext<PlayQuizContextType | undefined>(
 export const PlayQuizProvider = ({
   children,
   quizProgress,
-  preview,}: {
+  preview,
+}: {
   children: React.ReactNode;
   quizProgress: PlayQuizType;
-  preview: boolean
+  preview: boolean;
 }) => {
   const [state, dispatch] = useReducer(quizRoomReducer, initialState);
-  const { userAnswer, quizMode, playQuizQuestions, currentQuestion } = state;
-
+  const {
+    userAnswer,
+    quizMode,
+    playQuizQuestions,
+    currentQuestion,
+    isResultSheetOpen,
+  } = state;
 
   const playRightWorngAnswerSound = (isAnswerRight: boolean | null) => {
     if (isAnswerRight === null) return;
@@ -156,13 +161,21 @@ export const PlayQuizProvider = ({
   );
 
   useEffect(() => {
+    if (isResultSheetOpen || quizMode === "ended")
+      console.log(playQuizQuestions.length - 1 === currentQuestion);
+
     saveQuizProgressFun({
       playQuizQuestions,
-      currentQuestion,
+      currentQuestion:
+        playQuizQuestions.length - 1 === currentQuestion
+          ? 0
+          : quizMode === "timeOut" || quizMode === "answered"
+          ? currentQuestion + 1
+          : currentQuestion,
       isCompleted: quizMode === "ended",
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentQuestion]);
+  }, [currentQuestion, isResultSheetOpen]);
 
   useEffect(() => {
     let initialQuestions: PlayQuizQuestion[];
@@ -282,7 +295,6 @@ export const PlayQuizProvider = ({
               return {
                 ...question,
                 isAnswerRight,
-                // timeTaken,
               };
             } else {
               return question;
@@ -301,7 +313,6 @@ export const PlayQuizProvider = ({
               return {
                 ...question,
                 isAnswerRight,
-                // timeTaken,
               };
             } else {
               return question;
@@ -332,7 +343,9 @@ export const PlayQuizProvider = ({
   // const userRate = session.data && quizProgress.quiz.ratings.find(e => e.userId === session.data.user.id)?.rating || 0;
 
   return (
-    <QuizRoomContext.Provider value={{ state, dispatch, resetQuiz, quiz: quizProgress.quiz  }}>
+    <QuizRoomContext.Provider
+      value={{ state, dispatch, resetQuiz, quiz: quizProgress.quiz }}
+    >
       {children}
     </QuizRoomContext.Provider>
   );

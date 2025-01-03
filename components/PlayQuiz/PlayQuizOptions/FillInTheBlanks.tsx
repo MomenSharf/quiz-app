@@ -54,7 +54,8 @@ export default function FillInTheBlanks({
          );
        }, 500);
      } else if (
-       quizMode === "playing" &&
+       quizMode === "playing" && 
+       playQuizQuestions[currentQuestion] && 
        playQuizQuestions[currentQuestion].isAnswerRight === null &&
        currentQuestion !== 0
      ) {
