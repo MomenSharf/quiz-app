@@ -1,4 +1,6 @@
+import ErrorPage from "@/components/Layout/ErrorPage";
 import LibraryProvider from "@/components/Library/LibraryProvider";
+import { FormMessage } from "@/components/ui/form";
 import {
   getLibraryFolders,
   getLibraryQuizzes,
@@ -29,8 +31,8 @@ export default async function Page({
     getLibraryFolders(sortBy),
   ]);
 
-  const { success: quizzesSuccess, quizzes } = quizzesResult;
-  const { success: folderWithQuizzesSuccess, folderWithQuizzes } =
+  const { success: quizzesSuccess, quizzes , message : quizzesMessage} = quizzesResult;
+  const { success: folderWithQuizzesSuccess, folderWithQuizzes, message : FoldersMessage } =
     foldersResult;
 
   if (
@@ -39,7 +41,8 @@ export default async function Page({
     !quizzes ||
     !folderWithQuizzes
   ) {
-    return <div>Failed to load dashboard folders and quizzes</div>;
+    const message = quizzesMessage ? quizzesMessage : FoldersMessage
+    return <ErrorPage message={message} />;
   }
 
   return (

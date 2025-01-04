@@ -1,3 +1,4 @@
+import ErrorPage from "@/components/Layout/ErrorPage";
 import Settings from "@/components/Settings/Settings";
 import { getSettingsUser } from "@/lib/actions/user";
 import { getCurrentUser } from "@/lib/auth";
@@ -11,9 +12,9 @@ export default async function Page() {
     return redirect("/login");
   }
 
-  const { success, user } = await getSettingsUser();
+  const { success, user, message } = await getSettingsUser();
   if (!success || !user) {
-    return "??";
+    return <ErrorPage message={message} />;
   }
   return <Settings user={user} />;
 }

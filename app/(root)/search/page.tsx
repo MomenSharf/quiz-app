@@ -1,3 +1,4 @@
+import ErrorPage from "@/components/Layout/ErrorPage";
 import QuizzesPanelsTable from "@/components/Quiz/QuizzesPanelsTable";
 import CategorySelector from "@/components/Search/CategorySelector";
 import SortBySelector from "@/components/Search/SortBySelector";
@@ -16,7 +17,9 @@ export default async function Page(props: {
   const sortOption = isValidSearchSortOption(searchParams?.sortBy)
     ? searchParams?.sortBy
     : undefined;
-  const category = isValidCategoryOption(searchParams?.category) ? searchParams?.category : undefined;
+  const category = isValidCategoryOption(searchParams?.category)
+    ? searchParams?.category
+    : undefined;
 
   const { success, message, quizzes } = await getSearchQuizzes({
     query,
@@ -25,7 +28,7 @@ export default async function Page(props: {
   });
 
   if (!success || !quizzes) {
-    return <p>{message}</p>;
+    return <ErrorPage message={message} />;
   }
   return (
     <div className="flex flex-col gap-3 p-2 sm:p-3">

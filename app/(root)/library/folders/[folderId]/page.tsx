@@ -1,8 +1,6 @@
+import ErrorPage from "@/components/Layout/ErrorPage";
 import LibraryProvider from "@/components/Library/LibraryProvider";
-import {
-  getDashboardFolder,
-  getFolderPath
-} from "@/lib/actions/library";
+import { getDashboardFolder, getFolderPath } from "@/lib/actions/library";
 
 import { getCurrentUser } from "@/lib/auth";
 import { isValidLibrarySortOption } from "@/lib/utils";
@@ -24,18 +22,17 @@ export default async function Page({
   const sortBy = isValidLibrarySortOption(searchParams.sortBy)
     ? searchParams.sortBy
     : "recentUpdate";
-    
+
   const [folderResult, folderPathResult] = await Promise.all([
     getDashboardFolder(sortBy, folderId),
     getFolderPath(folderId),
   ]);
 
-  const { success: folderSuccess, folder } = folderResult;
+  const { success: folderSuccess, folder, message } = folderResult;
   const { success: folderPathSuccess, path } = folderPathResult;
 
   if (!folderSuccess || !folder) {
-    return <div>Failed to load dashboard folders and quizzes</div>;
-    folder;
+    return <ErrorPage message={message} />;
   }
 
   return (

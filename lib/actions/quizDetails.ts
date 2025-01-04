@@ -36,6 +36,10 @@ export const getQuizDetails = async ({ quizId }: { quizId: string }) => {
       },
     });
 
+    if(!quizDetails) {
+      return { success : false, message : 'Quiz not found'}
+    }
+
     const quizDetailsWithIsBookmark = quizDetails
       ? {
           ...quizDetails,

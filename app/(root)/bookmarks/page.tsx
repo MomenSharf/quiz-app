@@ -1,3 +1,5 @@
+import { Icons } from "@/components/icons";
+import ErrorPage from "@/components/Layout/ErrorPage";
 import QuizzesPanelsTable from "@/components/Quiz/QuizzesPanelsTable";
 import CategorySelector from "@/components/Search/CategorySelector";
 import SortBySelector from "@/components/Search/SortBySelector";
@@ -16,7 +18,9 @@ export default async function Page(props: {
   const sortOption = isValidSearchSortOption(searchParams?.sortBy)
     ? searchParams?.sortBy
     : undefined;
-  const category = isValidCategoryOption(searchParams?.category) ? searchParams?.category : undefined;
+  const category = isValidCategoryOption(searchParams?.category)
+    ? searchParams?.category
+    : undefined;
 
   const { success, message, quizzes } = await getBookmarksQuizzes({
     query,
@@ -25,22 +29,31 @@ export default async function Page(props: {
   });
 
   if (!success || !quizzes) {
-    return <p>{message}</p>;
+    return <ErrorPage message={message} />;
   }
   return (
-    <div className="flex flex-col gap-3 p-2 sm:p-3">
-      {query && <h1 className="font-semibold max-w-full truncate">
-        Showing results for {`'${query}'`}
-      </h1>}
+    <div className="flex flex-col h-full gap-3 p-2 sm:p-3">
+      {query && (
+        <h1 className="font-semibold max-w-full truncate">
+          Showing results for {`'${query}'`}
+        </h1>
+      )}
       <div className="flex justify-end gap-1 sm:gap-3">
         <SortBySelector />
         <CategorySelector />
       </div>
-      <div>
+      <div className="h-full">
         {quizzes.length > 0 ? (
           <QuizzesPanelsTable quizzes={quizzes} />
         ) : (
-          <p className="font-bold text-lg">No quizzes found.</p>
+          <div className="flex justify-center items-center h-full">
+            <div className="flex flex-col gap-3 justify-center items-center">
+              <Icons.bookmarkOff className="w-16 h-16 sm:w-20 sm:h-20 fill-gray-dark" />
+              <p className="text-sm sm:text-base">
+                No bookmarked quizzes found
+              </p>
+            </div>
+          </div>
         )}
       </div>
     </div>
