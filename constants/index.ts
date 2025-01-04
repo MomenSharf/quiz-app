@@ -2,7 +2,7 @@ import { Icons } from "@/components/icons";
 import { Category, LibrarySortOption, SearchSortOption } from "@/types";
 import { THEME_COLORS as colorsType } from "@/types/theme";
 import { QuestionType } from "@prisma/client";
-import { LucideProps } from "lucide-react";
+import { icons, LucideProps } from "lucide-react";
 import {
   BookOpen,
   Cpu,
@@ -225,7 +225,6 @@ export const POINTS_OPTIONS = [
   { label: "20 points", value: 20 },
 ];
 
-
 export const CATEGORY_OPTIONS_LIST: {
   label: string;
   value: Category;
@@ -238,129 +237,135 @@ export const CATEGORY_OPTIONS_LIST: {
     value: "SCIENCE",
     id: 1,
     color: "--green-dark",
-    icon: BookOpen,
+    icon: Icons.science,
   },
-  { label: "Math", value: "MATH", id: 2, color: "--blue-dark", icon: Code },
+  {
+    label: "Math",
+    value: "MATH",
+    id: 2,
+    color: "--blue-dark",
+    icon: Icons.math,
+  },
   {
     label: "History",
     value: "HISTORY",
     id: 3,
     color: "--amber",
-    icon: Calendar,
+    icon: Icons.calendar,
   },
   {
     label: "Geography",
     value: "GEOGRAPHY",
     id: 4,
     color: "--teal",
-    icon: Globe,
+    icon: Icons.map,
   },
   {
     label: "Literature",
     value: "LITERATURE",
     id: 5,
     color: "--purple-dark",
-    icon: PenTool,
+    icon: Icons.book,
   },
   {
     label: "Technology",
     value: "TECHNOLOGY",
     id: 6,
     color: "--indigo",
-    icon: Cpu,
+    icon: Icons.cpu,
   },
-  { label: "Sports", value: "SPORTS", id: 7, color: "--red", icon: Heart },
-  { label: "Art", value: "ART", id: 8, color: "--pink", icon: Layers },
+  { label: "Sports", value: "SPORTS", id: 7, color: "--red", icon: Icons.shose },
+  { label: "Art", value: "ART", id: 8, color: "--pink", icon: Icons.paintbrush},
   {
     label: "Language",
     value: "LANGUAGE",
     id: 9,
     color: "--deep-orange",
-    icon: User,
+    icon: Icons.language,
   },
   {
     label: "General",
     value: "GENERAL_KNOWLEDGE",
     id: 10,
     color: "--yellow",
-    icon: Lightbulb,
+    icon: Icons.discover,
   },
   {
     label: "Politics",
     value: "POLITICS",
     id: 11,
     color: "--navy",
-    icon: Briefcase,
+    icon: Icons.politics,
   },
   {
     label: "Economics",
     value: "ECONOMICS",
     id: 12,
     color: "--orange",
-    icon: BarChart2,
+    icon: Icons.dollar,
   },
   {
     label: "Philosophy",
     value: "PHILOSOPHY",
     id: 13,
     color: "--gray-extra-dark",
-    icon: FileText,
+    icon: Icons.document,
   },
   {
     label: "Psychology",
     value: "PSYCHOLOGY",
     id: 14,
     color: "--pink-dark",
-    icon: Github,
+    icon: Icons.brain,
   },
   {
     label: "Biology",
     value: "BIOLOGY",
     id: 15,
     color: "--light-green",
-    icon: Music,
+    icon: Icons.microscope,
   },
   {
     label: "Chemistry",
     value: "CHEMISTRY",
     id: 16,
     color: "--blue",
-    icon: Video,
+    icon: Icons.chemistry,
   },
   {
     label: "Physics",
     value: "PHYSICS",
     id: 17,
     color: "--gray-dark",
-    icon: FileText,
+    icon: Icons.physics,
   },
   {
     label: "Computer",
     value: "COMPUTER_SCIENCE",
     id: 18,
     color: "--amber",
-    icon: Cpu,
+    icon: Icons.computer,
   },
   {
     label: "Religion",
     value: "RELIGION",
     id: 19,
     color: "--purple-dark",
-    icon: Heart,
+    icon: Icons.moon,
   },
   {
     label: "Nature",
     value: "NATURE",
     id: 20,
     color: "--green-dark",
-    icon: Globe,
+    icon: Icons.mountain,
   },
   {
     label: "Education",
     value: "EDUCATION",
     id: 21,
     color: "--gray-medium",
-    icon: BookOpen,
+    icon: Icons.education,
   },
 ];
 
