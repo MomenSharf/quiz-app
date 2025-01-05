@@ -3,6 +3,8 @@
 import { Category, SearchSortOption } from "@/types";
 import { db } from "../db";
 import { getCurrentUser } from "../auth";
+import { unstable_noStore as noStore } from 'next/cache';
+
 
 export const getSearchQuizzes = async ({
   page = 1,
@@ -37,6 +39,7 @@ export const getSearchQuizzes = async ({
         message: "Query is required to search quizzes.",
       };
     }
+    noStore()
     const quizzes = await db.quiz.findMany({
       where: {
         visibility: 'PUBLIC',

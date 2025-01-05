@@ -20,7 +20,7 @@ export default function UseScrollerContainer({
       <div className="relative w-full overflow-hidden">
         {isLeftVisible && (
           <div
-            className="cursor-pointer group absolute z-[2] top-1/2 left-1 -translate-y-1/2 p-2 bg-card/70 hover:bg-card transition-all border rounded-full flex justify-center items-center"
+            className="w-8 h-8 cursor-pointer group absolute z-[2] top-1/2 left-1 -translate-y-1/2 p-2 bg-card/70 hover:bg-card transition-all border rounded-full flex justify-center items-center"
             onClick={goLeft}
           >
             <ChevronLeft
@@ -37,7 +37,7 @@ export default function UseScrollerContainer({
         </div>
         {isRightVisible && (
           <div
-            className="cursor-pointer group absolute z-[2] top-1/2 right-1 -translate-y-1/2 p-2 bg-card/70 hover:bg-card transition-all border rounded-full flex justify-center items-center"
+            className="w-8 h-8 cursor-pointer group absolute z-[2] top-1/2 right-1 -translate-y-1/2 p-2 bg-card/70 hover:bg-card transition-all border rounded-full flex justify-center items-center"
             onClick={goRight}
           >
             <ChevronRight className="w-3 h-3 m:w-5 sm:h-5 group-hover:text-primary" />

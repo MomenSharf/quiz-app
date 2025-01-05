@@ -4,6 +4,8 @@ import { db } from "@/lib/db";
 import { getCurrentUser } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
 import { FolderPathSegment, LibrarySortOption } from "@/types";
+import { unstable_noStore as noStore } from 'next/cache';
+
 
 // Get
 export const getLibraryQuizzes = async (
@@ -16,6 +18,7 @@ export const getLibraryQuizzes = async (
     return { success: false, message: "Unauthorized: User is not logged in." };
   }
   try {
+    noStore()
     const orderByMap: Record<LibrarySortOption, Record<string, string>> = {
       alphabetical: { title: "asc" },
       reverseAlphabetical: { title: "desc" },
@@ -26,7 +29,6 @@ export const getLibraryQuizzes = async (
     };
 
     const orderBy = orderByMap[sortOption];
-
     const quizzes = await db.quiz.findMany({
       where: { userId: session.user.id, folderId },
       include: {
@@ -62,6 +64,7 @@ export const getLibraryFolders = async (
     return { success: false, message: "Unauthorized: User is not logged in." };
   }
   try {
+    noStore()
     const orderByMap: Record<LibrarySortOption, Record<string, string>> = {
       alphabetical: { title: "asc" },
       reverseAlphabetical: { title: "desc" },
@@ -169,6 +172,7 @@ export async function getFolderPath(folderId?: string): Promise<{
   path?: FolderPathSegment[];
 }> {
   try {
+    noStore()
     const folder = await db.folder.findUnique({
       where: { id: folderId },
       include: { parent: true }, // Include the parent folder for recursion
@@ -363,6 +367,7 @@ export const duplicateQuiz = async ({
     const quiz = await db.quiz.create({
       data: {
         title: newQuizTitle,
+        visibility: 'PRIVATE',
         ...data,
         questions: {
           create: questions,

@@ -2,6 +2,8 @@
 import { PlayQuizQuestion } from "@/components/PlayQuiz/Context";
 import { getCurrentUser } from "../auth";
 import { db } from "../db";
+import { unstable_noStore as noStore } from 'next/cache';
+
 
 export const getPlayQuiz = async (quizId: string, mode: "play" | "preview") => {
   const session = await getCurrentUser();
@@ -11,7 +13,7 @@ export const getPlayQuiz = async (quizId: string, mode: "play" | "preview") => {
   }
 
   try {
-    // Await the Prisma call to get the actual data
+    noStore()
     let quizProgress = await db.quizProgress.findUnique({
       where: {
         userId_quizId: {
@@ -90,12 +92,14 @@ export const getPlayQuiz = async (quizId: string, mode: "play" | "preview") => {
         });
       }
     }
+    if(!quizProgress) {
+      return {success: false, message: "Error while loading quiz data"};
+    }
 
     return { success: true, quizProgress };
 
-    // Return the quiz progress data (or handle it as needed)
   } catch (error) {
-    return { success: false, message: "Error while loading quiz data", error };
+    return { success: false, message: "Error while loading quiz data" };
   }
 };
 export const saveQuizProgress = async (

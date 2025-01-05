@@ -1,3 +1,4 @@
+import ErrorPage from "@/components/Layout/ErrorPage";
 import Provider from "@/components/PlayQuiz/Provider";
 import { getPlayQuiz } from "@/lib/actions/playQuiz";
 import { getCurrentUser } from "@/lib/auth";
@@ -21,10 +22,14 @@ export default async function Page(props: {
   const searchParams = await props.searchParams;
   const mode = searchParams?.mode === "preview" ? "preview" : "play";
 
-  const { success, quizProgress } = await getPlayQuiz(quizId, mode);
+  const { success, quizProgress, message } = await getPlayQuiz(quizId, mode);
 
   if (!success || !quizProgress) {
-    return notFound();
+    return (
+      <div className="w-full h-screen flex items-center justify-center main-background">
+        <ErrorPage message={message} />;
+      </div>
+    );
   }
 
   const quiz = intQuiz(quizProgress.quiz);

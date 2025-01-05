@@ -1,7 +1,9 @@
 // import Editor from "@/components/Editor2/Editor";
 import EditorProvider from "@/components/Editor/EditorProvider";
+import ErrorPage from "@/components/Layout/ErrorPage";
 import { getEditorQuiz } from "@/lib/actions/editor";
 import { getCurrentUser } from "@/lib/auth";
+import { intQuiz } from "@/lib/utils";
 import { notFound, redirect } from "next/navigation";
 import React from "react";
 
@@ -16,12 +18,17 @@ export default async function Page({
     return redirect("/login");
   }
 
-  const {success, initialQuiz} = await getEditorQuiz({quizId});
+  const { success, initialQuiz, message } = await getEditorQuiz({
+    quizId,
+  });
 
-  if (!initialQuiz) {
-    return notFound();
+  if (!initialQuiz || !success) {
+    return (
+      <div className="w-full h-screen flex items-center justify-center main-background">
+        <ErrorPage message={message} />;
+      </div>
+    );
   }
 
-  // return <Editor quiz={quiz} />;
   return <EditorProvider initialQuiz={initialQuiz} />;
 }

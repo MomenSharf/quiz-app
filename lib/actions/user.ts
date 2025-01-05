@@ -4,6 +4,8 @@ import { revalidatePath } from "next/cache";
 import { getCurrentUser } from "../auth";
 import { db } from "../db";
 import { ProfileShemaType } from "../validations/userShemas";
+import { unstable_noStore as noStore } from 'next/cache';
+
 
 export const getSettingsUser = async () => {
   const session = await getCurrentUser();
@@ -13,6 +15,7 @@ export const getSettingsUser = async () => {
   }
 
   try {
+    noStore()
     const user = await db.user.findFirst({ where: { id: session.user.id } });
     return { success: true, user };
   } catch (error) {

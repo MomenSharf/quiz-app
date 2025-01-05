@@ -7,7 +7,8 @@ export default function ErrorSpan({
   error:
     | FieldError
     | Merge<FieldError, (FieldError | undefined)[]>
-    | undefined;
+    | undefined
+    | null;
 }) {
   return (
     error && (

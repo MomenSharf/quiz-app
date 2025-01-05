@@ -17,6 +17,7 @@ export default function PickAnswer({
       setValue,
       formState: { errors },
       trigger,
+      getFieldState,
     },
   } = useEditorContext();
 
@@ -52,13 +53,12 @@ export default function PickAnswer({
 
   if (question.type !== "PICK_ANSWER") return;
 
+  const { error } = getFieldState(`questions.${questionIndex}.items`);
+
   const oneCorrectAnswerError =
-    errors.questions &&
-    (errors.questions[questionIndex] as {
-      items: {
-        oneCorrectAnswer: FieldError;
-      };
-    });
+    error && "oneCorrectAnswer" in error
+      ? (error.oneCorrectAnswer as FieldError)
+      : null;
 
   const addOption = () => {
     setValue(`questions.${questionIndex}.items`, [
@@ -97,13 +97,7 @@ export default function PickAnswer({
               );
             })}
           </Reorder.Group>
-          <ErrorSpan
-            error={
-              oneCorrectAnswerError?.items &&
-              oneCorrectAnswerError?.items.oneCorrectAnswer &&
-              oneCorrectAnswerError?.items.oneCorrectAnswer
-            }
-          />
+          <ErrorSpan error={oneCorrectAnswerError} />
 
           {question.items.length < 8 && (
             <Button type="button" onClick={addOption}>

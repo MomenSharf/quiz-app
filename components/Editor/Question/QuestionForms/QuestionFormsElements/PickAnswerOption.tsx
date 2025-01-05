@@ -17,6 +17,7 @@ import { cn } from "@/lib/utils";
 import { ItemsSchemaType } from "@/lib/validations/quizSchemas";
 import { Reorder, useDragControls, useMotionValue } from "framer-motion";
 import { GripVertical, Trash } from "lucide-react";
+import { FieldError } from "react-hook-form";
 
 type OprionProps = {
   questionIndex: number;
@@ -55,12 +56,14 @@ OprionProps) {
           item.isCorrect ? false : true,
           { shouldValidate: true }
         );
-        if (errors && Object.values(errors).length !== 0)
+        
+        if (itemsError && "oneCorrectAnswer" in itemsError)
           trigger(`questions.${questionIndex}.items`);
       }
     }
   };
-
+  const { error: itemsError } = getFieldState(`questions.${questionIndex}.items`);
+  
   const { error } = getFieldState(
     `questions.${questionIndex}.items.${itemIndex}.text`
   );
@@ -74,7 +77,7 @@ OprionProps) {
         animate={{ border: "1px solid var(hsl(--primary))" }}
         dragControls={dragControls}
         className={cn("flex rounded group relative", {
-          'mb-4': error
+          "mb-4": error,
         })}
       >
         <FormField

@@ -1,12 +1,15 @@
 "use server";
 import { getCurrentUser } from "../auth";
 import { db } from "../db";
+import { unstable_noStore as noStore } from 'next/cache';
+
 
 export const getProfile = async ({ username }: { username: string }) => {
   const session = await getCurrentUser();
   const userId = session?.user.id;
   
   try {
+    noStore()
     const profile = await db.user.findUnique({
       where: { username },
       include: {

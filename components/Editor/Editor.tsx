@@ -14,13 +14,7 @@ export default function Editor() {
     state: { isImageEditorOpenWithFiles, isSettingsOpen },
   } = useEditorContext();
 
-  const onSubmit = (values: quizSchemaType) => {
-    if (!isSettingsOpen)
-      dispatch({
-        type: "SET_IS_SETTINGS_OPEN",
-        payload: true,
-      });
-  };
+  const onSubmit = (values: quizSchemaType) => {};
   return (
     <Form {...form}>
       <form

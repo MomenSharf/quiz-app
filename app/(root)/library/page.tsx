@@ -8,6 +8,7 @@ import {
 
 import { getCurrentUser } from "@/lib/auth";
 import { isValidLibrarySortOption } from "@/lib/utils";
+import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 
@@ -44,6 +45,8 @@ export default async function Page({
     const message = quizzesMessage ? quizzesMessage : FoldersMessage
     return <ErrorPage message={message} />;
   }
+
+   revalidatePath('/library')
 
   return (
     <div className="flex w-full h-full">

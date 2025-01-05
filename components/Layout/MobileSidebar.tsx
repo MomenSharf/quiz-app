@@ -41,7 +41,7 @@ export default function MobileSideBar({
         <SheetHeader className="bg-[#252834]">
           {user ? (
             <div className="flex gap-3 p-5 items-center">
-              <UserAvatarImage imageUrl={user.image || null} />
+              <UserAvatarImage user={user}/>
               <div className="flex flex-col text-start max-w-32">
                 <p className="font-semibold truncate">{user.name}</p>
                 <p className="font-semibold truncate">{user.email}</p>

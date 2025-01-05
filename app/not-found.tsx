@@ -3,7 +3,7 @@ import React from "react";
 
 export default function NotFound() {
   return (
-    <div className="min-h-screen w-full flex justify-center items-center bg-[var(--main-bg)]">
+    <div className="min-h-screen w-full flex justify-center items-center main-background">
       <NotFoundPage />
     </div>
   );

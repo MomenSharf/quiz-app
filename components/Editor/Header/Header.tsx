@@ -129,7 +129,8 @@ export default function Header() {
           className="gap-1 rounded-xl"
           onClick={() => {
             if (quizSchema.safeParse(getValues()).success)
-              router.push(`/play/${quizId}?mode=preview`);
+              ''
+              // router.push(`/play/${quizId}?mode=preview`);
           }}
         >
           <Eye className="w-4 h-4" />

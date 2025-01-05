@@ -96,7 +96,7 @@ export default function SearchInput() {
           }
         }}
       >
-        <Search className="w-4 h-4 text-gray-medium " />
+        <Search className="w-4 h-4 text-gray-medium" />
       </Button>
     </div>
   );

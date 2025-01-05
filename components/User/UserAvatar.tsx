@@ -31,7 +31,7 @@ export function UserAvatar({ user }: { user: nextAuthUser }) {
         <UserAvatarImage user={user} />
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56 mr-5 sm:ml-10">
-        <DropdownMenuLabel className="p-">
+        <DropdownMenuLabel>
           <div className="flex gap-3 items-center bg-primary/10 p-2 rounded">
             <UserAvatarImage user={user} />
             <div className="flex flex-col text-start max-w-32">

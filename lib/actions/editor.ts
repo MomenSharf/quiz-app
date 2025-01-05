@@ -9,15 +9,18 @@ import { Prisma, QuestionType, Quiz, Visibility } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { getCurrentUser } from "../auth";
 import { db } from "../db";
+import { unstable_noStore as noStore } from 'next/cache';
 
 export const getEditorQuiz = async ({ quizId }: { quizId: string }) => {
+  
   const session = await getCurrentUser();
-
+  
   if (!session) {
     return { success: false, message: "Unauthorized: User is not logged in." };
   }
-
+  
   try {
+    noStore()
     const initialQuiz = await db.quiz.findUnique({
       where: {
         id: quizId,
@@ -54,11 +57,12 @@ export const saveEditorQuiz = async (
 
   const isValid = quizSchema.safeParse(data).success;
   const mapQuestion = (
-    question: questionSchemaType
+    question: questionSchemaType,
+    index?: number
   ): Prisma.QuestionCreateWithoutQuizInput => {
     const base = {
       type: question.type,
-      questionOrder: question.questionOrder,
+      questionOrder: index ? index : question.questionOrder,
       timeLimit: question.timeLimit,
       points: question.points,
       imageUrl: "imageUrl" in question ? question.imageUrl : undefined,
@@ -138,7 +142,7 @@ export const saveEditorQuiz = async (
       imageUrl: data.imageUrl,
     };
 
-    const questions = data.questions.map(mapQuestion);
+    const questions = data.questions.filter(e => e.type !== 'UNSELECTED').map(mapQuestion);
 
     const quiz = await db.quiz.update({
       where: {

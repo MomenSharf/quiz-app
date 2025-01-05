@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { useLibraryContext } from "../Context";
 import Loader from "@/components/Layout/Loader";
+import { useRouter } from "next/navigation";
 
 export default function NewQuizButton({
   folderId,
@@ -13,6 +14,7 @@ export default function NewQuizButton({
   ...props
 }: ButtonProps & { folderId?: string }) {
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
   const createQuiz = async ({
     folderId,
     pathname,
@@ -21,9 +23,10 @@ export default function NewQuizButton({
     pathname: string;
   }) => {
     setLoading(true);
-    const { success, message } = await newQuiz({ folderId, pathname });
-    if (success) {
+    const { quiz, success, message } = await newQuiz({ folderId, pathname });
+    if (success && quiz) {
       toast({ description: "Quiz created successfully" });
+      router.push(`/editor/${quiz.id}`);
     } else {
       toast({
         description: message,

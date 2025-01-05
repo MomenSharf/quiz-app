@@ -62,10 +62,10 @@ export const fillInTheBlankSchema = z.object({
         isBlank: z.boolean(),
       })
     )
-    .min(2, "At least two options are required")
-    .refine((items) => items.find((item) => item.isBlank), {
-      message: "At least one blank item",
-      path: ["oneBlank"],
+    .min(3, "At least three items are required")
+    .refine((items) => items.filter((item) => item.isBlank).length > 1, {
+      message: "At least tow blank items",
+      path: ["towBlanks"],
     }),
 });
 

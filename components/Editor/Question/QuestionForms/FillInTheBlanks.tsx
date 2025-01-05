@@ -17,6 +17,7 @@ export default function FillInTheBlanks({
       watch,
       formState: { errors },
       trigger,
+      getFieldState,
     },
   } = useEditorContext();
   const question = getValues(`questions.${questionIndex}`);
@@ -49,6 +50,9 @@ export default function FillInTheBlanks({
             })
           : []
       );
+      if(error) {
+        trigger(`questions.${questionIndex}.items`)
+      }
     } else {
       setValue(`questions.${questionIndex}.items`, []);
     }
@@ -70,20 +74,19 @@ export default function FillInTheBlanks({
         }
       })
     );
-    if (oneBlankError?.items.oneBlank) {
-      trigger(`questions.${questionIndex}`);
+    if (towBlanksError) {
+      trigger(`questions.${questionIndex}.items`);
     }
   };
 
   if (question.type !== "FILL_IN_THE_BLANK") return;
 
-  const oneBlankError =
-    errors.questions &&
-    (errors.questions[questionIndex] as {
-      items: {
-        oneBlank: FieldError;
-      };
-    });
+  const { error } = getFieldState(`questions.${questionIndex}.items`);
+
+  const towBlanksError =
+    error && "towBlanks" in error ? (error.towBlanks as FieldError) : null;
+    console.log(towBlanksError);
+    
 
   return (
     <div className="flex flex-col gap-1">
@@ -111,11 +114,8 @@ export default function FillInTheBlanks({
             );
           })}
       </div>
-      {question.question && (
-        <ErrorSpan
-          error={oneBlankError?.items && oneBlankError?.items.oneBlank}
-        />
-      )}
+      {question.question && <ErrorSpan error={error } />}
+      {question.question && <ErrorSpan error={towBlanksError} />}
       {question.items && question.items.length === 0 && (
         <ErrorSpan
           error={{

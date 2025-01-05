@@ -146,10 +146,10 @@ export default function DataCard({
             <Button
               size="icon"
               variant="outline"
-              onClick={() => router.push(`/editor/${data.id}`)}
               className="rounded-lg"
+              onClick={() => router.push(`/editor/${data.id}`)}
             >
-              <Icons.penLine className="w-4 h-4 fill-gray-dark" />
+              <Icons.edit className="w-4 h-4 stroke-gray-dark" />
             </Button>
           </div>
         )}
