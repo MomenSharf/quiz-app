@@ -18,6 +18,7 @@ export default function ResultSheet() {
   const {
     dispatch,
     state: { isResultSheetOpen, currentQuestion, playQuizQuestions, quizMode },
+    goNextQuestion,
   } = usePlayQuizContext();
 
   const isRight =
@@ -30,7 +31,7 @@ export default function ResultSheet() {
         playQuizQuestions[currentQuestion].isAnswerRight;
 
   return (
-    <Sheet open={isResultSheetOpen}>
+    <Sheet open={isResultSheetOpen} onOpenChange={(e) => dispatch({type: 'SET_IS_RESULT_SHEET_OPEN', payload: e})}>
       <SheetContent
         side="bottom"
         hideClose
@@ -81,16 +82,7 @@ export default function ResultSheet() {
               "bg-destructive hover:bg-destructive/90 focus-visible:ring-destructive":
                 !isRight,
             })}
-            onClick={() => {
-              dispatch({
-                type: "SET_CURRENT_QUESTION",
-                payload: currentQuestion + 1,
-              });
-              dispatch({ type: "SET_IS_RESULT_SHEET_OPEN", payload: false });
-              if (currentQuestion !== playQuizQuestions.length - 1)
-                dispatch({ type: "SET_QUIZ_MODE", payload: "playing" });
-              else dispatch({ type: "SET_QUIZ_MODE", payload: "ended" });
-            }}
+            onClick={goNextQuestion}
           >
             Continue
           </Button>

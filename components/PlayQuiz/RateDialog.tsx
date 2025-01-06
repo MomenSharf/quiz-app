@@ -22,9 +22,10 @@ export default function RateDialog() {
   const [isMouseEnter, setIsMouseEnter] = useState(false);
 
   const session = useSession();
-  const { quiz } = usePlayQuizContext();
+  const { quiz, mode } = usePlayQuizContext();
 
   useEffect(() => {
+    if (mode === "preview") return;
     const userRate =
       (session.data &&
         quiz.ratings.find((e) => e.userId === session.data.user.id)?.rate) ||
@@ -65,7 +66,7 @@ export default function RateDialog() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="w-20 h-20 sm:w-28 sm:h-28 flex-col gap-1 bg-amber hover:bg-amber/90">
+        <Button className="w-20 h-20 sm:w-28 sm:h-28 flex-col gap-1 bg-amber hover:bg-amber/90" disabled={mode === 'preview'}>
           <Icons.star className="w-10 h-10 sm:w-14 sm:h-14 fill-white" />
           <span className="text-xs">Rate</span>
         </Button>

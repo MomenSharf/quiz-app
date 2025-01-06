@@ -174,6 +174,8 @@ export default function MatchingPairs({
               });
             }
           }}
+          disabled={(quizMode === "answered" || quizMode === "timeOut")}
+
         >
           Submit
         </Button>

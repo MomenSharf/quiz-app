@@ -80,9 +80,9 @@ export default function ShortAnswer({
                   }}
                   initial={{ x: 0, scale: 1 }}
                   animate={{
-                    x: isShaking ? [0, -10, 10, -10, 10, 0] : 0,
-                    scale: isCorrect ? [1, 1.1, 1] : 1,
-                    rotate: isCorrect ? [0, 5, -5, 0] : 0,
+                    x: isShaking ? [0, -5, 5, -5, 5, 0] : 0,
+                    scale: isCorrect ? [1, 1.01, 1] : 1,
+                    rotate: isCorrect ? [0, 1, -1, 0] : 0,
                   }}
                   transition={{
                     duration: 0.3,
@@ -114,7 +114,11 @@ export default function ShortAnswer({
             <p>{question.correctAnswer}</p>
           </div>
         )}
-        <Button className="self-end" type="submit">
+        <Button
+          className="self-end"
+          type="submit"
+          disabled={quizMode === "answered" || quizMode === "timeOut"}
+        >
           Submit
         </Button>
       </form>

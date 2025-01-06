@@ -13,6 +13,7 @@ import RateDialog from "./RateDialog";
 export default function QuizResult() {
   const {
     state: { playQuizQuestions, timeTakenArray, quizMode },
+    mode
   } = usePlayQuizContext();
   const [g, setG] = useState(false);
 
@@ -182,7 +183,7 @@ export default function QuizResult() {
             }}
             className="animated-item"
           >
-            <Button className="w-20 h-20 sm:w-28 sm:h-28 flex-col gap-1 bg-pink hover:bg-pink/90">
+            <Button className="w-20 h-20 sm:w-28 sm:h-28 flex-col gap-1 bg-pink hover:bg-pink/90" disabled={mode === 'preview'}>
               <Icons.send className="w-10 h-10 sm:w-14 sm:h-14 fill-white" />
               <span className="text-xs">Share</span>
             </Button>

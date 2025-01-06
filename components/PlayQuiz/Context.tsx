@@ -1,5 +1,5 @@
 import { saveQuizProgress } from "@/lib/actions/playQuiz";
-import { EditorQuiz, PlayQuizType } from "@/types";
+import { EditorQuiz, PlayQuizMode, PlayQuizType } from "@/types";
 import {
   createContext,
   useCallback,
@@ -57,7 +57,9 @@ type PlayQuizContextType = {
   state: PlayQuizState;
   dispatch: React.Dispatch<PlayQuizActions>;
   resetQuiz: () => void;
+  goNextQuestion: () => void;
   quiz: PlayQuizType["quiz"];
+  mode: PlayQuizMode
 };
 
 const initialState: PlayQuizState = {
@@ -109,11 +111,11 @@ const QuizRoomContext = createContext<PlayQuizContextType | undefined>(
 export const PlayQuizProvider = ({
   children,
   quizProgress,
-  preview,
+  mode,
 }: {
   children: React.ReactNode;
   quizProgress: PlayQuizType;
-  preview: boolean;
+  mode: PlayQuizMode;
 }) => {
   const [state, dispatch] = useReducer(quizRoomReducer, initialState);
   const {
@@ -151,27 +153,36 @@ export const PlayQuizProvider = ({
       currentQuestion: number;
       isCompleted: boolean;
     }) => {
-      await saveQuizProgress(quizProgress.quiz.id, {
-        playQuizQuestions: data.playQuizQuestions,
-        currentQuestion: data.currentQuestion,
-        isCompleted: data.isCompleted,
-      });
+      console.log("gg");
+      if (mode === "play") {
+        console.log("save");
+
+        await saveQuizProgress(quizProgress.quiz.id, {
+          playQuizQuestions: data.playQuizQuestions,
+          currentQuestion: data.currentQuestion,
+          isCompleted: data.isCompleted,
+        });
+      }
     },
     [quizProgress.quiz.id]
   );
 
   useEffect(() => {
-    if (isResultSheetOpen || quizMode === "ended")
-    saveQuizProgressFun({
-      playQuizQuestions,
-      currentQuestion:
-        playQuizQuestions.length - 1 === currentQuestion
-          ? 0
-          : quizMode === "timeOut" || quizMode === "answered"
-          ? currentQuestion + 1
-          : currentQuestion,
-      isCompleted: quizMode === "ended",
-    });
+    try {
+      if (isResultSheetOpen || quizMode === "ended")
+        saveQuizProgressFun({
+          playQuizQuestions,
+          currentQuestion:
+            playQuizQuestions.length - 1 === currentQuestion
+              ? 0
+              : quizMode === "timeOut" || quizMode === "answered"
+              ? currentQuestion + 1
+              : currentQuestion,
+          isCompleted: quizMode === "ended",
+        });
+    } catch (error) {
+      return;
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentQuestion, isResultSheetOpen]);
 
@@ -338,11 +349,21 @@ export const PlayQuizProvider = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [quizMode]);
 
-  // const userRate = session.data && quizProgress.quiz.ratings.find(e => e.userId === session.data.user.id)?.rating || 0;
+  const goNextQuestion = () => {
+    dispatch({
+      type: "SET_CURRENT_QUESTION",
+      payload: currentQuestion + 1,
+    });
+    dispatch({ type: "SET_IS_RESULT_SHEET_OPEN", payload: false });
+    if (currentQuestion !== playQuizQuestions.length - 1)
+      dispatch({ type: "SET_QUIZ_MODE", payload: "playing" });
+    else dispatch({ type: "SET_QUIZ_MODE", payload: "ended" });
+  }
+
 
   return (
     <QuizRoomContext.Provider
-      value={{ state, dispatch, resetQuiz, quiz: quizProgress.quiz }}
+      value={{ state, dispatch, resetQuiz, goNextQuestion, quiz: quizProgress.quiz, mode }}
     >
       {children}
     </QuizRoomContext.Provider>

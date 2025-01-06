@@ -44,24 +44,26 @@ export default function FillInTheBlanks({
     playQuizQuestions[currentQuestion].isAnswerRight &&
     userAnswer?.type === "FILL_IN_THE_BLANKS";
 
-    useEffect(() => {
+  useEffect(() => {
     if (quizMode === "answered" || quizMode === "timeOut") {
-       setTimeout(() => {
-         setBlanks(
-           question.items.sort(
-             (a, b) => (a.order ? a.order : 0) - (b.order ? b.order : 0)
-           )
-         );
-       }, 500);
-     } else if (
-       quizMode === "playing" && 
-       playQuizQuestions[currentQuestion] && 
-       playQuizQuestions[currentQuestion].isAnswerRight === null &&
-       currentQuestion !== 0
-     ) {
-       setBlanks(shuffleArray([...question.items.filter(e => e.isBlank)]));
-     }
-    }, [ quizMode])
+      setTimeout(() => {
+        const gg = question.items
+          .filter((item) => item.isBlank)
+          .map((item, index) => {
+            return { item, index: blanksIndexes[index] };
+          });
+        setUserChoices(gg);
+      }, 500);
+    } else if (
+      quizMode === "playing" &&
+      playQuizQuestions[currentQuestion] &&
+      playQuizQuestions[currentQuestion].isAnswerRight === null &&
+      currentQuestion !== 0
+    ) {
+      setBlanks(shuffleArray([...question.items.filter((e) => e.isBlank)]));
+      setUserChoices([]);
+    }
+  }, [quizMode]);
 
   return (
     <div className="flex flex-col gap-5">
@@ -82,11 +84,10 @@ export default function FillInTheBlanks({
                       setUserChoices((prevs) =>
                         prevs.filter((prev) => prev.item.id !== choice.item.id)
                       );
-                     
                     }}
                     initial={{ x: 0, scale: 1 }}
                     animate={{
-                      x: isShaking ? [0, -10, 10, -10, 10, 0] : 0,
+                      x: isShaking ? [0, -5, 5, -5, 5, 0] : 0,
                       scale: isCorrect ? [1, 1.1, 1] : 1,
                       rotate: isCorrect ? [0, 5, -5, 0] : 0,
                     }}
@@ -107,31 +108,35 @@ export default function FillInTheBlanks({
             );
           })}
       </div>
-      <div className="flex gap-1 flex-wrap">
-        {blanks.map((item) => {
-          return (
-            <Button
-              key={item.id}
-              variant="outline"
-              onClick={() => {
-                if (!userChoices.find((choice) => choice.item.id === item.id)) {
-                  setUserChoices((prev) => [
-                    ...prev,
-                    { item, index: blanksIndexes[userChoices.length] },
-                  ]);
-                  setBlanks((prevs) =>
-                    prevs.filter((prev) => prev.id !== item.id)
-                  );
-                }
-                if (blanksItems.length === userChoices.length + 1)
-                  setError(null);
-              }}
-            >
-              {item.text}
-            </Button>
-          );
-        })}
-      </div>
+      {(quizMode === "waiting" || quizMode === "playing") && (
+        <div className="flex gap-1 flex-wrap">
+          {blanks.map((item) => {
+            return (
+              <Button
+                key={item.id}
+                variant="outline"
+                onClick={() => {
+                  if (
+                    !userChoices.find((choice) => choice.item.id === item.id)
+                  ) {
+                    setUserChoices((prev) => [
+                      ...prev,
+                      { item, index: blanksIndexes[userChoices.length] },
+                    ]);
+                    setBlanks((prevs) =>
+                      prevs.filter((prev) => prev.id !== item.id)
+                    );
+                  }
+                  if (blanksItems.length === userChoices.length + 1)
+                    setError(null);
+                }}
+              >
+                {item.text}
+              </Button>
+            );
+          })}
+        </div>
+      )}
       {error && <span className="text-xs text-destructive">{error}</span>}
       <Button
         onClick={() => {
@@ -147,6 +152,7 @@ export default function FillInTheBlanks({
             });
           }
         }}
+        disabled={quizMode === "answered" || quizMode === "timeOut"}
       >
         Check
       </Button>

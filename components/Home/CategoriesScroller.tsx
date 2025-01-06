@@ -20,7 +20,7 @@ export default function CategoriesScroller() {
               href={`/discover`}
             >
               <Icon
-                className="w-7 h-7 fill-foreground"
+                className="w-7 h-7 fill-gray-dark"
               />
               <span className="text-xs text-gray-medium">
                 {label}

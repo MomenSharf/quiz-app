@@ -1,16 +1,13 @@
 import ErrorPage from "@/components/Layout/ErrorPage";
 import LibraryProvider from "@/components/Library/LibraryProvider";
-import { FormMessage } from "@/components/ui/form";
-import {
-  getLibraryFolders,
-  getLibraryQuizzes,
-} from "@/lib/actions/library";
+import { getLibraryFolders, getLibraryQuizzes } from "@/lib/actions/library";
 
 import { getCurrentUser } from "@/lib/auth";
 import { isValidLibrarySortOption } from "@/lib/utils";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
+export const revalidate = 60
 
 export default async function Page({
   searchParams,
@@ -32,9 +29,16 @@ export default async function Page({
     getLibraryFolders(sortBy),
   ]);
 
-  const { success: quizzesSuccess, quizzes , message : quizzesMessage} = quizzesResult;
-  const { success: folderWithQuizzesSuccess, folderWithQuizzes, message : FoldersMessage } =
-    foldersResult;
+  const {
+    success: quizzesSuccess,
+    quizzes,
+    message: quizzesMessage,
+  } = quizzesResult;
+  const {
+    success: folderWithQuizzesSuccess,
+    folderWithQuizzes,
+    message: FoldersMessage,
+  } = foldersResult;
 
   if (
     !quizzesSuccess ||
@@ -42,11 +46,11 @@ export default async function Page({
     !quizzes ||
     !folderWithQuizzes
   ) {
-    const message = quizzesMessage ? quizzesMessage : FoldersMessage
+    const message = quizzesMessage ? quizzesMessage : FoldersMessage;
     return <ErrorPage message={message} />;
   }
 
-   revalidatePath('/library')
+  revalidatePath("/library");
 
   return (
     <div className="flex w-full h-full">

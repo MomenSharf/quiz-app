@@ -143,7 +143,6 @@ export type PlayQuizType = Prisma.QuizProgressGetPayload<{
         ratings: true;
       };
     };
-    user: true;
   };
 }>;
 
@@ -161,6 +160,9 @@ export type UserProfile = Prisma.UserGetPayload<{
     };
   };
 }> ;
+
+
+export type PlayQuizMode = 'play' | 'preview'
 
 
 //

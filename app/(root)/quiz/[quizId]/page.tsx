@@ -2,7 +2,7 @@ import ErrorPage from "@/components/Layout/ErrorPage";
 import Quiz from "@/components/QuizDetails/Quiz";
 import { getQuizDetails } from "@/lib/actions/quizDetails";
 import { getCurrentUser } from "@/lib/auth";
-import { notFound } from "next/navigation";
+import { revalidatePath } from "next/cache";
 
 export default async function Page({
   params: { quizId },
@@ -13,9 +13,9 @@ export default async function Page({
   const { success, quizDetails, message } = await getQuizDetails({ quizId });
 
   if (!quizDetails || !success) {
-         return <ErrorPage message={message} />;
-    
+    return <ErrorPage message={message} />;
   }
+  revalidatePath("/quiz");
 
   const isCurrentUser = quizDetails.user.id === session?.user.id;
 

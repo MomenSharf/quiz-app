@@ -31,7 +31,7 @@ export default function TrueAndFalse({
     userAnswer?.type === "TRUE_FALSE";
 
   return (
-    <div className="grid grid-cols-2 gap-3">
+    <div className="grid grid-cols-2 gap-3 PX-1">
       <motion.button
         type="button"
         className={cn(
@@ -52,7 +52,7 @@ export default function TrueAndFalse({
         }}
         initial={{ x: 0, scale: 1 }}
         animate={{
-          x: isShaking && userAnswer.answer === "true" ? [0, -10, 10, -10, 10, 0] : 0,
+          x: isShaking && userAnswer.answer === "true" ? [0, -5, 5, -5, 5, 0] : 0,
           scale: (isCorrect && userAnswer.answer === "true") || (quizMode === 'timeOut' &&  question.correctAnswer === 'true') ? [1, 1.1, 1] : 1,
           rotate: isCorrect && userAnswer.answer === "true" ||  (quizMode === 'timeOut' && question.correctAnswer === 'true')  ? [0, 5, -5, 0] : 0,
         }}
@@ -62,7 +62,7 @@ export default function TrueAndFalse({
         }}
         onClick={() => {
           if (quizMode === "playing") {
-            dispatch({ type: "SET_QUIZ_MODE", payload: "answered" });
+            dispatch({ type: "SET_QUIZ_MODE", payload: "answered" }); 
             dispatch({
               type: "SET_USER_ANSWER",
               payload: { type: "TRUE_FALSE", answer: "true" },
@@ -92,7 +92,7 @@ export default function TrueAndFalse({
         }}
         initial={{ x: 0, scale: 1 }}
         animate={{
-          x: isShaking && userAnswer.answer === "false"    ? [0, -10, 10, -10, 10, 0] : 0,
+          x: isShaking && userAnswer.answer === "false"    ? [0, -5, 5, -5, 5, 0] : 0,
           scale: isCorrect && userAnswer.answer === "false" || (quizMode === 'timeOut' &&  question.correctAnswer === 'false')  ? [1, 1.1, 1] : 1,
           rotate: isCorrect && userAnswer.answer === "false"||(quizMode === 'timeOut' &&  question.correctAnswer === 'false') ? [0, 5, -5, 0] : 0,
         }}

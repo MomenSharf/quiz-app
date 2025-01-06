@@ -2,8 +2,7 @@
 import { PlayQuizQuestion } from "@/components/PlayQuiz/Context";
 import { getCurrentUser } from "../auth";
 import { db } from "../db";
-import { unstable_noStore as noStore } from 'next/cache';
-
+import { unstable_noStore as noStore } from "next/cache";
 
 export const getPlayQuiz = async (quizId: string, mode: "play" | "preview") => {
   const session = await getCurrentUser();
@@ -13,7 +12,7 @@ export const getPlayQuiz = async (quizId: string, mode: "play" | "preview") => {
   }
 
   try {
-    noStore()
+    noStore();
     let quizProgress = await db.quizProgress.findUnique({
       where: {
         userId_quizId: {
@@ -36,7 +35,6 @@ export const getPlayQuiz = async (quizId: string, mode: "play" | "preview") => {
             },
           },
         },
-        user: true,
       },
     });
 
@@ -92,12 +90,40 @@ export const getPlayQuiz = async (quizId: string, mode: "play" | "preview") => {
         });
       }
     }
-    if(!quizProgress) {
-      return {success: false, message: "Error while loading quiz data"};
+    if (!quizProgress) {
+      return { success: false, message: "Error while loading quiz data" };
     }
 
     return { success: true, quizProgress };
+  } catch (error) {
+    return { success: false, message: "Error while loading quiz data" };
+  }
+};
+export const getPreviewQuiz = async (quizId: string) => {
+  const session = await getCurrentUser();
 
+  if (!session) {
+    return { success: false, message: "Unauthorized: User is not logged in." };
+  }
+
+  try {
+    noStore();
+    const quiz = await db.quiz.findUnique({
+      where: { id: quizId, userId: session.user.id },
+      include: {
+        questions: {
+          include: {
+            items: true,
+          },
+        },
+      },
+    });
+
+    if (!quiz) {
+      return { success: false, message: "Error while loading quiz data" };
+    }
+
+    return { success: true, quiz };
   } catch (error) {
     return { success: false, message: "Error while loading quiz data" };
   }

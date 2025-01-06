@@ -18,8 +18,9 @@ const variants = {
 export default function Content() {
   const {
     state: { currentQuestion, quizMode, playQuizQuestions },
+    goNextQuestion,
   } = usePlayQuizContext();
-  
+
   return (
     <div className="flex flex-col w-full flex-1  items-center">
       <div className="p-3 max-w-6xl flex-1 flex flex-col">
@@ -65,6 +66,11 @@ export default function Content() {
                         <Hints />
                       </div>
                       <OptionsSwitcher question={question} />
+                      {(quizMode === "answered" || quizMode === "timeOut") && (
+                        <div className="flex justify-end">
+                          <Button onClick={goNextQuestion}>Next</Button>
+                        </div>
+                      )}
                     </div>
                   </motion.div>
                 );

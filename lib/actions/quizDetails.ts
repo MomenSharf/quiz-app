@@ -1,17 +1,16 @@
 "use server";
 
-import { QuizDetails } from "@/types";
 import { getCurrentUser } from "../auth";
 import { db } from "../db";
 import { unstable_noStore as noStore } from 'next/cache';
 
 
 export const getQuizDetails = async ({ quizId }: { quizId: string }) => {
+  noStore()
   const session = await getCurrentUser();
   const userId = session?.user.id;
 
   try {
-    noStore()
     const quiz = await db.quiz.findUnique({
       where: { id: quizId },
       include: {

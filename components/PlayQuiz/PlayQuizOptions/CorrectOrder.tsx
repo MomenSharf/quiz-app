@@ -148,6 +148,7 @@ export default function CorrectOrder({
               });
             }
           }}
+          disabled={(quizMode === "answered" || quizMode === "timeOut")}
         >
           Submit
         </Button>

@@ -130,7 +130,7 @@ export default function Header() {
           onClick={() => {
             if (quizSchema.safeParse(getValues()).success)
               ''
-              // router.push(`/play/${quizId}?mode=preview`);
+              router.push(`/play/${quizId}?mode=preview`);
           }}
         >
           <Eye className="w-4 h-4" />

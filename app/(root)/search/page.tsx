@@ -4,6 +4,7 @@ import CategorySelector from "@/components/Search/CategorySelector";
 import SortBySelector from "@/components/Search/SortBySelector";
 import { getSearchQuizzes } from "@/lib/actions/search";
 import { isValidCategoryOption, isValidSearchSortOption } from "@/lib/utils";
+import Image from "next/image";
 
 export default async function Page(props: {
   searchParams?: Promise<{
@@ -31,19 +32,30 @@ export default async function Page(props: {
     return <ErrorPage message={message} />;
   }
   return (
-    <div className="flex flex-col gap-3 p-2 sm:p-3">
-      <h1 className="font-semibold max-w-full truncate">
-        Showing results for {`'${query}'`}
-      </h1>
+    <div className="w-full h-full flex flex-col gap-3 p-2 sm:p-3">
+      {query && (
+        <h1 className="font-semibold max-w-full truncate">
+          Showing results for {`'${query}'`}
+        </h1>
+      )}
       <div className="flex justify-end gap-1 sm:gap-3">
         <SortBySelector />
         <CategorySelector />
       </div>
-      <div>
+      <div className="w-full h-full">
         {quizzes.length > 0 ? (
           <QuizzesPanelsTable quizzes={quizzes} />
         ) : (
-          <p className="font-bold text-lg">No quizzes found.</p>
+          <div className="w-full h-full flex flex-col justify-center items-center">
+            <Image
+              src="/assets/images/no-results.png "
+              alt="no result"
+              width={100}
+              height={100}
+            />
+            <p className="font-bold text-lg mt-2">No Quizzes found</p>
+            <p className="text-sm text-gray-medium truncate max-w-full">for {`'${query}'`}</p>
+          </div>
         )}
       </div>
     </div>

@@ -3,8 +3,7 @@
 import { Category, SearchSortOption } from "@/types";
 import { db } from "../db";
 import { getCurrentUser } from "../auth";
-import { unstable_noStore as noStore } from 'next/cache';
-
+import { unstable_noStore as noStore } from "next/cache";
 
 export const getSearchQuizzes = async ({
   page = 1,
@@ -25,8 +24,8 @@ export const getSearchQuizzes = async ({
   const orderByMap: Record<SearchSortOption | "random", Record<string, any>> = {
     highestRated: { createdAt: "desc" }, //!!
     random: {
-      playCount: 'desc', 
-    }, 
+      playCount: "desc",
+    },
     mostPlayed: { playCount: "desc" },
     mostRecent: { createdAt: "asc" },
   };
@@ -35,14 +34,15 @@ export const getSearchQuizzes = async ({
   try {
     if (!query) {
       return {
-        success: false,
+        success: true,
         message: "Query is required to search quizzes.",
+        quizzes: [],
       };
     }
-    noStore()
+    noStore();
     const quizzes = await db.quiz.findMany({
       where: {
-        visibility: 'PUBLIC',
+        visibility: "PUBLIC",
         AND: [
           {
             OR: [
@@ -90,6 +90,9 @@ export const getSearchQuizzes = async ({
       return { success: false, message: "No Quizzes found" };
     }
 
+    if (quizzes.length === 0) {
+      return { success: true, message: `No result for '${query}'`, quizzes };
+    }
 
     return { success: true, quizzes };
   } catch (error) {

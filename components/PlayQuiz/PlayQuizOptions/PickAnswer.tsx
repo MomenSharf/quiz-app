@@ -78,7 +78,7 @@ export default function PickAnswer({
             }}
             initial={{ x: 0, scale: 1 }}
             animate={{
-              x: isShaking ? [0, -10, 10, -10, 10, 0] : 0,
+              x: isShaking ? [0, -5, 5, -5, 5, 0] : 0,
               scale: isCorrect ? [1, 1.1, 1] : 1,
               rotate: isCorrect ? [0, 5, -5, 0] : 0,
             }}

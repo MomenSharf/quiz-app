@@ -4,8 +4,8 @@ import { db } from "@/lib/db";
 import { getCurrentUser } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
 import { FolderPathSegment, LibrarySortOption } from "@/types";
-import { unstable_noStore as noStore } from 'next/cache';
-
+import { unstable_noStore as noStore } from "next/cache";
+import { redirect } from "next/navigation";
 
 // Get
 export const getLibraryQuizzes = async (
@@ -18,7 +18,6 @@ export const getLibraryQuizzes = async (
     return { success: false, message: "Unauthorized: User is not logged in." };
   }
   try {
-    noStore()
     const orderByMap: Record<LibrarySortOption, Record<string, string>> = {
       alphabetical: { title: "asc" },
       reverseAlphabetical: { title: "desc" },
@@ -58,13 +57,13 @@ export const getLibraryFolders = async (
   sortOption: LibrarySortOption,
   parentId?: string
 ) => {
+  noStore();
   const session = await getCurrentUser();
 
   if (!session) {
     return { success: false, message: "Unauthorized: User is not logged in." };
   }
   try {
-    noStore()
     const orderByMap: Record<LibrarySortOption, Record<string, string>> = {
       alphabetical: { title: "asc" },
       reverseAlphabetical: { title: "desc" },
@@ -172,7 +171,7 @@ export async function getFolderPath(folderId?: string): Promise<{
   path?: FolderPathSegment[];
 }> {
   try {
-    noStore()
+    noStore();
     const folder = await db.folder.findUnique({
       where: { id: folderId },
       include: { parent: true }, // Include the parent folder for recursion
@@ -234,7 +233,7 @@ export const newQuiz = async ({
         folderId,
         title: "My new Quiz",
         description: "",
-        visibility: 'PRIVATE',
+        visibility: "PRIVATE",
         categories: [],
         questions: {
           create: {
@@ -367,7 +366,7 @@ export const duplicateQuiz = async ({
     const quiz = await db.quiz.create({
       data: {
         title: newQuizTitle,
-        visibility: 'PRIVATE',
+        visibility: "PRIVATE",
         ...data,
         questions: {
           create: questions,
@@ -379,7 +378,6 @@ export const duplicateQuiz = async ({
 
     return { success: true, quiz };
   } catch (error) {
-
     return {
       success: false,
       message: `Failed to delete duplicate quiz. Please try again later.`,
@@ -474,7 +472,7 @@ export const renameQuiz = async ({
         id: quizId,
       },
       data: {
-        title
+        title,
       },
     });
 
@@ -508,7 +506,7 @@ export const renameFolder = async ({
         id: folderId,
       },
       data: {
-        title
+        title,
       },
     });
 
@@ -516,7 +514,6 @@ export const renameFolder = async ({
 
     return { success: true, quiz };
   } catch (error) {
-
     return {
       success: false,
       message: `Failed to renaming Folder. Please try again later.`,

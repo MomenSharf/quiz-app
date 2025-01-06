@@ -1,14 +1,18 @@
 # app
 
 - solve catch data when user nevigate between pages
+- make app more server components instead of client components
+
+## home
+
+- chenge categories scoller icons color ...
 
 ## /search
-
-- make No quizzes found. more beautiful
 
 ## library
 
 - fix when user make new quiz it's take a lot of time
+- make redirect('quiz/quizId) in server not in client
 
 ## editor
 
@@ -20,4 +24,8 @@
 
 ## quiz details
 
-- fix rate views
+## play
+
+- make play quiz deal with if user logged in or not
+- make preview without descreption or image or categories
+- add wrong answer song effect and finish quiz sound effect

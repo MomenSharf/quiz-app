@@ -1,6 +1,6 @@
 "use client";
 import { copyQuiz as copyQuizServer } from "@/lib/actions/quizDetails";
-import { cn, formatToMinSec } from "@/lib/utils";
+import { calculateQuizRatings, cn, formatToMinSec } from "@/lib/utils";
 import { QuizDetailsWithIsBookmark } from "@/types";
 import {
   ArrowDownIcon,
@@ -65,6 +65,7 @@ export default function QuizCard({
   };
 
   const router = useRouter();
+  const { averageRating, totalRatings } = calculateQuizRatings(quiz.ratings);
 
   return (
     <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 justify-center p-5 bg-card rounded-xl">
@@ -81,7 +82,7 @@ export default function QuizCard({
           className="rounded-xl"
         />
       </div>{" "}
-      <div className="lg:col-span-2 flex flex-col gap-2 justify-between">
+      <div className="lg:col-span-2 flex flex-col gap-3 justify-between">
         <p className="text-lg font-medium truncate">{quiz.title.trim()}</p>
         <div className="flex items-center gap-1">
           <Link href={`/profile/${quiz.user.username}`}>
@@ -99,8 +100,8 @@ export default function QuizCard({
         </div>
         <div className="flex gap-1 items-center">
           <Icons.star className="w-3 h-3 fill-yellow" />
-          <span className="text-xs">4.5</span>
-          <span className="text-xs text-yellow-400">{"(50 vote)"}</span>
+          <span className="text-xs">{averageRating}</span>
+          <span className="text-xs">({totalRatings} retings) </span>
         </div>
         <div className="flex gap-1">
           <Badge className="bg-primary/30 hover:bg-primary/30 text-primary gap-0.5">
