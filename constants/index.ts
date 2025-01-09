@@ -1,5 +1,10 @@
 import { Icons } from "@/components/icons";
-import { Category, LibrarySortOption, SearchSortOption } from "@/types";
+import {
+  Category,
+  ImageManagerTabsType,
+  LibrarySortOption,
+  SearchSortOption,
+} from "@/types";
 import { THEME_COLORS as colorsType } from "@/types/theme";
 import { QuestionType } from "@prisma/client";
 import { icons, LucideProps } from "lucide-react";
@@ -32,6 +37,15 @@ export const AVATAR_COLORS = [
   "#F1C40F", // Sunflower
   "#E67E22", // Carrot
   "#34495E", // Wet Asphalt
+];
+
+export const IMAGE_MANAGER_TABS: {
+  label: string;
+  value: ImageManagerTabsType;
+}[] = [
+  { label: "Upload", value: "upload" },
+  { label: "Stock Photos", value: "stockPhotos" },
+  { label: "Giphy GIFs", value: "giphyGIFS" },
 ];
 
 export const UNSAVED_ID_PREFIX = "unsaved-";
@@ -274,8 +288,20 @@ export const CATEGORY_OPTIONS_LIST: {
     color: "--indigo",
     icon: Icons.cpu,
   },
-  { label: "Sports", value: "SPORTS", id: 7, color: "--red", icon: Icons.shose },
-  { label: "Art", value: "ART", id: 8, color: "--pink", icon: Icons.paintbrush},
+  {
+    label: "Sports",
+    value: "SPORTS",
+    id: 7,
+    color: "--red",
+    icon: Icons.shose,
+  },
+  {
+    label: "Art",
+    value: "ART",
+    id: 8,
+    color: "--pink",
+    icon: Icons.paintbrush,
+  },
   {
     label: "Language",
     value: "LANGUAGE",

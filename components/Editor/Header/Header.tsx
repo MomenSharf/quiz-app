@@ -11,7 +11,10 @@ import { Icons } from "@/components/icons";
 import { useEditorContext } from "../Context";
 import { revalidatePathInServer } from "@/lib/actions/utils";
 import ToggleVisibility from "./ToggleVisibility";
-import { quizSchema } from "@/lib/validations/quizSchemas";
+import {
+  previewPlayQuizSchema,
+  quizSchema,
+} from "@/lib/validations/quizSchemas";
 
 export default function Header() {
   const [isEditingTitle, setIsEditingTitle] = useState(false);
@@ -125,12 +128,12 @@ export default function Header() {
           )}
         </Button>
         <Button
-          type="submit"
+          type="button"
           className="gap-1 rounded-xl"
           onClick={() => {
-            if (quizSchema.safeParse(getValues()).success)
-              ''
+            if (previewPlayQuizSchema.safeParse(getValues()).success) {
               router.push(`/play/${quizId}?mode=preview`);
+            }
           }}
         >
           <Eye className="w-4 h-4" />

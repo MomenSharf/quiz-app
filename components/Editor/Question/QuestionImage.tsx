@@ -58,7 +58,7 @@ export default function QuestionImage({
           Replace
         </Button>
       </div>
-      <div className="flex flex-col w-full rounded-xl overflow-hidden">
+      <div className="flex flex-col w-full rounded-lg overflow-hidden">
         <Image
           src={imageUrl}
           alt="question Image"
@@ -68,7 +68,7 @@ export default function QuestionImage({
           style={{
             aspectRatio: "4 / 3", // Maintains the 4:3 aspect ratio
           }}
-          className="rounded-xl"
+          className="rounded-lg"
         />
       </div>
     </div>

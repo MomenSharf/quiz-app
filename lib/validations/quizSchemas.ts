@@ -1,8 +1,9 @@
-import {  QuestionType, Visibility } from "@prisma/client";
+import { QuestionType, Visibility } from "@prisma/client";
 import { z } from "zod";
 // Define schemas for different question types
-const visibilityEnum = z.enum(Object.values(Visibility) as [Visibility, ...Visibility[]]);
-
+const visibilityEnum = z.enum(
+  Object.values(Visibility) as [Visibility, ...Visibility[]]
+);
 
 export const unselectedSchema = z.object({
   id: z.string(),
@@ -119,9 +120,10 @@ export const questionOrderSchema = z.object({
 export const quizSchema = z.object({
   id: z.string(),
   title: z.string().min(3, "Title must be at least 3 characters long"),
-  description: z.string().min(10, "Description must be at least 10 characters long"),
-  // imageUrl: z.string().min(5, "Thumbnail image is required"),
-  imageUrl: z.string().optional(),
+  description: z
+    .string()
+    .min(10, "Description must be at least 10 characters long"),
+  imageUrl: z.string().min(5, "Thumbnail image is required"),
   categories: z.array(z.string()).min(1, "At least one category is required"),
   visibility: visibilityEnum,
   questions: z
@@ -138,12 +140,16 @@ export const quizSchema = z.object({
     )
     .min(1, "At least one question is required"),
 });
-
-export const folderSchema = quizSchema.pick({title: true});
+export const previewPlayQuizSchema = quizSchema.omit({
+  description: true,
+  imageUrl: true,
+  categories: true,
+});
+export const folderSchema = quizSchema.pick({ title: true });
 
 export type folderSchemaType = z.infer<typeof folderSchema>;
 export type quizSchemaType = z.infer<typeof quizSchema>;
-export type questionsSchemaType =quizSchemaType["questions"];
+export type questionsSchemaType = quizSchemaType["questions"];
 export type questionSchemaType = quizSchemaType["questions"][number];
 export type ItemSchemaType =
   | z.infer<typeof pickAnswerSchema>["items"][number]
@@ -153,4 +159,3 @@ export type ItemsSchemaType =
   | z.infer<typeof pickAnswerSchema>["items"]
   | z.infer<typeof matchingPairsSchema>["items"]
   | z.infer<typeof questionOrderSchema>["items"];
-

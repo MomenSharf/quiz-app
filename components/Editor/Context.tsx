@@ -76,7 +76,7 @@ const initialState: EditorState = {
   saveState: "good",
   historyArray: [],
   currentQuestionId: null,
-  isSettingsOpen: false,
+  isSettingsOpen: true,
   isImageManagerTabsOpen: false,
   isImageEditorOpenWithFiles: { isOpen: false },
 };

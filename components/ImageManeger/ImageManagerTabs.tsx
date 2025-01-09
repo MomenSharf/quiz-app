@@ -4,51 +4,67 @@ import { Icons } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import ImageUploader from "./ImageUploader";
 import { ReactNode } from "react";
-
-type QuestionImageManagerTabs = {};
+import { ImageManagerTabsType } from "@/types";
+import { IMAGE_MANAGER_TABS } from "@/constants";
 
 export default function ImageManagerTabs({
   open,
   onOpenChange,
   onDropFunction,
   trigger,
+  tabs = ["upload"],
 }: {
   open: boolean;
   onOpenChange: (e: boolean) => void;
   onDropFunction: (acceptedFiles: File[]) => void;
   trigger?: ReactNode;
+  tabs: ImageManagerTabsType[];
 }) {
+  function TabsContentSwitcher({ tab }: { tab: ImageManagerTabsType }) {
+    switch (tab) {
+      case "upload":
+        return <ImageUploader onDropFunction={onDropFunction} />;
+      case "stockPhotos":
+        return `${tab}`;
+      case "giphyGIFS":
+        return `${tab}`;
+      default:
+        return null;
+    }
+  }
+
+  const TABS = IMAGE_MANAGER_TABS.filter(({ value }) =>
+    tabs.includes(value)
+  );
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       {trigger && <DialogTrigger asChild>{trigger}</DialogTrigger>}
-      <DialogContent className="max-w-3xl h-[85vh] flex flex-col px-8">
-        <Tabs defaultValue="upload" className="h-full">
+      <DialogContent className="max-w-3xl flex flex-col px-9 pt-10 pb-0 gap-3">
+        <Tabs defaultValue={IMAGE_MANAGER_TABS[0].value} className="h-full">
           <TabsList className="flex">
-            <TabsTrigger value="upload" className="basis-1/3">
-              Upload
-            </TabsTrigger>
-            <TabsTrigger value="stock-photos" className="basis-1/3">
-              Stock photos
-            </TabsTrigger>
-            <TabsTrigger value="giphy-GIFS" className="basis-1/3">
-              giphy GIFS
-            </TabsTrigger>
+            {TABS.map(({ label, value }) => {
+              return (
+                <TabsTrigger value={value} key={value} className={`basis-1/3` } style={{flexBasis: `${100 / (TABS.length)}%`}}>
+                  {label}
+                </TabsTrigger>
+              );
+            })}
           </TabsList>
-          <TabsContent value="upload" className="h-full">
-            <ImageUploader onDropFunction={onDropFunction} />
-          </TabsContent>
-          <TabsContent
-            value="stock-photos"
-            className="w-full h-[calc(100%_-_2rem)] max-h-full"
-          >
-            {/* <StockPhotos /> */}
-          </TabsContent>
-          <TabsContent
-            value="giphy-GIFS"
-            className="w-full h-[calc(100%_-_2rem)] max-h-full"
-          >
-            {/* <GiphyGIFs /> */}
-          </TabsContent>
+          {TABS.map(({ value }) => {
+            return (
+              <TabsContent
+                value={value}
+                key={value}
+                className="flex items-center justify-center my-3"
+                tabIndex={undefined}
+              >
+                <div className="w-full min-h-96">
+                  <TabsContentSwitcher tab={value} />
+                </div>
+              </TabsContent>
+            );
+          })}
         </Tabs>
       </DialogContent>
     </Dialog>

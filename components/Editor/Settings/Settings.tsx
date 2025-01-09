@@ -20,7 +20,7 @@ import ErrorSpan from "../Question/QuestionForms/QuestionFormsElements/ErrorSpan
 import { cn } from "@/lib/utils";
 
 export default function Settings() {
-  const [isImageManagerTabs, setIsImageManagerTabs] = useState(false);
+  const [isImageManagerTabs, setIsImageManagerTabs] = useState(true);
 
   const {
     dispatch,
@@ -31,7 +31,7 @@ export default function Settings() {
     },
   } = useEditorContext();
 
-  const imageUrl = getValues("imageUrl");  
+  const imageUrl = getValues("imageUrl");
 
   return (
     <div className="container max-w-3xl py-3 flex flex-col gap-3">
@@ -64,6 +64,7 @@ export default function Settings() {
         <h4>Thumbnail image</h4>
         <>
           <ImageManagerTabs
+            tabs={["upload"]}
             onDropFunction={(acceptedFiles) => {
               setIsImageManagerTabs(false);
               dispatch({
@@ -86,13 +87,17 @@ export default function Settings() {
               )
             }
           />
-          {imageUrl && <QuestionImage
-            imageUrl={imageUrl}
-            openImageManagerTabs={() => {
-              setIsImageManagerTabs(true);
-            }}
-            field="imageUrl"
-          />}
+          {imageUrl && (
+            <div className="max-w-96">
+              <QuestionImage
+                imageUrl={imageUrl}
+                openImageManagerTabs={() => {
+                  setIsImageManagerTabs(true);
+                }}
+                field="imageUrl"
+              />
+            </div>
+          )}
 
           {errors && <ErrorSpan error={errors.imageUrl} />}
         </>

@@ -59,7 +59,7 @@ type PlayQuizContextType = {
   resetQuiz: () => void;
   goNextQuestion: () => void;
   quiz: PlayQuizType["quiz"];
-  mode: PlayQuizMode
+  mode: PlayQuizMode;
 };
 
 const initialState: PlayQuizState = {
@@ -126,12 +126,17 @@ export const PlayQuizProvider = ({
     isResultSheetOpen,
   } = state;
 
-  const playRightWorngAnswerSound = (isAnswerRight: boolean | null) => {
-    if (isAnswerRight === null) return;
-    const audio = new Audio(
-      "/assets/sounds/zapsplat_multimedia_game_sound_slot_machine_mallet_chime_positive_win_001_65507.mp3"
-    );
-    if (isAnswerRight) audio.play();
+  const playSound = (type: "rightAnswer" | "wrongAnswer" | "gameFinished") => {
+    const audioUrl =
+      type === "rightAnswer"
+        ? "/assets/sounds/right-answer.mp3"
+        : type === "wrongAnswer"
+        ? "/assets/sounds/wrong-answer.mp3"
+        : type === "gameFinished"
+        ? "/assets/sounds/game-finished.mp3"
+        : undefined;
+    const audio = new Audio(audioUrl);
+    if (audio) audio.play();
   };
 
   const resetQuiz = () => {
@@ -185,6 +190,7 @@ export const PlayQuizProvider = ({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentQuestion, isResultSheetOpen]);
+
 
   useEffect(() => {
     let initialQuestions: PlayQuizQuestion[];
@@ -341,10 +347,12 @@ export const PlayQuizProvider = ({
           ? 1200
           : 500
       );
-      playRightWorngAnswerSound(isAnswerRight);
+
+      playSound(isAnswerRight ? "rightAnswer" : "wrongAnswer");
     }
     if (quizMode === "ended") {
       dispatch({ type: "SET_CURRENT_QUESTION", payload: 0 });
+      playSound('gameFinished');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [quizMode]);
@@ -358,12 +366,18 @@ export const PlayQuizProvider = ({
     if (currentQuestion !== playQuizQuestions.length - 1)
       dispatch({ type: "SET_QUIZ_MODE", payload: "playing" });
     else dispatch({ type: "SET_QUIZ_MODE", payload: "ended" });
-  }
-
+  };
 
   return (
     <QuizRoomContext.Provider
-      value={{ state, dispatch, resetQuiz, goNextQuestion, quiz: quizProgress.quiz, mode }}
+      value={{
+        state,
+        dispatch,
+        resetQuiz,
+        goNextQuestion,
+        quiz: quizProgress.quiz,
+        mode,
+      }}
     >
       {children}
     </QuizRoomContext.Provider>

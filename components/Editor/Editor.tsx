@@ -32,10 +32,16 @@ export default function Editor() {
           <ImageEditor
             open={isImageEditorOpenWithFiles.isOpen}
             afterUpload={(uploadedImage) => {
+              const { error } = form.getFieldState(
+                isImageEditorOpenWithFiles.field
+              );
               form.setValue(
                 isImageEditorOpenWithFiles.field,
                 uploadedImage[0].url
               );
+              if (error) {
+                form.trigger(isImageEditorOpenWithFiles.field);
+              }
               dispatch({
                 type: "SET_IS_IMAGE_EDITOR_OPEN",
                 payload: { isOpen: false },

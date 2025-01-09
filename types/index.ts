@@ -39,6 +39,8 @@ export type LibrarySortOption =
 
 export type SearchSortOption = "highestRated" | "mostRecent" | "mostPlayed";
 
+export type ImageManagerTabsType = "upload" | "stockPhotos" | "giphyGIFS"
+
 export type DashboardQuiz = Prisma.QuizGetPayload<{
   include: {
     _count: {

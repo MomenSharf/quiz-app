@@ -12,20 +12,17 @@
 ## library
 
 - fix when user make new quiz it's take a lot of time
-- make redirect('quiz/quizId) in server not in client
 
 ## editor
 
-- fix categories selection functionality
+- fix categories selection functionality and trigger when selected
 
-- when save quiz with unslected questions type the question order desnt chenge
+## image tabs
 
-- save noStore functionality like when i out frm edit quiz and then cam page the quiz not
+- make the rest of the tabs [stockPhotos, giphyGIFS]
 
 ## quiz details
 
 ## play
 
-- make play quiz deal with if user logged in or not
-- make preview without descreption or image or categories
-- add wrong answer song effect and finish quiz sound effect
+- make soud effect more better then existing

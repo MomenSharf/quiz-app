@@ -13,7 +13,6 @@ export default function ImageUploader({
 }: {
   onDropFunction: (acceptedFiles: File[]) => void;
 }) {
-  
   const onDrop = onDropFunction;
 
   const { getRootProps, getInputProps } = useDropzone({
@@ -23,14 +22,14 @@ export default function ImageUploader({
 
   return (
     <>
-      <div className="h-[calc(100%_-_2.5rem)]">
+      <div className="h-96">
         <div
           {...getRootProps()}
-          className="flex justify-center items-center cursor-pointer h-[calc(100%_-_2.5rem)] mt-7"
+          className="ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-lg flex justify-center items-center cursor-pointer h-full"
         >
           <input {...getInputProps()} className="cursor-pointer" />
 
-          <div className="w-full h-full flex justify-center items-center flex-col py-5 border-2 border-dashed bg-primary/5 box-content rounded-lg">
+          <div className="w-full h-full flex justify-center items-center flex-col border-2 border-dashed bg-primary/5 box-content rounded-lg">
             <ImageUp className="w-10 h-10 text-muted-foreground" />
             <h3 className=" flex text-muted-foreground tx-sm">Upload Image</h3>
             <p className="text-xs mb-4 text-muted-foreground">SVG, PNG, JPG</p>

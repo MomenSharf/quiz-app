@@ -1,13 +1,10 @@
+import { FolderPathSegment } from "@/types";
 import Image from "next/image";
-import { useLibraryContext } from "./Context";
+import { Icons } from "../icons";
+import { Separator } from "../ui/separator";
+import BreadcrumbDemoFolderPath from "./Folder/BreadcrumbFolderPath";
 import NewFolderButton from "./Folder/NewFolderButton";
 import NewQuizButton from "./Quiz/NewQuizButton";
-import { Icons } from "../icons";
-import { buttonVariants } from "../ui/button";
-import { cn } from "@/lib/utils";
-import { FolderPathSegment } from "@/types";
-import BreadcrumbDemoFolderPath from "./Folder/BreadcrumbFolderPath";
-import { Separator } from "../ui/separator";
 
 export default function EmptyLibrary({
   folderId,
