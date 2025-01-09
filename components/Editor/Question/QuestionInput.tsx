@@ -56,6 +56,7 @@ export default function QuestionInput({
                 value={getValues(`questions.${questionIndex}.question`)}
               />
                 <ImageManagerTabs
+                tabs={['upload', "stockPhotos", "giphyGIFS"]}
                   onDropFunction={(acceptedFiles) => {
                     setIsImageManagerTabs(false);
                     dispatch({

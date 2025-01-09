@@ -265,6 +265,7 @@ export default function ProfileCard({ user }: { user: SettingsUser }) {
         </div>
       </div>
       <ImageManagerTabs
+      tabs={['upload', 'stockPhotos']}
         open={isImageMangerOpen}
         onOpenChange={setImageMangerOpen}
         onDropFunction={onDropFunction}
