@@ -64,8 +64,8 @@ export default function Settings() {
         <h4>Thumbnail image</h4>
         <>
           <ImageManagerTabs
-            tabs={["upload"]}
-            onDropFunction={(acceptedFiles) => {
+            tabs={["upload", 'stockPhotos', "giphyGIFS"]}
+            onSelectImage={(acceptedFiles) => {
               setIsImageManagerTabs(false);
               dispatch({
                 type: "SET_IS_IMAGE_EDITOR_OPEN",

@@ -1,91 +1,123 @@
-import { formatTimeAgo } from "@/lib/utils";
-import { Edit, Play, Timer } from "lucide-react";
-import Image from "next/image";
-import { Icons } from "../icons";
-import { Badge } from "../ui/badge";
-import { Button } from "../ui/button";
-import { Checkbox } from "../ui/checkbox";
-import { useLibraryContext } from "./Context";
+// import { Search } from "lucide-react";
+// import { useCallback, useEffect, useRef, useState, useTransition } from "react";
+// import { Button } from "../ui/button";
+// import { Input } from "../ui/input";
+// import Image from "next/image";
+// import { useDebounce, useDebouncedCallback } from "use-debounce";
+// import { fetchUnsplashImages } from "@/lib/actions/images";
+// import { toast } from "../ui/use-toast";
+// import { UnsplashImage } from "@/types";
+// import { useInView } from "framer-motion";
 
-export default function Table() {
-  const { quizzes, folderWithQuizzes } = useLibraryContext();
+// export default function StockPhotos() {
+//   const [query, setQuery] = useState("");
+//   const [photos, setPhotos] = useState<UnsplashImage[]>([]);
+//   const [page, setPage] = useState(1);
+//   const [hasMore, setHasMore] = useState(true);
+//   const [loading, setLoading] = useState(false);
 
-  return (
-    <div className="w-full table-auto border-separate border-spacing-3">
-      <table className="w-full">
-        <thead className="hidden sm:table-header-group">
-          <tr className="*:text-start">
-            <th className="min-w-3"></th>
-            <th className="w-full">Name</th>
-            <th className="w-40">Last Updated</th>
-            <th className="w-40 hidden lg:table-cell">Created At</th>
-            <th className="w-40"></th>
-            <th className="w-3"></th>
-          </tr>
-        </thead>
-        <tbody>
-          {quizzes.map((quiz) => {
-            return (
-              <tr key={quiz.id} className="bg-white p-3 rounded-lg mb-3">
-                <td className="p-2">
-                  <Checkbox id="terms" />
-                </td>
-                <td className="w-full flex justify-start gap-2 p-2">
-                  <div className="flex flex-col rounded-md overflow-hidden">
-                    {quiz.image && quiz.image.url ? (
-                      <Image
-                        src={quiz.image.url}
-                        alt="question Image"
-                        width={100}
-                        height={75}
-                        priority
-                        style={{
-                          aspectRatio: "4 / 3",
-                        }}
-                        className="rounded-md"
-                      />
-                    ) : (
-                      <div className="w-[100px] h-[75px] flex justify-center items-center object-contain rounded-md overflow-hidden min-w-16 sm:min-w-20 bg-[hsl(var(--primary)_/_10%)] ">
-                        <Icons.quizzes className="w-7 h-7 fill-primary" />
-                      </div>
-                    )}
-                  </div>
-                  <div className="flex flex-col gap-1 justify-center">
-                    <p className="truncate font-medium">{quiz.title}</p>
-                    <div className="flex gap-1">
-                      <Badge className="bg-primary/30 hover:bg-primary/30 text-primary gap-0.5">
-                        <Icons.quizzes className="w-3 h-3 fill-primary" />8
-                        Question
-                      </Badge>
-                    </div>
-                  </div>
-                </td>
-                <td className="hidden sm:table-cell p-2">
-                  <p className="max-w-40 truncate">
-                    {formatTimeAgo(quiz.updatedAt)}
-                  </p>
-                </td>
-                <td className="hidden lg:table-cell truncate p-2">
-                  <p className="max-w-40 truncate">
-                    {formatTimeAgo(quiz.createdAt)}
-                  </p>
-                </td>
-                <td className="hidden sm:table-cell p-2">
-                  <div className="flex gap-2 justify-center">
-                    <Button size="icon" className="">
-                      <Play className="w-3 h-3" />
-                    </Button>
-                    <Button size="icon" className="bg-white text-foreground">
-                      <Edit className="w-4 h-4" />
-                    </Button>
-                  </div>
-                </td>
-                <td className="p-2">|</td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
-    </div>
-  );
-}
+//   const ref = useRef(null);
+
+//   const inView = useInView(ref);
+
+//   const fetchPhotos = useCallback(
+//     async (query: string, page: number) => {
+//       if (loading || !hasMore) return;
+//       setLoading(true);
+//       const { success, message, photos , error} = await fetchUnsplashImages({
+//         query: query || "wanderlust",
+//         page,
+//       });
+//       console.log(error);
+//       if (success) {
+//         setPhotos((prev) => [...prev, ...photos]);
+//         setHasMore(photos.length === 12);
+        
+
+//         console.log(photos);
+//       } else {
+//         toast({ description: message, variant: "destructive" });
+//       }
+//       setLoading(false);
+//     },
+//     [hasMore, loading]
+//   );
+
+//   // const debounceHandleSearch = useDebouncedCallback((query: string, page: number) => handleSearch(query, page),500)
+
+//   useEffect(() => {
+//     console.log(inView);
+    
+//     // if (inView && query && photos.length > 12) {
+//     //   fetchPhotos(query, page + 1);
+//     //   setPage((prev) => prev + 1);
+//     // }
+//   }, [query, fetchPhotos, page, inView]);
+
+//   const handleSearch = () => {
+//     setPhotos([]);
+//     setPage(1);
+//     setHasMore(true);
+//     if (query) fetchPhotos(query, 2);
+//   };
+//   return (
+//     <div className="flex-1 flex flex-col gap-2">
+//       <div className="flex w-full">
+//         <Input
+//           placeholder="Search for photos..."
+//           value={query}
+//           onChange={(e) => setQuery(e.target.value)}
+//           className="rounded-tr-none rounded-br-none border-r-0"
+//         />
+//         <Button
+//           variant="outline"
+//           size="icon"
+//           className="rounded-tl-none rounded-bl-none"
+//           onClick={handleSearch}
+//         >
+//           <Search className="w-4 h-4" />
+//         </Button>
+//       </div>
+//       <div className="flex-1 max-h-[415px] overflow-y-scroll">
+//         <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+//           {query.trim() ? null : photos.length > 0 || true ? (
+//             photos.map(({ urls: { regular }, id, alt_description }) => {
+//               // Array.from({ length: 100 }).map((_, i) => {
+//               return (
+//                 <div
+//                   key={id}
+//                   className="flex flex-col w-full rounded-lg overflow-hidden"
+//                 >
+//                   <Image
+//                     // src="/assets/images/hero.webp"
+//                     src={regular}
+//                     // alt="dd"
+//                     alt={alt_description || "Unsplash image"}
+//                     width={800} // Replace with your desired pixel width
+//                     height={600} // Replace with your desired pixel height
+//                     priority
+//                     style={{
+//                       aspectRatio: "4 / 3", // Maintains the 4:3 aspect ratio
+//                     }}
+//                     className="rounded-lg"
+//                     loading="lazy"
+//                   />
+//                 </div>
+//               );
+//             })
+//           ) : (
+//             <div>no Images</div>
+//           )}
+//         </div>
+//         <div ref={ref} className="w-full h-5 bg-rose-500">
+//           {inView ? "inView" : "gg"}
+//         </div>
+//       </div>
+//       {photos.length !== 0 && (
+//         <div className="flex justify-center">
+//           <Button>Load more</Button>
+//         </div>
+//       )}
+//     </div>
+//   );
+// }

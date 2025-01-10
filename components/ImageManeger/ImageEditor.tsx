@@ -23,13 +23,13 @@ export default function ImageEditor({
   onOpenChange,
   files,
   afterUpload,
-  aspectRatio
+  aspectRatio,
 }: {
   open: boolean;
   onOpenChange: (e: boolean) => void;
-  files: File[] | string |null;
+  files: File[] | string | null;
   afterUpload: (uploadedImage: ClientUploadedFileData<null>[]) => void;
-  aspectRatio: number 
+  aspectRatio: number;
 }) {
   const [image, setImage] = useState("");
   const [isUploading, setIsUploading] = useState(false);
@@ -103,7 +103,7 @@ export default function ImageEditor({
     cropper.reset(); // Reset the cropper to its initial state
   };
 
-  const imageDropQuality = () => {
+  const imageDropQuality = async () => {
     if (files) {
       if (Array.isArray(files) && files[0]) {
         if (files[0].size > 1000000) {
@@ -117,7 +117,7 @@ export default function ImageEditor({
         return 0.7; // Default quality for URLs
       }
     }
-    return 0.5; // Default quality if no files
+    return 0.3; // Default quality if no files
   };
 
   const { startUpload } = useUploadThing("imageUploader");
@@ -139,7 +139,7 @@ export default function ImageEditor({
             const uploadedImage = await startUpload([file]);
             if (uploadedImage && uploadedImage.length > 0) {
               afterUpload(uploadedImage);
-              toast('image uploaded successfully')
+              toast("image uploaded successfully");
             } else {
               toast("something wrong with apluading img");
             }

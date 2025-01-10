@@ -2,6 +2,8 @@
 
 - solve catch data when user nevigate between pages
 - make app more server components instead of client components
+- make all loading stats with   const [isPending, startTransition] = useTransiti()
+- make all images with property loading="lazy"
 
 ## home
 
@@ -19,10 +21,12 @@
 
 ## image tabs
 
-- make the rest of the tabs [stockPhotos, giphyGIFS]
+- make loder
+- make secret passwords to be used only by me
 
 ## quiz details
 
 ## play
 
 - make soud effect more better then existing
+- fix question image

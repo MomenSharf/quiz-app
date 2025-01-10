@@ -11,18 +11,17 @@ import { toast } from "sonner";
 export default function ImageUploader({
   onDropFunction,
 }: {
-  onDropFunction: (acceptedFiles: File[]) => void;
+  onDropFunction: (acceptedFiles: File[]  | string ) => void;
 }) {
-  const onDrop = onDropFunction;
 
   const { getRootProps, getInputProps } = useDropzone({
-    onDrop,
+    onDrop: onDropFunction,
     accept: generateClientDropzoneAccept(["image/*"]),
   });
 
   return (
     <>
-      <div className="h-96">
+      <div className="flex-1">
         <div
           {...getRootProps()}
           className="ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-lg flex justify-center items-center cursor-pointer h-full"

@@ -6,28 +6,30 @@ import ImageUploader from "./ImageUploader";
 import { ReactNode } from "react";
 import { ImageManagerTabsType } from "@/types";
 import { IMAGE_MANAGER_TABS } from "@/constants";
+import StockPhotos from "./StockPhotos";
+import GiphyGIFS from "./GiphyGIFS";
 
 export default function ImageManagerTabs({
   open,
   onOpenChange,
-  onDropFunction,
+  onSelectImage,
   trigger,
   tabs = ["upload"],
 }: {
   open: boolean;
   onOpenChange: (e: boolean) => void;
-  onDropFunction: (acceptedFiles: File[]) => void;
+  onSelectImage: (acceptedFiles: File[] | string) => void;
   trigger?: ReactNode;
   tabs: ImageManagerTabsType[];
 }) {
   function TabsContentSwitcher({ tab }: { tab: ImageManagerTabsType }) {
     switch (tab) {
       case "upload":
-        return <ImageUploader onDropFunction={onDropFunction} />;
+        return <ImageUploader onDropFunction={onSelectImage} />;
       case "stockPhotos":
-        return `${tab}`;
+        return <StockPhotos onSelectImage={onSelectImage}/>;
       case "giphyGIFS":
-        return `${tab}`;
+        return <GiphyGIFS onSelectImage={onSelectImage}/>;
       default:
         return null;
     }
@@ -40,9 +42,9 @@ export default function ImageManagerTabs({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       {trigger && <DialogTrigger asChild>{trigger}</DialogTrigger>}
-      <DialogContent className="max-w-3xl flex flex-col px-9 pt-10 pb-0 gap-3">
-        <Tabs defaultValue={IMAGE_MANAGER_TABS[0].value} className="h-full">
-          <TabsList className="flex">
+      <DialogContent className="max-w-3xl flex flex-col px-3 pt-10 pb-0 gap-3">
+        <Tabs defaultValue={IMAGE_MANAGER_TABS[2].value} className="h-full pb-3">
+          <TabsList className="flex mb-3">
             {TABS.map(({ label, value }) => {
               return (
                 <TabsTrigger value={value} key={value} className={`basis-1/3` } style={{flexBasis: `${100 / (TABS.length)}%`}}>
@@ -56,10 +58,10 @@ export default function ImageManagerTabs({
               <TabsContent
                 value={value}
                 key={value}
-                className="flex items-center justify-center my-3"
+                className="flex items-center justify-center mt-0"
                 tabIndex={undefined}
               >
-                <div className="w-full min-h-96">
+                <div className="w-full min-h-[29rem] flex">
                   <TabsContentSwitcher tab={value} />
                 </div>
               </TabsContent>
