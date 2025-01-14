@@ -35,6 +35,7 @@ type PlayQuizState = {
   quizMode: quizMode;
   userAnswer: userAnswer;
   timeTakenArray: { questionId: string; timeTaken: number }[] | null;
+  isSoundOn: boolean;
 };
 
 type PlayQuizActions =
@@ -45,6 +46,7 @@ type PlayQuizActions =
       payload: { open: boolean; isStarted?: boolean };
     }
   | { type: "SET_IS_RESULT_SHEET_OPEN"; payload: boolean }
+  | { type: "SET_IS_SOUND_ON"; payload: boolean }
   | { type: "SET_QUIZ_MODE"; payload: quizMode }
   | { type: "SET_USER_ANSWER"; payload: userAnswer }
   | { type: "SET_PLAY_QUIZ_QUESTIONS"; payload: PlayQuizQuestion[] }
@@ -70,6 +72,7 @@ const initialState: PlayQuizState = {
   quizMode: "waiting",
   userAnswer: null,
   timeTakenArray: null,
+  isSoundOn: true,
 };
 
 const quizRoomReducer = (
@@ -91,6 +94,8 @@ const quizRoomReducer = (
       return { ...state, userAnswer: action.payload };
     case "SET_PLAY_QUIZ_QUESTIONS":
       return { ...state, playQuizQuestions: action.payload };
+    case "SET_IS_SOUND_ON":
+      return { ...state, isSoundOn: action.payload };
     case "SET_TIME_TAKEN":
       const updatedTimeTakenArray = action.payload.map((newTimeTaken) => {
         const existing = state.timeTakenArray?.find(
@@ -124,9 +129,11 @@ export const PlayQuizProvider = ({
     playQuizQuestions,
     currentQuestion,
     isResultSheetOpen,
+    isSoundOn,
   } = state;
 
   const playSound = (type: "rightAnswer" | "wrongAnswer" | "gameFinished") => {
+    if (!isSoundOn) return;
     const audioUrl =
       type === "rightAnswer"
         ? "/assets/sounds/right-answer.mp3"
@@ -190,7 +197,6 @@ export const PlayQuizProvider = ({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentQuestion, isResultSheetOpen]);
-
 
   useEffect(() => {
     let initialQuestions: PlayQuizQuestion[];
@@ -352,7 +358,7 @@ export const PlayQuizProvider = ({
     }
     if (quizMode === "ended") {
       dispatch({ type: "SET_CURRENT_QUESTION", payload: 0 });
-      playSound('gameFinished');
+      playSound("gameFinished");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [quizMode]);

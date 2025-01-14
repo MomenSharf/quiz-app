@@ -12,12 +12,22 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Settings as S, VideoOff, Volume2, VolumeX } from "lucide-react";
+import {
+  Settings as S,
+  SoupIcon,
+  VideoOff,
+  Volume2,
+  VolumeX,
+} from "lucide-react";
+import { usePlayQuizContext } from "./Context";
 
 type Checked = DropdownMenuCheckboxItemProps["checked"];
 
 export default function Settings() {
-  const [showStatusBar, setShowStatusBar] = React.useState<Checked>(true);
+  const {
+    dispatch,
+    state: { isSoundOn },
+  } = usePlayQuizContext();
 
   return (
     <DropdownMenu>
@@ -28,12 +38,14 @@ export default function Settings() {
         <DropdownMenuLabel>Settings</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuCheckboxItem
-          checked={showStatusBar}
-          onCheckedChange={setShowStatusBar}
+          checked={isSoundOn}
+          onCheckedChange={(checked) =>
+            dispatch({ type: "SET_IS_SOUND_ON", payload: checked })
+          }
           className="justify-between"
         >
           Sound Effect
-          {showStatusBar ? (
+          {isSoundOn ? (
             <Volume2 className="w-4 h-4 justify-self-end" />
           ) : (
             <VolumeX className="w-4 h-4 self-end" />

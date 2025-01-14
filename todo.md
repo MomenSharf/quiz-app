@@ -2,7 +2,7 @@
 
 - solve catch data when user nevigate between pages
 - make app more server components instead of client components
-- make all loading stats with   const [isPending, startTransition] = useTransiti()
+- make all loading stats with const [isPending, startTransition] = useTransiti()
 - make all images with property loading="lazy"
 
 ## home
@@ -18,6 +18,7 @@
 ## editor
 
 - fix categories selection functionality and trigger when selected
+- fix Reorder mobile functionality
 
 ## image tabs
 
@@ -26,7 +27,9 @@
 
 ## quiz details
 
+- add questions card for what represent the quiz question
+
 ## play
 
 - make soud effect more better then existing
-- fix question image
+- fix when user answer the question next button apper that make user go to next question immediately but after that result sheet open

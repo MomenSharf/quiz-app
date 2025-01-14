@@ -126,7 +126,7 @@ export default function MatchingPairs({
   return (
     texts &&
     matches && (
-      <div className="grid grid-cols-2 grid-rows-[1fr_auto] gap-1">
+      <div className="grid grid-cols-2 grid-rows-[1fr_auto] gap-y-3 gap-x-1">
         <Reorder.Group
           axis="y"
           onReorder={setTexts}

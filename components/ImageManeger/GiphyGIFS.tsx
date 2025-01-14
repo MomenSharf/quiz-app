@@ -8,6 +8,7 @@ import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { toast } from "../ui/use-toast";
 import Image from "next/image";
+import { Icons } from "../icons";
 
 export default function GiphyGIFS({
   onSelectImage,
@@ -91,6 +92,14 @@ export default function GiphyGIFS({
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           className="rounded-tr-none rounded-br-none border-r-0"
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              e.preventDefault();
+              if (query) {
+                handleSearch();
+              }
+            }
+          }}
         />
         <Button
           variant="outline"
@@ -107,25 +116,38 @@ export default function GiphyGIFS({
       <div className="flex-1 max-h-[415px] overflow-y-scroll">
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-1">
           {gifs.length > 0 &&
-            gifs.map(({ id, images: {original: {width, height ,url}}, title }) => (
-              <div
-                key={id}
-                className="relative flex flex-col w-full rounded-lg overflow-hidden"
-              >
-                <Image
-                  src={url}
-                  alt={title}
-                  width={Number(width) || 500}
-                  height={Number(height) || 500}
-                  priority
-                  style={{ aspectRatio: "4 / 3" }}
-                  className="rounded-lg z-[2]"
-                  onClick={() => onSelectImage(url)}
-                />
-                <div className="absolute w-full h-full rounded-lg bg-muted" />
-              </div>
-            ))}
+            gifs.map(
+              ({
+                id,
+                images: {
+                  original: { width, height, url },
+                },
+                title,
+              }) => (
+                <div
+                  key={id}
+                  className="relative flex flex-col w-full rounded-lg overflow-hidden"
+                >
+                  <Image
+                    src={url}
+                    alt={title}
+                    width={Number(width) || 500}
+                    height={Number(height) || 500}
+                    priority
+                    style={{ aspectRatio: "4 / 3" }}
+                    className="rounded-lg z-[2]"
+                    onClick={() => onSelectImage(url)}
+                  />
+                  <div className="absolute w-full h-full rounded-lg bg-muted" />
+                </div>
+              )
+            )}
         </div>
+        {loading && (
+          <div className="flex justify-center">
+            <Icons.Loader className="w-7 h-7 stroke-primary animate-spin" />
+          </div>
+        )}
         <div ref={ref} className="w-full h-5" />
       </div>
     </div>

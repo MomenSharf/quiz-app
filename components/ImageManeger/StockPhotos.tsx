@@ -8,8 +8,13 @@ import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { toast } from "../ui/use-toast";
 import Image from "next/image";
+import Loader from "../Layout/Loader";
+import { Icons } from "../icons";
 
-export default function StockPhotos({onSelectImage}: {  onSelectImage: (acceptedFiles: File[] | string) => void;
+export default function StockPhotos({
+  onSelectImage,
+}: {
+  onSelectImage: (acceptedFiles: File[] | string) => void;
 }) {
   const [query, setQuery] = useState("");
   const [photos, setPhotos] = useState<UnsplashImage[]>([]);
@@ -79,9 +84,9 @@ export default function StockPhotos({onSelectImage}: {  onSelectImage: (accepted
     }
   }, [inView, hasMore, loading, query, page, fetchPhotos, photos.length]);
 
-  const handleClick = (src: string ) => {
-    onSelectImage(src)
-  }
+  const handleClick = (src: string) => {
+    onSelectImage(src);
+  };
 
   return (
     <div className="flex-1 flex flex-col gap-2">
@@ -92,6 +97,14 @@ export default function StockPhotos({onSelectImage}: {  onSelectImage: (accepted
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           className="rounded-tr-none rounded-br-none border-r-0"
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              e.preventDefault();
+              if (query) {
+                handleSearch();
+              }
+            }
+          }}
         />
         <Button
           variant="outline"
@@ -107,7 +120,15 @@ export default function StockPhotos({onSelectImage}: {  onSelectImage: (accepted
       {/* Photos Grid */}
       <div className="flex-1 max-h-[415px] overflow-y-scroll">
         {photos.length > 0 && (
-          <Gallery photos={photos} onClick={(_, {photo}) => onSelectImage(photo.src)} />
+          <Gallery
+            photos={photos}
+            onClick={(_, { photo }) => onSelectImage(photo.src)}
+          />
+        )}
+        {loading && (
+          <div className="flex justify-center">
+            <Icons.Loader className="w-7 h-7 stroke-primary animate-spin" />
+          </div>
         )}
         <div ref={ref} className="w-full h-5" />
       </div>

@@ -2,7 +2,7 @@ import React from "react";
 import QuizImage from "./QuizImage";
 import { motion } from "framer-motion";
 import { usePlayQuizContext, type PlayQuizQuestion } from "./Context";
-import { toCapitalize } from "@/lib/utils";
+import { cn, toCapitalize } from "@/lib/utils";
 import { Button } from "../ui/button";
 import OptionsSwitcher from "./OptionsSwitcher";
 import ProgressBar from "./ProgressBar";
@@ -17,15 +17,15 @@ const variants = {
 
 export default function Content() {
   const {
-    state: { currentQuestion, quizMode, playQuizQuestions },
+    state: { currentQuestion, quizMode, playQuizQuestions, isResultSheetOpen },
     goNextQuestion,
   } = usePlayQuizContext();
 
   return (
-    <div className="flex flex-col w-full flex-1  items-center">
-      <div className="p-3 max-w-6xl flex-1 flex flex-col">
+    <div className="flex flex-col w-full flex-1  items-center justify-center">
+      <div className="p-3 w-full max-w-6xl flex-1 flex items-center justify-center">
         {quizMode !== "ended" ? (
-          <div className="flex-1 flex">
+          <div className="flex-1">
             {playQuizQuestions
               .sort((a, b) => a.questionOrder - b.questionOrder)
               .map((question) => {
@@ -44,14 +44,18 @@ export default function Content() {
                     style={{
                       display:
                         question.questionOrder === currentQuestion
-                          ? "grid"
+                          ? "flex"
                           : "none",
                     }}
                     key={question.id}
-                    className="grid-rows-[auto_1fr] sm:grid-rows-1 sm:grid-cols-2 gap-5 items-center"
+                    className={cn(
+                      "flex flex-col sm:flex-row gap-5 items-center justify-center"
+                    )}
                   >
-                    <QuizImage imageUrl="" />
-                    <div className="flex flex-col gap-3 h-full sm:justify-center">
+                    {question.imageUrl && (
+                      <QuizImage imageUrl={question.imageUrl} />
+                    )}
+                    <div className="flex flex-col gap-3 h-full w-full sm:justify-center max-w-2xl">
                       {question.question &&
                         question.type !== "FILL_IN_THE_BLANK" && (
                           <p className="text-2xl text-gray-dark text-center sm:text-start">
@@ -66,11 +70,14 @@ export default function Content() {
                         <Hints />
                       </div>
                       <OptionsSwitcher question={question} />
-                      {(quizMode === "answered" || quizMode === "timeOut") && (
-                        <div className="flex justify-end">
-                          <Button onClick={goNextQuestion}>Next</Button>
-                        </div>
-                      )}
+                      <div
+                        className={cn("flex justify-end opacity-0", {
+                          "opacity-100":
+                            quizMode === "answered" || quizMode === "timeOut",
+                        })}
+                      >
+                        <Button onClick={goNextQuestion}>Next</Button>
+                      </div>
                     </div>
                   </motion.div>
                 );

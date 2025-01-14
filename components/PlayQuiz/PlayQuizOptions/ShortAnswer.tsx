@@ -114,13 +114,11 @@ export default function ShortAnswer({
             <p>{question.correctAnswer}</p>
           </div>
         )}
-        <Button
-          className="self-end"
-          type="submit"
-          disabled={quizMode === "answered" || quizMode === "timeOut"}
-        >
-          Submit
-        </Button>
+        {(quizMode === "playing" || quizMode === "waiting") && (
+          <Button className="self-end" type="submit">
+            Submit
+          </Button>
+        )}
       </form>
     </Form>
   );

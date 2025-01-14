@@ -20,7 +20,7 @@ import ErrorSpan from "../Question/QuestionForms/QuestionFormsElements/ErrorSpan
 import { cn } from "@/lib/utils";
 
 export default function Settings() {
-  const [isImageManagerTabs, setIsImageManagerTabs] = useState(true);
+  const [isImageManagerTabs, setIsImageManagerTabs] = useState(false);
 
   const {
     dispatch,
