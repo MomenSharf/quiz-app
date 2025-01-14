@@ -55,32 +55,32 @@ export default function QuestionInput({
                 {...field}
                 value={getValues(`questions.${questionIndex}.question`)}
               />
-                <ImageManagerTabs
-                tabs={['upload', "stockPhotos", "giphyGIFS"]}
-                  onDropFunction={(acceptedFiles) => {
-                    setIsImageManagerTabs(false);
-                    dispatch({
-                      type: "SET_IS_IMAGE_EDITOR_OPEN",
-                      payload: {
-                        isOpen: true,
-                        files: acceptedFiles,
-                        field: `questions.${questionIndex}.imageUrl`,
-                      },
-                    });
-                  }}
-                  open={isImageManagerTabs}
-                  onOpenChange={setIsImageManagerTabs}
-                  trigger={
-                    hasImageUrl ? undefined : (
-                      <Button
-                        variant="outline"
-                        className="h-full border-l-0 rounded-tl-none rounded-bl-none"
-                      >
-                        <Icons.picture className="w-5 h-5 fill-black" />
-                      </Button>
-                    )
-                  }
-                />
+              <ImageManagerTabs
+                tabs={["upload", "stockPhotos", "giphyGIFS"]}
+                onSelectImage={(acceptedFiles) => {
+                  setIsImageManagerTabs(false);
+                  dispatch({
+                    type: "SET_IS_IMAGE_EDITOR_OPEN",
+                    payload: {
+                      isOpen: true,
+                      files: acceptedFiles,
+                      field: `questions.${questionIndex}.imageUrl`,
+                    },
+                  });
+                }}
+                open={isImageManagerTabs}
+                onOpenChange={setIsImageManagerTabs}
+                trigger={
+                  hasImageUrl ? undefined : (
+                    <Button
+                      variant="outline"
+                      className="h-full border-l-0 rounded-tl-none rounded-bl-none"
+                    >
+                      <Icons.picture className="w-5 h-5 fill-black" />
+                    </Button>
+                  )
+                }
+              />
             </div>
           </FormControl>
           <FormMessage className="text-xs" />

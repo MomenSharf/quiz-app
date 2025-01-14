@@ -32,7 +32,7 @@ export default function ProfileCard({ user }: { user: SettingsUser }) {
   const [isUpdatingProfile, setIsUpdatingProfile] = useState(false);
   const [isImageMangerOpen, setImageMangerOpen] = useState(false);
   const [isImageEditorOpen, setImageEditorOpen] = useState(false);
-  const [files, setFiles] = useState<File[] | null>(null);
+  const [files, setFiles] = useState<File[] | string |null>(null);
   const [isSendResetPasswordSuccess, setIsSendResetPasswordSuccess] =
     useState(false);
   const [isSendingResetEmail, setisSendingResetEmail] = useState(false);
@@ -67,7 +67,7 @@ export default function ProfileCard({ user }: { user: SettingsUser }) {
     }
   };
 
-  const onDropFunction = (acceptedFiles: File[]) => {
+  const onSelectImage = (acceptedFiles: File[] | string) => {
     setFiles(acceptedFiles);
     setImageMangerOpen(false);
     setImageEditorOpen(true);
@@ -268,7 +268,7 @@ export default function ProfileCard({ user }: { user: SettingsUser }) {
       tabs={['upload', 'stockPhotos']}
         open={isImageMangerOpen}
         onOpenChange={setImageMangerOpen}
-        onDropFunction={onDropFunction}
+        onSelectImage={onSelectImage}
       />
       <ImageEditor
         open={isImageEditorOpen}

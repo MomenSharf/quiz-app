@@ -9,13 +9,13 @@ import { ImageUp } from "lucide-react";
 import { toast } from "sonner";
 
 export default function ImageUploader({
-  onDropFunction,
+  onSelectImage,
 }: {
-  onDropFunction: (acceptedFiles: File[]  | string ) => void;
+  onSelectImage: (acceptedFiles: File[]  | string ) => void;
 }) {
 
   const { getRootProps, getInputProps } = useDropzone({
-    onDrop: onDropFunction,
+    onDrop: onSelectImage,
     accept: generateClientDropzoneAccept(["image/*"]),
   });
 

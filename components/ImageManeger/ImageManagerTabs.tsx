@@ -25,7 +25,7 @@ export default function ImageManagerTabs({
   function TabsContentSwitcher({ tab }: { tab: ImageManagerTabsType }) {
     switch (tab) {
       case "upload":
-        return <ImageUploader onDropFunction={onSelectImage} />;
+        return <ImageUploader onSelectImage={onSelectImage} />;
       case "stockPhotos":
         return <StockPhotos onSelectImage={onSelectImage}/>;
       case "giphyGIFS":
