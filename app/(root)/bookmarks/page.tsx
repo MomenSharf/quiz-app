@@ -33,11 +33,7 @@ export default async function Page(props: {
   }
   return (
     <div className="flex flex-col h-full gap-3 p-2 sm:p-3">
-      {query && (
-        <h1 className="font-semibold max-w-full truncate">
-          Showing results for {`'${query}'`}
-        </h1>
-      )}
+      <h1 className="text-thin text-lg">BOOKMARKS</h1>
       <div className="flex justify-end gap-1 sm:gap-3">
         <SortBySelector />
         <CategorySelector />
@@ -48,8 +44,8 @@ export default async function Page(props: {
         ) : (
           <div className="flex justify-center items-center h-full">
             <div className="flex flex-col gap-3 justify-center items-center">
-              <Icons.bookmarkOff className="w-16 h-16 sm:w-20 sm:h-20 fill-gray-dark" />
-              <p className="text-sm sm:text-base">
+              <Icons.bookmarkOff className="w-16 h-16 sm:w-20 sm:h-20 fill-muted-foreground" />
+              <p className="text-sm sm:text-base text-gray-medium">
                 No bookmarked quizzes found
               </p>
             </div>

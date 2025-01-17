@@ -43,7 +43,7 @@ export default function ImageManagerTabs({
     <Dialog open={open} onOpenChange={onOpenChange}>
       {trigger && <DialogTrigger asChild>{trigger}</DialogTrigger>}
       <DialogContent className="max-w-3xl flex flex-col px-3 pt-10 pb-0 gap-3">
-        <Tabs defaultValue={IMAGE_MANAGER_TABS[2].value} className="h-full pb-3">
+        <Tabs defaultValue={IMAGE_MANAGER_TABS[0].value} className="h-full pb-3">
           <TabsList className="flex mb-3">
             {TABS.map(({ label, value }) => {
               return (

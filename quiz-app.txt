@@ -1,0 +1,504 @@
+so i need to meke for me a data to seed it for my quiz app in prisma database but i need it to be very realistic like users names and quizes contect and rates and all data i need it to be very realistic, and i will provide to you a prisma schema and zod validation schema for you to make tha data compatible with my database. also i will write a comment on top of any thing or in the same line to keep it in mind or example for it, like in top of prisma model or questions schemas. i need you to make a lot of users and and users have a lot of quizzes and retings and bookmarks. I need your to make the data larg and realistic. in fill in the blanks question do't add ____ keep question clean. make all imageUrls for users or quizzes or questions or questions items from any place but make it suitable with what's it's was add it for. make all quizzes valid whit zod schema to make it all quizzes visibility public. don't save any question with type unselected. make all ids in the database uuid
+so this the prisma schema file sprisma.prismama :
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(cuid()) 
+  name          String?  
+  email         String    @unique
+  emailVerified DateTime?
+  username      String?   @unique
+  imageUrl      String?
+  avatarColor   String? // hex color
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  password      String?
+  accounts      Account[]
+  Authenticator Authenticator[]
+  folders       Folder[]
+  quizzes       Quiz[]
+  sessions      Session[]
+  ratings       Rating[]
+  QuizProgress  QuizProgress[]
+  bookmarks     Bookmark[]
+
+  @@index([email]) // Index for faster email lookups
+}
+
+model Folder {
+  id         String   @id @default(cuid())
+  title      String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  userId     String
+  parentId   String?
+  parent     Folder?  @relation("Subfolders", fields: [parentId], references: [id], onDelete: Cascade)
+  subfolders Folder[] @relation("Subfolders")
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  quizzes    Quiz[]
+}
+
+model Quiz {
+  id              String         @id @default(cuid())
+  title           String
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  categories      String[]
+  description     String
+  visibility      Visibility     @default(PUBLIC)
+  folderId        String?
+  userId          String
+  questions       Question[]
+  folder          Folder?        @relation(fields: [folderId], references: [id], onDelete: Cascade)
+  user            User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  ratings         Rating[]
+  QuizProgress    QuizProgress[] // this just for when the user play quiz to save the progress
+  bookmarks       Bookmark[]
+  imageUrl        String?
+  playCount       Int            @default(0) 
+  completionCount Int            @default(0) 
+
+  @@index([title, createdAt]) 
+}
+
+model Question {
+  id            String       @id @default(cuid())
+  type          QuestionType
+  question      String?
+  correctAnswer String?
+  quizId        String
+  questionOrder Int
+  items         Item[]
+  timeLimit     Int // 5, 10, 15, 20, 30, 45 seconds or 1, 2, 3, 5, 10, 15, 20 minutes but the valeuw save in milli seconds
+  points        Int // between 0 and 20
+  quiz          Quiz         @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  imageUrl      String?
+}
+
+model Item {
+  id         String    @id @default(cuid())
+  text       String
+  match      String?
+  isCorrect  Boolean?
+  order      Int?
+  isBlank    Boolean?
+  questionId String?
+  Question   Question? @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  imageUrl   String?
+}
+
+model Rating {
+  id        String   @id @default(cuid())
+  quiz      Quiz     @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  quizId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  createdAt DateTime @default(now())
+
+  rate Int // from 1 to 5
+}
+
+model Bookmark {
+  id     String @id @default(cuid())
+  quiz   Quiz   @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  quizId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+
+  @@unique([userId, quizId])
+}
+
+// this only for save play quiz progress
+model QuizProgress {
+  id                String    @id @default(cuid()) // Unique identifier for the progress record
+  userId            String // Reference to the User
+  quizId            String // Reference to the Quiz
+  currentQuestion   Int // Tracks the current question number
+  isCompleted       Boolean   @default(false) // Whether the quiz is completed
+  startedAt         DateTime  @default(now()) // Time when the quiz started
+  completedAt       DateTime? // Time when the quiz was completed, null if not completed
+  lastUpdated       DateTime  @updatedAt // Time of the last update to the progress
+  playQuizQuestions Json[]
+  user              User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  quiz              Quiz      @relation(fields: [quizId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, quizId]) // Ensures only one progress record per quiz per user
+}
+
+// this form next Auth
+model Account {
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([provider, providerAccountId])
+}
+
+model VerificationToken {
+  id      String   @id @default(cuid())
+  email   String
+  token   String
+  expires DateTime
+
+  @@unique([email, token]) // Ensure uniqueness for email, token, and type
+}
+
+// this form next Auth
+model Session {
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// this form next Auth
+
+model Authenticator {
+  credentialID         String  @unique
+  userId               String
+  providerAccountId    String
+  credentialPublicKey  String
+  counter              Int
+  credentialDeviceType String
+  credentialBackedUp   Boolean
+  transports           String?
+  user                 User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([userId, credentialID])
+}
+
+enum Visibility {
+  PUBLIC
+  PRIVATE
+}
+
+enum QuestionType {
+  UNSELECTED
+  PICK_ANSWER
+  TRUE_FALSE
+  FILL_IN_THE_BLANK
+  SHORT_ANSWER
+  MATCHING_PAIRS
+  ORDER
+}
+
+----
+
+this zode schema file 
+// this only when the user add new question and no type is selected yet do't save it in database
+export const unselectedSchema = z.object({
+  id: z.string(),
+  type: z.literal(QuestionType.UNSELECTED),
+  questionOrder: z.number(),
+  timeLimit: z.number(),
+  points: z.number(),
+});
+/* 
+example :
+{
+  "id": "uuid-1",
+  "type": "PICK_ANSWER",
+  "questionOrder": 0,
+  "timeLimit": 10000,
+  "points": 10,
+  items: [
+  id: "uuid-1",
+  text: "Option 1",
+  isCorrect: false,
+  },
+  {
+  id: "uuid-2",
+  text: "Option 2",
+  isCorrect: true,
+  },  
+  {
+  id: "uuid-3",
+  text: "Option 3",
+  isCorrect: false,
+  },  
+  ]  
+}
+*/
+export const pickAnswerSchema = z.object({
+  id: z.string(),
+  type: z.literal(QuestionType.PICK_ANSWER),
+  questionOrder: z.number(),
+  timeLimit: z.number(),
+  points: z.number(),
+  imageUrl: z.string().optional(),
+  question: z.string().min(1, "Question is required"),
+  items: z
+    .array(
+      z.object({
+        id: z.string(),
+        text: z.string().min(1, "Option is required"),
+        isCorrect: z.boolean(),
+      })
+    )
+    .min(2, "At least two options are required")
+    .refine((items) => items.find((item) => item.isCorrect), {
+      message: "At least one item must be marked as correct",
+      path: ["oneCorrectAnswer"],
+    }),
+});
+
+/*
+ example :
+{
+  "id": "uuid-1",
+  "type": "TRUE_FALSE",
+  "questionOrder": 0,
+  "timeLimit": 10000,
+  "points": 10,
+  imageUrl: "thumbnail-image-url",
+  question: "Is this a correct sentence?",
+  correctAnswer: "true"
+}
+ */
+export const trueFalseSchema = z.object({
+  id: z.string(),
+  type: z.literal(QuestionType.TRUE_FALSE),
+  questionOrder: z.number(),
+  timeLimit: z.number(),
+  points: z.number(),
+  imageUrl: z.string().optional(),
+  question: z.string().min(1, "Question is required"),
+  correctAnswer: z.union([z.literal("true"), z.literal("false")]),
+});
+
+/*
+ I need u here to make question items cames from the question word and any items whit isBlank but make it realistic and egnore those [" ", "\t", "\r", "\f", "?", "!", "/", "@", "$", ">", "<", "*", "+", "-", "(", ")", "[", "]", "{", "}", ":", ";", "'", "\"", "`", "|", "&", "^", "%", ",", ".", "\\"]
+ example :
+{
+  "id": "uuid-1",
+  "type": "FILL_IN_THE_BLANK",
+  "questionOrder": 0,
+  "timeLimit": 10000,
+  "points": 10,
+  imageUrl: "thumbnail-image-url",
+  question: "I eat pizza and drenk orange",
+  items: [
+  {
+    id: "uuid-1",
+    text: "I",
+    isBlank: false,
+  },
+  {
+    id: "uuid-2",
+    text: "eat",
+    isBlank: false,
+  },
+  {
+    id: "uuid-3",
+    text: "pizza",
+    isBlank: true,
+  }, 
+  {
+   id: "uuid-4",
+    text: "and",
+    isBlank: false,
+  },
+  {
+   id: "uuid-4",
+    text: "drunk",
+    isBlank: false,
+  },
+  {
+   id: "uuid-5",
+    text: "orange",
+    isBlank: true,
+  },  
+  ]  
+}
+*/
+export const fillInTheBlankSchema = z.object({
+  id: z.string(),
+  type: z.literal(QuestionType.FILL_IN_THE_BLANK),
+  questionOrder: z.number(),
+  timeLimit: z.number(),
+  points: z.number(),
+  imageUrl: z.string().optional(),
+  question: z.string().min(1, "Question is required"),
+  items: z
+    .array(
+      z.object({
+        id: z.string(),
+        text: z.string(),
+        isBlank: z.boolean(),
+      })
+    )
+    .min(3, "At least three items are required")
+    .refine((items) => items.filter((item) => item.isBlank).length > 1, {
+      message: "At least tow blank items",
+      path: ["towBlanks"],
+    }),
+});
+
+/*
+ example :
+{
+  "id": "uuid-1",
+  "type": "MULTIPLE_CHOICE",
+  "questionOrder": 0,
+  "timeLimit": 10000,
+  "points": 10,
+  imageUrl: "thumbnail-image-url",
+  question: "What does a cat eat?",
+  correctAnswer : fish
+}
+*/
+export const shortAnswerSchema = z.object({
+  id: z.string(),
+  type: z.literal(QuestionType.SHORT_ANSWER),
+  questionOrder: z.number(),
+  timeLimit: z.number(),
+  points: z.number(),
+  imageUrl: z.string().optional(),
+  question: z.string().min(1, "Question is required"),
+  correctAnswer: z.string().min(1, "Correct answer is required"),
+});
+
+/*
+ example :
+ {
+  "id": "uuid-1",
+  "type": "MATCHING_PAIRS",
+  "questionOrder": 0,
+  "timeLimit": 10000,
+  "points": 10,
+  imageUrl: "thumbnail-image-url",
+  question: "Which animal is this?",
+  items: [
+  {
+   id: "uuid-1",
+    text: "Elephant",
+    match: "tusk",
+  },
+  {
+   id: "uuid-2",
+    text: "Lion",
+    match: "paw",
+  },
+  {
+   id: "uuid-3",
+    text: "Tiger",
+    match: "fur",
+  },
+  {
+   id: "uuid-4",
+    text: "Giraffe",
+    match: "neck",
+  },
+  ]
+}
+*/
+export const matchingPairsSchema = z.object({
+  id: z.string(),
+  type: z.literal(QuestionType.MATCHING_PAIRS),
+  questionOrder: z.number(),
+  timeLimit: z.number(),
+  points: z.number(),
+  imageUrl: z.string().optional(),
+  question: z.string().min(1, "Question is required"),
+  items: z
+    .array(
+      z.object({
+        id: z.string(),
+        text: z.string().min(1, "Prompt is required"),
+        match: z.string().min(1, "Answer is required"),
+      })
+    )
+    .min(2, "At least two options are required"),
+});
+
+/*
+ example :
+ {
+  "id": "uuid-1",
+  "type": "ORDER",
+  "questionOrder": 0,
+  "timeLimit": 10000,
+  "points": 10,
+  imageUrl: "thumbnail-image-url",
+  question: "Sort these items by size",
+  items: [
+  {
+   id: "uuid-1",
+    text: "Small",
+    order: 1,
+  },
+  {
+   id: "uuid-2",
+    text: "Medium",
+    order: 2,
+  },
+  {
+   id: "uuid-3",
+    text: "Large",
+    order: 3,
+  },
+  ]
+})
+*/
+export const questionOrderSchema = z.object({
+  id: z.string(),
+  type: z.literal(QuestionType.ORDER),
+  questionOrder: z.number(),
+  timeLimit: z.number(),
+  points: z.number(),
+  imageUrl: z.string().optional(),
+  question: z.string().min(1, "Question is required"),
+  items: z.array(
+    z.object({
+      id: z.string(),
+      text: z.string().min(1, "Prompt is required"),
+      order: z.number(),
+    })
+  ),
+});
+
+export const quizSchema = z.object({
+  id: z.string(),
+  title: z.string().min(3, "Title must be at least 3 characters long"),
+  description: z
+    .string()
+    .min(10, "Description must be at least 10 characters long"),
+  imageUrl: z.string().min(5, "Thumbnail image is required"),
+  categories: z.array(z.string()).min(1, "At least one category is required"), // form this array ["SCIENCE", "MATH", "HISTORY", "GEOGRAPHY", "LITERATURE", "TECHNOLOGY", "SPORTS", "ART", "LANGUAGE", "GENERAL_KNOWLEDGE", "POLITICS", "ECONOMICS", "PHILOSOPHY", "PSYCHOLOGY", "BIOLOGY", "CHEMISTRY", "PHYSICS", "COMPUTER_SCIENCE", "RELIGION", "NATURE", "EDUCATION"]
+  visibility: visibilityEnum, // 'PUBLIC', 'PRIVATE'
+  questions: z
+    .array(
+      z.union([
+        unselectedSchema,
+        pickAnswerSchema,
+        trueFalseSchema,
+        fillInTheBlankSchema,
+        shortAnswerSchema,
+        matchingPairsSchema,
+        questionOrderSchema,
+      ])
+    )
+    .min(1, "At least one question is required"),
+});
+
+so please take your time and make it realistic not just random data and make it large and realistic and do't forget about the comments i add it to help you make the data in right way and what i mean by saying large is like the app have alot of users and user make alot of quizzes but in realistic way

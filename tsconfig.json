@@ -28,7 +28,9 @@
     ".next/types/**/*.ts",
     "quiz-app",
     "insertData.js",
-    "app/(auth)/forgot-password"
-, "app/(auth)/reset-password"  ],
+    "app/(auth)/forgot-password",
+    "app/(auth)/reset-password",
+    "prisma/seed.js"
+  ],
   "exclude": ["node_modules"]
 }

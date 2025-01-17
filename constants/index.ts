@@ -7,26 +7,7 @@ import {
 } from "@/types";
 import { THEME_COLORS as colorsType } from "@/types/theme";
 import { QuestionType } from "@prisma/client";
-import { icons, LucideProps } from "lucide-react";
-import {
-  BookOpen,
-  Cpu,
-  Calendar,
-  Globe,
-  PenTool,
-  Code,
-  Heart,
-  Layers,
-  User,
-  Lightbulb,
-  Briefcase,
-  BarChart2,
-  FileText,
-  Github,
-  Music,
-  Video,
-  Search,
-} from "lucide-react";
+import { LucideProps } from "lucide-react";
 
 export const AVATAR_COLORS = [
   "#1ABC9C", // Turquoise

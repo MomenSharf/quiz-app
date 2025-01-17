@@ -2,12 +2,10 @@
 
 - solve catch data when user nevigate between pages
 - make app more server components instead of client components
-- make all loading stats with const [isPending, startTransition] = useTransiti()
-- make all images with property loading="lazy"
 
 ## home
 
-- chenge categories scoller icons color ...
+- make categories color more better
 
 ## /search
 
@@ -24,6 +22,7 @@
 
 - make loder
 - make secret passwords to be used only by me
+- fix stoke photos gallery
 
 ## quiz details
 
@@ -31,5 +30,5 @@
 
 ## play
 
+- make when user press ok the question answer submit
 - make soud effect more better then existing
-- fix when user answer the question next button apper that make user go to next question immediately but after that result sheet open

@@ -3,7 +3,7 @@ import QuizImage from "./QuizImage";
 import { motion } from "framer-motion";
 import { usePlayQuizContext, type PlayQuizQuestion } from "./Context";
 import { cn, toCapitalize } from "@/lib/utils";
-import { Button } from "../ui/button";
+import { Button, buttonVariants } from "../ui/button";
 import OptionsSwitcher from "./OptionsSwitcher";
 import ProgressBar from "./ProgressBar";
 import Timer from "./Timer";
@@ -23,7 +23,7 @@ export default function Content() {
 
   return (
     <div className="flex flex-col w-full flex-1  items-center justify-center">
-      <div className="p-3 w-full max-w-6xl flex-1 flex items-center justify-center">
+      <div className="p-3 w-full max-w-6xl flex-1 flex items-center justify-center overflow-x-hidden">
         {quizMode !== "ended" ? (
           <div className="flex-1">
             {playQuizQuestions
@@ -70,13 +70,19 @@ export default function Content() {
                         <Hints />
                       </div>
                       <OptionsSwitcher question={question} />
-                      <div
-                        className={cn("flex justify-end opacity-0", {
-                          "opacity-100":
-                            quizMode === "answered" || quizMode === "timeOut",
-                        })}
-                      >
-                        <Button onClick={goNextQuestion}>Next</Button>
+                      <div className="flex justify-end">
+                        <motion.button
+                          className={cn(buttonVariants(), "disabled:opacity-0")}
+                          animate={
+                            (quizMode === "answered" || quizMode === 'timeOut') && !isResultSheetOpen
+                              ? { opacity: 1, transition: { delay: 1.2 } }
+                              : { opacity: 0 }
+                          }
+                          disabled={isResultSheetOpen}
+                          onClick={goNextQuestion}
+                        >
+                          Next
+                        </motion.button>
                       </div>
                     </div>
                   </motion.div>

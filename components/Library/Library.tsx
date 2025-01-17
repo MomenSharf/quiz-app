@@ -1,5 +1,4 @@
 import { FolderPathSegment } from "@/types";
-import { Separator } from "../ui/separator";
 import { useLibraryContext } from "./Context";
 import EmptyLibrary from "./EmptyLibrary";
 import BreadcrumbDemoFolderPath from "./Folder/BreadcrumbFolderPath";
@@ -27,7 +26,6 @@ export default function Library({
       {path && (
         <BreadcrumbDemoFolderPath path={path} currentFolderId={folderId} />
       )}
-      {/* <Separator /> */}
       <div>
         <Toolbar />
         <Table />

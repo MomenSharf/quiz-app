@@ -5,19 +5,16 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
-
-  // uncomment next line if you use Prisma <5.10
-  // directUrl = env("DATABASE_URL_UNPOOLED")
 }
 
 model User {
-  id            String    @id @default(cuid())
-  name          String?
+  id            String    @id @default(cuid()) 
+  name          String?  
   email         String    @unique
   emailVerified DateTime?
   username      String?   @unique
   imageUrl      String?
-  avatarColor   String? 
+  avatarColor   String? // hex color
   createdAt     DateTime        @default(now())
   updatedAt     DateTime        @updatedAt
   password      String?
@@ -60,13 +57,13 @@ model Quiz {
   folder          Folder?        @relation(fields: [folderId], references: [id], onDelete: Cascade)
   user            User           @relation(fields: [userId], references: [id], onDelete: Cascade)
   ratings         Rating[]
-  QuizProgress    QuizProgress[]
+  QuizProgress    QuizProgress[] // this just for when the user play quiz to save the progress
   bookmarks       Bookmark[]
   imageUrl        String?
-  playCount       Int            @default(0) // Field to track how many times the quiz has been played
-  completionCount Int            @default(0) // Total number of times the quiz has been completed
+  playCount       Int            @default(0) 
+  completionCount Int            @default(0) 
 
-  @@index([title, createdAt]) // Index for faster querying by title and creation date
+  @@index([title, createdAt]) 
 }
 
 model Question {
@@ -77,8 +74,8 @@ model Question {
   quizId        String
   questionOrder Int
   items         Item[]
-  timeLimit     Int
-  points        Int
+  timeLimit     Int // 5, 10, 15, 20, 30, 45 seconds or 1, 2, 3, 5, 10, 15, 20 minutes but the valeuw save in milli seconds
+  points        Int // between 0 and 20
   quiz          Quiz         @relation(fields: [quizId], references: [id], onDelete: Cascade)
   imageUrl      String?
 }
@@ -103,7 +100,7 @@ model Rating {
   userId    String
   createdAt DateTime @default(now())
 
-  rate Int
+  rate Int // from 1 to 5
 }
 
 model Bookmark {
@@ -116,6 +113,7 @@ model Bookmark {
   @@unique([userId, quizId])
 }
 
+// this only for save play quiz progress
 model QuizProgress {
   id                String    @id @default(cuid()) // Unique identifier for the progress record
   userId            String // Reference to the User
@@ -132,6 +130,7 @@ model QuizProgress {
   @@unique([userId, quizId]) // Ensures only one progress record per quiz per user
 }
 
+// this form next Auth
 model Account {
   userId            String
   type              String
@@ -160,6 +159,7 @@ model VerificationToken {
   @@unique([email, token]) // Ensure uniqueness for email, token, and type
 }
 
+// this form next Auth
 model Session {
   sessionToken String   @unique
   userId       String
@@ -168,6 +168,8 @@ model Session {
   updatedAt    DateTime @updatedAt
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
+
+// this form next Auth
 
 model Authenticator {
   credentialID         String  @unique

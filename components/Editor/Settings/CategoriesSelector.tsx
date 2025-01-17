@@ -11,6 +11,7 @@ export default function CategoriesSelector() {
       getValues,
       setValue,
       formState: { errors },
+      trigger,
     },
   } = useEditorContext();
 
@@ -22,7 +23,6 @@ export default function CategoriesSelector() {
       isSelected: categories.includes(category.value),
     };
   });
-  
 
   return (
     <div className="flex flex-col gap-1">
@@ -47,6 +47,9 @@ export default function CategoriesSelector() {
                 );
               } else {
                 setValue("categories", [...categories, value]);
+              }
+              if (errors.categories) {
+                trigger("categories");
               }
             }}
             className="gap-1"

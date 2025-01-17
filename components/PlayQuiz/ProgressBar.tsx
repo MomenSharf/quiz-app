@@ -19,7 +19,7 @@ export default function ProgressBar() {
         quizMode === "ended" ? (
           <Trophy className="w-4 h-4" />
         ) : (
-          `${currentQuestion + 1}/${playQuizQuestions.length}`
+          `${currentQuestion + 1} / ${playQuizQuestions.length}`
         )}
       </span>
       <Progress

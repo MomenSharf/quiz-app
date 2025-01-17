@@ -3,7 +3,7 @@ import { UnsplashImage } from "@/types";
 import { useInView } from "framer-motion";
 import { Search } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
-import Gallery from "react-photo-gallery";
+// import Gallery from "react-photo-gallery";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { toast } from "../ui/use-toast";
@@ -119,12 +119,12 @@ export default function StockPhotos({
 
       {/* Photos Grid */}
       <div className="flex-1 max-h-[415px] overflow-y-scroll">
-        {photos.length > 0 && (
+        {/* {photos.length > 0 && (
           <Gallery
             photos={photos}
             onClick={(_, { photo }) => onSelectImage(photo.src)}
           />
-        )}
+        )} */}
         {loading && (
           <div className="flex justify-center">
             <Icons.Loader className="w-7 h-7 stroke-primary animate-spin" />
