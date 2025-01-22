@@ -152,6 +152,12 @@ export const EditorProvider = ({
   }, []);
   const data = getValues();
 
+  if(!quizSchema.safeParse(data).success) {
+    data.visibility = 'PRIVATE'
+  }
+
+  console.log(data.visibility);
+  
   const saveEditorQuiz = useCallback(
     async (isReseting: boolean) => {
       try {

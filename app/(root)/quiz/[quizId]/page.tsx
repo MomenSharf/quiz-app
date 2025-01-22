@@ -1,5 +1,5 @@
 import ErrorPage from "@/components/Layout/ErrorPage";
-import Quiz from "@/components/QuizDetails/Quiz";
+import QuizDetails from "@/components/QuizDetails/QuizDetails";
 import { getQuizDetails } from "@/lib/actions/quizDetails";
 import { getCurrentUser } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
@@ -20,6 +20,10 @@ export default async function Page({
   const isCurrentUser = quizDetails.user.id === session?.user.id;
 
   return (
-    <Quiz quiz={quizDetails} pathname="/quiz" isCurrentUser={isCurrentUser} />
+    <QuizDetails
+      quiz={quizDetails}
+      pathname="/quiz"
+      isCurrentUser={isCurrentUser}
+    />
   );
 }

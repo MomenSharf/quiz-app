@@ -10,7 +10,7 @@ import { redirect } from "next/navigation";
 // Get
 export const getLibraryQuizzes = async (
   sortOption: LibrarySortOption,
-  folderId?: string
+  folderId: string | null = null
 ) => {
   const session = await getCurrentUser();
 

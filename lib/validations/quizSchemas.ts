@@ -22,6 +22,7 @@ example :
   "timeLimit": 10000,
   "points": 10,
   items: [
+  {
   id: "uuid-1",
   text: "Option 1",
   isCorrect: false,

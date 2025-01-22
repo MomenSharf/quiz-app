@@ -6,7 +6,7 @@ import { UserProfile } from "@/types";
 
 export default function Profile({ profile }: { profile: UserProfile }) {
   return (
-    <div className="flex flex-col gap-3">
+    <div className="container flex flex-col gap-3">
       <div className="bg-card flex flex-col gap-3 p-3">
         <div className="flex gap-3 items-center">
           <Image

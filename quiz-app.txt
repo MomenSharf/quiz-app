@@ -1,5 +1,5 @@
-so i need to meke for me a data to seed it for my quiz app in prisma database but i need it to be very realistic like users names and quizes contect and rates and all data i need it to be very realistic, and i will provide to you a prisma schema and zod validation schema for you to make tha data compatible with my database. also i will write a comment on top of any thing or in the same line to keep it in mind or example for it, like in top of prisma model or questions schemas. i need you to make a lot of users and and users have a lot of quizzes and retings and bookmarks. I need your to make the data larg and realistic. in fill in the blanks question do't add ____ keep question clean. make all imageUrls for users or quizzes or questions or questions items from any place but make it suitable with what's it's was add it for. make all quizzes valid whit zod schema to make it all quizzes visibility public. don't save any question with type unselected. make all ids in the database uuid
-so this the prisma schema file sprisma.prismama :
+so i need to meke for me a data to seed it for my quiz app in prisma database but i need it to be very realistic like users names and quizes contect and rates and all data, i need it to be very realistic, and i will provide to you a prisma schema and zod validation schema for you to make tha data compatible with my database. this files had comment to help you understand what i need :
+so this the prisma.shema file :
 generator client {
   provider = "prisma-client-js"
 }
@@ -500,5 +500,30 @@ export const quizSchema = z.object({
     )
     .min(1, "At least one question is required"),
 });
+
+------
+
+ this things keep on mind to make it right:
+
+- I need your to make the data larg and realistic not just random values
+
+- make id and username and email unique
+
+- make ids for all users and quizzes and questions and items and rates and bookmarks and others with uuid  and rembered to make relat it to eatchother and make it real like cm60qua3o0049shfzkdsbn1xs
+
+- make all imageUrls from unsplsh or giphy  images and make it suitable wiith the model was add it  to it
+
+- make all quizzes valid whit zod schema to make it all quizzes visibility public
+
+- when you make FILL_IN_THE_BLANK question do not add ____  and make itesm form the all question words like split it and filter the special characters do't add it to items and make ones blanks 
+
+- don't make any question with type unselected
+
+- any quiz must have imageUrl
+
+
+
+
+
 
 so please take your time and make it realistic not just random data and make it large and realistic and do't forget about the comments i add it to help you make the data in right way and what i mean by saying large is like the app have alot of users and user make alot of quizzes but in realistic way

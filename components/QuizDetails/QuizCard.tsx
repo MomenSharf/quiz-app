@@ -1,4 +1,3 @@
-"use client";
 import { copyQuiz as copyQuizServer } from "@/lib/actions/quizDetails";
 import { calculateQuizRatings, cn, formatToMinSec } from "@/lib/utils";
 import { QuizDetailsWithIsBookmark } from "@/types";
@@ -18,9 +17,11 @@ import BookmarkButton from "../Quiz/BookmarkButton";
 import { UserAvatarImage } from "../User/UserAvatar";
 import { Icons } from "../icons";
 import { Badge, badgeVariants } from "../ui/badge";
-import { Button } from "../ui/button";
+import { Button, buttonVariants } from "../ui/button";
 import { toast } from "../ui/use-toast";
 import DeleteDialog from "./DeleteDiaolg";
+import CopyButton from "./CopyButton";
+import QuizCardDescription from "./QuizCardDescription";
 
 export default function QuizCard({
   quiz,
@@ -31,40 +32,11 @@ export default function QuizCard({
   pathname: string;
   isCurrentUser?: boolean;
 }) {
-  const [isDescriptionOpen, setIsDescriptionOpen] = useState(true);
-  const [isShowMoreVisible, setIsShowMoreVisible] = useState(true);
-  const [isCopyingQuiz, setIsCopiyngQuiz] = useState(false);
-  const descriptionRef = useRef<HTMLParagraphElement>(null);
   const quizTime = quiz.questions.reduce(
     (acc, curr) => acc + curr.timeLimit,
     0
   );
 
-  useEffect(() => {
-    if (!descriptionRef.current) return;
-    const lineHeight = parseFloat(
-      getComputedStyle(descriptionRef.current).lineHeight
-    );
-    const contentHeight = descriptionRef.current.scrollHeight;
-    if (contentHeight > lineHeight * 3) {
-      setIsShowMoreVisible(true);
-    }
-  }, []);
-
-  const copyQuiz = async () => {
-    setIsCopiyngQuiz(true);
-    const { success, message, newQuiz } = await copyQuizServer(quiz.id);
-    if (!success || !newQuiz) {
-      setIsCopiyngQuiz(false);
-      toast({ variant: "destructive", description: message });
-    } else {
-      setIsCopiyngQuiz(false);
-      toast({ description: message });
-      router.push(`/editor/${newQuiz.id}`);
-    }
-  };
-
-  const router = useRouter();
   const { averageRating, totalRatings } = calculateQuizRatings(quiz.ratings);
 
   return (
@@ -115,31 +87,7 @@ export default function QuizCard({
         </div>
         <div className="flex flex-col gap-1">
           <p className="text-sm">Description :</p>
-          <p
-            className={cn("text-xs text-gray-medium relative", {
-              "line-clamp-3": isDescriptionOpen,
-            })}
-            ref={descriptionRef}
-          >
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellendus
-            pariatur totam mollitia impedit provident accusantium eum voluptatum
-            ipsa earum eos fugiat a voluptate laboriosam quibusdam harum quia
-            porro, deserunt rerum?
-            {isShowMoreVisible && (
-              <Button
-                className="absolute right-0 bottom-0 rounded-full w-6 h-6 opacity-70 hover:opacity-100"
-                size="icon"
-                variant="outline"
-                onClick={() => setIsDescriptionOpen((prev) => !prev)}
-              >
-                {!isDescriptionOpen ? (
-                  <ArrowUpIcon className="w-3 h-3" />
-                ) : (
-                  <ArrowDownIcon className="w-3 h-3" />
-                )}
-              </Button>
-            )}
-          </p>
+          <QuizCardDescription description={quiz.description.trim() || ""} />
         </div>
         <div className="flex flex-col gap-1">
           <p className="text-sm">Categories :</p>
@@ -156,35 +104,25 @@ export default function QuizCard({
           </div>
         </div>
         <div className="flex gap-1">
-          <Button
-            className="flex-1 rounded-full max-w-40"
-            onClick={() => router.push(`/play/${quiz.id}`)}
+          <Link
+            href={`/play/${quiz.id}`}
+            className={cn(buttonVariants(), "flex-1 rounded-full max-w-40")}
           >
             Play
-          </Button>
+          </Link>
           {isCurrentUser ? (
-            <Button
-              className="group rounded-full flex-1  max-w-40 gap-2"
-              variant="outline"
-              onClick={() => router.push(`/editor/${quiz.id}`)}
+            <Link
+              href={`/editor/${quiz.id}`}
+              className={cn(
+                buttonVariants({ variant: "outline" }),
+                "group rounded-full flex-1  max-w-40 gap-2"
+              )}
             >
               <Edit className="w-4 h-4 " />
               <span>Edit</span>
-            </Button>
+            </Link>
           ) : (
-            <Button
-              className="rounded-full"
-              size="icon"
-              variant="outline"
-              onClick={copyQuiz}
-              disabled={isCopyingQuiz}
-            >
-              {isCopyingQuiz ? (
-                <Icons.Loader className="w-4 h-4 animate-spin stroke-foreground" />
-              ) : (
-                <Copy className="w-4 h-4" />
-              )}
-            </Button>
+            <CopyButton quizId={quiz.id} />
           )}
 
           <Button className="rounded-full" size="icon" variant="outline">

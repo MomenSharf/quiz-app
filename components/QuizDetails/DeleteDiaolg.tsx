@@ -1,3 +1,4 @@
+'use client'
 import { Icons } from "@/components/icons";
 import { Button, ButtonProps, buttonVariants } from "@/components/ui/button";
 import {

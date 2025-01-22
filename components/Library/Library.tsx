@@ -21,7 +21,7 @@ export default function Library({
     return <EmptyLibrary folderId={folderId} path={path} title={title} />;
   }
   return (
-    <div className="flex flex-col gap-3 p-3 w-full">
+    <div className="container flex flex-col gap-3 p-3 w-full">
       <Header folderId={folderId} title={title} />
       {path && (
         <BreadcrumbDemoFolderPath path={path} currentFolderId={folderId} />

@@ -3,7 +3,6 @@ import { GiphyGif, UnsplashImage } from "@/types";
 import { useInView } from "framer-motion";
 import { Search } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
-import Gallery from "react-photo-gallery";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { toast } from "../ui/use-toast";
