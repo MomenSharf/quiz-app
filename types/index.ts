@@ -105,7 +105,11 @@ export type QuizDetails = Prisma.QuizGetPayload<{
   include: {
     user: true;
     bookmarks: true | undefined;
-    questions: true;
+    questions: {
+      include: {
+        items: true;
+      };
+    };
     ratings: true;
   };
 }>;
@@ -196,8 +200,6 @@ export type UnsplashImage = {
   alt: string; // Alternative text for the image
 };
 
-
-
 export type GiphyGif = {
   id: string;
   title: string;
@@ -215,8 +217,7 @@ export type GiphyGif = {
     };
     // Other size variations can be added here
   };
-}
-
+};
 
 export type Photo = {
   src: string;

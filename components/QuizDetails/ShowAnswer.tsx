@@ -11,7 +11,7 @@ export default function ShowAnswer() {
 
   const handleCheckedChange = (isChecked: boolean) => {
     console.log(isChecked);
-    
+
     setChecked(isChecked);
 
     // Get the current query parameters
@@ -25,17 +25,13 @@ export default function ShowAnswer() {
       params.delete("showAnswers");
     }
 
-    // Update the URL with the modified query parameters
-    router.replace(`?${params.toString()}`, undefined);
+    router.replace(`?${params.toString()}`, { scroll: false });
   };
 
   return (
     <div className="flex items-center gap-2">
       <span className="text-sm font-semibold">Show Answers</span>
-      <Switch
-        checked={checked}
-        onCheckedChange={handleCheckedChange}
-      />
+      <Switch checked={checked} onCheckedChange={handleCheckedChange} />
     </div>
   );
 }

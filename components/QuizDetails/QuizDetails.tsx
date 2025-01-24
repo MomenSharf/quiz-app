@@ -7,10 +7,12 @@ export default function QuizDetails({
   quiz,
   pathname,
   isCurrentUser,
+  showAnswers
 }: {
   quiz: QuizDetailsWithIsBookmark;
   pathname: string;
   isCurrentUser?: boolean;
+  showAnswers: boolean,
 }) {
   return (
     <div className="container flex flex-col gap-5 p-3 items-center w-full ">
@@ -21,7 +23,7 @@ export default function QuizDetails({
         </h4>
       <ShowAnswer />
       </div>
-      <Questions questions={quiz.questions} />
+      <Questions questions={quiz.questions}  showAnswers={showAnswers}/>
     </div>
   );
 }

@@ -2,6 +2,7 @@
 
 - solve catch data when user nevigate between pages
 - make app more server components instead of client components
+- make linebar when user navigate between pages
 
 ## home
 
@@ -18,6 +19,7 @@
 - fix categories selection functionality and trigger when selected
 - fix Reorder mobile functionality
 - fix toggle visibility functionality
+- make question question don't reqiured if does't effect in question
 
 ## image tabs
 
@@ -27,8 +29,6 @@
 - make when user choose gif image dont be cropped and dirctly uploaded
 
 ## quiz details
-
-- add questions card for what represent the quiz question
 
 ## play
 

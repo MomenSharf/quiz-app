@@ -9,7 +9,7 @@ import {
 } from "react";
 import stringSimilarity from "string-similarity";
 
-export type PlayQuizQuestion = EditorQuiz["questions"][number] & {
+export type PlayQuizQuestion = PlayQuizType['quiz']["questions"][number] & {
   // timeTaken: number;
   isAnswerRight: boolean | null;
 };

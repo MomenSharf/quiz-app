@@ -15,7 +15,6 @@ export default function QuizResult() {
     state: { playQuizQuestions, timeTakenArray, quizMode },
     mode
   } = usePlayQuizContext();
-  const [g, setG] = useState(false);
 
   const router = useRouter();
 
@@ -98,12 +97,11 @@ export default function QuizResult() {
               duration: 0.6, // Duration for the animation
             }}
             className="bg-card rounded-xl"
-            onClick={() => setG((prev) => !prev)}
           >
-            <div className="flex flex-col gap-1 p-2 sm:p-3 bg-primary/5 rounded-xl max-w-[180px] shadow-sm h-full">
+            <div className="w-full flex flex-col gap-1 p-2 sm:p-3 bg-primary/5 rounded-xl shadow-sm h-full">
               <Icons.logo className="w-6 h-6 sm:w-10 sm:h-10 fill-primary" />
               <span className="text-lg sm:text-2xl font-medium">{`${correctQuestions.length}/${playQuizQuestions.length}`}</span>
-              <p className="text-gray-DARK text-xs sm:text-sm ">
+              <p className="text-gray-DARK text-xs sm:text-sm">
                 Questions you have answerd right
               </p>
             </div>
@@ -117,8 +115,8 @@ export default function QuizResult() {
             }}
             className="bg-card rounded-xl"
           >
-            <div className="flex flex-col gap-1 p-2 sm:p-3 bg-primary/5 rounded-xl max-w-[180px] shadow-sm h-full">
-              <Medal className="w-6 h-6 sm:w-10 sm:h-10 text-yellow" />
+            <div className="flex flex-col gap-1 p-2 sm:p-3 bg-primary/5 rounded-xl shadow-sm h-full">
+              <Medal className="w-6 h-6 sm:w-10 sm:h-10 text-amber" />
               <span className="text-lg sm:text-2xl font-medium">{`${userPoints}/${totalPoints}`}</span>
               <p className="text-gray-DARK text-xs sm:text-sm ">
                 Points you get it
@@ -134,7 +132,7 @@ export default function QuizResult() {
             }}
             className="bg-card rounded-xl "
           >
-            <div className="flex flex-col gap-1 p-2 sm:p-3 bg-pink/5 rounded-xl max-w-[180px] shadow-sm h-full">
+            <div className="flex flex-col gap-1 p-2 sm:p-3 bg-pink/5 rounded-xl shadow-sm h-full">
               <TimerIcon className="w-6 h-6 sm:w-10 sm:h-10 text-pink" />
               <span className="text-lg sm:text-xl font-medium">{`${formatToMinSec(
                 timeTaken || 0

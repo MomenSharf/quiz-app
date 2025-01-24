@@ -31,6 +31,6 @@
     "app/(auth)/forgot-password",
     "app/(auth)/reset-password",
     "prisma/seed.js"
-  ],
+, "components/QuizDetails/QuestionOptions", "components/QuizDetails/QuestionOptions", "components/QuizDetails/Questions", "components/QuizDetails/QuestionOption"  ],
   "exclude": ["node_modules"]
 }

@@ -3,26 +3,42 @@ import React from "react";
 import { Badge } from "../ui/badge";
 import { toCapitalize } from "@/lib/utils";
 import { formatISODuration, intervalToDuration } from "date-fns";
+import { Medal, Timer } from "lucide-react";
+import PickAnswer from "./QuestionOption/PickAnswer";
+import TrueFalse from "./QuestionOption/TrueFalse";
+import FillInTheBlanks from "./QuestionOption/FillInTheBlanks";
+import Order from "./QuestionOption/Order";
+import MatchingPairs from "./QuestionOption/MatchingPairs";
 
 export default function Question({
   question,
+  showAnswers,
 }: {
   question: QuizDetails["questions"][number];
+  showAnswers: boolean;
 }) {
-  const Questionn = () => {
+  const Options = () => {
     switch (question.type) {
       case "PICK_ANSWER":
-        return "PICK ANSWER";
+        return <PickAnswer question={question} showAnswers={showAnswers} />;
       case "TRUE_FALSE":
-        return "TRUE";
+        return <TrueFalse question={question} showAnswers={showAnswers} />;
       case "SHORT_ANSWER":
-        return "SHORT";
+        return (
+          <>
+            {showAnswers && (
+              <p className="truncate font-semibold">{question.correctAnswer}</p>
+            )}
+          </>
+        );
       case "MATCHING_PAIRS":
-        return "MATCHING_PAIRS";
+        return <MatchingPairs question={question} showAnswers={showAnswers} />;
       case "ORDER":
-        return "ORDER";
+        return <Order question={question} showAnswers={showAnswers} />;
       case "FILL_IN_THE_BLANK":
-        return "FILL_IN_THE_BL";
+        return (
+          <FillInTheBlanks question={question} showAnswers={showAnswers} />
+        );
       default:
         null;
         break;
@@ -47,17 +63,26 @@ export default function Question({
   }
 
   return (
-    <div className="bg-card p-3 flex flex-col rounded-md">
+    <div className="bg-card p-3 flex flex-col gap-2 rounded-md">
       <div className="flex justify-between">
-        <Badge variant="outline">
+        <Badge className="bg-primary/30 hover:bg-primary/30 text-primary gap-0.5">
           {toCapitalize(question.type.split("_").join(" ").toLowerCase())}
         </Badge>
         <div className="flex gap-1">
-          <Badge variant="outline">{formatMilliseconds()}</Badge>
-          <Badge variant="outline">{question.points} pts</Badge>
+          <Badge className="bg-destructive/30 hover:bg-destructive/30 text-destructive gap-0.5">
+            <Timer className="w-3 h-3 text-destructive" />
+            {formatMilliseconds()}
+          </Badge>
+          <Badge className="bg-amber/30 hover:bg-amber/30 text-amber gap-0.5">
+            <Medal className="w-3 h-3 text-amber" />
+            {question.points} pts
+          </Badge>
         </div>
       </div>
-      <Questionn />
+      {question.type !== "FILL_IN_THE_BLANK" && (
+        <p className="text-lg font-semibold truncate">{question.question}</p>
+      )}
+      <Options />
     </div>
   );
 }

@@ -55,6 +55,20 @@ export function shuffleArray(array: any[]): any[] {
   return newArray; // Return the shuffled copy
 }
 
+export function shuffleMatches(array: {text: string | null, match: string |null}[]) {
+  // Step 1: Extract all match values
+  const matches = array.map(item => item.match);
+
+  // Step 2: Shuffle the matches array
+  const shuffledMatches = matches.sort(() => Math.random() - 0.5);
+
+  // Step 3: Create a new array with shuffled matches
+  return array.map((item, index) => ({
+    text: item.text,
+    match: shuffledMatches[index],
+  }));
+}
+
 // Utility function to format milliseconds as "Xmin Ys"
 export const formatToMinSec = (time: number) => {
   const end = time < 1000 ? 1000 : time;
