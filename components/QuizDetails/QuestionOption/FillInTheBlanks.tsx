@@ -15,7 +15,7 @@ export default function FillInTheBlanks({
   const blanks = shuffleArray(question.items.filter(e => e.isBlank))
   return (
     <div className="flex flex-col gap-3">
-      <div className="flex gap-1 items-cener">
+      <div className="flex gap-1 items-cener my-2">
         {question.items.map((item) => {
           return (
             <>

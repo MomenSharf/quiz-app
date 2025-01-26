@@ -21,7 +21,7 @@ export default function QuizDetails({
         <h4 className="text-gray-medium text-sm font-semibold">
           {quiz.questions.length} Question
         </h4>
-      <ShowAnswer />
+      <ShowAnswer showAnswers={showAnswers}/>
       </div>
       <Questions questions={quiz.questions}  showAnswers={showAnswers}/>
     </div>

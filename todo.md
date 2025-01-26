@@ -1,8 +1,6 @@
 # app
 
 - solve catch data when user nevigate between pages
-- make app more server components instead of client components
-- make linebar when user navigate between pages
 
 ## home
 

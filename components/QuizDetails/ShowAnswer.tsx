@@ -4,8 +4,8 @@ import React, { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Switch } from "../ui/switch";
 
-export default function ShowAnswer() {
-  const [checked, setChecked] = useState(false);
+export default function ShowAnswer({ showAnswers }: { showAnswers: boolean }) {
+  const [checked, setChecked] = useState(showAnswers);
   const router = useRouter();
   const searchParams = useSearchParams();
 
