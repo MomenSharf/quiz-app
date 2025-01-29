@@ -1,5 +1,5 @@
 import { fetchGiphyGIFs, fetchUnsplashImages } from "@/lib/actions/images";
-import { GiphyGif, UnsplashImage } from "@/types";
+import { GiphyGif, ImageManagerTabsType, UnsplashImage } from "@/types";
 import { useInView } from "framer-motion";
 import { Search } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -12,7 +12,7 @@ import { Icons } from "../icons";
 export default function GiphyGIFS({
   onSelectImage,
 }: {
-  onSelectImage: (acceptedFiles: File[] | string) => void;
+  onSelectImage: ({acceptedFiles, from}:{acceptedFiles: File[] | string, from: ImageManagerTabsType}) => void;
 }) {
   const [query, setQuery] = useState("");
   const [gifs, setGifs] = useState<GiphyGif[]>([]);
@@ -37,13 +37,6 @@ export default function GiphyGIFS({
           query: searchQuery || "wanderlust",
           page: currentPage,
         });
-
-        // const newPhotosMap = newPhotos.map((photo: any) => ({
-        //   src: photo.urls.regular, // Image URL
-        //   width: photo.width / 100, // Adjusted width
-        //   height: photo.height / 100, // Adjusted height
-        //   alt: photo.alt_description || "Unsplash Image",
-        // }));
 
         if (success) {
           setGifs((prev) =>
@@ -135,7 +128,7 @@ export default function GiphyGIFS({
                     priority
                     style={{ aspectRatio: "4 / 3" }}
                     className="rounded-lg z-[2]"
-                    onClick={() => onSelectImage(url)}
+                    onClick={() => onSelectImage({acceptedFiles: url, from: 'giphyGIFS'})}
                   />
                   <div className="absolute w-full h-full rounded-lg bg-muted" />
                 </div>

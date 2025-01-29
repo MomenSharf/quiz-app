@@ -28,6 +28,7 @@ export default function Settings() {
       control,
       getValues,
       formState: { errors },
+      setValue
     },
   } = useEditorContext();
 
@@ -64,17 +65,21 @@ export default function Settings() {
         <h4>Thumbnail image</h4>
         <>
           <ImageManagerTabs
-            tabs={["upload", 'stockPhotos', "giphyGIFS"]}
-            onSelectImage={(acceptedFiles) => {
+            tabs={["upload", "stockPhotos", "giphyGIFS"]}
+            onSelectImage={({ acceptedFiles, from }) => {
               setIsImageManagerTabs(false);
-              dispatch({
-                type: "SET_IS_IMAGE_EDITOR_OPEN",
-                payload: {
-                  isOpen: true,
-                  files: acceptedFiles,
-                  field: `imageUrl`,
-                },
-              });
+              if (from === "giphyGIFS" && typeof acceptedFiles === "string") {
+                setValue("imageUrl", acceptedFiles);
+              } else {
+                dispatch({
+                  type: "SET_IS_IMAGE_EDITOR_OPEN",
+                  payload: {
+                    isOpen: true,
+                    files: acceptedFiles,
+                    field: `imageUrl`,
+                  },
+                });
+              }
             }}
             open={isImageManagerTabs}
             onOpenChange={setIsImageManagerTabs}

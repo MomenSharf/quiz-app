@@ -1,5 +1,5 @@
 "use client";
-import { SettingsUser } from "@/types";
+import { ImageManagerTabsType, SettingsUser } from "@/types";
 import Image from "next/image";
 import React, { useState } from "react";
 import {
@@ -32,7 +32,7 @@ export default function ProfileCard({ user }: { user: SettingsUser }) {
   const [isUpdatingProfile, setIsUpdatingProfile] = useState(false);
   const [isImageMangerOpen, setImageMangerOpen] = useState(false);
   const [isImageEditorOpen, setImageEditorOpen] = useState(false);
-  const [files, setFiles] = useState<File[] | string |null>(null);
+  const [files, setFiles] = useState<File[] | string | null>(null);
   const [isSendResetPasswordSuccess, setIsSendResetPasswordSuccess] =
     useState(false);
   const [isSendingResetEmail, setisSendingResetEmail] = useState(false);
@@ -67,15 +67,23 @@ export default function ProfileCard({ user }: { user: SettingsUser }) {
     }
   };
 
-  const onSelectImage = (acceptedFiles: File[] | string) => {
-    setFiles(acceptedFiles);
+  const onSelectImage = ({
+    acceptedFiles,
+    from,
+  }: {
+    acceptedFiles: File[] | string;
+    from: ImageManagerTabsType;
+  }) => {
     setImageMangerOpen(false);
-    setImageEditorOpen(true);
+    if (from !== "giphyGIFS") {
+      setFiles(acceptedFiles);
+      setImageEditorOpen(true);
+    }
   };
   const afterUpload = async (uploadedImage: ClientUploadedFileData<null>[]) => {
     try {
       const { success, message } = await UpdateUserProfile(
-        { imageUrl: uploadedImage[0].url , },
+        { imageUrl: uploadedImage[0].url },
         "/settings"
       );
       if (!success) {
@@ -265,7 +273,7 @@ export default function ProfileCard({ user }: { user: SettingsUser }) {
         </div>
       </div>
       <ImageManagerTabs
-      tabs={['upload', 'stockPhotos']}
+        tabs={["upload", "stockPhotos"]}
         open={isImageMangerOpen}
         onOpenChange={setImageMangerOpen}
         onSelectImage={onSelectImage}

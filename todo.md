@@ -16,9 +16,7 @@
 
 ## image tabs
 
-- make loder
 - make secret passwords to be used only by me
-- fix stoke photos gallery
 - make when user choose gif image dont be cropped and dirctly uploaded
 
 ## quiz details

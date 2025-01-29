@@ -194,10 +194,11 @@ export type PlayQuizMode = "play" | "preview";
 //
 //
 export type UnsplashImage = {
-  src: string; // URL of the image
-  width: number; // Aspect ratio width
-  height: number; // Aspect ratio height
-  alt: string; // Alternative text for the image
+  id: "Dwu85P9SOIk";
+  urls: {
+    regular: "https://images.unsplash.com/photo-123?w=1080";
+  };
+  alt_description: "A beautiful mountain landscape";
 };
 
 export type GiphyGif = {

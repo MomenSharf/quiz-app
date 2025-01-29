@@ -24,7 +24,7 @@ export default function QuestionInput({
 }) {
   const {
     dispatch,
-    form: { control, getValues, getFieldState },
+    form: { control, getValues, getFieldState, setValue },
   } = useEditorContext();
 
   const hasImageUrl =
@@ -66,16 +66,25 @@ export default function QuestionInput({
               />
               <ImageManagerTabs
                 tabs={["upload", "stockPhotos", "giphyGIFS"]}
-                onSelectImage={(acceptedFiles) => {
+                onSelectImage={({ acceptedFiles, from }) => {
+                  console.log(from);
+
                   setIsImageManagerTabs(false);
-                  dispatch({
-                    type: "SET_IS_IMAGE_EDITOR_OPEN",
-                    payload: {
-                      isOpen: true,
-                      files: acceptedFiles,
-                      field: `questions.${questionIndex}.imageUrl`,
-                    },
-                  });
+                  if (
+                    from === "giphyGIFS" &&
+                    typeof acceptedFiles === "string"
+                  ) {
+                    setValue("imageUrl", acceptedFiles);
+                  } else {
+                    dispatch({
+                      type: "SET_IS_IMAGE_EDITOR_OPEN",
+                      payload: {
+                        isOpen: true,
+                        files: acceptedFiles,
+                        field: `questions.${questionIndex}.imageUrl`,
+                      },
+                    });
+                  }
                 }}
                 open={isImageManagerTabs}
                 onOpenChange={setIsImageManagerTabs}

@@ -18,7 +18,7 @@ export default function ImageManagerTabs({
 }: {
   open: boolean;
   onOpenChange: (e: boolean) => void;
-  onSelectImage: (acceptedFiles: File[] | string) => void;
+  onSelectImage: ({acceptedFiles, from}:{acceptedFiles: File[] | string, from: ImageManagerTabsType}) => void;
   trigger?: ReactNode;
   tabs: ImageManagerTabsType[];
 }) {

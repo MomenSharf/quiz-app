@@ -1,5 +1,5 @@
 import { fetchUnsplashImages } from "@/lib/actions/images";
-import { UnsplashImage } from "@/types";
+import { ImageManagerTabsType, UnsplashImage } from "@/types";
 import { useInView } from "framer-motion";
 import { Search } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -14,7 +14,7 @@ import { Icons } from "../icons";
 export default function StockPhotos({
   onSelectImage,
 }: {
-  onSelectImage: (acceptedFiles: File[] | string) => void;
+  onSelectImage: ({acceptedFiles, from}:{acceptedFiles: File[] | string, from: ImageManagerTabsType}) => void;
 }) {
   const [query, setQuery] = useState("");
   const [photos, setPhotos] = useState<UnsplashImage[]>([]);
@@ -40,16 +40,9 @@ export default function StockPhotos({
           page: currentPage,
         });
 
-        const newPhotosMap = newPhotos.map((photo: any) => ({
-          src: photo.urls.regular, // Image URL
-          width: photo.width / 100, // Adjusted width
-          height: photo.height / 100, // Adjusted height
-          alt: photo.alt_description || "Unsplash Image",
-        }));
-
         if (success) {
           setPhotos((prev) =>
-            currentPage === 1 ? newPhotosMap : [...prev, ...newPhotosMap]
+            currentPage === 1 ? newPhotos : [...prev, ...newPhotos]
           );
           setHasMore(newPhotos.length === 12); // Assume 12 is the page size
         } else {
@@ -77,7 +70,6 @@ export default function StockPhotos({
   }, [query, fetchPhotos]);
 
   useEffect(() => {
-    console.log(!!query.trim());
     if (inView && hasMore && !loading && query.trim() && photos.length >= 12) {
       fetchPhotos(query, page + 1);
       setPage((prev) => prev + 1);
@@ -85,7 +77,7 @@ export default function StockPhotos({
   }, [inView, hasMore, loading, query, page, fetchPhotos, photos.length]);
 
   const handleClick = (src: string) => {
-    onSelectImage(src);
+    onSelectImage({acceptedFiles: src, from: 'stockPhotos'});
   };
 
   return (
@@ -119,12 +111,29 @@ export default function StockPhotos({
 
       {/* Photos Grid */}
       <div className="flex-1 max-h-[415px] overflow-y-scroll">
-        {/* {photos.length > 0 && (
-          <Gallery
-            photos={photos}
-            onClick={(_, { photo }) => onSelectImage(photo.src)}
-          />
-        )} */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-1">
+          {" "}
+          {photos.length > 0 &&
+            photos.map(({ id, urls: { regular }, alt_description }) => (
+              <div
+                key={id}
+                className="relative flex flex-col w-full rounded-lg overflow-hidden"
+              >
+                <Image
+                  src={regular}
+                  alt={alt_description}
+                  width={800} // Replace with your desired pixel width
+                  height={600} // Replace with your desired pixel height
+                  priority
+                  style={{
+                    aspectRatio: "4 / 3", // Maintains the 4:3 aspect ratio
+                  }}
+                  className="rounded-lg z-10"
+                />
+                <div className="absolute w-full h-full rounded-lg bg-muted" />
+              </div>
+            ))}
+        </div>
         {loading && (
           <div className="flex justify-center">
             <Icons.Loader className="w-7 h-7 stroke-primary animate-spin" />

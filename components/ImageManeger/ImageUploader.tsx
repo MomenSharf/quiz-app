@@ -7,15 +7,23 @@ import { generateClientDropzoneAccept } from "uploadthing/client";
 import { Button } from "@/components/ui/button";
 import { ImageUp } from "lucide-react";
 import { toast } from "sonner";
+import { ImageManagerTabsType } from "@/types";
 
 export default function ImageUploader({
   onSelectImage,
 }: {
-  onSelectImage: (acceptedFiles: File[]  | string ) => void;
+  onSelectImage: ({
+    acceptedFiles,
+    from,
+  }: {
+    acceptedFiles: File[] | string;
+    from: ImageManagerTabsType;
+  }) => void;
 }) {
-
   const { getRootProps, getInputProps } = useDropzone({
-    onDrop: onSelectImage,
+    onDrop: (file) => {
+      onSelectImage({ acceptedFiles: file, from: "upload" });
+    },
     accept: generateClientDropzoneAccept(["image/*"]),
   });
 
