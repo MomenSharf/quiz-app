@@ -12,7 +12,13 @@ import { Icons } from "../icons";
 export default function GiphyGIFS({
   onSelectImage,
 }: {
-  onSelectImage: ({acceptedFiles, from}:{acceptedFiles: File[] | string, from: ImageManagerTabsType}) => void;
+  onSelectImage: ({
+    acceptedFiles,
+    from,
+  }: {
+    acceptedFiles: File[] | string;
+    from: ImageManagerTabsType;
+  }) => void;
 }) {
   const [query, setQuery] = useState("");
   const [gifs, setGifs] = useState<GiphyGif[]>([]);
@@ -20,6 +26,7 @@ export default function GiphyGIFS({
   const [hasMore, setHasMore] = useState(true);
   const [loading, setLoading] = useState(false);
 
+  const searcInputRef = useRef<HTMLInputElement>(null);
   const ref = useRef(null);
   const inView = useInView(ref);
 
@@ -68,12 +75,19 @@ export default function GiphyGIFS({
   }, [query, fetchPhotos]);
 
   useEffect(() => {
-    console.log(!!query.trim());
     if (inView && hasMore && !loading && query.trim() && gifs.length >= 12) {
       fetchPhotos(query, page + 1);
       setPage((prev) => prev + 1);
     }
   }, [inView, hasMore, loading, query, page, fetchPhotos, gifs.length]);
+
+  useEffect(() => {
+    setTimeout(() => {
+      if (searcInputRef.current) {
+        searcInputRef.current.focus();
+      }
+    }, 10);
+  }, []);
 
   return (
     <div className="flex-1 flex flex-col gap-2">
@@ -92,6 +106,7 @@ export default function GiphyGIFS({
               }
             }
           }}
+          ref={searcInputRef}
         />
         <Button
           variant="outline"
@@ -128,7 +143,9 @@ export default function GiphyGIFS({
                     priority
                     style={{ aspectRatio: "4 / 3" }}
                     className="rounded-lg z-[2]"
-                    onClick={() => onSelectImage({acceptedFiles: url, from: 'giphyGIFS'})}
+                    onClick={() =>
+                      onSelectImage({ acceptedFiles: url, from: "giphyGIFS" })
+                    }
                   />
                   <div className="absolute w-full h-full rounded-lg bg-muted" />
                 </div>

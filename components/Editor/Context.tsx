@@ -215,7 +215,7 @@ export const EditorProvider = ({
           name === "description" ||
           name === "imageUrl" ||
           name === "visibility" ||
-          name === "categories" || //!! does not save correctly
+          name === "categories" || 
           name.startsWith("questions") ||
           name.startsWith("image"))
       ) {

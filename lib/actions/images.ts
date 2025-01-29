@@ -9,6 +9,7 @@ export const fetchUnsplashImages = async ({
   page: number;
 }) => {
   const ACCESS_KEY = process.env.UNSPLASH_ACCESS_KEY;
+  const MY_PASSWORD = process.env.MY_PASSWORD;
 
   if (!ACCESS_KEY) {
     return {
@@ -17,18 +18,35 @@ export const fetchUnsplashImages = async ({
     };
   }
 
+  if (!MY_PASSWORD) {
+    return {
+      success: false,
+      message:
+        "Failed to authenticate with Unsplash. Please write first the password",
+    };
+  }
+
+  const regex = new RegExp(`^${MY_PASSWORD}(\\w+)`); // Create regex dynamically
+  const match = query.match(regex);
+
+  if (!match) {
+    return {
+      success: false,
+      message: "Password not matching",
+    };
+  }
+
   try {
     const response = await axios.get("https://api.unsplash.com/search/photos", {
       params: {
-        query: query || "nature",
+        query: match[1] || "nature",
         per_page: 12,
-        page
+        page,
       },
       headers: {
         Authorization: `Client-ID ${ACCESS_KEY}`,
       },
     });
-    
 
     return {
       success: true,
@@ -54,6 +72,7 @@ export const fetchGiphyGIFs = async ({
   page: number;
 }) => {
   const API_KEY = process.env.GIPHY_API_KEY;
+  const MY_PASSWORD = process.env.MY_PASSWORD;
 
   if (!API_KEY) {
     return {
@@ -62,11 +81,28 @@ export const fetchGiphyGIFs = async ({
     };
   }
 
+  if (!MY_PASSWORD) {
+    return {
+      success: false,
+      message:
+        "Failed to authenticate with Unsplash. Please write first the password",
+    };
+  }
+
+  const regex = new RegExp(`^${MY_PASSWORD}(\\w+)`); // Create regex dynamically
+  const match = query.match(regex);
+
+  if (!match) {
+    return {
+      success: false,
+      message: "Password not matching",
+    };
+  }
   try {
     const response = await axios.get("https://api.giphy.com/v1/gifs/search", {
       params: {
         api_key: API_KEY,
-        q: query || "funny", // Default query if none provided
+        q: match[1] || "funny", // Default query if none provided
         limit: 12, // Number of results per page
         offset: page * 12, // Offset for pagination
       },

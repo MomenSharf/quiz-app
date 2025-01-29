@@ -74,7 +74,7 @@ export default function QuestionInput({
                     from === "giphyGIFS" &&
                     typeof acceptedFiles === "string"
                   ) {
-                    setValue("imageUrl", acceptedFiles);
+                    setValue(`questions.${questionIndex}.imageUrl`, acceptedFiles);
                   } else {
                     dispatch({
                       type: "SET_IS_IMAGE_EDITOR_OPEN",

@@ -13,7 +13,6 @@ export default function QuestionImage({
   imageUrl: string;
   openImageManagerTabs: () => void;
 }) {
-  
   const {
     dispatch,
     form: { setValue },
@@ -69,6 +68,7 @@ export default function QuestionImage({
             aspectRatio: "4 / 3", // Maintains the 4:3 aspect ratio
           }}
           className="rounded-lg"
+          unoptimized
         />
       </div>
     </div>

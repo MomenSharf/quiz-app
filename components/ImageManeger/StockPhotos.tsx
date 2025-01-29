@@ -14,7 +14,13 @@ import { Icons } from "../icons";
 export default function StockPhotos({
   onSelectImage,
 }: {
-  onSelectImage: ({acceptedFiles, from}:{acceptedFiles: File[] | string, from: ImageManagerTabsType}) => void;
+  onSelectImage: ({
+    acceptedFiles,
+    from,
+  }: {
+    acceptedFiles: File[] | string;
+    from: ImageManagerTabsType;
+  }) => void;
 }) {
   const [query, setQuery] = useState("");
   const [photos, setPhotos] = useState<UnsplashImage[]>([]);
@@ -22,6 +28,7 @@ export default function StockPhotos({
   const [hasMore, setHasMore] = useState(true);
   const [loading, setLoading] = useState(false);
 
+  const searcInputRef = useRef<HTMLInputElement>(null);
   const ref = useRef(null);
   const inView = useInView(ref);
 
@@ -76,13 +83,16 @@ export default function StockPhotos({
     }
   }, [inView, hasMore, loading, query, page, fetchPhotos, photos.length]);
 
-  const handleClick = (src: string) => {
-    onSelectImage({acceptedFiles: src, from: 'stockPhotos'});
-  };
+  useEffect(() => {
+    setTimeout(() => {
+      if (searcInputRef.current) {
+        searcInputRef.current.focus();
+      }
+    }, 10);
+  }, []);
 
   return (
     <div className="flex-1 flex flex-col gap-2">
-      {/* Search Input */}
       <div className="flex w-full">
         <Input
           placeholder="Search for photos..."
@@ -97,6 +107,7 @@ export default function StockPhotos({
               }
             }
           }}
+          ref={searcInputRef}
         />
         <Button
           variant="outline"
@@ -125,10 +136,10 @@ export default function StockPhotos({
                   width={800} // Replace with your desired pixel width
                   height={600} // Replace with your desired pixel height
                   priority
-                  style={{
-                    aspectRatio: "4 / 3", // Maintains the 4:3 aspect ratio
-                  }}
-                  className="rounded-lg z-10"
+                  // style={{
+                  //   aspectRatio: "4 / 3", // Maintains the 4:3 aspect ratio
+                  // }}
+                  className="rounded-lg z-10 object-contain"
                 />
                 <div className="absolute w-full h-full rounded-lg bg-muted" />
               </div>

@@ -44,7 +44,7 @@ export default async function QuizzesCard({
         duration: 0.3,
       }}
       viewport={{ amount: 0 }}
-      className="w-44 sm:w-52 bg-card rounded-xl flex flex-col"
+      className="min-w-44 w-44 sm:min-w-52 sm:w-52 bg-card rounded-xl flex flex-col"
     >
       <div className="group relative flex flex-col w-full rounded-xl  rounded-bl-none rounded-br-none overflow-hidden">
         <Image
@@ -58,6 +58,7 @@ export default async function QuizzesCard({
             aspectRatio: "4 / 3", // Maintains the 4:3 aspect ratio
           }}
           className="rounded-xl rounded-bl-none rounded-br-none"
+          unoptimized
         />
         <div className="absolute opacity-0 group-hover:opacity-100 transition-opacity w-full h-full flex justify-center items-center bg-black/30">
           <Link

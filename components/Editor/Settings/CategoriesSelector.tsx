@@ -4,6 +4,7 @@ import { useEditorContext } from "../Context";
 import { Button } from "@/components/ui/button";
 import ErrorSpan from "../Question/QuestionForms/QuestionFormsElements/ErrorSpan";
 import { toast } from "@/components/ui/use-toast";
+import { useState } from "react";
 
 export default function CategoriesSelector() {
   const {
@@ -15,7 +16,8 @@ export default function CategoriesSelector() {
     },
   } = useEditorContext();
 
-  const categories = getValues("categories");
+  // const categories = getValues("categories");
+  const [categories, setCategories] = useState(() => getValues("categories"));
 
   const categoriesWithIsSelected = CATEGORY_OPTIONS_LIST.map((category) => {
     return {
@@ -41,12 +43,12 @@ export default function CategoriesSelector() {
                   description: "Maximum 5 categories",
                 });
               if (isSelected) {
-                setValue(
-                  "categories",
-                  categories.filter((e) => e !== value)
-                );
+                const newCategory = categories.filter((e) => e !== value);
+                setValue("categories", newCategory);
+                setCategories(newCategory);
               } else {
                 setValue("categories", [...categories, value]);
+                setCategories([...categories, value]);
               }
               if (errors.categories) {
                 trigger("categories");

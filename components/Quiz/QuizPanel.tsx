@@ -65,6 +65,7 @@ export default async function QuizPanel({
               aspectRatio: "4 / 3", // Maintains the 4:3 aspect ratio
             }}
             className="rounded-xl"
+            unoptimized
           />
         </Link>
 
