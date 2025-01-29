@@ -10,8 +10,6 @@
 
 ## library
 
-- fix when user make new quiz it's take a lot of time
-
 ## editor
 
 - fix categories selection functionality and trigger when selected
