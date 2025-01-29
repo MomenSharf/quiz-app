@@ -12,6 +12,8 @@ import { GripVertical, Trash } from "lucide-react";
 import ErrorSpan from "./ErrorSpan";
 import { useEditorContext } from "@/components/Editor/Context";
 import { Button } from "@/components/ui/button";
+import { useEffect, useRef } from "react";
+import { ReorderIcon } from "./Icon";
 
 type OprionProps = InputProps & {
   questionIndex: number;
@@ -32,10 +34,30 @@ export default function CorrectOrderItem({
 
   const items = getValues(`questions.${questionIndex}.items`);
   const item = getValues(`questions.${questionIndex}.items.${itemIndex}`);
+  const iRef = useRef<HTMLElement | null>(null);
 
   const { error } = getFieldState(
     `questions.${questionIndex}.items.${itemIndex}.text`
   );
+
+  useEffect(() => {
+    const touchHandler: React.TouchEventHandler<HTMLElement> = (e) =>
+      e.preventDefault();
+
+    const iTag = iRef.current;
+
+    if (iTag) {
+      //@ts-ignore
+      iTag.addEventListener("touchstart", touchHandler, { passive: false });
+
+      return () => {
+        //@ts-ignore
+        iTag.removeEventListener("touchstart", touchHandler, {
+          passive: false,
+        });
+      };
+    }
+  }, [iRef]);
 
   return (
     <Reorder.Item
@@ -55,23 +77,23 @@ export default function CorrectOrderItem({
           render={({ field }) => (
             <FormItem className="space-y-1 flex w-full flex-col tepri">
               <FormControl>
-              <div className="bg-card rounded-tl-md rounded-bl-md z-[2]">
-                <Input
-                  className={cn(
-                    "h-12 font-semibold rounded-tr-none rounded-br-none focus:z-10",
-                    {
-                      "border-destructive bg-destructive/10 focus-visible:ring-destructive":
-                        error,
+                <div className="bg-card rounded-tl-md rounded-bl-md z-[2]">
+                  <Input
+                    className={cn(
+                      "h-12 font-semibold rounded-tr-none rounded-br-none focus:z-10",
+                      {
+                        "border-destructive bg-destructive/10 focus-visible:ring-destructive":
+                          error,
                       },
-                    className
-                  )}
-                  placeholder={`item ${itemIndex + 1}...`}
-                  {...field}
-                  value={getValues(
-                    `questions.${questionIndex}.items.${itemIndex}.text`
-                  )}
+                      className
+                    )}
+                    placeholder={`item ${itemIndex + 1}...`}
+                    {...field}
+                    value={getValues(
+                      `questions.${questionIndex}.items.${itemIndex}.text`
+                    )}
                   />
-                  </div>
+                </div>
               </FormControl>
             </FormItem>
           )}
@@ -98,11 +120,12 @@ export default function CorrectOrderItem({
               type="button"
               size="icon"
               variant="outline"
-              className="h-12 group/move rounded-tl-none rounded-bl-none focus:z-10"
+              className="h-12 group/move rounded-tl-none rounded-bl-none focus:z-10 justify-center items-center"
             >
-              <GripVertical
-                onPointerDown={(e) => dragControls.start(e)}
-                className="w-4 h-4 rounded-tl-none rounded-bl-none border-l-0 group-hover/move:text-primary"
+              <ReorderIcon
+                dragControls={dragControls}
+                ref={iRef}
+                className="fill-accent-foreground w-3 h-4"
               />
             </Button>
           </TooltipTrigger>

@@ -13,9 +13,6 @@
 ## editor
 
 - fix categories selection functionality and trigger when selected
-- fix Reorder mobile functionality
-- fix toggle visibility functionality
-- make question question don't reqiured if does't effect in question
 
 ## image tabs
 
@@ -28,5 +25,4 @@
 
 ## play
 
-- make when user press ok the question answer submit
 - make soud effect more better then existing

@@ -1,18 +1,15 @@
-import { Button } from "@/components/ui/button";
-import React, { useState } from "react";
-import { useEditorContext } from "../Context";
 import { Icons } from "@/components/icons";
+import { Button } from "@/components/ui/button";
 import {
   Tooltip,
-  TooltipTrigger,
   TooltipContent,
+  TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { toast } from "@/components/ui/use-toast";
-import { toggleVisibility } from "@/lib/actions/editor";
 import { quizSchema } from "@/lib/validations/quizSchemas";
+import { useEditorContext } from "../Context";
 
 export default function ToggleVisibility() {
-  const [loading, setLoading] = useState(false);
   const {
     form: {
       getValues,
@@ -24,29 +21,7 @@ export default function ToggleVisibility() {
   const currentVisibility = quizSchema.safeParse(getValues()).success
     ? getValues("visibility")
     : "PRIVATE";
-  const quizId = getValues("id");
 
-  const handleClick = async () => {
-    setLoading(true);
-
-    try {
-      const { success, visibility, message } = await toggleVisibility({
-        quizId,
-        visibility: currentVisibility,
-      });
-
-      if (success && visibility) {
-        setValue("visibility", visibility);
-        toast({ description: message });
-      } else {
-        toast({ description: message });
-      }
-    } catch (error) {
-      toast({ description: "Error toggling visibility" });
-    } finally {
-      setLoading(false);
-    }
-  };
   return (
     <Tooltip delayDuration={100}>
       <TooltipTrigger asChild>
@@ -58,7 +33,10 @@ export default function ToggleVisibility() {
           disabled={saveState === "waiting"}
           onClick={() => {
             if (!Object.keys(errors).length) {
-              handleClick();
+              setValue(
+                "visibility",
+                currentVisibility === "PRIVATE" ? "PUBLIC" : "PRIVATE"
+              );
             } else {
               toast({
                 description: "Please fix the validation errors first.",
@@ -67,9 +45,7 @@ export default function ToggleVisibility() {
             }
           }}
         >
-          {loading ? (
-            <Icons.Loader className="w-4 h-4 animate-spin stroke-secondary-foreground" />
-          ) : currentVisibility === "PRIVATE" ? (
+          {currentVisibility === "PRIVATE" ? (
             <Icons.lock className="w-4 h-4 fill-secondary-foreground" />
           ) : (
             <Icons.global className="w-4 h-4 fill-secondary-foreground" />

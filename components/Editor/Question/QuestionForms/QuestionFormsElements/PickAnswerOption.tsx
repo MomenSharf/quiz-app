@@ -17,7 +17,8 @@ import { cn } from "@/lib/utils";
 import { ItemsSchemaType } from "@/lib/validations/quizSchemas";
 import { Reorder, useDragControls, useMotionValue } from "framer-motion";
 import { GripVertical, Trash } from "lucide-react";
-import { FieldError } from "react-hook-form";
+import { useEffect, useRef } from "react";
+import { ReorderIcon } from "./Icon";
 
 type OprionProps = {
   questionIndex: number;
@@ -45,6 +46,7 @@ OprionProps) {
 
   const items = getValues(`questions.${questionIndex}.items`);
   const item = getValues(`questions.${questionIndex}.items.${itemIndex}`);
+  const iRef = useRef<HTMLElement | null>(null);
 
   const setCorrectOption = () => {
     if ("isCorrect" in item) {
@@ -56,17 +58,37 @@ OprionProps) {
           item.isCorrect ? false : true,
           { shouldValidate: true }
         );
-        
+
         if (itemsError && "oneCorrectAnswer" in itemsError)
           trigger(`questions.${questionIndex}.items`);
       }
     }
   };
-  const { error: itemsError } = getFieldState(`questions.${questionIndex}.items`);
-  
+  const { error: itemsError } = getFieldState(
+    `questions.${questionIndex}.items`
+  );
+
   const { error } = getFieldState(
     `questions.${questionIndex}.items.${itemIndex}.text`
   );
+  useEffect(() => {
+    const touchHandler: React.TouchEventHandler<HTMLElement> = (e) =>
+      e.preventDefault();
+
+    const iTag = iRef.current;
+
+    if (iTag) {
+      //@ts-ignore
+      iTag.addEventListener("touchstart", touchHandler, { passive: false });
+
+      return () => {
+        //@ts-ignore
+        iTag.removeEventListener("touchstart", touchHandler, {
+          passive: false,
+        });
+      };
+    }
+  }, [iRef]);
 
   if ("isCorrect" in item)
     return (
@@ -76,9 +98,12 @@ OprionProps) {
         style={{ y }}
         animate={{ border: "1px solid var(hsl(--primary))" }}
         dragControls={dragControls}
+        dragListener={false}
         className={cn("flex rounded group relative", {
           "mb-4": error,
         })}
+        whileDrag={{zIndex: 99}}
+
       >
         <FormField
           control={control}
@@ -154,10 +179,7 @@ OprionProps) {
               variant="outline"
               className="h-12 group/move rounded-tl-none rounded-bl-none focus:z-10"
             >
-              <GripVertical
-                onPointerDown={(e) => dragControls.start(e)}
-                className="w-4 h-4 rounded-tl-none rounded-bl-none border-l-0 group-hover/move:text-primary"
-              />
+              <ReorderIcon dragControls={dragControls} ref={iRef}  className="fill-accent-foreground w-3 h-4" />
             </Button>
           </TooltipTrigger>
           <TooltipContent className="text-xs">Reorder</TooltipContent>

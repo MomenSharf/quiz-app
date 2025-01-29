@@ -9,18 +9,17 @@ import { Prisma, QuestionType, Quiz, Visibility } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { getCurrentUser } from "../auth";
 import { db } from "../db";
-import { unstable_noStore as noStore } from 'next/cache';
+import { unstable_noStore as noStore } from "next/cache";
 
 export const getEditorQuiz = async ({ quizId }: { quizId: string }) => {
-  
   const session = await getCurrentUser();
-  
+
   if (!session) {
     return { success: false, message: "Unauthorized: User is not logged in." };
   }
-  
+
   try {
-    noStore()
+    noStore();
     const initialQuiz = await db.quiz.findUnique({
       where: {
         id: quizId,
@@ -56,6 +55,7 @@ export const saveEditorQuiz = async (
   }
 
   const isValid = quizSchema.safeParse(data).success;
+
   const mapQuestion = (
     question: questionSchemaType,
     index?: number
@@ -142,7 +142,11 @@ export const saveEditorQuiz = async (
       imageUrl: data.imageUrl,
     };
 
-    const questions = data.questions.filter(e => e.type !== 'UNSELECTED').map(mapQuestion);
+    const questions = data.questions
+      .filter((e) => e.type !== "UNSELECTED")
+      .map(mapQuestion);
+
+    const { categories, title, description, imageUrl, visibility } = data;
 
     const quiz = await db.quiz.update({
       where: {
@@ -150,7 +154,11 @@ export const saveEditorQuiz = async (
         userId: session.user.id,
       },
       data: {
-        ...quizData,
+        categories,
+        title,
+        description,
+        imageUrl,
+        visibility: isValid ? visibility : "PRIVATE",
         questions: {
           deleteMany: {}, // Remove old questions
           create: questions,
@@ -159,6 +167,8 @@ export const saveEditorQuiz = async (
     });
 
     if (quiz) {
+      console.log(quiz.visibility);
+
       return { success: true, message: "Quiz updated successfully.", quiz };
     } else {
       return {
@@ -168,55 +178,5 @@ export const saveEditorQuiz = async (
     }
   } catch (error: any) {
     return { success: false, message: `An error occurred: ${error.message}` };
-  }
-};
-
-export const toggleVisibility = async ({
-  quizId,
-  visibility,
-}: {
-  quizId: string;
-  visibility: Visibility;
-}) => {
-  // Get the currently logged-in user
-  const session = await getCurrentUser();
-  const userId = session?.user.id;
-
-  if (!userId) {
-    return { success: false, message: "User not authenticated" };
-  }
-
-  try {
-    // Fetch the quiz to check ownership
-    const quiz = await db.quiz.findUnique({
-      where: { id: quizId },
-    });
-
-    if (!quiz) {
-      return { success: false, message: "Quiz not found" };
-    }
-
-    if (quiz.userId !== userId) {
-      return {
-        success: false,
-        message: "Access denied: You are not the owner of this quiz",
-      };
-    }
-
-    // Toggle the visibility
-    const updatedQuiz = await db.quiz.update({
-      where: { id: quizId },
-      data: {
-        visibility: visibility === "PRIVATE" ? "PUBLIC" : "PRIVATE",
-      },
-    });
-
-    return {
-      success: true,
-      visibility: updatedQuiz.visibility,
-      message: `Visibility updated to ${updatedQuiz.visibility}`,
-    };
-  } catch (error) {
-    return { success: false, message: "Failed to toggle visibility" };
   }
 };

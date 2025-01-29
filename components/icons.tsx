@@ -1,18 +1,5 @@
 import { LucideProps } from "lucide-react";
 // className="fill-inherit stroke-inherit"
-import {
-  Radio,
-  CheckCircle,
-  XCircle,
-  Edit,
-  PenTool,
-  AlignLeft,
-  AlignCenter,
-  Camera,
-  Move,
-  Code,
-  Circle,
-} from "lucide-react";
 
 export const Icons = {
   logo: (props: LucideProps) => (
@@ -1587,7 +1574,27 @@ export const Icons = {
       />
     </svg>
   ),
-  // Radio: (props: LucideProps) => <Radio {...props} />,
+  gripVertical: (props: LucideProps) => (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="#000000"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      {...props}
+    >
+      <circle cx="9" cy="12" r="1" />
+      <circle cx="9" cy="5" r="1" />
+      <circle cx="9" cy="19" r="1" />
+      <circle cx="15" cy="12" r="1" />
+      <circle cx="15" cy="5" r="1" />
+      <circle cx="15" cy="19" r="1" />
+    </svg>
+  ),
   // Radio: (props: LucideProps) => <Radio {...props} />,
   // CheckCircle: (props: LucideProps) => <CheckCircle {...props} />,
   // XCircle: (props: LucideProps) => <XCircle {...props} />,

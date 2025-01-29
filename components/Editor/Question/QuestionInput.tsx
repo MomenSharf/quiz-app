@@ -30,6 +30,8 @@ export default function QuestionInput({
   const hasImageUrl =
     getValues(`questions.${questionIndex}.imageUrl`) !== undefined;
 
+  const questionType = getValues(`questions.${questionIndex}.type`);
+
   return (
     <FormField
       control={control}
@@ -52,6 +54,13 @@ export default function QuestionInput({
                   }
                 )}
                 placeholder="Type your Question..."
+                defaultValue={
+                  questionType === "MATCHING_PAIRS"
+                    ? "Match the following"
+                    : questionType === "ORDER"
+                    ? "Reorder the following"
+                    : undefined
+                }
                 {...field}
                 value={getValues(`questions.${questionIndex}.question`)}
               />
