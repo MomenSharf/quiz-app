@@ -1,0 +1,88 @@
+"use client";
+import { Category, SearchQuiz, SearchSortOption } from "@/types";
+import { useCallback, useEffect, useRef, useState } from "react";
+import QuizzesPanelsTable from "../Quiz/QuizzesPanelsTable";
+import { useInView } from "framer-motion";
+import { getSearchQuizzes } from "@/lib/actions/search";
+import { toast } from "../ui/use-toast";
+import { Icons } from "../icons";
+
+export default function MoreSearchQuizzes({
+  query,
+  category,
+  sortOption
+}: {
+  query: string | undefined;
+  category: Category | undefined;
+  sortOption?: SearchSortOption
+}) {
+  const [quizzes, setQuizzes] = useState<SearchQuiz[]>([]);
+  const [page, setPage] = useState(2);
+  const [hasMore, setHasMore] = useState(true);
+  const [loading, setLoading] = useState(false);
+
+  const ref = useRef(null);
+  const inView = useInView(ref);
+
+  const fetchQizzes = useCallback(
+    async (searchQuery: string, currentPage: number) => {
+      if (loading || !hasMore) return;
+
+      setLoading(true);
+      try {
+        const { success, message, quizzes } = await getSearchQuizzes({
+          query: searchQuery || "wanderlust",
+          page: currentPage,
+          category,
+          sortOption
+        });
+
+        
+        if (success && quizzes) {
+          
+          setQuizzes((prev) => [...prev, ...quizzes]);
+          setHasMore(quizzes.length > 0); // Assume 12 is the page size
+        } else {
+          toast({ description: message, variant: "destructive" });
+        }
+      } catch (error) {
+        toast({
+          description: "Something went wrong. Please try again.",
+          variant: "destructive",
+        });
+      } finally {
+        setLoading(false);
+      }
+    },
+    [loading, hasMore]
+  );
+
+  useEffect(() => {
+    console.log(query);
+    
+    if (
+      inView &&
+      hasMore &&
+      !loading &&
+      query &&
+      query.trim() 
+    ) {
+      console.log('gg');
+      
+       fetchQizzes(query, page + 1);
+      setPage((prev) => prev + 1);
+    }
+  }, [inView, hasMore, loading, query, page, fetchQizzes]);
+
+  return (
+    <div className="flex flex-col gap-3">
+      <QuizzesPanelsTable quizzes={quizzes} />
+      {loading && (
+        <div className="flex justify-center">
+          <Icons.Loader className="w-10 h-10 stroke-primary animate-spin" />
+        </div>
+      )}
+      <div ref={ref} className="w-full h-1" />
+    </div>
+  );
+}

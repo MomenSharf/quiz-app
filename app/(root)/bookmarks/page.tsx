@@ -4,7 +4,9 @@ import QuizzesPanelsTable from "@/components/Quiz/QuizzesPanelsTable";
 import CategorySelector from "@/components/Search/CategorySelector";
 import SortBySelector from "@/components/Search/SortBySelector";
 import { getBookmarksQuizzes } from "@/lib/actions/bookmark";
+import { getCurrentUser } from "@/lib/auth";
 import { isValidCategoryOption, isValidSearchSortOption } from "@/lib/utils";
+import { redirect } from "next/navigation";
 
 export default async function Page(props: {
   searchParams?: Promise<{
@@ -13,6 +15,13 @@ export default async function Page(props: {
     category?: string;
   }>;
 }) {
+
+    const session = await getCurrentUser();
+  
+    if (!session) {
+      return redirect("/login");
+    }
+  
   const searchParams = await props.searchParams;
   const query = searchParams?.query;
   const sortOption = isValidSearchSortOption(searchParams?.sortBy)

@@ -49,7 +49,7 @@ export default function Content() {
                     }}
                     key={question.id}
                     className={cn(
-                      "flex flex-col sm:flex-row gap-5 items-center justify-center"
+                      "flex flex-col sm:flex-row gap-5 items-center justify-center max-w-full"
                     )}
                   >
                     {question.imageUrl && (

@@ -22,7 +22,7 @@ export default function CategoriesScroller() {
               <Icon
                 className="w-7 h-7 fill-gray-dark"
               />
-              <span className="text-xs text-gray-medium">
+              <span className="text-xs text-muted-foreground">
                 {label}
               </span>
             </Link>

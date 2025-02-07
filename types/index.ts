@@ -122,7 +122,10 @@ export type SearchQuiz = Prisma.QuizGetPayload<{
     questions: true;
     ratings: true;
   };
-}>;
+}> 
+
+
+
 
 export type BookmarkQuiz = Prisma.QuizGetPayload<{
   include: {

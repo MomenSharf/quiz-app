@@ -17,7 +17,7 @@ import { toast } from "../ui/use-toast";
 export default function RateDialog() {
   const [isRating, setIsRating] = useState(false);
   const [open, setOpen] = useState(false);
-  const [rate, setRate] = useState<number>(3);
+  const [rate, setRate] = useState<number>(0);
   const [hovered, setHovered] = useState(0);
   const [isMouseEnter, setIsMouseEnter] = useState(false);
 

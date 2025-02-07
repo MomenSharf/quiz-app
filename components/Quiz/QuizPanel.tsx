@@ -14,24 +14,25 @@ import Link from "next/link";
 import { Icons } from "../icons";
 import { Badge } from "../ui/badge";
 import BookmarkButton from "./BookmarkButton";
-export default async function QuizPanel({
+export default function QuizPanel({
   quiz,
   index,
 }: {
   quiz: SearchQuiz | BookmarkQuiz | UserProfile["quizzes"][number];
   index: number;
 }) {
-  const sessiom = await getCurrentUser();
-  const isCurrentUser = sessiom && quiz.user.id === sessiom.user.id;
+  // const sessiom = await getCurrentUser();
+  // const isCurrentUser = sessiom && quiz.user.id === sessiom.user.id;
+  const isCurrentUser = false
 
   const quizTime = quiz.questions.reduce(
     (acc, curr) => acc + curr.timeLimit,
     0
   );
-  const isBookmarked =
-    sessiom && sessiom.user.id && quiz.bookmarks
-      ? quiz.bookmarks.length > 0
-      : false;
+  const isBookmarked = false
+    // sessiom && sessiom.user.id && quiz.bookmarks
+    //   ? quiz.bookmarks.length > 0
+    //   : false;
 
   const { averageRating, totalRatings } = calculateQuizRatings(quiz.ratings);
 
@@ -44,7 +45,7 @@ export default async function QuizPanel({
       initial="hidden"
       animate="visible"
       transition={{
-        delay: index * 0.2,
+        delay: 0.2,
         ease: "easeInOut",
         duration: 0.3,
       }}
@@ -57,6 +58,8 @@ export default async function QuizPanel({
         >
           <Image
             src={quiz.imageUrl || "/assets/images/hero.webp"}
+            // src="/assets/images/categories/ART.jpg"
+            // src="/assets/images/categories/ART.jpg"
             alt="question Image"
             width={800} // Replace with your desired pixel width
             height={600} // Replace with your desired pixel height

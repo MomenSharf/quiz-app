@@ -7,7 +7,7 @@ import { unstable_noStore as noStore } from "next/cache";
 
 export const getSearchQuizzes = async ({
   page = 1,
-  pageSize = 10,
+  pageSize = 15,
   query,
   sortOption,
   category,

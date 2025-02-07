@@ -30,7 +30,7 @@
     "insertData.js",
     "app/(auth)/forgot-password",
     "app/(auth)/reset-password",
-    "prisma/seed.js"
-, "components/QuizDetails/QuestionOptions", "components/QuizDetails/QuestionOptions", "components/QuizDetails/Questions", "components/QuizDetails/QuestionOption"  ],
+    "prisma/seedd.js"
+, "components/QuizDetails/QuestionOptions", "components/QuizDetails/QuestionOptions", "components/QuizDetails/Questions", "components/QuizDetails/QuestionOption", "prisma/seed.js"  ],
   "exclude": ["node_modules"]
 }

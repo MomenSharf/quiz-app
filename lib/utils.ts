@@ -38,7 +38,6 @@ export function formatTimeAgo(date: Date | string): string {
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
-
 export const convertFileToUrl = (file: File) => URL.createObjectURL(file);
 
 export function toCapitalize(str: string) {
@@ -199,10 +198,10 @@ export function formatAsKMB(num: number) {
 
 export const calculateQuizRatings = (ratings: { rate: number }[]) => {
   const totalRatings = ratings.length;
-  const averageRating =
+  const averageRating =(
     totalRatings > 0
       ? ratings.reduce((sum, rating) => sum + rating.rate, 0) / totalRatings
-      : 0;
+      : 0).toFixed(1);
 
   return { averageRating, totalRatings };
 };
@@ -239,4 +238,9 @@ export function getInitials(name?: string | null) {
   return parts.length > 1
     ? parts[0][0].toUpperCase() + parts[1][0].toUpperCase()
     : parts[0][0].toUpperCase();
+}
+
+export const getCategoryName = (path: string) => {
+  const prefix = "/assets/images/categories/";
+  return path.startsWith(prefix) ? path.replace(prefix, "").split(".")[0] : null;
 }

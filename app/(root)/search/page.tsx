@@ -1,6 +1,7 @@
 import ErrorPage from "@/components/Layout/ErrorPage";
 import QuizzesPanelsTable from "@/components/Quiz/QuizzesPanelsTable";
 import CategorySelector from "@/components/Search/CategorySelector";
+import MoreSearchQuizzes from "@/components/Search/MoreSearchQuizzes";
 import SortBySelector from "@/components/Search/SortBySelector";
 import { getSearchQuizzes } from "@/lib/actions/search";
 import { isValidCategoryOption, isValidSearchSortOption } from "@/lib/utils";
@@ -31,6 +32,7 @@ export default async function Page(props: {
   if (!success || !quizzes) {
     return <ErrorPage message={message} />;
   }
+
   return (
     <div className="w-full h-full flex flex-col gap-3 p-2 sm:p-3">
       {query && (
@@ -44,7 +46,10 @@ export default async function Page(props: {
       </div>
       <div className="w-full h-full">
         {quizzes.length > 0 ? (
+          <div className="flex flex-col gap-1 sm:gap-3">
           <QuizzesPanelsTable quizzes={quizzes} />
+          <MoreSearchQuizzes query={query} category={category} sortOption={sortOption} />
+          </div>
         ) : (
           <div className="w-full h-full flex flex-col justify-center items-center">
             <Image

@@ -1,13 +1,20 @@
 import ErrorPage from "@/components/Layout/ErrorPage";
 import Profile from "@/components/Profile/Profile";
 import { getProfile } from "@/lib/actions/profile";
-import { notFound } from "next/navigation";
+import { getCurrentUser } from "@/lib/auth";
+import { notFound, redirect } from "next/navigation";
 
 export default async function Page({
   params: { username },
 }: {
   params: { username: string };
 }) {
+
+    const session = await getCurrentUser();
+  
+    if (!session) {
+      return redirect("/login");
+    }
   
   const {success, profile , message} = await getProfile({ username });
   

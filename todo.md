@@ -1,10 +1,15 @@
 # app
 
 - solve catch data when user nevigate between pages
+- add Ai to the app
+- remove unnecessary images in public file
+- fix all Next Image for all app like make max-w-full for all and aspectRatio: "4 / 3", and more
+- make bookmark page is search page but with bookmark filters 
+- fix search sort options functionality
 
 ## home
 
-- make categories color more better
+- finish the cards code
 
 ## /search
 
@@ -12,14 +17,11 @@
 
 ## editor
 
-- fix categories selection functionality and trigger when selected
 - fix quiz settings does't save currectly
+- make trancat for questions options
 
 ## image tabs
 
-- make secret passwords to be used only by me
-- make when user choose gif image dont be cropped and dirctly uploaded
-- make unsplash and gif same component to minimize the code
 - fix unsplash gallery
 
 ## quiz details
