@@ -10,11 +10,13 @@ import { Icons } from "../icons";
 export default function MoreSearchQuizzes({
   query,
   category,
-  sortOption
+  sortOption,
+  isBookmarked 
 }: {
   query: string | undefined;
   category: Category | undefined;
-  sortOption?: SearchSortOption
+  sortOption?: SearchSortOption;
+  isBookmarked: boolean 
 }) {
   const [quizzes, setQuizzes] = useState<SearchQuiz[]>([]);
   const [page, setPage] = useState(2);
@@ -34,7 +36,8 @@ export default function MoreSearchQuizzes({
           query: searchQuery || "wanderlust",
           page: currentPage,
           category,
-          sortOption
+          sortOption,
+          isBookmarked
         });
 
         

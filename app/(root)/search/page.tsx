@@ -1,9 +1,11 @@
 import ErrorPage from "@/components/Layout/ErrorPage";
 import QuizzesPanelsTable from "@/components/Quiz/QuizzesPanelsTable";
+import BookmarkSwitch from "@/components/Search/BookmarkSwitch";
 import CategorySelector from "@/components/Search/CategorySelector";
 import MoreSearchQuizzes from "@/components/Search/MoreSearchQuizzes";
 import SortBySelector from "@/components/Search/SortBySelector";
 import { getSearchQuizzes } from "@/lib/actions/search";
+import { getCurrentUser } from "@/lib/auth";
 import { isValidCategoryOption, isValidSearchSortOption } from "@/lib/utils";
 import Image from "next/image";
 
@@ -12,8 +14,11 @@ export default async function Page(props: {
     query?: string;
     sortBy?: string;
     category?: string;
+    isBookmarked?: string;
   }>;
 }) {
+  const session = await getCurrentUser();
+
   const searchParams = await props.searchParams;
   const query = searchParams?.query;
   const sortOption = isValidSearchSortOption(searchParams?.sortBy)
@@ -23,15 +28,19 @@ export default async function Page(props: {
     ? searchParams?.category
     : undefined;
 
+  const isBookmarked = searchParams?.isBookmarked === "true" && !!session;
+
   const { success, message, quizzes } = await getSearchQuizzes({
     query,
     sortOption,
     category,
+    isBookmarked,
   });
 
-  if (!success || !quizzes) {
+  if (!success || !quizzes) { 
     return <ErrorPage message={message} />;
   }
+console.log(query);
 
   return (
     <div className="w-full h-full flex flex-col gap-3 p-2 sm:p-3">
@@ -41,14 +50,20 @@ export default async function Page(props: {
         </h1>
       )}
       <div className="flex justify-end gap-1 sm:gap-3">
+        {session && <BookmarkSwitch isBookmarked={isBookmarked} />}
         <SortBySelector />
         <CategorySelector />
       </div>
       <div className="w-full h-full">
         {quizzes.length > 0 ? (
           <div className="flex flex-col gap-1 sm:gap-3">
-          <QuizzesPanelsTable quizzes={quizzes} />
-          <MoreSearchQuizzes query={query} category={category} sortOption={sortOption} />
+            <QuizzesPanelsTable quizzes={quizzes} />
+            <MoreSearchQuizzes
+              query={query}
+              category={category}
+              sortOption={sortOption}
+              isBookmarked
+            />
           </div>
         ) : (
           <div className="w-full h-full flex flex-col justify-center items-center">
@@ -59,7 +74,9 @@ export default async function Page(props: {
               height={100}
             />
             <p className="font-bold text-lg mt-2">No Quizzes found</p>
-            <p className="text-sm text-gray-medium truncate max-w-full">for {`'${query}'`}</p>
+            <p className="text-sm text-gray-medium truncate max-w-full">
+              for {`'${query}'`}
+            </p>
           </div>
         )}
       </div>

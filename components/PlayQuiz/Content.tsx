@@ -22,7 +22,7 @@ export default function Content() {
   } = usePlayQuizContext();
 
   return (
-    <div className="flex flex-col w-full flex-1  items-center justify-center">
+    <div className="flex flex-col w-full max-w-screen flex-1  items-center justify-center">
       <div className="p-3 w-full max-w-6xl flex-1 flex items-center justify-center overflow-x-hidden">
         {quizMode !== "ended" ? (
           <div className="flex-1">

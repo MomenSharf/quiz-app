@@ -6,6 +6,7 @@ import {
   formatAsKMB,
   formatTimeAgo,
   formatToMinSec,
+  formatToShortDate,
 } from "@/lib/utils";
 import { BookmarkQuiz, SearchQuiz, UserProfile } from "@/types";
 import { Layers, Timer } from "lucide-react";
@@ -14,6 +15,7 @@ import Link from "next/link";
 import { Icons } from "../icons";
 import { Badge } from "../ui/badge";
 import BookmarkButton from "./BookmarkButton";
+import You from "./You";
 export default function QuizPanel({
   quiz,
   index,
@@ -21,18 +23,14 @@ export default function QuizPanel({
   quiz: SearchQuiz | BookmarkQuiz | UserProfile["quizzes"][number];
   index: number;
 }) {
-  // const sessiom = await getCurrentUser();
-  // const isCurrentUser = sessiom && quiz.user.id === sessiom.user.id;
-  const isCurrentUser = false
+  
+  const isCurrentUser = false  
 
   const quizTime = quiz.questions.reduce(
     (acc, curr) => acc + curr.timeLimit,
     0
   );
-  const isBookmarked = false
-    // sessiom && sessiom.user.id && quiz.bookmarks
-    //   ? quiz.bookmarks.length > 0
-    //   : false;
+  const isBookmarked = quiz.bookmarks.length > 0
 
   const { averageRating, totalRatings } = calculateQuizRatings(quiz.ratings);
 
@@ -77,15 +75,13 @@ export default function QuizPanel({
             <Link
               href={`quiz/${quiz.id}`}
               className={cn(
-                "text-sm font-bold max-w-52 sm:max-w-md truncate cursor-pointer hover:text-primary"
+                "text-sm font-bold max-w-36 sm:max-w-80 md:max-w-md truncate cursor-pointer hover:text-primary"
               )}
               title={quiz.title}
             >
               {quiz.title}
             </Link>
-            {isCurrentUser && (
-              <span className="text-primary text-xs">(You)</span>
-            )}
+            <You userId={quiz.userId}/>
           </div>
           <div className="flex gap-1">
             <Badge className="bg-primary/30 hover:bg-primary/30 text-primary gap-0.5">
@@ -99,15 +95,13 @@ export default function QuizPanel({
           </div>
           <div className="flex items-center gap-1">
             <span className="text-xs text-gray-medium">
-              {formatTimeAgo(quiz.createdAt)}
+              {formatToShortDate(quiz.createdAt)}
             </span>
             <span> - </span>
             <div className="flex gap-1 items-center">
               <Icons.star className="w-3 h-3 fill-yellow" />
               <span className="text-xs">{averageRating}</span>
-              <span className="text-xs">
-                ({formatAsKMB(totalRatings)} retings)
-              </span>
+         
             </div>
             <span> - </span>
             <div className="flex gap-1 items-center">
@@ -116,7 +110,6 @@ export default function QuizPanel({
               </span>
             </div>
           </div>
-          {!isCurrentUser && (
             <div className="absolute right-3 top-3">
               <BookmarkButton
                 quizId={quiz.id}
@@ -124,7 +117,6 @@ export default function QuizPanel({
                 isBookmarked={isBookmarked}
               />
             </div>
-          )}
         </div>
       </div>
     </MotionDiv>

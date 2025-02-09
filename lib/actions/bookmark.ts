@@ -36,7 +36,8 @@ export const getBookmarksQuizzes = async ({
 
   try {
     // Fetch quizzes from bookmarks
-    const bookmarks = await db.bookmark.findMany({
+    const bookmarks = await db.bookmark.findMany(
+      {
       where: {
         userId,
         quiz: {

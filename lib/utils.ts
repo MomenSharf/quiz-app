@@ -22,7 +22,7 @@ import {
 } from "@/types";
 import { QuestionType } from "@prisma/client";
 import { type ClassValue, clsx } from "clsx";
-import { formatDistanceToNow, intervalToDuration } from "date-fns";
+import { formatDistanceToNow, intervalToDuration, format } from "date-fns";
 import { twMerge } from "tailwind-merge";
 import * as z from "zod";
 import numeral from "numeral";
@@ -34,6 +34,9 @@ export function formatTimeAgo(date: Date | string): string {
 
   return formatDistanceToNow(date, { addSuffix: true });
 }
+
+export const formatToShortDate = (date: Date | string) => format(new Date(date), "MMM d, yyyy");
+
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));

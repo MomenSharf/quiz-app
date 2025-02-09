@@ -14,6 +14,7 @@ import { Badge } from "../ui/badge";
 import { buttonVariants } from "../ui/button";
 import { UserAvatarImage } from "../User/UserAvatar";
 import { getCurrentUser } from "@/lib/auth";
+import You from "./You";
 
 export default async function QuizzesCard({
   quiz,
@@ -91,23 +92,21 @@ export default async function QuizzesCard({
       </div>
       <div className="p-2 pb-4 flex flex-col gap-2">
         <div className="flex items-center gap-1">
-          <UserAvatarImage user={quiz.user} className="w-8 h-8" />
+          <UserAvatarImage user={quiz.user} className="w-8 h-8 text-xs" />
           <div className="flex flex-col gap-0 w-full">
             <Link
               href={`quiz/${quiz.id}`}
               className={cn(
-                "text-sm font-bold max-w-[85%] truncate cursor-pointer hover:text-primary"
+                "text-sm font-bold max-w-[80%] truncate cursor-pointer hover:text-primary"
               )}
             >
               {quiz.title}
             </Link>
             <div className="flex gap-1">
-              <p className="text-xs text-gray-medium max-w-[65%] truncate">
-                {quiz.user.username}
+              <p className="text-xs text-gray-medium max-w-[60%] truncate">
+                {quiz.user.username}dddddddddddddddd
               </p>
-              {isCurrentUser && (
-                <span className="text-primary text-xs">(You)</span>
-              )}
+              <You userId={quiz.userId}/>
             </div>
           </div>
         </div>
@@ -124,7 +123,6 @@ export default async function QuizzesCard({
           <div className="flex gap-1 items-center">
             <Icons.star className="w-3 h-3 fill-yellow" />
             <span className="text-xs">{averageRating}</span>
-            <span className="text-xs">({totalRatings} retings) </span>
           </div>
           <span className="text-xs">
             {`${formatAsKMB(quiz.playCount)}`} plays

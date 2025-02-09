@@ -6,7 +6,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { CATEGORY_OPTIONS_LIST, SEARCH_SORT_OPTIONS_WITH_LABEL } from "@/constants";
+import {
+  CATEGORY_OPTIONS_LIST
+} from "@/constants";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 export default function CategorySelector() {
@@ -18,7 +20,7 @@ export default function CategorySelector() {
 
   function handleSearch(term: string) {
     const params = new URLSearchParams(searchParams);
-    if (term) {
+    if (term && term !== "ALL_CATEGORIES") {
       params.set("category", term);
     } else {
       params.delete("category");
@@ -32,7 +34,10 @@ export default function CategorySelector() {
         <SelectValue placeholder="Category" />
       </SelectTrigger>
       <SelectContent>
-        {CATEGORY_OPTIONS_LIST.map(({ value, label }) => {
+        {[
+          { value: "ALL_CATEGORIES", label: "All Categories" },
+          ...CATEGORY_OPTIONS_LIST,
+        ].map(({ value, label }) => {
           return (
             <SelectItem value={value} key={value}>
               {label}

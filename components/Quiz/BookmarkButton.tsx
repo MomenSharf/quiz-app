@@ -11,7 +11,7 @@ import { useSession } from "next-auth/react";
 export default function BookmarkButton({
   quizId,
   pathname,
-  isBookmarked,
+  isBookmarked: isB,
 }: {
   quizId: string;
   pathname: string;
@@ -20,15 +20,19 @@ export default function BookmarkButton({
   const session = useSession();
 
   const [isBookmarkingQuiz, setIsBookmarkingQuiz] = useState(false);
+  const [isBookmarked, setIsBookmarked] = useState(isB);
+  if (!session) return null;
   const bookmarkQuiz = async () => {
+    setIsBookmarked(prev => !prev);
     setIsBookmarkingQuiz(true);
-    const { success, message } = await toggleBookmark({
+    const { success, message,bookmarked } = await toggleBookmark({
       quizId,
       pathname,
     });
     if (!success) {
       {
         setIsBookmarkingQuiz(false);
+        setIsBookmarked(isB);
         toast({ variant: "destructive", description: message });
       }
     } else {
