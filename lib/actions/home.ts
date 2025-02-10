@@ -1,0 +1,144 @@
+"use server";
+
+import { Category, SearchQuizessArgs } from "@/types";
+import { db } from "../db";
+import { CATEGORIES, HOME } from "@/constants";
+import { getSearchQuizzes } from "./search";
+const TAKE = 12;
+
+export const getRecentlyPublishedQuizzes = async () => {
+  try {
+    const quizzes = await db.quiz.findMany({
+      where: { visibility: "PUBLIC" },
+      orderBy: { createdAt: "desc" },
+      take: TAKE,
+    });
+
+    if (quizzes) {
+      return quizzes;
+    } else {
+      return null;
+    }
+  } catch (error) {
+    return null;
+  }
+};
+export const getPopularQuizzes = async () => {
+  try {
+    const quizzes = await db.quiz.findMany({
+      where: { visibility: "PUBLIC" },
+      orderBy: { createdAt: "desc", playCount: "desc" },
+      take: TAKE,
+    });
+
+    if (quizzes) {
+      return quizzes;
+    } else {
+      return null;
+    }
+  } catch (error) {
+    return null;
+  }
+};
+export const getBestRatedQuizzes = async () => {
+  try {
+    const bestRatedQuizzes = await db.rating.groupBy({
+      by: ["quizId"],
+      _avg: {
+        rate: true,
+      },
+      orderBy: {
+        _avg: {
+          rate: "desc",
+        },
+      },
+      take: TAKE, // Get the top 10 best-rated quizzes
+    });
+
+    const quizzes = await db.quiz.findMany({
+      where: {
+        id: { in: bestRatedQuizzes.map((r) => r.quizId) },
+      },
+      include: {
+        ratings: {
+          select: { rate: true },
+        },
+      },
+    });
+
+    if (quizzes) {
+      return quizzes;
+    } else {
+      return null;
+    }
+  } catch (error) {
+    return null;
+  }
+};
+
+export const getHomeQuizzes = async () => {
+  try {
+    const categories: {
+      title: string;
+      args: SearchQuizessArgs;
+      route: string;
+    }[] = CATEGORIES.map((category) => ({
+      title: category
+        .replace(/_/g, " ")
+        .replace(/\b\w/g, (c) => c.toUpperCase()),
+      args: { category, sortOption: "popular" },
+      route: `/search?category=${category}`,
+    }));
+
+    const results = await Promise.all(
+      [...HOME, ...categories].map(async ({ title, args, route }) => {
+        const {success , quizzes} = await getSearchQuizzes(args);
+        if (quizzes && success && quizzes.length > 0) {
+          return { title, quizzes, route };
+        } else {
+          return null;
+        }
+      })
+    );
+
+    return results;
+  } catch (error) {
+    return null;
+  }
+};
+
+export const getHomeQuizzesByCategories = async (categories: Category[]) => {
+  try {
+    const bestRatedQuizzes = await db.rating.groupBy({
+      by: ["quizId"],
+      _avg: {
+        rate: true,
+      },
+      orderBy: {
+        _avg: {
+          rate: "desc",
+        },
+      },
+      take: TAKE, // Get the top 10 best-rated quizzes
+    });
+
+    const quizzes = await db.quiz.findMany({
+      where: {
+        id: { in: bestRatedQuizzes.map((r) => r.quizId) },
+      },
+      include: {
+        ratings: {
+          select: { rate: true },
+        },
+      },
+    });
+
+    if (quizzes) {
+      return quizzes;
+    } else {
+      return null;
+    }
+  } catch (error) {
+    return null;
+  }
+};

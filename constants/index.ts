@@ -3,10 +3,12 @@ import {
   Category,
   ImageManagerTabsType,
   LibrarySortOption,
+  SearchQuizessArgs,
   SearchSortOption,
 } from "@/types";
 import { THEME_COLORS as colorsType } from "@/types/theme";
-import { QuestionType } from "@prisma/client";
+import { Prisma, QuestionType } from "@prisma/client";
+import { subMonths } from "date-fns";
 import { LucideProps } from "lucide-react";
 
 export const AVATAR_COLORS = [
@@ -42,7 +44,7 @@ export const LIBRARY_SORT_OPTIONS: LibrarySortOption[] = [
 export const SEARCH_SORT_OPTIONS: SearchSortOption[] = [
   "highestRated",
   "mostRecent",
-  "mostPlayed",
+  "popular",
 ];
 
 export const LIBRARY_SORT_OPTIONS_WITH_LABEL: {
@@ -61,7 +63,7 @@ export const SEARCH_SORT_OPTIONS_WITH_LABEL: {
   label: string;
 }[] = [
   { value: "highestRated", label: "Highes Rated" },
-  { value: "mostPlayed", label: "Most Played" },
+  { value: "popular", label: "Popular" },
   { value: "mostRecent", label: "Most Recent" },
 ];
 
@@ -91,6 +93,30 @@ export const THEME_COLORS: {
   { id: 7, label: "blue", color: "#2980B9" },
   { id: 8, label: "yellow", color: "#F1C40F" },
   { id: 9, label: "violet", color: "#7c3aed" },
+];
+
+export const CATEGORIES: Category[] = [
+  "SCIENCE",
+  "MATH",
+  "HISTORY",
+  "GEOGRAPHY",
+  "LITERATURE",
+  "TECHNOLOGY",
+  "SPORTS",
+  "ART",
+  "LANGUAGE",
+  "GENERAL_KNOWLEDGE",
+  "POLITICS",
+  "ECONOMICS",
+  "PHILOSOPHY",
+  "PSYCHOLOGY",
+  "BIOLOGY",
+  "CHEMISTRY",
+  "PHYSICS",
+  "COMPUTER_SCIENCE",
+  "RELIGION",
+  "NATURE",
+  "EDUCATION",
 ];
 
 export const DESKTOP_SIDEBAR_ITEMS = [
@@ -416,3 +442,29 @@ export const QUESTION_MARK_TIMES: {
   MATCHING_PAIRS: 8000, // 6 seconds for Matching Pairs
   ORDER: 8000, // 7 seconds for Order type questions
 };
+
+export const HOME: {
+  title: string;
+  args: SearchQuizessArgs;
+  route: string;
+}[] = [
+  {
+    title: "Most Recent",
+    args: {
+      sortOption: "mostRecent",
+    },
+    route: "/search?orderBy=mostRecent",
+  },
+  {
+    title: "Popular",
+    args: {
+      sortOption: "popular",
+    },
+    route: "/popular",
+  },
+  {
+    title: "Random selection",
+    args: {},
+    route: "/search",
+  },
+];

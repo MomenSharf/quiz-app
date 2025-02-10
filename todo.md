@@ -9,6 +9,7 @@
 ## home
 
 - finish the cards logic
+- make quizze appear just when be visible in screen
 
 ## /search
 
@@ -29,3 +30,12 @@
 
 - make soud effect more better then existing
 - make backup imahUrl more spasifc
+
+{
+  title: 'title 1'
+  query: 'query - 1'
+},
+{
+  title: 'title 2'
+  query: 'query - 2'
+}

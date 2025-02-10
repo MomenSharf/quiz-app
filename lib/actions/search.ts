@@ -1,6 +1,11 @@
 "use server";
 
-import { Category, SearchQuiz, SearchSortOption } from "@/types";
+import {
+  Category,
+  SearchQuiz,
+  SearchQuizessArgs,
+  SearchSortOption,
+} from "@/types";
 import { db } from "../db";
 import { getCurrentUser } from "../auth";
 import { unstable_noStore as noStore } from "next/cache";
@@ -13,45 +18,52 @@ export const getSearchQuizzes = async ({
   sortOption,
   category,
   isBookmarked,
-}: {
-  page?: number;
-  pageSize?: number;
-  query?: string;
-  sortOption?: SearchSortOption;
-  category?: Category;
-  isBookmarked?: boolean;
-}) => {
+}: SearchQuizessArgs) => {
   const session = await getCurrentUser();
   const userId = session?.user?.id;
 
-  const orderByMap: Record<SearchSortOption | "random", Record<string, any>> = {
+  const quizOrderByMap: Record<
+    SearchSortOption | "random",
+    Prisma.QuizFindManyArgs["orderBy"]
+  > = {
     highestRated: { createdAt: "desc" }, //!!
-    random: {
-      playCount: "desc",
-    },
-    mostPlayed: { playCount: "desc" },
+    random: { id: "asc" },
+    popular: [{ playCount: "desc" }, { createdAt: "desc" }],
     mostRecent: { createdAt: "asc" },
   };
-  const orderBy = sortOption ? orderByMap[sortOption] : undefined;
+  const bookmarkOrderByMap: Record<
+    SearchSortOption | "random",
+    Prisma.BookmarkOrderByWithRelationInput | Prisma.BookmarkOrderByWithRelationInput[]
+  > = {
+    highestRated: { quiz: { createdAt: "desc" } }, //!!
+    random: { quiz: { id: "asc" } },
+    popular: { quiz: { playCount: "desc", createdAt: "desc" } },
+    mostRecent: { quiz: { createdAt: "asc" } },
+  };
+  const quizOrderBy = sortOption ? quizOrderByMap[sortOption] : undefined;
+  const bookmarkOrderBy = sortOption ? bookmarkOrderByMap[sortOption] : undefined;
 
-  const where : Prisma.QuizWhereInput =   {
-    visibility: 'PUBLIC',
+  const where: Prisma.QuizWhereInput = {
+    visibility: "PUBLIC",
+
     AND: [
       {
-        OR: [
-          {
-            title: {
-              contains: query,
-              mode: "insensitive",
-            },
-          },
-          {
-            description: {
-              contains: query,
-              mode: "insensitive",
-            },
-          },
-        ],
+        OR: query
+          ? [
+              {
+                title: {
+                  contains: query,
+                  mode: "insensitive",
+                },
+              },
+              {
+                description: {
+                  contains: query,
+                  mode: "insensitive",
+                },
+              },
+            ]
+          : undefined,
       },
       ...(category
         ? [
@@ -63,7 +75,7 @@ export const getSearchQuizzes = async ({
           ]
         : []),
     ],
-  }
+  };
 
   const include = {
     user: true,
@@ -83,7 +95,6 @@ export const getSearchQuizzes = async ({
   try {
     let quizzes: SearchQuiz[];
     if (isBookmarked && userId) {
-      
       const bookmarks = await db.bookmark.findMany({
         where: { userId, quiz: where },
         include: {
@@ -91,31 +102,19 @@ export const getSearchQuizzes = async ({
         },
         skip,
         take,
-        orderBy: {
-          quiz: orderBy
-        },
+        orderBy: bookmarkOrderBy,
       });
-      console.log('isb');
-      
       quizzes = bookmarks.map((bookmark) => bookmark.quiz);
     } else {
-      console.log('inob');
-      if (!query) {
-        return {
-          success: true,
-          message: "Query is required to search quizzes.",
-          quizzes: [],
-        };
-      }
       quizzes = await db.quiz.findMany({
         where,
         include,
         skip,
         take,
-        orderBy,
+        orderBy: quizOrderBy,
       });
     }
- 
+
     if (!quizzes) {
       return { success: false, message: "No Quizzes found" };
     }
@@ -123,12 +122,11 @@ export const getSearchQuizzes = async ({
     if (quizzes.length === 0) {
       return { success: true, message: `No result for '${query}'`, quizzes };
     }
-    
 
     return { success: true, quizzes };
   } catch (error) {
     console.log(error);
-    
+
     return { success: false, message: "Error searching Quizzes" };
   }
 };

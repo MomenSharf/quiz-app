@@ -49,6 +49,7 @@ model Quiz {
   title           String
   createdAt       DateTime       @default(now())
   updatedAt       DateTime       @updatedAt
+  publishedAt     DateTime?
   categories      String[]
   description     String
   visibility      Visibility     @default(PUBLIC)
@@ -65,6 +66,16 @@ model Quiz {
   completionCount Int            @default(0) 
 
   @@index([title, createdAt]) 
+}
+model Rating {
+  id        String   @id @default(cuid())
+  quiz      Quiz     @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  quizId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  createdAt DateTime @default(now())
+
+  rate Int // from 1 to 5
 }
 
 model Question {
@@ -93,16 +104,6 @@ model Item {
   imageUrl   String?
 }
 
-model Rating {
-  id        String   @id @default(cuid())
-  quiz      Quiz     @relation(fields: [quizId], references: [id], onDelete: Cascade)
-  quizId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId    String
-  createdAt DateTime @default(now())
-
-  rate Int // from 1 to 5
-}
 
 model Bookmark {
   id     String @id @default(cuid())

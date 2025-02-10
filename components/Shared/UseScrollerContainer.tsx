@@ -9,11 +9,13 @@ import { cn } from "@/lib/utils";
 
 export default function UseScrollerContainer({
   children,
+  scrollBy
 }: {
   children: ReactNode;
+  scrollBy? : number;
 }) {
   const { isLeftVisible, isRightVisible, sliderRef, goLeft, goRight } =
-    useScroller();
+    useScroller(scrollBy);
 
   return (
     <div className="flex">

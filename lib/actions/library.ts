@@ -219,7 +219,7 @@ export const newQuiz = async ({
   pathname,
 }: {
   folderId?: string;
-  pathname: string;
+  pathname?: string;
 }) => {
   const session = await getCurrentUser();
   if (!session) {
@@ -246,7 +246,7 @@ export const newQuiz = async ({
       },
     });
 
-    revalidatePath(pathname);
+    if (pathname) revalidatePath(pathname);
 
     return { success: true, quiz };
   } catch (error) {

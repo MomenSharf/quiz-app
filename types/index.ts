@@ -35,9 +35,18 @@ export type LibrarySortOption =
   | "oldestCreate"
   | "oldestUpdate";
 
-export type SearchSortOption = "highestRated" | "mostRecent" | "mostPlayed";
+export type SearchSortOption = "highestRated" | "mostRecent" | "popular" ;
 
 export type ImageManagerTabsType = "upload" | "stockPhotos" | "giphyGIFS";
+
+export type SearchQuizessArgs = {
+  page?: number;
+  pageSize?: number;
+  query?: string;
+  sortOption?: SearchSortOption;
+  category?: Category;
+  isBookmarked?: boolean;
+}
 
 export type DashboardQuiz = Prisma.QuizGetPayload<{
   include: {

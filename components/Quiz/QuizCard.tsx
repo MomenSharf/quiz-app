@@ -50,8 +50,6 @@ export default async function QuizzesCard({
       <div className="group relative flex flex-col w-full rounded-xl  rounded-bl-none rounded-br-none overflow-hidden">
         <Image
           src={quiz.imageUrl || "/assets/images/hero.webp"}
-          // src="/assets/images/hero.webp"
-          // src="/assets/images/categories/ART.jpg"
           alt="question Image"
           width={800} // Replace with your desired pixel width
           height={600} // Replace with your desired pixel height
@@ -62,22 +60,6 @@ export default async function QuizzesCard({
           className="rounded-xl rounded-bl-none rounded-br-none"
           unoptimized
         />
-        <div className="hidden">
-        <Image
-          // src={quiz.imageUrl || "/assets/images/hero.webp"}
-          // src="/assets/images/hero.webp"
-          src="/public/assets/images/categories/ART.jpg"
-          alt="question Image"
-          width={800} // Replace with your desired pixel width
-          height={600} // Replace with your desired pixel height
-          priority
-          style={{
-            aspectRatio: "4 / 3", // Maintains the 4:3 aspect ratio
-          }}
-          className="rounded-xl rounded-bl-none rounded-br-none"
-          unoptimized
-        />
-        </div>
         <div className="absolute opacity-0 group-hover:opacity-100 transition-opacity w-full h-full flex justify-center items-center bg-black/30">
           <Link
             href={`play/${quiz.id}`}
@@ -104,9 +86,9 @@ export default async function QuizzesCard({
             </Link>
             <div className="flex gap-1">
               <p className="text-xs text-gray-medium max-w-[60%] truncate">
-                {quiz.user.username}dddddddddddddddd
+                {quiz.user.username}
               </p>
-              <You userId={quiz.userId}/>
+              <You userId={quiz.userId} />
             </div>
           </div>
         </div>

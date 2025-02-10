@@ -1,6 +1,8 @@
 import React from "react";
-import { Button } from "../ui/button";
+import { Button, buttonVariants } from "../ui/button";
 import { Icons } from "../icons";
+import Link from "next/link";
+import { cn } from "@/lib/utils";
 
 export default function Cards() {
   return (
@@ -14,12 +16,15 @@ export default function Cards() {
             <p className="text-xs sm:text-sm text-white">
               Create a New Quiz and Challenge the World!
             </p>
-            <Button
-              className="self-start mt-auto justify-items-end bg-card text-primary hover:bg-card/90 rounded-xl"
-              size="sm"
+            <Link
+              className={cn(
+                buttonVariants({ size: "sm" }),
+                "self-start mt-auto justify-items-end bg-card text-primary hover:bg-card/90 rounded-xl"
+              )}
+              href='editor/new'
             >
               Create Quiz
-            </Button>
+            </Link>
             <Icons.quizzes className="absolute w-6 h-6 sm:w-10 sm:h-10 fill-white right-3 bottom-3" />
           </div>
         </div>
