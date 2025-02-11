@@ -64,7 +64,7 @@ export default function QuizCard({
             href={`/profile/${quiz.user.username}`}
             className="text-xs text-gray-dark font-medium hover:underline hover hover:text-primary transition-colors"
           >
-            {quiz.user.username?.trim()}{" "}
+            {quiz.user.username?.trim()}
             {isCurrentUser && (
               <span className="text-primary text-xs">(You)</span>
             )}

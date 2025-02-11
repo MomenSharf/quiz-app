@@ -1,4 +1,5 @@
 import ErrorPage from "@/components/Layout/ErrorPage";
+import QuizzesPanelsContainer from "@/components/Quiz/QuizzesPanelsContainer";
 import QuizzesPanelsTable from "@/components/Quiz/QuizzesPanelsTable";
 import BookmarkSwitch from "@/components/Search/BookmarkSwitch";
 import CategorySelector from "@/components/Search/CategorySelector";
@@ -15,11 +16,13 @@ export default async function Page(props: {
     sortBy?: string;
     category?: string;
     isBookmarked?: string;
+    userId?: string;
   }>;
 }) {
   const session = await getCurrentUser();
 
   const searchParams = await props.searchParams;
+  const userId = searchParams?.userId;
   const query = searchParams?.query;
   const sortOption = isValidSearchSortOption(searchParams?.sortBy)
     ? searchParams?.sortBy
@@ -37,10 +40,10 @@ export default async function Page(props: {
     isBookmarked,
   });
 
-  if (!success || !quizzes) { 
+  if (!success || !quizzes) {
     return <ErrorPage message={message} />;
   }
-console.log(query);
+  console.log(query);
 
   return (
     <div className="w-full h-full flex flex-col gap-3 p-2 sm:p-3">
@@ -56,15 +59,14 @@ console.log(query);
       </div>
       <div className="w-full h-full">
         {quizzes.length > 0 ? (
-          <div className="flex flex-col gap-1 sm:gap-3">
-            <QuizzesPanelsTable quizzes={quizzes} />
-            <MoreSearchQuizzes
-              query={query}
-              category={category}
-              sortOption={sortOption}
-              isBookmarked
-            />
-          </div>
+          <QuizzesPanelsContainer
+            quizzes={quizzes}
+            query={query}
+            category={category}
+            sortOption={sortOption}
+            isBookmarked={isBookmarked}
+            userId={userId}
+          />
         ) : (
           <div className="w-full h-full flex flex-col justify-center items-center">
             <Image

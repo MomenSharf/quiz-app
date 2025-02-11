@@ -7,18 +7,16 @@ import { getSearchQuizzes } from "@/lib/actions/search";
 import { toast } from "../ui/use-toast";
 import { Icons } from "../icons";
 
-export default function MoreSearchQuizzes({
-  userId,
+export default function MoreQuizzesPanels({
   query,
   category,
   sortOption,
-  isBookmarked,
+  isBookmarked 
 }: {
-  userId?: string;
   query: string | undefined;
   category: Category | undefined;
   sortOption?: SearchSortOption;
-  isBookmarked?: boolean;
+  isBookmarked: boolean 
 }) {
   const [quizzes, setQuizzes] = useState<SearchQuiz[]>([]);
   const [page, setPage] = useState(2);
@@ -35,15 +33,16 @@ export default function MoreSearchQuizzes({
       setLoading(true);
       try {
         const { success, message, quizzes } = await getSearchQuizzes({
-          userId,
           query: searchQuery || "wanderlust",
           page: currentPage,
           category,
           sortOption,
-          isBookmarked,
+          isBookmarked
         });
 
+        
         if (success && quizzes) {
+          
           setQuizzes((prev) => [...prev, ...quizzes]);
           setHasMore(quizzes.length > 0); // Assume 12 is the page size
         } else {
@@ -63,11 +62,17 @@ export default function MoreSearchQuizzes({
 
   useEffect(() => {
     console.log(query);
-
-    if (inView && hasMore && !loading && query && query.trim()) {
-      console.log("gg");
-
-      fetchQizzes(query, page + 1);
+    
+    if (
+      inView &&
+      hasMore &&
+      !loading &&
+      query &&
+      query.trim() 
+    ) {
+      console.log('gg');
+      
+       fetchQizzes(query, page + 1);
       setPage((prev) => prev + 1);
     }
   }, [inView, hasMore, loading, query, page, fetchQizzes]);

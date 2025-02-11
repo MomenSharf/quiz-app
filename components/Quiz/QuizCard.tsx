@@ -85,9 +85,12 @@ export default async function QuizzesCard({
               {quiz.title}
             </Link>
             <div className="flex gap-1">
-              <p className="text-xs text-gray-medium max-w-[60%] truncate">
+            <Link
+            href={`/profile/${quiz.user.username}`}
+            className="text-xs text-gray-dark font-medium hover:underline hover hover:text-primary transition-colors"
+          >
                 {quiz.user.username}
-              </p>
+              </Link>
               <You userId={quiz.userId} />
             </div>
           </div>

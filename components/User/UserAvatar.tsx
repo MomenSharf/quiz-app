@@ -79,7 +79,7 @@ export function UserAvatarImage({
           {...props}
         >
           <AvatarImage
-            src={imageUrl ? imageUrl : "/boy.png"}
+            src={imageUrl}
             alt="avatar"
             className="rounded-full"
           />

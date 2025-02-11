@@ -35,18 +35,19 @@ export type LibrarySortOption =
   | "oldestCreate"
   | "oldestUpdate";
 
-export type SearchSortOption = "highestRated" | "mostRecent" | "popular" ;
+export type SearchSortOption = "highestRated" | "mostRecent" | "popular";
 
 export type ImageManagerTabsType = "upload" | "stockPhotos" | "giphyGIFS";
 
 export type SearchQuizessArgs = {
+  userId?: string;
   page?: number;
   pageSize?: number;
   query?: string;
   sortOption?: SearchSortOption;
   category?: Category;
   isBookmarked?: boolean;
-}
+};
 
 export type DashboardQuiz = Prisma.QuizGetPayload<{
   include: {
@@ -131,10 +132,7 @@ export type SearchQuiz = Prisma.QuizGetPayload<{
     questions: true;
     ratings: true;
   };
-}> 
-
-
-
+}>;
 
 export type BookmarkQuiz = Prisma.QuizGetPayload<{
   include: {

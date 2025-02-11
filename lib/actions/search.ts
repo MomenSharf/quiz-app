@@ -12,6 +12,7 @@ import { unstable_noStore as noStore } from "next/cache";
 import { Prisma } from "@prisma/client";
 
 export const getSearchQuizzes = async ({
+  userId,
   page = 1,
   pageSize = 15,
   query,
@@ -20,7 +21,7 @@ export const getSearchQuizzes = async ({
   isBookmarked,
 }: SearchQuizessArgs) => {
   const session = await getCurrentUser();
-  const userId = session?.user?.id;
+  const sessionUserId = session?.user?.id;
 
   const quizOrderByMap: Record<
     SearchSortOption | "random",
@@ -45,7 +46,7 @@ export const getSearchQuizzes = async ({
 
   const where: Prisma.QuizWhereInput = {
     visibility: "PUBLIC",
-
+    userId,
     AND: [
       {
         OR: query
@@ -79,9 +80,9 @@ export const getSearchQuizzes = async ({
 
   const include = {
     user: true,
-    bookmarks: userId
+    bookmarks: sessionUserId
       ? {
-          where: { userId }, // Include bookmarks only if userId exists
+          where: { userId: sessionUserId }, // Include bookmarks only if userId exists
         }
       : undefined,
     questions: true,
@@ -96,7 +97,7 @@ export const getSearchQuizzes = async ({
     let quizzes: SearchQuiz[];
     if (isBookmarked && userId) {
       const bookmarks = await db.bookmark.findMany({
-        where: { userId, quiz: where },
+        where: { userId: sessionUserId, quiz: where },
         include: {
           quiz: { include },
         },
