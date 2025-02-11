@@ -160,18 +160,7 @@ export type PlayQuizType = Prisma.QuizProgressGetPayload<{
 
 export type SettingsUser = Prisma.UserGetPayload<{}>;
 
-export type UserProfile = Prisma.UserGetPayload<{
-  include: {
-    quizzes: {
-      include: {
-        user: true;
-        bookmarks: true | undefined;
-        questions: true;
-        ratings: true;
-      };
-    };
-  };
-}>;
+export type UserProfile = Prisma.UserGetPayload<{}> & { quizzes : SearchQuiz[]};
 
 export type PlayQuizMode = "play" | "preview";
 
