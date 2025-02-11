@@ -6,6 +6,7 @@ import { useInView } from "framer-motion";
 import { getSearchQuizzes } from "@/lib/actions/search";
 import { toast } from "../ui/use-toast";
 import { Icons } from "../icons";
+import { PAGE_SIZE } from "@/constants";
 
 export default function MoreSearchQuizzes({
   userId,
@@ -45,7 +46,7 @@ export default function MoreSearchQuizzes({
 
         if (success && quizzes) {
           setQuizzes((prev) => [...prev, ...quizzes]);
-          setHasMore(quizzes.length > 0); // Assume 12 is the page size
+          setHasMore(quizzes.length === PAGE_SIZE); // Assume 12 is the page size
         } else {
           toast({ description: message, variant: "destructive" });
         }
@@ -58,15 +59,11 @@ export default function MoreSearchQuizzes({
         setLoading(false);
       }
     },
-    [loading, hasMore]
+    [loading, hasMore, userId, category, sortOption, isBookmarked]
   );
 
   useEffect(() => {
-    console.log(query);
-
     if (inView && hasMore && !loading && query && query.trim()) {
-      console.log("gg");
-
       fetchQizzes(query, page + 1);
       setPage((prev) => prev + 1);
     }

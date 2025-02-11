@@ -167,8 +167,6 @@ export const saveEditorQuiz = async (
     });
 
     if (quiz) {
-      console.log(quiz.visibility);
-
       return { success: true, message: "Quiz updated successfully.", quiz };
     } else {
       return {

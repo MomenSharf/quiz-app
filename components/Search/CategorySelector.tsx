@@ -6,17 +6,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  CATEGORY_OPTIONS_LIST
-} from "@/constants";
+import { CATEGORY_OPTIONS_LIST } from "@/constants";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export default function CategorySelector() {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const { replace } = useRouter();
-
-  const category = searchParams.get("category") || "";
+  const [category, setCategory] = useState(
+    searchParams.get("category") || undefined
+  );
 
   function handleSearch(term: string) {
     const params = new URLSearchParams(searchParams);
@@ -27,6 +27,10 @@ export default function CategorySelector() {
     }
     replace(`${pathname}?${params.toString()}`);
   }
+
+  useEffect(() => {
+    setCategory(searchParams.get("category") || undefined);
+  }, [searchParams]);
 
   return (
     <Select defaultValue={category} onValueChange={handleSearch}>

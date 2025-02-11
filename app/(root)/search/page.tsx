@@ -31,7 +31,7 @@ export default async function Page(props: {
     ? searchParams?.category
     : undefined;
 
-  const isBookmarked = searchParams?.isBookmarked === "true" && !!session;
+  const isBookmarked = searchParams?.isBookmarked === "true";
 
   const { success, message, quizzes } = await getSearchQuizzes({
     query,
@@ -43,7 +43,6 @@ export default async function Page(props: {
   if (!success || !quizzes) {
     return <ErrorPage message={message} />;
   }
-  console.log(query);
 
   return (
     <div className="w-full h-full flex flex-col gap-3 p-2 sm:p-3">
@@ -52,10 +51,12 @@ export default async function Page(props: {
           Showing results for {`'${query}'`}
         </h1>
       )}
-      <div className="flex justify-end gap-1 sm:gap-3">
+      <div className="flex gap-3 justify-between sm:gap-3">
         {session && <BookmarkSwitch isBookmarked={isBookmarked} />}
-        <SortBySelector />
-        <CategorySelector />
+        <div className="flex gap-1">
+          <SortBySelector />
+          <CategorySelector />
+        </div>
       </div>
       <div className="w-full h-full">
         {quizzes.length > 0 ? (

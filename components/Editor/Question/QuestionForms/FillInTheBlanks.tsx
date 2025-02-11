@@ -50,8 +50,8 @@ export default function FillInTheBlanks({
             })
           : []
       );
-      if(error) {
-        trigger(`questions.${questionIndex}.items`)
+      if (error) {
+        trigger(`questions.${questionIndex}.items`);
       }
     } else {
       setValue(`questions.${questionIndex}.items`, []);
@@ -85,8 +85,6 @@ export default function FillInTheBlanks({
 
   const towBlanksError =
     error && "towBlanks" in error ? (error.towBlanks as FieldError) : null;
-    console.log(towBlanksError);
-    
 
   return (
     <div className="flex flex-col gap-1">
@@ -114,7 +112,7 @@ export default function FillInTheBlanks({
             );
           })}
       </div>
-      {question.question && <ErrorSpan error={error } />}
+      {question.question && <ErrorSpan error={error} />}
       {question.question && <ErrorSpan error={towBlanksError} />}
       {question.items && question.items.length === 0 && (
         <ErrorSpan

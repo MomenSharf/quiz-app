@@ -67,8 +67,6 @@ export default function QuestionInput({
               <ImageManagerTabs
                 tabs={["upload", "stockPhotos", "giphyGIFS"]}
                 onSelectImage={({ acceptedFiles, from }) => {
-                  console.log(from);
-
                   setIsImageManagerTabs(false);
                   if (
                     from === "giphyGIFS" &&

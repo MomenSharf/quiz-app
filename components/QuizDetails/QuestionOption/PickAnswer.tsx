@@ -12,7 +12,6 @@ export default function PickAnswer({
   const headersList = headers();
   const referer = headersList.get("showAnswers"); // Example: Get Referer header
   if (question.type !== "PICK_ANSWER") return null;
-  console.log(referer);
 
   return (
     <div className="flex flex-col gap-">

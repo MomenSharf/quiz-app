@@ -54,9 +54,9 @@ export default async function QuizzesCard({
           width={800} // Replace with your desired pixel width
           height={600} // Replace with your desired pixel height
           priority
-          // style={{
-          //   aspectRatio: "4 / 3", // Maintains the 4:3 aspect ratio
-          // }}
+          style={{
+            aspectRatio: "4 / 3", // Maintains the 4:3 aspect ratio
+          }}
           className="rounded-xl rounded-bl-none rounded-br-none"
           unoptimized
         />

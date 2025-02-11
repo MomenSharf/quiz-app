@@ -9,7 +9,7 @@ import {
 } from "react";
 import stringSimilarity from "string-similarity";
 
-export type PlayQuizQuestion = PlayQuizType['quiz']["questions"][number] & {
+export type PlayQuizQuestion = PlayQuizType["quiz"]["questions"][number] & {
   // timeTaken: number;
   isAnswerRight: boolean | null;
 };
@@ -165,10 +165,7 @@ export const PlayQuizProvider = ({
       currentQuestion: number;
       isCompleted: boolean;
     }) => {
-      console.log("gg");
       if (mode === "play") {
-        console.log("save");
-
         await saveQuizProgress(quizProgress.quiz.id, {
           playQuizQuestions: data.playQuizQuestions,
           currentQuestion: data.currentQuestion,

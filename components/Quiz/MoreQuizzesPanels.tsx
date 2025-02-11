@@ -11,12 +11,12 @@ export default function MoreQuizzesPanels({
   query,
   category,
   sortOption,
-  isBookmarked 
+  isBookmarked,
 }: {
   query: string | undefined;
   category: Category | undefined;
   sortOption?: SearchSortOption;
-  isBookmarked: boolean 
+  isBookmarked: boolean;
 }) {
   const [quizzes, setQuizzes] = useState<SearchQuiz[]>([]);
   const [page, setPage] = useState(2);
@@ -37,12 +37,10 @@ export default function MoreQuizzesPanels({
           page: currentPage,
           category,
           sortOption,
-          isBookmarked
+          isBookmarked,
         });
 
-        
         if (success && quizzes) {
-          
           setQuizzes((prev) => [...prev, ...quizzes]);
           setHasMore(quizzes.length > 0); // Assume 12 is the page size
         } else {
@@ -61,18 +59,8 @@ export default function MoreQuizzesPanels({
   );
 
   useEffect(() => {
-    console.log(query);
-    
-    if (
-      inView &&
-      hasMore &&
-      !loading &&
-      query &&
-      query.trim() 
-    ) {
-      console.log('gg');
-      
-       fetchQizzes(query, page + 1);
+    if (inView && hasMore && !loading && query && query.trim()) {
+      fetchQizzes(query, page + 1);
       setPage((prev) => prev + 1);
     }
   }, [inView, hasMore, loading, query, page, fetchQizzes]);

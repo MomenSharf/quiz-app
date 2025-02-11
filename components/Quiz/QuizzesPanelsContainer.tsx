@@ -13,8 +13,8 @@ export default function QuizzesPanelsContainer({
 }: {
   userId?: string;
   quizzes: SearchQuiz[];
-  query?: string ;
-  category?: Category ;
+  query?: string;
+  category?: Category;
   sortOption?: SearchSortOption;
   isBookmarked?: boolean;
 }) {
@@ -27,7 +27,6 @@ export default function QuizzesPanelsContainer({
         sortOption={sortOption}
         isBookmarked={isBookmarked}
         userId={userId}
-        
       />
     </div>
   );

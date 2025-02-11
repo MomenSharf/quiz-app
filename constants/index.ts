@@ -11,6 +11,8 @@ import { Prisma, QuestionType } from "@prisma/client";
 import { subMonths } from "date-fns";
 import { LucideProps } from "lucide-react";
 
+export const PAGE_SIZE = 12
+
 export const AVATAR_COLORS = [
   "#1ABC9C", // Turquoise
   "#2ECC71", // Emerald
@@ -453,14 +455,14 @@ export const HOME: {
     args: {
       sortOption: "mostRecent",
     },
-    route: "/search?orderBy=mostRecent",
+    route: "/search?sortBy=mostRecent",
   },
   {
     title: "Popular",
     args: {
       sortOption: "popular",
     },
-    route: "/popular",
+    route: "/search?sortBy=popular",
   },
   {
     title: "Random selection",

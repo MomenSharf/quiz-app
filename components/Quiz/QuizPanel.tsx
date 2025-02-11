@@ -49,7 +49,7 @@ export default function QuizPanel({
       }}
       viewport={{ amount: 0 }}
     >
-      <div className="relative bg-card p-2 sm:p-3 flex rounded-lg">
+      <div className="relative bg-card p-2  flex rounded-lg">
         <Link
           href={`quiz/${quiz.id}`}
           className="flex items-center rounded-xl overflow-hidden w-28 min-w-28"

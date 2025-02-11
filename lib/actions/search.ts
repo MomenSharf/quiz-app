@@ -10,11 +10,12 @@ import { db } from "../db";
 import { getCurrentUser } from "../auth";
 import { unstable_noStore as noStore } from "next/cache";
 import { Prisma } from "@prisma/client";
+import { PAGE_SIZE } from "@/constants";
 
 export const getSearchQuizzes = async ({
   userId,
   page = 1,
-  pageSize = 15,
+  pageSize = PAGE_SIZE,
   query,
   sortOption,
   category,
@@ -34,7 +35,8 @@ export const getSearchQuizzes = async ({
   };
   const bookmarkOrderByMap: Record<
     SearchSortOption | "random",
-    Prisma.BookmarkOrderByWithRelationInput | Prisma.BookmarkOrderByWithRelationInput[]
+    | Prisma.BookmarkOrderByWithRelationInput
+    | Prisma.BookmarkOrderByWithRelationInput[]
   > = {
     highestRated: { quiz: { createdAt: "desc" } }, //!!
     random: { quiz: { id: "asc" } },
@@ -42,7 +44,9 @@ export const getSearchQuizzes = async ({
     mostRecent: { quiz: { createdAt: "asc" } },
   };
   const quizOrderBy = sortOption ? quizOrderByMap[sortOption] : undefined;
-  const bookmarkOrderBy = sortOption ? bookmarkOrderByMap[sortOption] : undefined;
+  const bookmarkOrderBy = sortOption
+    ? bookmarkOrderByMap[sortOption]
+    : undefined;
 
   const where: Prisma.QuizWhereInput = {
     visibility: "PUBLIC",
@@ -95,7 +99,7 @@ export const getSearchQuizzes = async ({
 
   try {
     let quizzes: SearchQuiz[];
-    if (isBookmarked && userId) {
+    if (isBookmarked && sessionUserId) {
       const bookmarks = await db.bookmark.findMany({
         where: { userId: sessionUserId, quiz: where },
         include: {
@@ -126,8 +130,6 @@ export const getSearchQuizzes = async ({
 
     return { success: true, quizzes };
   } catch (error) {
-    console.log(error);
-
     return { success: false, message: "Error searching Quizzes" };
   }
 };

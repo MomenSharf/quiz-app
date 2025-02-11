@@ -8,13 +8,14 @@ import {
 } from "@/components/ui/select";
 import { SEARCH_SORT_OPTIONS_WITH_LABEL } from "@/constants";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export default function SortBySelector() {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const { replace } = useRouter();
 
-  const sortBy = searchParams.get("sortBy") || "";
+  const [sortBy, setSortBy] = useState(searchParams.get("sortBy") || undefined);
 
   function handleSearch(term: string) {
     const params = new URLSearchParams(searchParams);
@@ -25,6 +26,10 @@ export default function SortBySelector() {
     }
     replace(`${pathname}?${params.toString()}`);
   }
+
+  useEffect(() => {
+    setSortBy(searchParams.get("sortBy") || undefined);
+  }, [searchParams]);
 
   return (
     <Select defaultValue={sortBy} onValueChange={handleSearch}>

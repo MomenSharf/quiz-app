@@ -10,8 +10,6 @@ export default function ShowAnswer({ showAnswers }: { showAnswers: boolean }) {
   const searchParams = useSearchParams();
 
   const handleCheckedChange = (isChecked: boolean) => {
-    console.log(isChecked);
-
     setChecked(isChecked);
 
     // Get the current query parameters
