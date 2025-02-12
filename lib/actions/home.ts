@@ -124,7 +124,7 @@ export const getHomeQuizzes = async () => {
       for (const { title, args, route } of allItems) {
         const { success, quizzes } = await getSearchQuizzes({...args, pageSize: 6});
         if (quizzes && success && quizzes.length > 0) {
-          results.push({ title, quizzes, route });
+          results.push({ title, quizzes, route }); 
         }
       }
       return results;
