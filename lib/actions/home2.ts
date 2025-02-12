@@ -132,7 +132,7 @@ export const getHomeQuizzes = async () => {
           })
         );
 
-        return
+        return results
     };
 
     return await Promise.race([fetchQuizzes(), timeout]);

@@ -38,7 +38,6 @@ CREATE TABLE "Quiz" (
     "title" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
-    "publishedAt" TIMESTAMP(3),
     "categories" TEXT[],
     "description" TEXT NOT NULL,
     "visibility" "Visibility" NOT NULL DEFAULT 'PUBLIC',

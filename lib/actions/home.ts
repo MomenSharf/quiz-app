@@ -1,6 +1,6 @@
 "use server";
 
-import { Category, SearchQuizessArgs } from "@/types";
+import { Category, SearchQuiz, SearchQuizessArgs } from "@/types";
 import { db } from "../db";
 import { CATEGORIES, HOME } from "@/constants";
 import { getSearchQuizzes } from "./search";
@@ -91,18 +91,47 @@ export const getHomeQuizzes = async () => {
       route: `/search?category=${category}`,
     }));
 
-    const results = await Promise.all(
-      [...HOME, ...categories].map(async ({ title, args, route }) => {
-        const { success, quizzes } = await getSearchQuizzes(args);
-        if (quizzes && success && quizzes.length > 0) {
-          return { title, quizzes, route };
-        } else {
-          return null;
-        }
-      })
-    );
+    // const results = await Promise.all(
+    //   [...HOME, ...categories].map(async ({ title, args, route }) => {
+    //     const { success, quizzes } = await getSearchQuizzes(args);
+    //     if (quizzes && success && quizzes.length > 0) {
+    //       return { title, quizzes, route };
+    //     } else {
+    //       return null;
+    //     }
+    //   })
+    // );
 
-    return results;
+    const results: {
+      title: string;
+      quizzes: SearchQuiz[];
+      route: string;
+    }[] = [];
+
+    const timeout = new Promise<
+      { title: string; quizzes: any; route: string }[]
+    >((resolve) => setTimeout(() => resolve(results), 4000));
+
+    // Function to fetch quizzes one by one
+    const fetchQuizzes = async () => {
+      const results = await Promise.all(
+        [...HOME, ...categories].map(async ({ title, args, route }) => {
+          const { success, quizzes } = await getSearchQuizzes({
+            ...args,
+            pageSize: 6,
+          });
+          if (quizzes && success && quizzes.length > 0) {
+            return { title, quizzes, route };
+          } else {
+            return null;
+          }
+        })
+      );
+
+      return results;
+    };
+
+    return await Promise.race([fetchQuizzes(), timeout]);
   } catch (error) {
     return null;
   }
