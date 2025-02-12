@@ -24,6 +24,5 @@
 
 ## play
 
-- make soud effect more better then existing
 - make trancat for questions options
 - make backup imahUrl more spasifc
