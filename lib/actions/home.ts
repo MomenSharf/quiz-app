@@ -122,7 +122,7 @@ export const getHomeQuizzes = async () => {
     // Function to fetch quizzes one by one
     const fetchQuizzes = async () => {
       for (const { title, args, route } of allItems) {
-        const { success, quizzes } = await getSearchQuizzes({...args, page: 6});
+        const { success, quizzes } = await getSearchQuizzes({...args, pageSize: 6});
         if (quizzes && success && quizzes.length > 0) {
           results.push({ title, quizzes, route });
         }
