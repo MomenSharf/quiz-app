@@ -11,34 +11,24 @@ import {
 } from "../ui/dropdown-menu";
 import { THEME_COLORS } from "@/constants";
 import { Button } from "../ui/button";
+import Image from "next/image";
+import { useState } from "react";
 
 export default function Palette() {
   const { state, dispatch } = useTheme();
-
-  // to tailwind
-  [
-    "bg-[#7F8C8D]",
-    "bg-[#6C7A89]",
-    "bg-[#E74C3C]",
-    "bg-[#FF66CC]",
-    "bg-[#F39C12]",
-    "bg-[#27AE60]",
-    "bg-[#2980B9]",
-    "bg-[#F1C40F]",
-    "bg-[#7c3aed]",
-  ];
+  const [open, setOpen] = useState(false);
 
   return (
     <div className=" relative flex justify-center items-center sm:py-3 min-w-10">
-      <DropdownMenu>
-        <DropdownMenuTrigger>
-          {/* <button> */}
-          <PaletteIcom
-            className={cn(
-              "text-white hover:text-primary transition-all delay-100 absolute left-0 top-0 translate-x-1/2 translate-y-1/2  sm:-translate-y-1/2"
-            )}
+      <DropdownMenu open={open} onOpenChange={setOpen}>
+        <DropdownMenuTrigger className="rounded-full overflow-hidden border border-primary">
+          <Image
+            src="/assets/images/gradient-themes.gif"
+            alt="change theme"
+            width={25}
+            height={25}
+            className="rounded-full"
           />
-          {/* </button> */}
         </DropdownMenuTrigger>
         <DropdownMenuContent className="relative left-5 top-8 sm:left-14 sm:bottom-1d6">
           <DropdownMenuLabel className="flex gap-2">
@@ -46,27 +36,26 @@ export default function Palette() {
             Theme Color
           </DropdownMenuLabel>
           <div className="grid grid-cols-3 p-3">
-            {THEME_COLORS.map((color) => {
+            {THEME_COLORS.map(({ id, label, color }) => {
               return (
                 <Button
-                  key={color.id}
+                  key={id}
                   variant="ghost"
                   size="sm"
-                  onClick={() =>
+                  onClick={() => {
                     dispatch({
                       type: "SET_THEME",
-                      payload: { mode: state.mode, theme: color.label },
-                    })
-                  }
+                      payload: { mode: state.mode, theme: label },
+                    });
+                    setOpen(false);
+                  }}
                   className="flex gap-2 justify-start"
                 >
                   <span
-                    className={cn(
-                      " w-5 h-5 rounded-full",
-                      `bg-[${color.color}]`
-                    )}
+                    className=" w-5 h-5 rounded-full"
+                    style={{ backgroundColor: color }}
                   />
-                  {color.label}
+                  {label}
                 </Button>
               );
             })}

@@ -75,9 +75,9 @@ export const COLORS: colorsType[] = [
   "red",
   "rose",
   "orange",
-  "green",
+  // "green",
   "blue",
-  "yellow",
+  // "yellow",
   "violet",
 ];
 
@@ -86,15 +86,15 @@ export const THEME_COLORS: {
   label: colorsType;
   color: string;
 }[] = [
-  { id: 1, label: "zinc", color: "#7F8C8D" },
-  { id: 2, label: "slate", color: "#6C7A89" },
-  { id: 3, label: "red", color: "#E74C3C" },
-  { id: 4, label: "rose", color: "#FF66CC" },
-  { id: 5, label: "orange", color: "#F39C12" },
-  { id: 6, label: "green", color: "#27AE60" },
-  { id: 7, label: "blue", color: "#2980B9" },
-  { id: 8, label: "yellow", color: "#F1C40F" },
-  { id: 9, label: "violet", color: "#7c3aed" },
+  { id: 1, label: "violet", color: "#7c3aed" },
+  { id: 2, label: "red", color: "#E74C3C" },
+  { id: 3, label: "rose", color: "#FF66CC" },
+  { id: 4, label: "orange", color: "#F39C12" },
+  { id: 5, label: "blue", color: "#2980B9" },
+  { id: 6, label: "zinc", color: "#7F8C8D" },
+  { id: 7, label: "slate", color: "#6C7A89" },
+  // { id: 6, label: "green", color: "#27AE60" },
+  // { id: 8, label: "yellow", color: "#F1C40F" },
 ];
 
 export const CATEGORIES: Category[] = [

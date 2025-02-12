@@ -7,21 +7,25 @@ import { UserAvatar } from "../User/UserAvatar";
 import MobileSideBar from "./MobileSidebar";
 import SearchInput from "./SearchInput";
 import Logo from "./Logo";
+import Palette from "../Theme/Palette";
 
 export default async function Header() {
   const session = await getCurrentUser();
-  
 
   return (
     <header className="z-20 w-full p-2 flex bg-card shadow-sm">
-      <div className="sm:hidden w-full flex items-center  gap-1">
-        <MobileSideBar
-          user={session ? session.user : null}
-          isLoggedIn={!!session?.user}
-        />
-        <Logo />
-
-        <SearchInput />
+      <div className="sm:hidden w-full flex items- justify-between  gap-1">
+        <div className="flex gap-1">
+          <MobileSideBar
+            user={session ? session.user : null}
+            isLoggedIn={!!session?.user}
+          />
+          <Logo />
+        </div>
+        <div className="flex gap-1">
+          <Palette />
+          <SearchInput />
+        </div>
       </div>
       <div className="hidden container sm:flex  items-center justify-end gap-3">
         {/* <Logo /> */}

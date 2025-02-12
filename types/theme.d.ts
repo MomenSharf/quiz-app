@@ -4,9 +4,9 @@ export type THEME_COLORS =
   | "red"
   | "rose"
   | "orange"
-  | "green"
+  // | "green"
   | "blue"
-  | "yellow"
+  // | "yellow"
   | "violet";
 
 export type Theme_mode = "dark" | "light";

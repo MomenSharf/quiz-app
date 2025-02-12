@@ -2,11 +2,11 @@
 
 - solve catch data when user nevigate between pages
 - add Ai to the app
+- make all themes be suitable with app
 
 ## home
 
 - finish the cards logic
-- make quizze appear just when be visible in screen
 
 ## /search
 
