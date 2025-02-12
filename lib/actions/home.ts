@@ -117,7 +117,7 @@ export const getHomeQuizzes = async () => {
 
     const timeout = new Promise<
       { title: string; quizzes: any; route: string }[]
-    >((resolve) => setTimeout(() => resolve(results), 9000));
+    >((resolve) => setTimeout(() => resolve(results), 3000));
 
     // Function to fetch quizzes one by one
     const fetchQuizzes = async () => {
@@ -131,7 +131,9 @@ export const getHomeQuizzes = async () => {
     };
 
     return await Promise.race([fetchQuizzes(), timeout]);
-  } catch (error) {
+  } catch (error: any) {
+    console.log(error);
+    
     return null;
   }
 };

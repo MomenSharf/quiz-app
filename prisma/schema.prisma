@@ -127,7 +127,7 @@ model QuizProgress {
   lastUpdated       DateTime  @updatedAt // Time of the last update to the progress
   playQuizQuestions Json[]
   user              User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  quiz              Quiz      @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  quiz              Quiz      @relation(fields: [quizId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   @@unique([userId, quizId]) // Ensures only one progress record per quiz per user
 }
