@@ -130,6 +130,8 @@ export const getSearchQuizzes = async ({
 
     return { success: true, quizzes };
   } catch (error) {
+    console.log(error);
+    
     return { success: false, message: "Error searching Quizzes" };
   }
 };
