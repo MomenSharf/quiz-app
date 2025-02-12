@@ -117,7 +117,7 @@ export const getHomeQuizzes = async () => {
 
     const timeout = new Promise<
       { title: string; quizzes: any; route: string }[]
-    >((resolve) => setTimeout(() => resolve(results), 5000));
+    >((resolve) => setTimeout(() => resolve(results), 6000));
 
     // Function to fetch quizzes one by one
     const fetchQuizzes = async () => {
