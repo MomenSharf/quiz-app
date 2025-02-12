@@ -23,31 +23,20 @@ export default function QuizPanel({
   quiz: SearchQuiz | BookmarkQuiz | UserProfile["quizzes"][number];
   index: number;
 }) {
-  
-  const isCurrentUser = false  
-
   const quizTime = quiz.questions.reduce(
     (acc, curr) => acc + curr.timeLimit,
     0
   );
-  const isBookmarked = quiz.bookmarks.length > 0
+  const isBookmarked = quiz.bookmarks && quiz.bookmarks.length > 0;
 
-  const { averageRating, totalRatings } = calculateQuizRatings(quiz.ratings);
+  const { averageRating } = calculateQuizRatings(quiz.ratings);
 
   return (
     <MotionDiv
-      variants={{
-        hidden: { opacity: 0 },
-        visible: { opacity: 1 },
-      }}
-      initial="hidden"
-      animate="visible"
-      transition={{
-        delay: 0.2,
-        ease: "easeInOut",
-        duration: 0.3,
-      }}
-      viewport={{ amount: 0 }}
+      initial={{ opacity: 0, y: 50 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6, ease: "easeOut" }}
+      viewport={{ once: true }} // Ensures it animates only once
     >
       <div className="relative bg-card p-2  flex rounded-lg">
         <Link
@@ -81,7 +70,7 @@ export default function QuizPanel({
             >
               {quiz.title}
             </Link>
-            <You userId={quiz.userId}/>
+            <You userId={quiz.userId} />
           </div>
           <div className="flex gap-1">
             <Badge className="bg-primary/30 hover:bg-primary/30 text-primary gap-0.5">
@@ -101,7 +90,6 @@ export default function QuizPanel({
             <div className="flex gap-1 items-center">
               <Icons.star className="w-3 h-3 fill-yellow" />
               <span className="text-xs">{averageRating}</span>
-         
             </div>
             <span> - </span>
             <div className="flex gap-1 items-center">
@@ -110,13 +98,13 @@ export default function QuizPanel({
               </span>
             </div>
           </div>
-            <div className="absolute right-3 top-3">
-              <BookmarkButton
-                quizId={quiz.id}
-                pathname="/"
-                isBookmarked={isBookmarked}
-              />
-            </div>
+          <div className="absolute right-3 top-3">
+            <BookmarkButton
+              quizId={quiz.id}
+              pathname="/"
+              isBookmarked={isBookmarked}
+            />
+          </div>
         </div>
       </div>
     </MotionDiv>

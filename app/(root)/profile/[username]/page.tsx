@@ -9,19 +9,11 @@ export default async function Page({
 }: {
   params: { username: string };
 }) {
+  const { success, profile, message } = await getProfile({ username });
 
-    const session = await getCurrentUser();
-  
-    if (!session) {
-      return redirect("/login");
-    }
-  
-  const {success, profile , message} = await getProfile({ username });
-  
-  
   if (!profile || !success) {
     return <ErrorPage message={message} />;
-    }
+  }
 
   return <Profile profile={profile} />;
 }

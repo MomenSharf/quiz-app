@@ -4,6 +4,7 @@ import { Category, SearchQuizessArgs } from "@/types";
 import { db } from "../db";
 import { CATEGORIES, HOME } from "@/constants";
 import { getSearchQuizzes } from "./search";
+import { getRandomItems } from "../utils";
 const TAKE = 12;
 
 export const getRecentlyPublishedQuizzes = async () => {
@@ -82,7 +83,7 @@ export const getHomeQuizzes = async () => {
       title: string;
       args: SearchQuizessArgs;
       route: string;
-    }[] = CATEGORIES.map((category) => ({
+    }[] = getRandomItems(CATEGORIES, 3).map((category) => ({
       title: category
         .replace(/_/g, " ")
         .replace(/\b\w/g, (c) => c.toUpperCase()),
@@ -92,7 +93,7 @@ export const getHomeQuizzes = async () => {
 
     const results = await Promise.all(
       [...HOME, ...categories].map(async ({ title, args, route }) => {
-        const {success , quizzes} = await getSearchQuizzes(args);
+        const { success, quizzes } = await getSearchQuizzes(args);
         if (quizzes && success && quizzes.length > 0) {
           return { title, quizzes, route };
         } else {

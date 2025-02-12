@@ -247,3 +247,10 @@ export const getCategoryName = (path: string) => {
   const prefix = "/assets/images/categories/";
   return path.startsWith(prefix) ? path.replace(prefix, "").split(".")[0] : null;
 }
+
+export function getRandomItems<T>(arr: T[], count: number): T[] {
+  if (!Array.isArray(arr) || count <= 0) return [];
+  
+  const shuffled = arr.slice().sort(() => Math.random() - 0.5);
+  return shuffled.slice(0, Math.min(count, arr.length));
+}

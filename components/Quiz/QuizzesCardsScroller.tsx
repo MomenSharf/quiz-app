@@ -5,6 +5,7 @@ import QuizzesCard from "./QuizCard";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "../ui/button";
+import { MotionDiv } from "@/hooks/useMotion";
 
 export default function QuizzesCardsScroller({
   quizzes,
@@ -16,7 +17,13 @@ export default function QuizzesCardsScroller({
   route: string;
 }) {
   return (
-    <div className="flex flex-col gap-1">
+    <MotionDiv
+      initial={{ opacity: 0, y: 50 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6, ease: "easeOut" }}
+      viewport={{ once: true }} // Ensures it animates only once
+      className="flex flex-col gap-1"
+    >
       <div className="flex justify-between gap-3">
         <h2>{title}</h2>
         <Link
@@ -31,6 +38,6 @@ export default function QuizzesCardsScroller({
           <QuizzesCard key={quiz.id} quiz={quiz} index={i} />
         ))}
       </UseScrollerContainer>
-    </div>
+    </MotionDiv>
   );
 }

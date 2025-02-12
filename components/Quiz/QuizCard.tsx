@@ -33,18 +33,10 @@ export default async function QuizzesCard({
   const { averageRating, totalRatings } = calculateQuizRatings(quiz.ratings);
   return (
     <MotionDiv
-      variants={{
-        hidden: { opacity: 0 },
-        visible: { opacity: 1 },
-      }}
-      initial="hidden"
-      animate="visible"
-      transition={{
-        delay: index * 0.2,
-        ease: "easeInOut",
-        duration: 0.3,
-      }}
-      viewport={{ amount: 0 }}
+    initial={{ opacity: 0, x: 50 }}
+    whileInView={{ opacity: 1, x: 0 }}
+    transition={{ duration: 0.6, ease: "easeOut" }}
+    viewport={{ once: true }} // Ensures it animates only once
       className="min-w-44 w-44 sm:min-w-52 sm:w-52 bg-card rounded-xl flex flex-col"
     >
       <div className="group relative flex flex-col w-full rounded-xl  rounded-bl-none rounded-br-none overflow-hidden">
