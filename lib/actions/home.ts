@@ -121,13 +121,18 @@ export const getHomeQuizzes = async () => {
 
     // Function to fetch quizzes one by one
     const fetchQuizzes = async () => {
-      for (const { title, args, route } of allItems) {
-        const { success, quizzes } = await getSearchQuizzes({...args, pageSize: 6});
-        if (quizzes && success && quizzes.length > 0) {
-          results.push({ title, quizzes, route }); 
-        }
-      }
-      return results;
+      const results = await Promise.all(
+          [...HOME, ...categories].map(async ({ title, args, route }) => {
+            const { success, quizzes } = await getSearchQuizzes(args);
+            if (quizzes && success && quizzes.length > 0) {
+              return { title, quizzes, route };
+            } else {
+              return null;
+            }
+          })
+        );
+
+        return
     };
 
     return await Promise.race([fetchQuizzes(), timeout]);
