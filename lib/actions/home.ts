@@ -91,16 +91,26 @@ export const getHomeQuizzes = async () => {
       route: `/search?category=${category}`,
     }));
 
-    const results = await Promise.all(
-      [...HOME, ...categories].map(async ({ title, args, route }) => {
-        const { success, quizzes } = await getSearchQuizzes(args);
-        if (quizzes && success && quizzes.length > 0) {
-          return { title, quizzes, route };
-        } else {
-          return null;
-        }
-      })
-    );
+    // const results = await Promise.all(
+    //   [...HOME, ...categories].map(async ({ title, args, route }) => {
+    //     const { success, quizzes } = await getSearchQuizzes(args);
+    //     if (quizzes && success && quizzes.length > 0) {
+    //       return { title, quizzes, route };
+    //     } else {
+    //       return null;
+    //     }
+    //   })
+    // );
+
+    const allItems = [...HOME, ...categories];
+    const results = [];
+
+    for (const { title, args, route } of allItems) {
+      const { success, quizzes } = await getSearchQuizzes(args);
+      if (quizzes && success && quizzes.length > 0) {
+        results.push({ title, quizzes, route });
+      }
+    }
 
     return results;
   } catch (error) {
