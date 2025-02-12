@@ -1,6 +1,6 @@
 "use server";
 
-import { Category, SearchQuizessArgs } from "@/types";
+import { Category, SearchQuiz, SearchQuizessArgs } from "@/types";
 import { db } from "../db";
 import { CATEGORIES, HOME } from "@/constants";
 import { getSearchQuizzes } from "./search";
@@ -102,17 +102,35 @@ export const getHomeQuizzes = async () => {
     //   })
     // );
 
+    // for (const { title, args, route } of allItems) {
+    //   const { success, quizzes } = await getSearchQuizzes(args);
+    //   if (quizzes && success && quizzes.length > 0) {
+    //     results.push({ title, quizzes, route });
+    //   }
+    // }
     const allItems = [...HOME, ...categories];
-    const results = [];
+    const results: {
+      title: string;
+      quizzes: SearchQuiz[];
+      route: string;
+    }[] = [];
 
-    for (const { title, args, route } of allItems) {
-      const { success, quizzes } = await getSearchQuizzes(args);
-      if (quizzes && success && quizzes.length > 0) {
-        results.push({ title, quizzes, route });
+    const timeout = new Promise<
+      { title: string; quizzes: any; route: string }[]
+    >((resolve) => setTimeout(() => resolve(results), 9000));
+
+    // Function to fetch quizzes one by one
+    const fetchQuizzes = async () => {
+      for (const { title, args, route } of allItems) {
+        const { success, quizzes } = await getSearchQuizzes(args);
+        if (quizzes && success && quizzes.length > 0) {
+          results.push({ title, quizzes, route });
+        }
       }
-    }
+      return results;
+    };
 
-    return results;
+    return await Promise.race([fetchQuizzes(), timeout]);
   } catch (error) {
     return null;
   }
