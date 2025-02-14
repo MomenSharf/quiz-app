@@ -1,6 +1,8 @@
 import {
   AVATAR_COLORS,
+  CATEGORIES,
   CATEGORY_OPTIONS_LIST,
+  HOME,
   LIBRARY_SORT_OPTIONS,
   SEARCH_SORT_OPTIONS,
 } from "@/constants";
@@ -18,6 +20,8 @@ import {
   EditorQuiz,
   LibrarySortOption,
   PlayQuizType,
+  SearchQuiz,
+  SearchQuizessArgs,
   SearchSortOption,
 } from "@/types";
 import { QuestionType } from "@prisma/client";
@@ -35,8 +39,8 @@ export function formatTimeAgo(date: Date | string): string {
   return formatDistanceToNow(date, { addSuffix: true });
 }
 
-export const formatToShortDate = (date: Date | string) => format(new Date(date), "MMM d, yyyy");
-
+export const formatToShortDate = (date: Date | string) =>
+  format(new Date(date), "MMM d, yyyy");
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -57,9 +61,11 @@ export function shuffleArray(array: any[]): any[] {
   return newArray; // Return the shuffled copy
 }
 
-export function shuffleMatches(array: {text: string | null, match: string |null}[]) {
+export function shuffleMatches(
+  array: { text: string | null; match: string | null }[]
+) {
   // Step 1: Extract all match values
-  const matches = array.map(item => item.match);
+  const matches = array.map((item) => item.match);
 
   // Step 2: Shuffle the matches array
   const shuffledMatches = matches.sort(() => Math.random() - 0.5);
@@ -201,10 +207,11 @@ export function formatAsKMB(num: number) {
 
 export const calculateQuizRatings = (ratings: { rate: number }[]) => {
   const totalRatings = ratings.length;
-  const averageRating =(
+  const averageRating = (
     totalRatings > 0
       ? ratings.reduce((sum, rating) => sum + rating.rate, 0) / totalRatings
-      : 0).toFixed(1);
+      : 0
+  ).toFixed(1);
 
   return { averageRating, totalRatings };
 };
@@ -245,12 +252,37 @@ export function getInitials(name?: string | null) {
 
 export const getCategoryName = (path: string) => {
   const prefix = "/assets/images/categories/";
-  return path.startsWith(prefix) ? path.replace(prefix, "").split(".")[0] : null;
-}
+  return path.startsWith(prefix)
+    ? path.replace(prefix, "").split(".")[0]
+    : null;
+};
 
 export function getRandomItems<T>(arr: T[], count: number): T[] {
   if (!Array.isArray(arr) || count <= 0) return [];
-  
+
   const shuffled = arr.slice().sort(() => Math.random() - 0.5);
   return shuffled.slice(0, Math.min(count, arr.length));
 }
+
+export const getHomeQuizzesArgs = () => {
+  const categories: {
+    title: string;
+    args: SearchQuizessArgs;
+    route: string;
+  }[] = getRandomItems(CATEGORIES, 3).map((category) => ({
+    title: category.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase()),
+    args: { category, sortOption: "popular" },
+    route: `/search?category=${category}`,
+  }));
+
+  return [...HOME, ...categories];
+};
+
+
+export const fakeLongTimePromise = (ms = 5000) => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve("Done after " + ms + "ms");
+    }, ms);
+  });
+};

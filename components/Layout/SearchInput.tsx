@@ -25,7 +25,7 @@ export default function SearchInput() {
   const handleSearch = (term: string) => {
     const params = new URLSearchParams(searchParams);
 
-    if (pathname === "/search" || pathname === "/bookmarks") {
+    if (pathname === "/search") {
       if (term) {
         params.set("query", term);
       } else {
@@ -44,7 +44,10 @@ export default function SearchInput() {
   const handleSearchWidthDebounce = useDebouncedCallback(handleSearch, 500);
 
   return (
-    <div className="flex items-center ml-auto" ref={searchInputContainerRef}>
+    <div
+      className="flex items-center ml-auto sm:ml-0"
+      ref={searchInputContainerRef}
+    >
       <motion.div
         initial={{ width: 0 }}
         animate={{ width: isSearchOpen ? "auto" : 0 }}
@@ -84,12 +87,14 @@ export default function SearchInput() {
         onClick={() => {
           if (
             isSearchOpen &&
-            searchInputRef &&
-            searchInputRef.current?.value !== "" &&
-            pathname !== "/search" &&
-            pathname !== "/bookmarks"
+       
+            pathname !== "/search"
           ) {
-            push(`/search?query=${searchInputRef.current?.value}`);
+            if (searchInputRef && searchInputRef.current?.value !== "") {
+              push(`/search?query=${searchInputRef.current?.value}`);
+            } else {
+              setIsSearchOpen(false)
+            }
           } else {
             setIsSearchOpen(true);
             searchInputRef.current?.focus();

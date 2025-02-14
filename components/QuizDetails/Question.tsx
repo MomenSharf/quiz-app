@@ -65,16 +65,16 @@ export default function Question({
   return (
     <div className="bg-card p-3 flex flex-col gap-2 rounded-md">
       <div className="flex justify-between">
-        <Badge className="bg-primary/30 hover:bg-primary/30 text-primary gap-0.5">
+        <div className="flex font-semibold gap-1">
           {toCapitalize(question.type.split("_").join(" ").toLowerCase())}
-        </Badge>
+        </div>
         <div className="flex gap-1">
-          <Badge className="bg-destructive/30 hover:bg-destructive/30 text-destructive gap-0.5">
-            <Timer className="w-3 h-3 text-destructive" />
+          <Badge className="gap-1" variant='outline'>
+            <Timer className="w-3 h-3" />
             {formatMilliseconds()}
           </Badge>
-          <Badge className="bg-amber/30 hover:bg-amber/30 text-amber gap-0.5">
-            <Medal className="w-3 h-3 text-amber" />
+          <Badge className="gap-1" variant='outline'>
+            <Medal className="w-3 h-3" />
             {question.points} pts
           </Badge>
         </div>

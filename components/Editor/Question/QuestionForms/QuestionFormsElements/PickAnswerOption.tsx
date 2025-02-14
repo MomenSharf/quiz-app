@@ -37,7 +37,6 @@ OprionProps) {
       getValues,
       setValue,
       trigger,
-      formState: { errors },
     },
   } = useEditorContext();
 

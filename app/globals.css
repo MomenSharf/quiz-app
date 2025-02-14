@@ -6,7 +6,7 @@
   /* violet */
   :root {
     --background: 0 0% 100%;
-    --main-background: 262, 83%, 95%;
+    --main-background: 262, 83%, 98%;
     --foreground: 224 71.4% 4.1%;
     --card: 0 0% 100%;
     --card-foreground: 224 71.4% 4.1%;
@@ -28,7 +28,7 @@
     --radius: 0.5rem;
 
     --pastel-violet: hsl(262, 83%, 95%);
-    --pastel-red: hsl(0, 100%, 95%);
+    --pastel-red: hsl(0, 100%, 99%);
     --pastel-orange: hsl(30, 100%, 95%);
     --pastel-rose: hsl(340, 100%, 95%);
     --pastel-green: hsl(120, 60%, 95%);
@@ -185,7 +185,7 @@
   /* red */
   [data-theme-color="red"] {
     --background: 0 0% 100%;
-    --main-background: 0, 100%, 95%;
+    --main-background: 0, 100%, 98%;
     --foreground: 0 0% 3.9%;
     --card: 0 0% 100%;
     --card-foreground: 0 0% 3.9%;
@@ -231,7 +231,7 @@
   /* rose */
   [data-theme-color="rose"] {
     --background: 0 0% 100%;
-    --main-background: 340, 100%, 95%;
+    --main-background: 340, 100%, 98%;
     --foreground: 240 10% 3.9%;
     --card: 0 0% 100%;
     --card-foreground: 240 10% 3.9%;
@@ -277,7 +277,7 @@
   /* orange */
   [data-theme-color="orange"] {
     --background: 0 0% 100%;
-    --main-background: 30, 100%, 95%;
+    --main-background: 30, 100%, 98%;
     --foreground: 20 14.3% 4.1%;
     --card: 0 0% 100%;
     --card-foreground: 20 14.3% 4.1%;
@@ -369,7 +369,7 @@
   /* blue  */
   [data-theme-color="blue"] {
     --background: 0 0% 100%;
-    --main-background: 220, 100%, 95%;
+    --main-background: 220, 100%, 98%;
     --foreground: 222.2 84% 4.9%;
     --card: 0 0% 100%;
     --card-foreground: 222.2 84% 4.9%;

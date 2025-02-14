@@ -202,18 +202,18 @@ export const PlayQuizProvider = ({
       quizProgress.currentQuestion > 0
     ) {
       initialQuestions = quizProgress.playQuizQuestions as PlayQuizQuestion[];
-      dispatch({
-        type: "SET_IS_STARTER_DIALOG_OPEN",
-        payload: { open: true, isStarted: false },
-      });
+      // dispatch({
+      //   type: "SET_IS_STARTER_DIALOG_OPEN",
+      //   payload: { open: true, isStarted: false },
+      // });
     } else {
       initialQuestions = quizProgress.quiz.questions.map((question) => {
         return { ...question, timeTaken: 0, isAnswerRight: null };
       });
-      dispatch({
-        type: "SET_IS_STARTER_DIALOG_OPEN",
-        payload: { open: true, isStarted: true },
-      });
+      // dispatch({
+      //   type: "SET_IS_STARTER_DIALOG_OPEN",
+      //   payload: { open: true, isStarted: true },
+      // });
     }
 
     dispatch({

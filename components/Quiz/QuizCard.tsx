@@ -33,10 +33,10 @@ export default async function QuizzesCard({
   const { averageRating, totalRatings } = calculateQuizRatings(quiz.ratings);
   return (
     <MotionDiv
-    initial={{ opacity: 0, x: 50 }}
-    whileInView={{ opacity: 1, x: 0 }}
-    transition={{ duration: 0.6, ease: "easeOut" }}
-    viewport={{ once: true }} // Ensures it animates only once
+      initial={{ opacity: 0, x: 50 }}
+      whileInView={{ opacity: 1, x: 0 }}
+      transition={{ duration: 0.6, ease: "easeOut" }}
+      viewport={{ once: true }} // Ensures it animates only once
       className="min-w-44 w-44 sm:min-w-52 sm:w-52 bg-card rounded-xl flex flex-col"
     >
       <div className="group relative flex flex-col w-full rounded-xl  rounded-bl-none rounded-br-none overflow-hidden">
@@ -66,7 +66,9 @@ export default async function QuizzesCard({
       </div>
       <div className="p-2 pb-4 flex flex-col gap-2">
         <div className="flex items-center gap-1">
-          <UserAvatarImage user={quiz.user} className="w-8 h-8 text-xs" />
+          <Link href={`/profile/${quiz.user.username}`}>
+            <UserAvatarImage user={quiz.user} className="w-8 h-8 text-xs" />
+          </Link>
           <div className="flex flex-col gap-0 w-full">
             <Link
               href={`quiz/${quiz.id}`}
@@ -77,24 +79,25 @@ export default async function QuizzesCard({
               {quiz.title}
             </Link>
             <div className="flex gap-1">
-            <Link
-            href={`/profile/${quiz.user.username}`}
-            className="text-xs text-gray-dark font-medium hover:underline hover hover:text-primary transition-colors"
-          >
+              <Link
+                href={`/profile/${quiz.user.username}`}
+                className="text-xs text-gray-dark font-medium hover:underline hover hover:text-primary transition-colors"
+              >
                 {quiz.user.username}
               </Link>
               <You userId={quiz.userId} />
             </div>
           </div>
         </div>
-        <div className="flex gap-1">
-          <Badge className="bg-primary/30 hover:bg-primary/30 text-primary gap-0.5">
-            {quiz.questions.length} <Layers className="w-3 h-3" />
-          </Badge>
-          <Badge className="bg-destructive/30 hover:bg-destructive/30 text-destructive gap-0.5">
-            <Timer className="w-3 h-3 text-destructive" />
+        <div className="flex justify-between gap-1">
+          <div className="flex gap-1 text-xs">
+            <Layers className="w-3 h-3" />
+            {quiz.questions.length}
+          </div>
+          <div className="flex text-xs gap-1">
+            <Timer className="w-3 h-3" />
             {formatToMinSec(quizTime)}
-          </Badge>
+          </div>
         </div>
         <div className="flex justify-between gap-1 w-full">
           <div className="flex gap-1 items-center">

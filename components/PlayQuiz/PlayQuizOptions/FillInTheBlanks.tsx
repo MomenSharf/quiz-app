@@ -96,7 +96,9 @@ export default function FillInTheBlanks({
                       ease: "easeInOut",
                     }}
                   >
-                    {choice.item.text}
+                    <p className="max-w-20 truncate" title={choice.item.text}>
+                      {choice.item.text}
+                    </p>
                     <XCircle className="w-4 h-4" />
                   </motion.button>
                 ) : item.isBlank ? (
@@ -131,7 +133,13 @@ export default function FillInTheBlanks({
                     setError(null);
                 }}
               >
-                {item.text}
+                <span className="max-w-20 truncate" title={item.text}>
+                  {item.text} Lorem ipsum, dolor sit amet consectetur
+                  adipisicing elit. Placeat ullam error in. Autem quaerat fugiat
+                  accusantium soluta quibusdam, fugit voluptatibus? Similique
+                  assumenda esse vitae explicabo pariatur natus quibusdam,
+                  officia ducimus?
+                </span>
               </Button>
             );
           })}

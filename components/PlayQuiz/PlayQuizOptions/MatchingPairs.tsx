@@ -1,4 +1,10 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { Item, PlayQuizQuestion, usePlayQuizContext } from "../Context";
 import { Reorder, useDragControls, useMotionValue } from "framer-motion";
 import { cn, shuffleArray } from "@/lib/utils";
@@ -10,6 +16,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { GripVertical } from "lucide-react";
+import { ReorderIcon } from "./Icon";
 
 function MatchingPairsItem({
   type,
@@ -24,6 +31,26 @@ function MatchingPairsItem({
 }) {
   const y = useMotionValue(0);
   const dragControls = useDragControls();
+  const iRef = useRef<HTMLElement | null>(null);
+
+  useEffect(() => {
+    const touchHandler: React.TouchEventHandler<HTMLElement> = (e) =>
+      e.preventDefault();
+
+    const iTag = iRef.current;
+
+    if (iTag) {
+      //@ts-ignore
+      iTag.addEventListener("touchstart", touchHandler, { passive: false });
+
+      return () => {
+        //@ts-ignore
+        iTag.removeEventListener("touchstart", touchHandler, {
+          passive: false,
+        });
+      };
+    }
+  }, [iRef]);
 
   return (
     <Reorder.Item
@@ -48,19 +75,23 @@ function MatchingPairsItem({
       <div
         className={cn(
           buttonVariants(),
-          "flex-1 rounded-tr-none rounded-br-none bg-card hover:bg-card text-foreground"
+          "flex-1 rounded-tr-none rounded-br-none bg-card hover:bg-card text-foreground max-w-[90%]"
         )}
       >
-        {type === "text" ? item.text : item.match}
+        <span className="truncate max-w-full">
+          {type === "text" ? item.text : item.match}
+        </span>
       </div>
       <Button
         type="button"
         size="icon"
-        className="rounded-tl-none rounded-bl-none focus:z-10  bg-card hover:bg-card"
+        variant="outline"
+        className="rounded-tl-none rounded-bl-none border-none"
       >
-        <GripVertical
-          onPointerDown={(e) => dragControls.start(e)}
-          className="w-4 h-4 rounded-tl-none rounded-bl-none text-primary"
+        <ReorderIcon
+          dragControls={dragControls}
+          ref={iRef}
+          className="fill-accent-foreground w-3 h-4"
         />
       </Button>
     </Reorder.Item>
@@ -174,8 +205,7 @@ export default function MatchingPairs({
               });
             }
           }}
-          disabled={(quizMode === "answered" || quizMode === "timeOut")}
-
+          disabled={quizMode === "answered" || quizMode === "timeOut"}
         >
           Submit
         </Button>

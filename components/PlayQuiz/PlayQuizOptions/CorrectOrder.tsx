@@ -1,4 +1,10 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { Item, PlayQuizQuestion, usePlayQuizContext } from "../Context";
 import { Reorder, useDragControls, useMotionValue } from "framer-motion";
 import { cn, shuffleArray } from "@/lib/utils";
@@ -10,6 +16,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { GripVertical } from "lucide-react";
+import { ReorderIcon } from "./Icon";
 
 function CorrectOrderItem({
   item,
@@ -22,6 +29,26 @@ function CorrectOrderItem({
 }) {
   const y = useMotionValue(0);
   const dragControls = useDragControls();
+  const iRef = useRef<HTMLElement | null>(null);
+
+  useEffect(() => {
+    const touchHandler: React.TouchEventHandler<HTMLElement> = (e) =>
+      e.preventDefault();
+
+    const iTag = iRef.current;
+
+    if (iTag) {
+      //@ts-ignore
+      iTag.addEventListener("touchstart", touchHandler, { passive: false });
+
+      return () => {
+        //@ts-ignore
+        iTag.removeEventListener("touchstart", touchHandler, {
+          passive: false,
+        });
+      };
+    }
+  }, [iRef]);
 
   return (
     <Reorder.Item
@@ -46,21 +73,28 @@ function CorrectOrderItem({
       <div
         className={cn(
           buttonVariants(),
-          "flex-1 rounded-tr-none rounded-br-none bg-card hover:bg-card text-foreground"
+          "flex-1 rounded-tr-none rounded-br-none bg-card hover:bg-card text-foreground max-w-[90%]"
         )}
       >
-        {item.text}
+        <span className="truncate max-w-full">
+          {item.text} Lorem ipsum dolor sit amet consectetur adipisicing elit.
+          Illum sapiente accusamus asperiores tempore possimus reprehenderit
+          neque maxime! Rem iste qui sunt repellat, similique blanditiis ab iure
+          atque veritatis, fugiat ad!
+        </span>
       </div>
       <Tooltip delayDuration={100}>
         <TooltipTrigger asChild>
           <Button
             type="button"
             size="icon"
-            className="rounded-tl-none rounded-bl-none focus:z-10  bg-card hover:bg-card"
+            variant="outline"
+            className="rounded-tl-none rounded-bl-none border-none"
           >
-            <GripVertical
-              onPointerDown={(e) => dragControls.start(e)}
-              className="w-4 h-4 rounded-tl-none rounded-bl-none text-primary"
+            <ReorderIcon
+              dragControls={dragControls}
+              ref={iRef}
+              className="fill-accent-foreground w-3 h-4"
             />
           </Button>
         </TooltipTrigger>
@@ -121,38 +155,40 @@ export default function CorrectOrder({
     userAnswer?.type === "CORRECT_ORDER";
 
   return (
-    items && (
-      <Reorder.Group
-        axis="y"
-        onReorder={setItems}
-        values={items}
-        className="flex flex-col gap-3"
-      >
-        {items.map((item, i) => {
-          return (
-            <CorrectOrderItem
-              key={item.id}
-              item={item}
-              isShaking={isShaking}
-              isCorrect={isCorrect || false}
-            />
-          );
-        })}
-        <Button
-          onClick={() => {
-            if (quizMode === "playing") {
-              dispatch({ type: "SET_QUIZ_MODE", payload: "answered" });
-              dispatch({
-                type: "SET_USER_ANSWER",
-                payload: { type: "CORRECT_ORDER", answer: items },
-              });
-            }
-          }}
-          disabled={(quizMode === "answered" || quizMode === "timeOut")}
+    <div className="grid grid-cols-1">
+      {items && (
+        <Reorder.Group
+          axis="y"
+          onReorder={setItems}
+          values={items}
+          className="flex flex-col gap-3 max-w-full"
         >
-          Submit
-        </Button>
-      </Reorder.Group>
-    )
+          {items.map((item, i) => {
+            return (
+              <CorrectOrderItem
+                key={item.id}
+                item={item}
+                isShaking={isShaking}
+                isCorrect={isCorrect || false}
+              />
+            );
+          })}
+          <Button
+            onClick={() => {
+              if (quizMode === "playing") {
+                dispatch({ type: "SET_QUIZ_MODE", payload: "answered" });
+                dispatch({
+                  type: "SET_USER_ANSWER",
+                  payload: { type: "CORRECT_ORDER", answer: items },
+                });
+              }
+            }}
+            disabled={quizMode === "answered" || quizMode === "timeOut"}
+          >
+            Submit
+          </Button>
+        </Reorder.Group>
+      )}
+    </div>
   );
 }

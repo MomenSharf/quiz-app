@@ -28,7 +28,8 @@ export default async function Header() {
         </div>
       </div>
       <div className="hidden container sm:flex  items-center justify-end gap-3">
-        {/* <Logo /> */}
+        <Palette />
+
         <SearchInput />
         {session?.user ? (
           <>

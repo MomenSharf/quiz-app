@@ -54,13 +54,6 @@ export default function QuestionInput({
                   }
                 )}
                 placeholder="Type your Question..."
-                defaultValue={
-                  questionType === "MATCHING_PAIRS"
-                    ? "Match the following"
-                    : questionType === "ORDER"
-                    ? "Reorder the following"
-                    : undefined
-                }
                 {...field}
                 value={getValues(`questions.${questionIndex}.question`)}
               />

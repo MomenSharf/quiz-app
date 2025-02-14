@@ -19,7 +19,7 @@ export default function QuizzesPanelsContainer({
   isBookmarked?: boolean;
 }) {
   return (
-    <div className="flex flex-col gap-1 sm:gap-3">
+    <div className="flex flex-col gap-1">
       <QuizzesPanelsTable quizzes={quizzes} />
       <MoreSearchQuizzes
         query={query}

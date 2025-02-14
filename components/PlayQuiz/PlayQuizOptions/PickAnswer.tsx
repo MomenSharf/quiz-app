@@ -45,7 +45,7 @@ export default function PickAnswer({
           <motion.button
             key={item.id}
             className={cn(
-              "py-3 px-4 rounded-xl bg-primary-foreground shadow-sm border border-transparent self-stretch flex items-center transition-colors",
+              "py-3 px-4 rounded-xl bg-primary-foreground shadow-sm border border-transparent self-stretch flex justify-between items-center transition-colors",
               {
                 "bg-success/20 border-success":
                   item.isCorrect &&
@@ -88,7 +88,7 @@ export default function PickAnswer({
             }}
           >
             <span className="font-medium ">{LETTER_MAPPING[`${i}`]}</span>
-            <span className="flex-1">{item.text}</span>
+            <p className="">{item.text}</p>
             <span
               className={cn("rounded-full p-1 transition-colors", {
                 "bg-success/90":

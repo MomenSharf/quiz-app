@@ -72,15 +72,15 @@ export default function QuizPanel({
             </Link>
             <You userId={quiz.userId} />
           </div>
-          <div className="flex gap-1">
-            <Badge className="bg-primary/30 hover:bg-primary/30 text-primary gap-0.5">
-              <Layers className="w-3 h-3 text-primary" />
+          <div className="flex gap-2 text-xs">
+            <div className="flex gap-1">
+              <Layers className="w-3 h-3" />
               {quiz.questions.length}
-            </Badge>
-            <Badge className="bg-destructive/30 hover:bg-destructive/30 text-destructive gap-0.5">
-              <Timer className="w-3 h-3 text-destructive" />
+            </div>
+            <div className="flex text-xs gap-1">
+              <Timer className="w-3 h-3" />
               {formatToMinSec(quizTime)}
-            </Badge>
+            </div>
           </div>
           <div className="flex items-center gap-1">
             <span className="text-xs text-gray-medium">

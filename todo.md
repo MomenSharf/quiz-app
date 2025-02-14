@@ -15,6 +15,7 @@
 ## editor
 
 - fix quiz settings does't save currectly
+- fix edit sidebar in mobile mode
 
 ## image tabs
 
