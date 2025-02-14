@@ -30,7 +30,7 @@ export default function Palette() {
             className="rounded-full"
           />
         </DropdownMenuTrigger>
-        <DropdownMenuContent className="relative left-5 top-8 sm:left-14 sm:bottom-1d6">
+        <DropdownMenuContent className="relative -left-5 top-8 sm:-left-10 sm:bottom-1d6">
           <DropdownMenuLabel className="flex gap-2">
             <div className=" w-5 h-5 rounded-full bg-primary" />
             Theme Color
