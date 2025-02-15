@@ -1,4 +1,4 @@
-import { MotionDiv } from "@/hooks/useMotion";
+import { getCurrentUser } from "@/lib/auth";
 import {
   calculateQuizRatings,
   cn,
@@ -10,10 +10,8 @@ import { Layers, Timer } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { Icons } from "../icons";
-import { Badge } from "../ui/badge";
 import { buttonVariants } from "../ui/button";
 import { UserAvatarImage } from "../User/UserAvatar";
-import { getCurrentUser } from "@/lib/auth";
 import You from "./You";
 
 export default async function QuizzesCard({
@@ -32,11 +30,12 @@ export default async function QuizzesCard({
 
   const { averageRating, totalRatings } = calculateQuizRatings(quiz.ratings);
   return (
-    <MotionDiv
-      initial={{ opacity: 0, x: 50 }}
-      whileInView={{ opacity: 1, x: 0 }}
-      transition={{ duration: 0.6, ease: "easeOut" }}
-      viewport={{ once: true }} // Ensures it animates only once
+    // <MotionDiv
+    //   initial={{ opacity: 0, x: 50 }}
+    //   whileInView={{ opacity: 1, x: 0 }}
+    //   transition={{ duration: 0.6, ease: "easeOut" }}
+    //   viewport={{ once: true }} // Ensures it animates only once
+    <div
       className="min-w-44 w-44 sm:min-w-52 sm:w-52 bg-card rounded-xl flex flex-col"
     >
       <div className="group relative flex flex-col w-full rounded-xl  rounded-bl-none rounded-br-none overflow-hidden">
@@ -109,6 +108,6 @@ export default async function QuizzesCard({
           </span>
         </div>
       </div>
-    </MotionDiv>
+    </div>
   );
 }

@@ -1,19 +1,15 @@
-import { MotionDiv } from "@/hooks/useMotion";
-import { getCurrentUser } from "@/lib/auth";
 import {
   calculateQuizRatings,
   cn,
   formatAsKMB,
-  formatTimeAgo,
   formatToMinSec,
-  formatToShortDate,
+  formatToShortDate
 } from "@/lib/utils";
 import { BookmarkQuiz, SearchQuiz, UserProfile } from "@/types";
 import { Layers, Timer } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { Icons } from "../icons";
-import { Badge } from "../ui/badge";
 import BookmarkButton from "./BookmarkButton";
 import You from "./You";
 export default function QuizPanel({
@@ -32,11 +28,12 @@ export default function QuizPanel({
   const { averageRating } = calculateQuizRatings(quiz.ratings);
 
   return (
-    <MotionDiv
-      initial={{ opacity: 0, y: 50 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6, ease: "easeOut" }}
-      viewport={{ once: true }} // Ensures it animates only once
+    // <MotionDiv
+    //   initial={{ opacity: 0, y: 50 }}
+    //   whileInView={{ opacity: 1, y: 0 }}
+    //   transition={{ duration: 0.6, ease: "easeOut" }}
+    //   viewport={{ once: true }} // Ensures it animates only once
+    <div
     >
       <div className="relative bg-card p-2  flex rounded-lg">
         <Link
@@ -107,6 +104,6 @@ export default function QuizPanel({
           </div>
         </div>
       </div>
-    </MotionDiv>
+    </div>
   );
 }
