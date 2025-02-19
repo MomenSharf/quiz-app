@@ -14,6 +14,8 @@ export default function QuizDetails({
   isCurrentUser?: boolean;
   showAnswers: boolean,
 }) {
+  console.log(quiz);
+
   return (
     <div className="container flex flex-col gap-5 p-3 items-center w-full ">
       <QuizCard quiz={quiz} pathname={pathname} isCurrentUser={isCurrentUser} />

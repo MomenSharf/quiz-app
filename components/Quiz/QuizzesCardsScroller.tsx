@@ -17,12 +17,11 @@ export default function QuizzesCardsScroller({
   route: string;
 }) {
   return (
-    // <MotionDiv
-    //   initial={{ opacity: 0, y: 50 }}
-    //   whileInView={{ opacity: 1, y: 0 }}
-    //   transition={{ duration: 0.6, ease: "easeOut" }}
-    //   viewport={{ once: true }} // Ensures it animates only once
-    <div
+    <MotionDiv
+      initial={{ opacity: 0, y: 50 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6, ease: "easeOut" }}
+      viewport={{ once: true }} // Ensures it animates only once
       className="flex flex-col gap-1"
     >
       <div className="flex justify-between gap-3">
@@ -39,6 +38,6 @@ export default function QuizzesCardsScroller({
           <QuizzesCard key={quiz.id} quiz={quiz} index={i} />
         ))}
       </UseScrollerContainer>
-    </div>
+    </MotionDiv>
   );
 }

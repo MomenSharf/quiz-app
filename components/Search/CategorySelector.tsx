@@ -34,7 +34,7 @@ export default function CategorySelector() {
 
   return (
     <Select defaultValue={category} onValueChange={handleSearch}>
-      <SelectTrigger className="w-[130px] sm:w-[160px]">
+      <SelectTrigger className="w-[110px] sm:w-[160px]">
         <SelectValue placeholder="Category" />
       </SelectTrigger>
       <SelectContent>

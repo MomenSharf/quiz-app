@@ -20,7 +20,7 @@ export default function Sidebar() {
         <ul className="flex flex-col gap-y-1 justify-start px-2 relative">
           <Link
             href="/"
-            className="relative h-16 w-10 group-data-[state=expanded]:w-10 transition-all duration-200 flex items-center justify-center rounded group-data-[state=collapsed]:justify-center group-data-[state=expanded]:-space-x-2 group/item"
+            className="relative h-16 w-10 mt-2 group-data-[state=expanded]:w-10 transition-all duration-200 flex items-center justify-center rounded group-data-[state=collapsed]:justify-center group-data-[state=expanded]:-space-x-2 group/item"
           >
             <span className="relative left-0 right-0 bg-primary rounded-full flex h-10 w-10 items-center justify-center  transition-colors">
               <Icons.q className="w-5 h-5 text-primary-foreground fill-primary-foreground " />
@@ -29,6 +29,8 @@ export default function Sidebar() {
               uizzes<span className="text-lg font-semibold">Up</span>
             </span>
           </Link>
+          <div className="flex flex-col mt-10">
+
           {DESKTOP_SIDEBAR_ITEMS.map((item) => {
             return (
               <Link
@@ -58,6 +60,7 @@ export default function Sidebar() {
               </Link>
             );
           })}
+          </div>
         </ul>
       </nav>
     </div>

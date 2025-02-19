@@ -10,6 +10,8 @@
 
 ## /search
 
+- make undo to make the filter and sory witot options
+
 ## library
 
 ## editor
@@ -25,5 +27,4 @@
 
 ## play
 
-- make trancat for questions options
 - make backup imahUrl more spasifc

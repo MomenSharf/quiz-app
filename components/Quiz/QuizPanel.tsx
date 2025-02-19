@@ -12,6 +12,7 @@ import Link from "next/link";
 import { Icons } from "../icons";
 import BookmarkButton from "./BookmarkButton";
 import You from "./You";
+import { MotionDiv } from "@/hooks/useMotion";
 export default function QuizPanel({
   quiz,
   index,
@@ -28,12 +29,11 @@ export default function QuizPanel({
   const { averageRating } = calculateQuizRatings(quiz.ratings);
 
   return (
-    // <MotionDiv
-    //   initial={{ opacity: 0, y: 50 }}
-    //   whileInView={{ opacity: 1, y: 0 }}
-    //   transition={{ duration: 0.6, ease: "easeOut" }}
-    //   viewport={{ once: true }} // Ensures it animates only once
-    <div
+    <MotionDiv
+      initial={{ opacity: 0, y: 50 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6, ease: "easeOut" }}
+      viewport={{ once: true }} // Ensures it animates only once
     >
       <div className="relative bg-card p-2  flex rounded-lg">
         <Link
@@ -104,6 +104,6 @@ export default function QuizPanel({
           </div>
         </div>
       </div>
-    </div>
+    </MotionDiv>
   );
 }

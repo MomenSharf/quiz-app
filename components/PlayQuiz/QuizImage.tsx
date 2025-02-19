@@ -17,7 +17,7 @@ export default function QuizImage({ imageUrl }: { imageUrl: string }) {
             aspectRatio: "4 / 3", // Maintains the 4:3 aspect ratio
           }}
           className="rounded-lg"
-          onError={() => setUrl('/assets/images/categories/ART.jpg')}
+          onError={() => setUrl('/assets/images/image-not-found.png')}
         />
     </div>
   );

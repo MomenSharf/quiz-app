@@ -64,6 +64,10 @@ export default function MoreSearchQuizzes({
 
   useEffect(() => {
     if (inView && hasMore && !loading && query && query.trim()) {
+      // console.log('in');
+      // setHasMore(prev => true)
+    
+      
       fetchQizzes(query, page + 1);
       setPage((prev) => prev + 1);
     }
