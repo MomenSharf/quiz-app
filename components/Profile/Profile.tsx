@@ -9,7 +9,7 @@ import QuizzesPanelsContainer from "../Quiz/QuizzesPanelsContainer";
 export default function Profile({ profile }: { profile: UserProfile }) {
   return (
     <div className="container flex flex-col gap-3 mt-3 mb-5">
-      <div className="bg-card flex flex-col gap-3 p-3">
+      <div className="bg-card flex flex-col gap-3 p-3 rounded-md">
         <div className="flex gap-3 items-center rounded-md">
           <UserAvatarImage user={profile} className="w-16 h-16" />
           <div className="flex flex-col gap-1">

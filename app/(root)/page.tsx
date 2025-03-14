@@ -20,17 +20,7 @@ export default async function Home() {
         <Cards />
         <CategoriesScroller />
         <Quizzes args={args} />
-        {/* {gg &&
-          gg.map(({ title, quizzes,route }) => {
-            return (
-              <QuizzesCardsScroller
-                key={title}
-                quizzes={quizzes}
-                title={title}
-                route={route}
-              />
-            );
-          })} */}
+        
       </div>
     </div>
   );

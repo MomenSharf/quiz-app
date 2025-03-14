@@ -22,13 +22,11 @@ export default async function Page({
   const isCurrentUser = quizDetails.user.id === session?.user.id;
 
   return (
-    <>
-    <QuizDetails
-      quiz={quizDetails}
-      pathname="/quiz"
-      isCurrentUser={isCurrentUser}
-      showAnswers={showAnswers}
+      <QuizDetails
+        quiz={quizDetails}
+        pathname="/quiz"
+        isCurrentUser={isCurrentUser}
+        showAnswers={showAnswers}
       />
-      </>
   );
 }

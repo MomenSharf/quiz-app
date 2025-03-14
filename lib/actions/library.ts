@@ -522,40 +522,40 @@ export const renameFolder = async ({
 };
 
 // Reset
-export const resetQuiz = async ({
-  quizId,
-  pathname,
-}: {
-  quizId: string;
-  pathname: string;
-}) => {
-  const session = await getCurrentUser();
-  if (!session) {
-    return { success: false, message: "Unauthorized: User is not logged in." };
-  }
+// export const resetQuiz = async ({
+//   quizId,
+//   pathname,
+// }: {
+//   quizId: string;
+//   pathname: string;
+// }) => {
+//   const session = await getCurrentUser();
+//   if (!session) {
+//     return { success: false, message: "Unauthorized: User is not logged in." };
+//   }
 
-  try {
-    const quiz = await db.quiz.update({
-      where: {
-        id: quizId,
-      },
-      data: {
-        title: "My new Quiz",
-        description: "",
-        categories: [],
-        questions: {
-          deleteMany: {},
-        },
-      },
-    });
+//   try {
+//     const quiz = await db.quiz.update({
+//       where: {
+//         id: quizId,
+//       },
+//       data: {
+//         title: "My new Quiz",
+//         description: "",
+//         categories: [],
+//         questions: {
+//           deleteMany: {},
+//         },
+//       },
+//     });
 
-    revalidatePath(pathname);
+//     revalidatePath(pathname);
 
-    return { success: true, quiz };
-  } catch (error) {
-    return {
-      success: false,
-      message: `Failed to reset Quiz. Please try again later.`,
-    };
-  }
-};
+//     return { success: true, quiz };
+//   } catch (error) {
+//     return {
+//       success: false,
+//       message: `Failed to reset Quiz. Please try again later.`,
+//     };
+//   }
+// };

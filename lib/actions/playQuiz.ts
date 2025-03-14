@@ -3,6 +3,8 @@ import { PlayQuizQuestion } from "@/components/PlayQuiz/Context";
 import { getCurrentUser } from "../auth";
 import { db } from "../db";
 import { unstable_noStore as noStore } from "next/cache";
+import { previewPlayQuizSchema, quizSchema } from "../validations/quizSchemas";
+import { intQuiz } from "../utils";
 
 export const getPlayQuiz = async (quizId: string, mode: "play" | "preview") => {
   const session = await getCurrentUser();
@@ -92,6 +94,21 @@ export const getPlayQuiz = async (quizId: string, mode: "play" | "preview") => {
     }
     if (!quizProgress) {
       return { success: false, message: "Error while loading quiz data" };
+    }
+    const testQuiz = intQuiz(quizProgress.quiz);
+
+    if (
+      !previewPlayQuizSchema.safeParse(testQuiz).success &&
+      quizProgress.quiz.userId === session.user.id
+    ) {
+      return {
+        success: false,
+        message: "Invalid quiz data, if you are the creator edit it first",
+      };
+    }
+
+    if (!quizSchema.safeParse(testQuiz).success) {
+      return { success: false, message: "Invalid quiz data" };
     }
 
     return { success: true, quizProgress };

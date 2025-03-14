@@ -27,7 +27,7 @@ import { useLibraryContext } from "../Context";
 import DeleteQuizButton from "./DeleteQuizButton";
 import RenameQuiz from "./RenameQuiz";
 import { toast } from "@/components/ui/use-toast";
-import { duplicateQuiz, resetQuiz } from "@/lib/actions/library";
+import { duplicateQuiz } from "@/lib/actions/library";
 
 type QuizMenuProps = ButtonProps & {
   quiz: DashboardQuiz;
@@ -41,7 +41,6 @@ export default function QuizDrawer({
   const [renameDialogOpen, setRenameDialogOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [isDuplicatingQuiz, setIsDuplicatingQuiz] = useState(false);
-  const [isResettingQuiz, setIisResettingQuiz] = useState(false);
   const [open, setOpen] = useState(false);
 
   const router = useRouter();
@@ -62,7 +61,13 @@ export default function QuizDrawer({
           </div>
           <div className="w-full">
             <DrawerHeader>
-              <DrawerTitle className="truncate">{quiz.title} Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequuntur perferendis veritatis unde aperiam voluptatibus, at ducimus voluptate dignissimos officiis? Doloremque fugiat beatae error in vero. Dolore dignissimos sint accusamus! Dolor.</DrawerTitle>
+              <DrawerTitle className="truncate">
+                {quiz.title} Lorem ipsum dolor sit amet consectetur adipisicing
+                elit. Consequuntur perferendis veritatis unde aperiam
+                voluptatibus, at ducimus voluptate dignissimos officiis?
+                Doloremque fugiat beatae error in vero. Dolore dignissimos sint
+                accusamus! Dolor.
+              </DrawerTitle>
             </DrawerHeader>
 
             <div className="flex flex-col w-full px-1">
@@ -107,37 +112,7 @@ export default function QuizDrawer({
                 <ExternalLink className="w-6 h-6" />
                 <span className="font-semibold">Share</span>
               </Button>
-              <Button
-                variant="ghost"
-                className="flex gap-2 px-3 py-4 w-full justify-start text-lg"
-                onClick={async (e) => {
-                  setIisResettingQuiz(true);
-                  const { success, message } = await resetQuiz({
-                    quizId: quiz.id,
-                    pathname: "library",
-                  });
 
-                  if (success) {
-                    toast({ description: "Quiz reseted successfully" });
-                  } else {
-                    toast({
-                      description: message,
-                      title: "error",
-                      variant: "destructive",
-                    });
-                  }
-                  setIisResettingQuiz(false);
-                  setOpen(false);
-                }}
-                disabled={isResettingQuiz}
-              >
-                {isResettingQuiz ? (
-                  <Icons.Loader className="w-6 h-6 animate-spin stroke-gray-dark" />
-                ) : (
-                  <RotateCcw className="w-6 h-6" />
-                )}
-                <span className="font-semibold">Reset</span>
-              </Button>
               <Button
                 variant="ghost"
                 className="flex gap-2 px-3 py-4 w-full justify-start text-lg"

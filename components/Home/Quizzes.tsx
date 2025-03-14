@@ -58,7 +58,7 @@ export default function Quizzes({ args }: { args: HomeQuizzesArgs[] }) {
     fetchQuizzes();
   }, [order]);
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col gap-3">
       {quizzes &&
         quizzes.map((quiz) => {
           if (!quiz) return null;

@@ -1,5 +1,3 @@
-import { BookmarkQuiz, SearchQuiz, UserProfile } from "@/types";
-import QuizPanel from "./QuizPanel";
 import QuizPanelSkeleton from "./QuizPanelSkeleton";
 
 export default function QuizzesPanelsTableSkeleton() {

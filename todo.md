@@ -6,8 +6,6 @@
 
 ## /search
 
-- make undo to make the filter and sory witot options
-
 ## library
 
 - complte reset quiz logic

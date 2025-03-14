@@ -1,7 +1,7 @@
 import { saveEditorQuiz as saveEditorQuizServer } from "@/lib/actions/editor";
-import { intQuiz, mapQuestionByType } from "@/lib/utils";
+import { intQuiz } from "@/lib/utils";
 import { quizSchema, quizSchemaType } from "@/lib/validations/quizSchemas";
-import { Category, EditorQuiz } from "@/types";
+import { EditorQuiz } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import React, {
   createContext,

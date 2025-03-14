@@ -3,8 +3,7 @@ import {
   Edit,
   ExternalLink,
   PenLine,
-  RotateCcw,
-  Trash2,
+  Trash2
 } from "lucide-react";
 
 import { Icons } from "@/components/icons";
@@ -18,15 +17,14 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { toast } from "@/components/ui/use-toast";
+import { duplicateQuiz } from "@/lib/actions/library";
 import { cn, shareLink } from "@/lib/utils";
 import { DashboardQuiz } from "@/types";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { useLibraryContext } from "../Context";
 import DeleteQuizButton from "./DeleteQuizButton";
 import RenameQuiz from "./RenameQuiz";
-import { duplicateQuiz, resetQuiz } from "@/lib/actions/library";
-import { toast } from "@/components/ui/use-toast";
 
 type QuizMenuProps = ButtonProps & {
   quiz: DashboardQuiz;
@@ -36,7 +34,6 @@ export default function QuizMenu({ children, quiz, ...props }: QuizMenuProps) {
   const [renameDialogOpen, setRenameDialogOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [isDuplicatingQuiz, setIsDuplicatingQuiz] = useState(false);
-  const [isResettingQuiz, setIisResettingQuiz] = useState(false);
   const [open, setOpen] = useState(false);
 
   const router = useRouter();
@@ -99,36 +96,7 @@ export default function QuizMenu({ children, quiz, ...props }: QuizMenuProps) {
             </DropdownMenuItem>
           </DropdownMenuGroup>
           <DropdownMenuGroup>
-            <DropdownMenuItem
-              className=" flex gap-2"
-              onSelect={async (e) => {
-                setIisResettingQuiz(true);
-                const { success, message } = await resetQuiz({
-                  quizId: quiz.id,
-                  pathname: "library",
-                });
-
-                if (success) {
-                  toast({ description: "Quiz reseted successfully" });
-                } else {
-                  toast({
-                    description: message,
-                    title: "error",
-                    variant: "destructive",
-                  });
-                }
-                setIisResettingQuiz(false);
-                setOpen(false);
-              }}
-              disabled={isResettingQuiz}
-            >
-              {isResettingQuiz ? (
-                <Icons.Loader className="w-4 h-4 animate-spin stroke-gray-dark" />
-              ) : (
-                <RotateCcw className="w-5 h-5" />
-              )}
-              <span className="font-semibold">Reset</span>
-            </DropdownMenuItem>
+          
             <DropdownMenuItem
               className=" flex gap-2"
               onSelect={async (e) => {

@@ -37,7 +37,7 @@ export default function QuizPanel({
     >
       <div className="relative bg-card p-2  flex rounded-lg">
         <Link
-          href={`quiz/${quiz.id}`}
+          href={`/quiz/${quiz.id}`}
           className="flex items-center rounded-xl overflow-hidden w-28 min-w-28"
         >
           <Image
@@ -59,7 +59,7 @@ export default function QuizPanel({
         <div className="p-2 flex flex-col justify-center gap-1.5">
           <div className="flex gap-1">
             <Link
-              href={`quiz/${quiz.id}`}
+              href={`/quiz/${quiz.id}`}
               className={cn(
                 "text-sm font-bold max-w-36 sm:max-w-80 md:max-w-md truncate cursor-pointer hover:text-primary"
               )}
