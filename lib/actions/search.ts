@@ -22,6 +22,7 @@ export const getSearchQuizzes = async ({
   category,
   isBookmarked,
 }: SearchQuizessArgs) => {
+  await fakeLongTimePromise(3000)
   const session = await getCurrentUser();
   const sessionUserId = session?.user?.id;
 

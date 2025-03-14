@@ -6,6 +6,7 @@ import { useInView } from "framer-motion";
 import { getSearchQuizzes } from "@/lib/actions/search";
 import { toast } from "../ui/use-toast";
 import { Icons } from "../icons";
+import QuizzesPanelsTableSkeleton from "./QuizzesPanelsTableSkeleton";
 
 export default function MoreQuizzesPanels({
   query,
@@ -68,11 +69,7 @@ export default function MoreQuizzesPanels({
   return (
     <div className="flex flex-col gap-3">
       <QuizzesPanelsTable quizzes={quizzes} />
-      {loading && (
-        <div className="flex justify-center">
-          <Icons.Loader className="w-10 h-10 stroke-primary animate-spin" />
-        </div>
-      )}
+      {loading && <QuizzesPanelsTableSkeleton />}
       <div ref={ref} className="w-full h-1" />
     </div>
   );

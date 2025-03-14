@@ -7,6 +7,7 @@ import { getSearchQuizzes } from "@/lib/actions/search";
 import { toast } from "../ui/use-toast";
 import { Icons } from "../icons";
 import { PAGE_SIZE } from "@/constants";
+import QuizzesPanelsTableSkeleton from "../Quiz/QuizzesPanelsTableSkeleton";
 
 export default function MoreSearchQuizzes({
   userId,
@@ -77,9 +78,7 @@ export default function MoreSearchQuizzes({
     <div className="flex flex-col gap-3">
       <QuizzesPanelsTable quizzes={quizzes} />
       {loading && (
-        <div className="flex justify-center">
-          <Icons.Loader className="w-10 h-10 stroke-primary animate-spin" />
-        </div>
+       <QuizzesPanelsTableSkeleton />
       )}
       <div ref={ref} className="w-full h-1" />
     </div>
