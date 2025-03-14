@@ -9,10 +9,12 @@ import { cn } from "@/lib/utils";
 
 export default function UseScrollerContainer({
   children,
-  scrollBy
+  scrollBy,
+  className,
 }: {
   children: ReactNode;
-  scrollBy? : number;
+  scrollBy?: number;
+  className?: string;
 }) {
   const { isLeftVisible, isRightVisible, sliderRef, goLeft, goRight } =
     useScroller(scrollBy);
@@ -31,10 +33,7 @@ export default function UseScrollerContainer({
             />
           </div>
         )}
-        <div
-          ref={sliderRef}
-          className="flex gap-3 p-1 transition-transform overflow-x-scroll no-scrollbar "
-        >
+        <div ref={sliderRef} className={cn("no-scrollbar", className)}>
           {children}
         </div>
         {isRightVisible && (

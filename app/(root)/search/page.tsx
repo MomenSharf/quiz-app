@@ -17,6 +17,7 @@ export default async function Page(props: {
     category?: string;
     isBookmarked?: string;
     userId?: string;
+    page?: string;
   }>;
 }) {
   const session = await getCurrentUser();
@@ -30,6 +31,7 @@ export default async function Page(props: {
   const category = isValidCategoryOption(searchParams?.category)
     ? searchParams?.category
     : undefined;
+  const page = searchParams?.page;
 
   const isBookmarked = searchParams?.isBookmarked === "true";
 
@@ -49,10 +51,12 @@ export default async function Page(props: {
       {query && (
         <h1 className="font-semibold max-w-full truncate">
           Showing results for {`'${query}'`}
-        </h1>
+        </h1> 
       )}
-      <div className="flex gap-3 justify-between sm:gap-3">
-        {session && <BookmarkSwitch isBookmarked={isBookmarked} />}
+      <div className="flex gap-3 justify-end sm:gap-3">
+        {session && page !== "bookmarks" && (
+          <BookmarkSwitch isBookmarked={isBookmarked} />
+        )}
         <div className="flex gap-1">
           <SortBySelector />
           <CategorySelector />
@@ -76,10 +80,16 @@ export default async function Page(props: {
               width={100}
               height={100}
             />
-            <p className="font-bold text-lg mt-2">No Quizzes found</p>
-            <p className="text-sm text-gray-medium truncate max-w-full">
-              for {`'${query}'`}
+            <p className="font-bold text-lg mt-2">
+              {page === "bookmarks"
+                ? "No quizzes bookmarked"
+                : "No Quizzes found"}
             </p>
+            {query && (
+              <p className="text-sm text-gray-medium truncate max-w-full">
+                for {`'${query}'`}
+              </p>
+            )}
           </div>
         )}
       </div>

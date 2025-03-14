@@ -9,7 +9,7 @@ export default function CategoriesScroller() {
   return (
     <div className="flex flex-col gap-3">
       <h2>CATEGORIES</h2>
-      <UseScrollerContainer>
+      <UseScrollerContainer className="flex gap-3 no no-scroll p-1 overflow-x-scroll">
         {CATEGORY_OPTIONS_LIST.map(
           ({ id, label, value, icon: Icon, color }) => (
             <MotionDiv
@@ -18,6 +18,7 @@ export default function CategoriesScroller() {
               transition={{ duration: 0.6, ease: "easeOut" }}
               viewport={{ once: true }}
               key={id}
+              
             >
               <Link
                 className={cn(

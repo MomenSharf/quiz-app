@@ -35,7 +35,7 @@ export default function BookmarkSwitch({
   };
 
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex items-center gap-2 mr-auto">
       <span className="text-sm font-semibold">Bookmarks</span>
       <Switch checked={checked} onCheckedChange={handleCheckedChange} />
     </div>

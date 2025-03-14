@@ -21,7 +21,7 @@ export default function Cards() {
                 buttonVariants({ size: "sm" }),
                 "self-start mt-auto justify-items-end bg-card text-primary hover:bg-card/90 rounded-xl"
               )}
-              href='editor/new'
+              href="editor/new"
             >
               Create Quiz
             </Link>
@@ -36,9 +36,12 @@ export default function Cards() {
             <p className="justify-self-start text-xs sm:text-sm">
               Play Exciting Quizzes Powered by AI!
             </p>
-            <Button className="self-start mt-auto rounded-xl" size="sm">
-              Play with AI
-            </Button>
+            <div className="flex items-center gap-2">
+              <Button className="self-start mt-auto rounded-xl" size="sm">
+                Play with AI{" "}
+              </Button>
+              <span className="text text-xs text-primary hidden sm:block">{"( Soon... )"}</span>
+            </div>
             <Icons.aiStars className="absolute w-6 h-6 sm:w-10 sm:h-10 fill-primary right-3 bottom-3" />
           </div>
         </div>

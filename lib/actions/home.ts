@@ -137,38 +137,40 @@ export const getHomeQuizzes = async () => {
   }
 };
 
-export const getHomeQuizzesByCategories = async (categories: Category[]) => {
-  try {
-    const bestRatedQuizzes = await db.rating.groupBy({
-      by: ["quizId"],
-      _avg: {
-        rate: true,
-      },
-      orderBy: {
-        _avg: {
-          rate: "desc",
-        },
-      },
-      take: TAKE, // Get the top 10 best-rated quizzes
-    });
 
-    const quizzes = await db.quiz.findMany({
-      where: {
-        id: { in: bestRatedQuizzes.map((r) => r.quizId) },
-      },
-      include: {
-        ratings: {
-          select: { rate: true },
-        },
-      },
-    });
 
-    if (quizzes) {
-      return quizzes;
-    } else {
-      return null;
-    }
-  } catch (error) {
-    return null;
-  }
-};
+// export const getHomeQuizzesByCategories = async (categories: Category[]) => {
+//   try {
+//     const bestRatedQuizzes = await db.rating.groupBy({
+//       by: ["quizId"],
+//       _avg: {
+//         rate: true,
+//       },
+//       orderBy: {
+//         _avg: {
+//           rate: "desc",
+//         },
+//       },
+//       take: TAKE, // Get the top 10 best-rated quizzes
+//     });
+
+//     const quizzes = await db.quiz.findMany({
+//       where: {
+//         id: { in: bestRatedQuizzes.map((r) => r.quizId) },
+//       },
+//       include: {
+//         ratings: {
+//           select: { rate: true },
+//         },
+//       },
+//     });
+
+//     if (quizzes) {
+//       return quizzes;
+//     } else {
+//       return null;
+//     }
+//   } catch (error) {
+//     return null;
+//   }
+// };

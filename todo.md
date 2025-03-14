@@ -1,12 +1,8 @@
 # app
 
 - solve catch data when user nevigate between pages
-- add Ai to the app
-- make all themes be suitable with app
 
 ## home
-
-- finish the cards logic
 
 ## /search
 
@@ -14,9 +10,10 @@
 
 ## library
 
+- complte reset quiz logic
+
 ## editor
 
-- fix quiz settings does't save currectly
 - fix edit sidebar in mobile mode
 
 ## image tabs
@@ -28,3 +25,4 @@
 ## play
 
 - make backup imahUrl more spasifc
+- make soundOn by localStorage

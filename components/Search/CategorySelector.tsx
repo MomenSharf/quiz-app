@@ -20,7 +20,7 @@ export default function CategorySelector() {
 
   function handleSearch(term: string) {
     const params = new URLSearchParams(searchParams);
-    if (term && term !== "ALL_CATEGORIES") {
+    if (term && term !== "allCategories") {
       params.set("category", term);
     } else {
       params.delete("category");
@@ -33,13 +33,13 @@ export default function CategorySelector() {
   }, [searchParams]);
 
   return (
-    <Select defaultValue={category} onValueChange={handleSearch}>
+    <Select defaultValue={category || 'allCategories'} onValueChange={handleSearch}>
       <SelectTrigger className="w-[110px] sm:w-[160px]">
         <SelectValue placeholder="Category" />
       </SelectTrigger>
       <SelectContent>
         {[
-          { value: "ALL_CATEGORIES", label: "All Categories" },
+          { value: "allCategories", label: "All Categories" },
           ...CATEGORY_OPTIONS_LIST,
         ].map(({ value, label }) => {
           return (

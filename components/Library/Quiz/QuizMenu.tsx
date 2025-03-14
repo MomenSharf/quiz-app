@@ -47,8 +47,11 @@ export default function QuizMenu({ children, quiz, ...props }: QuizMenuProps) {
         <DropdownMenuTrigger asChild>
           <Button {...props}>{children}</Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent className="relative w-40 text-gray-medium cursor-pointer">
-          <DropdownMenuLabel className="text-gray-dark text-normal">
+        <DropdownMenuContent className="relative w-40 text-gray-medium cursor-pointer right-6">
+          <DropdownMenuLabel
+            className="text-gray-dark text-normal truncate"
+            title={quiz.title}
+          >
             {quiz.title}
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
@@ -78,13 +81,18 @@ export default function QuizMenu({ children, quiz, ...props }: QuizMenuProps) {
             </DropdownMenuItem>
             <DropdownMenuItem
               className=" flex gap-2"
-              onSelect={() =>
+              onSelect={() => {
+                if (quiz.visibility === "PRIVATE")
+                  return toast({
+                    description: "Make quiz public first",
+                    variant: "destructive",
+                  });
                 shareLink({
                   url: `${process.env.NEXT_PUBLIC_BASE_URL}/quiz/${quiz.id}`,
                   title: "Check out this quiz!",
                   text: `I found this great quiz: ${quiz.title}`,
-                })
-              }
+                });
+              }}
             >
               <ExternalLink className="w-5 h-5" />
               <span className="font-semibold">Share</span>
@@ -175,6 +183,7 @@ export default function QuizMenu({ children, quiz, ...props }: QuizMenuProps) {
       />
       <RenameQuiz
         quizId={quiz.id}
+        title={quiz.title}
         open={renameDialogOpen}
         setOpen={setRenameDialogOpen}
       />

@@ -62,7 +62,7 @@ export default function QuizDrawer({
           </div>
           <div className="w-full">
             <DrawerHeader>
-              <DrawerTitle>{quiz.title}</DrawerTitle>
+              <DrawerTitle className="truncate">{quiz.title} Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequuntur perferendis veritatis unde aperiam voluptatibus, at ducimus voluptate dignissimos officiis? Doloremque fugiat beatae error in vero. Dolore dignissimos sint accusamus! Dolor.</DrawerTitle>
             </DrawerHeader>
 
             <div className="flex flex-col w-full px-1">
@@ -194,6 +194,7 @@ export default function QuizDrawer({
       />
       <RenameQuiz
         quizId={quiz.id}
+        title={quiz.title}
         open={renameDialogOpen}
         setOpen={setRenameDialogOpen}
       />

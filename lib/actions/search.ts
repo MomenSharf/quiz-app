@@ -11,6 +11,7 @@ import { getCurrentUser } from "../auth";
 import { unstable_noStore as noStore } from "next/cache";
 import { Prisma } from "@prisma/client";
 import { PAGE_SIZE } from "@/constants";
+import { fakeLongTimePromise } from "../utils";
 
 export const getSearchQuizzes = async ({
   userId,

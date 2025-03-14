@@ -19,7 +19,7 @@ export default function SortBySelector() {
 
   function handleSearch(term: string) {
     const params = new URLSearchParams(searchParams);
-    if (term) {
+    if (term && term !== "bestMatch") {
       params.set("sortBy", term);
     } else {
       params.delete("sortBy");
@@ -32,12 +32,15 @@ export default function SortBySelector() {
   }, [searchParams]);
 
   return (
-    <Select defaultValue={sortBy} onValueChange={handleSearch}>
+    <Select defaultValue={sortBy || "bestMatch"} onValueChange={handleSearch}>
       <SelectTrigger className="w-[110px] sm:w-[160px]">
         <SelectValue placeholder="Sort by" />
       </SelectTrigger>
       <SelectContent>
-        {SEARCH_SORT_OPTIONS_WITH_LABEL.map(({ value, label }) => {
+        {[
+          { value: "bestMatch", label: "Best match" },
+          ...SEARCH_SORT_OPTIONS_WITH_LABEL,
+        ].map(({ value, label }) => {
           return (
             <SelectItem value={value} key={value}>
               {label}

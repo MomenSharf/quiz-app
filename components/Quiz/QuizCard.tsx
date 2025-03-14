@@ -14,16 +14,15 @@ import { buttonVariants } from "../ui/button";
 import { UserAvatarImage } from "../User/UserAvatar";
 import You from "./You";
 import { MotionDiv } from "@/hooks/useMotion";
+import { Skeleton } from "../ui/skeleton";
 
-export default async function QuizzesCard({
+export default function QuizzesCard({
   quiz,
   index,
 }: {
   quiz: SearchQuiz | BookmarkQuiz | UserProfile["quizzes"][number];
   index: number;
 }) {
-  const sessiom = await getCurrentUser();
-  const isCurrentUser = sessiom && quiz.user.id === sessiom.user.id;
   const quizTime = quiz.questions.reduce(
     (acc, curr) => acc + curr.timeLimit,
     0
@@ -48,9 +47,10 @@ export default async function QuizzesCard({
           style={{
             aspectRatio: "4 / 3", // Maintains the 4:3 aspect ratio
           }}
-          className="rounded-xl rounded-bl-none rounded-br-none"
+          className="rounded-xl rounded-bl-none rounded-br-none z-[2]"
           unoptimized
         />
+        <Skeleton className="absolute h-[132px] sm:h-[156px] w-full" />
         <div className="absolute opacity-0 group-hover:opacity-100 transition-opacity w-full h-full flex justify-center items-center bg-black/30">
           <Link
             href={`play/${quiz.id}`}

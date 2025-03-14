@@ -18,6 +18,7 @@ import {
 import {
   Category,
   EditorQuiz,
+  HomeQuizzesArgs,
   LibrarySortOption,
   PlayQuizType,
   SearchQuiz,
@@ -264,7 +265,7 @@ export function getRandomItems<T>(arr: T[], count: number): T[] {
   return shuffled.slice(0, Math.min(count, arr.length));
 }
 
-export const getHomeQuizzesArgs = () => {
+export const getHomeQuizzesArgs = (): HomeQuizzesArgs[] => {
   const categories: {
     title: string;
     args: SearchQuizessArgs;
@@ -277,7 +278,6 @@ export const getHomeQuizzesArgs = () => {
 
   return [...HOME, ...categories];
 };
-
 
 export const fakeLongTimePromise = (ms = 5000) => {
   return new Promise((resolve) => {

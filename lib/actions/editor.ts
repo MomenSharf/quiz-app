@@ -134,17 +134,21 @@ export const saveEditorQuiz = async (
   };
 
   try {
-    const quizData = {
-      categories: data.categories,
-      title: data.title,
-      description: data.description,
-      visibility: isValid ? data.visibility : "PUBLIC",
-      imageUrl: data.imageUrl,
-    };
-
-    const questions = data.questions
+    let questions = data.questions
       .filter((e) => e.type !== "UNSELECTED")
       .map(mapQuestion);
+
+    questions =
+      questions.length > 0
+        ? questions
+        : [
+            {
+              type: "UNSELECTED",
+              questionOrder: 0,
+              timeLimit: 10000,
+              points: 10,
+            },
+          ];
 
     const { categories, title, description, imageUrl, visibility } = data;
 

@@ -20,15 +20,15 @@ import { User as prismaUser } from "@prisma/client";
 import { AVATAR_COLORS } from "@/constants";
 import { Button } from "../ui/button";
 
-type UserAvatarImageProps = AvatarProps & {
+type UserAvatarProps = AvatarProps & {
   user: nextAuthUser | prismaUser;
 };
 
-export function UserAvatar({ user }: { user: nextAuthUser }) {
+export function UserAvatar({ user, ...props }: UserAvatarProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <UserAvatarImage user={user} />
+        <UserAvatarImage user={user} {...props} />
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56 mr-5 sm:ml-10">
         <DropdownMenuLabel>
@@ -43,16 +43,20 @@ export function UserAvatar({ user }: { user: nextAuthUser }) {
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem className=" flex gap-2">
-            <Icons.profile className="w-5 h-5 fill-foreground" />
-            <Link href="/profile" className="w-full font-semibold">
-              Profile
+            <Icons.settings className="w-5 h-5 fill-foreground" />
+            <Link href={`/settings`} className="w-full font-semibold">
+              Settings
             </Link>
           </DropdownMenuItem>
         </DropdownMenuGroup>
 
         <DropdownMenuSeparator />
         <DropdownMenuItem>
-          <SignOut className="w-full justify-start" variant="ghost" />
+          <SignOut
+            className="w-full justify-start hover:text-white hover:bg-destructive group"
+            iconClassName="group-hover:text-white"
+            variant="ghost"
+          />
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
@@ -63,7 +67,7 @@ export function UserAvatarImage({
   user,
   className,
   ...props
-}: UserAvatarImageProps) {
+}: UserAvatarProps) {
   if (!user) return null;
   const imageUrl = "imageUrl" in user ? user.imageUrl : user.image;
   const avatarColor = user.avatarColor || AVATAR_COLORS[0];
@@ -78,11 +82,7 @@ export function UserAvatarImage({
           )}
           {...props}
         >
-          <AvatarImage
-            src={imageUrl}
-            alt="avatar"
-            className="rounded-full"
-          />
+          <AvatarImage src={imageUrl} alt="avatar" className="rounded-full" />
         </Avatar>
       ) : (
         <Button

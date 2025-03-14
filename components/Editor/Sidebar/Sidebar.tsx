@@ -26,8 +26,7 @@ export default function Sidebar() {
     },
   } = useEditorContext();
 
-  const { goLeft, goRight, isLeftVisible, isRightVisible, sliderRef } =
-    useScroller();
+
   const questions = getValues("questions");
   const dimensions = useScreenDimensions();
 
@@ -47,40 +46,7 @@ export default function Sidebar() {
   };
   return (
     <aside className="relative flex-shrink-0 border-t sm:border-t-0 sm:border-r  flex sm:flex-col">
-      {/* <Button
-        size="icon"
-        variant="outline"
-        className="absolute w-10 h-3 sm:w-4 sm:h-9 bg-white hover:bg-white border-0 rounded-bl-none rounded-br-none sm:rounded-tl-none sm:rounded-bl-none sm:rounded-br-md -top-3 right-8  sm:top-16 sm:-right-4"
-        onClick={() => setIsSidebarOpen((prev) => !prev)}
-      >
-        {isSidebarOpen ? (
-          <>
-            <ChevronLeft className="hidden sm:block w-3 h-3 sm:w-4 sm:h-4" />
-            <ChevronDown className="sm:hidden w-3 h-3 sm:w-4 sm:h-4" />
-          </>
-        ) : (
-          <>
-            <ChevronRight className="hidden sm:block w-3 h-3 sm:w-4 sm:h-4" />
-            <ChevronUp className="sm:hidden w-3 h-3 sm:w-4 sm:h-4" />
-          </>
-        )}
-      </Button> */}
-      {/* <div
-        className={cn("relative flex sm:flex-col", {
-          hidden: !isSidebarOpen,
-        })}
-      > */}
-        {isLeftVisible && (
-          <div
-            className="flex sm:hidden cursor-pointer group absolute z-[2] top-1/2 left-1 -translate-y-1/2 p-2 bg-card/70 hover:bg-card transition-all border rounded-full justify-center items-center"
-            onClick={goLeft}
-          >
-            <ChevronLeft
-              className="w-3 h-3 m:w-5 sm:h-5 group-hover:text-primary"
-              onClick={goLeft}
-            />
-          </div>
-        )}
+  
         <Reorder.Group
           axis={dimensions.width >= 640 ? "y" : "x"}
           onReorder={async (questions) => {
@@ -95,7 +61,6 @@ export default function Sidebar() {
               await trigger();
             }
           }}
-          ref={sliderRef}
           values={questions}
           style={{ height: 250, border: "1px solid black", overflowY: "auto" }}
           layoutScroll
@@ -120,15 +85,7 @@ export default function Sidebar() {
             />
           </Button>
         </div>
-        {isRightVisible && (
-          <div
-            className="flex sm:hidden cursor-pointer group absolute z-[2] top-1/2 right-20 -translate-y-1/2 p-2 bg-card/70 hover:bg-card transition-all border rounded-full justify-center items-center"
-            onClick={goRight}
-          >
-            <ChevronRight className="w-3 h-3 m:w-5 sm:h-5 group-hover:text-primary" />
-          </div>
-        )}
-      {/* </div> */}
+  
     </aside>
   );
 }

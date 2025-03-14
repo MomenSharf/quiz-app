@@ -55,7 +55,10 @@ export default function SearchInput() {
       >
         <Input
           placeholder="Search"
-          className="rounded-tr-none rounded-br-none rounded-tl-full rounded-bl-full border-r-0 focus-visible:ring- focus-visible:ring-transparent"
+          className={cn(
+            "rounded-tr-none rounded-br-none rounded-tl-full rounded-bl-full h-8 border-r-0 focus-visible:ring-transparent textt-xs",
+            { "w-8 rounded-full": !isSearchOpen }
+          )}
           ref={searchInputRef}
           onChange={(e) => {
             handleSearchWidthDebounce(e.target.value.trim());
@@ -80,20 +83,16 @@ export default function SearchInput() {
       <Button
         size="icon"
         variant="outline"
-        className={cn("rounded-full", {
+        className={cn("rounded-full w-8 h-8", {
           "rounded-tl-none rounded-bl-none transition-all": isSearchOpen,
         })}
         aria-label="Search"
         onClick={() => {
-          if (
-            isSearchOpen &&
-       
-            pathname !== "/search"
-          ) {
+          if (isSearchOpen && pathname !== "/search") {
             if (searchInputRef && searchInputRef.current?.value !== "") {
               push(`/search?query=${searchInputRef.current?.value}`);
             } else {
-              setIsSearchOpen(false)
+              setIsSearchOpen(false);
             }
           } else {
             setIsSearchOpen(true);

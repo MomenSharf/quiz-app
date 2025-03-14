@@ -34,17 +34,19 @@ type NewQuizButtonProps = HTMLProps<HTMLDivElement> & {
 
 export default function RenameQuiz({
   quizId,
+  title,
   open,
   setOpen,
 }: {
   quizId: string;
+  title: string;
   open: boolean;
   setOpen: (open: boolean) => void;
 }) {
   const form = useForm<folderSchemaType>({
     resolver: zodResolver(folderSchema),
     defaultValues: {
-      title: "",
+      title,
     },
   });
 
