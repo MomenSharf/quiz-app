@@ -11,11 +11,15 @@ import {
 import { useEditorContext } from "../Context";
 import SidebarItem from "./SidebarItem";
 import { useScroller } from "@/hooks/useScroller";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 
 export default function Sidebar() {
-  // const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+
+  const sideBarRef = useRef<HTMLUListElement | null>(null);
+  const { width } = useScreenDimensions();
+  const isMobile = width < 640;
+
   const {
     dispatch,
     form: {
@@ -28,7 +32,6 @@ export default function Sidebar() {
 
 
   const questions = getValues("questions");
-  const dimensions = useScreenDimensions();
 
   const newQuetion = async () => {
     const id = crypto.randomUUID();
@@ -43,12 +46,23 @@ export default function Sidebar() {
       },
     ]);
     dispatch({ type: "SET_CURRENT_QUESTION_ID", payload: id });
+    
+    setTimeout(() => {
+      if (sideBarRef.current) {
+        if (isMobile) {
+          sideBarRef.current.scrollLeft = sideBarRef.current.scrollWidth;
+        } else {
+          sideBarRef.current.scrollTop = sideBarRef.current.scrollHeight;
+        }
+      }
+    }, 100);
   };
   return (
     <aside className="relative flex-shrink-0 border-t sm:border-t-0 sm:border-r  flex sm:flex-col">
   
         <Reorder.Group
-          axis={dimensions.width >= 640 ? "y" : "x"}
+          // axis={dimensions.width >= 640 ? "y" : "x"}
+          axis='y'
           onReorder={async (questions) => {
             setValue(
               "questions",
@@ -62,9 +76,10 @@ export default function Sidebar() {
             }
           }}
           values={questions}
-          style={{ height: 250, border: "1px solid black", overflowY: "auto" }}
+          style={{ overflowY: "scroll" }}
           layoutScroll
-          className="p-1.5 sm:p-3 flex-1 sm:flex-none !border-none flex sm:flex-col gap-2 !h-auto editor-sidebar z-10 !overflow-y-visible"
+          className="p-1.5 sm:p-3 !border-none flex sm:flex-col gap-2 h-auto !overflow-y-visible"
+          ref={sideBarRef}
         >
           {questions
             .sort((a, b) => a.questionOrder - b.questionOrder)
@@ -72,7 +87,9 @@ export default function Sidebar() {
               <SidebarItem key={question.id} question={question} questionIndex={i} />
             ))}
         </Reorder.Group>
-        <div className="sm:flex-1  border-l sm:border-t sm:border-l-0 p-1.5 flex justify-start items-center sm:justify-center sm:items-start">
+        <div
+         className="sm:flex-1 border-l sm:border-t sm:border-l-0 p-1.5 flex justify-start items-center sm:justify-center sm:items-start"
+         >
           <Button
             type="button"
             variant="outline"

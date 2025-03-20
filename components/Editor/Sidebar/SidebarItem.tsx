@@ -42,7 +42,8 @@ export default function SidebarItem({
       key={question.id}
       className={cn(
         buttonVariants({ size: "icon", variant: "outline" }),
-        "w-16 h-16 sm:w-20 sm:h-20 relative hover:border-ring hover:bg-background cursor-pointer",
+        "!min-w-16 !min-h-16 sm:!min-w-20 sm:!min-h-20 relative hover:border-ring hover:bg-background cursor-pointer",
+        
         {
           "border-ring bg-accent hover:bg-accent":
             currentQuestionId === question.id && !isSettingsOpen,
@@ -79,7 +80,7 @@ export default function SidebarItem({
         <SidebarItemMenu question={question} />
       </div>
       {error && (
-        <Icons.alert className="absolute w-4 h-4 fill-amber stroke-background -top-3 -right-2" />
+        <Icons.alert className="absolute w-4 h-4 fill-amber stroke-background -top-3 -right-2 z-10" />
       )}
     </Reorder.Item>
   );
