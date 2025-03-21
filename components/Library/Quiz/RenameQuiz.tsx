@@ -27,6 +27,7 @@ import {
 import { useLibraryContext } from "../Context";
 import { renameQuiz } from "@/lib/actions/library";
 import { toast } from "@/components/ui/use-toast";
+import { MAX_QUIZ_TITLE_LENGTH } from "@/constants";
 
 type NewQuizButtonProps = HTMLProps<HTMLDivElement> & {
   quizId: string;
@@ -88,18 +89,20 @@ export default function RenameQuiz({
               control={form.control}
               name="title"
               render={({ field }) => (
-                <FormItem className="space-y-1 flex w-full flex-col flex-1">
+                <FormItem className="relative space-y-1 flex w-full flex-col flex-1">
                   <FormControl>
                     <Input
                       placeholder="title..."
-                      className={cn("transition-all", {
+                      className={cn("transition-all pr-6", {
                         "border-destructive bg-destructive/10 focus-visible:ring-destructive":
                           form.getFieldState("title").error,
                       })}
+                      maxLength={MAX_QUIZ_TITLE_LENGTH}
                       {...field}
                     />
                   </FormControl>
                   <FormMessage className="text-xs font-extralight mt-0" />
+                  <div className="absolute right-2.5 top-2 text-xs text-muted-foreground">{MAX_QUIZ_TITLE_LENGTH - form.getValues('title').length }</div>
                 </FormItem>
               )}
             />

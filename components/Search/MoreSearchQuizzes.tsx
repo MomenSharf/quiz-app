@@ -75,7 +75,7 @@ export default function MoreSearchQuizzes({
   }, [inView, hasMore, loading, query, page, fetchQizzes]);
 
   return (
-    <div className="flex flex-col gap-3">
+    <div className="flex flex-col gap-1">
       <QuizzesPanelsTable quizzes={quizzes} />
       {loading && (
        <QuizzesPanelsTableSkeleton />

@@ -13,6 +13,9 @@ import { LucideProps } from "lucide-react";
 
 export const PAGE_SIZE = 12
 
+export const MAX_QUIZ_TITLE_LENGTH = 100
+export const MAX_FOLDER_TITLE_LENGTH = 100
+
 export const AVATAR_COLORS = [
   "#1ABC9C", // Turquoise
   "#2ECC71", // Emerald

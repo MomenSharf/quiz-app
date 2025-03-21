@@ -15,7 +15,6 @@ import { useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 
 export default function Sidebar() {
-
   const sideBarRef = useRef<HTMLUListElement | null>(null);
   const { width } = useScreenDimensions();
   const isMobile = width < 640;
@@ -29,7 +28,6 @@ export default function Sidebar() {
       trigger,
     },
   } = useEditorContext();
-
 
   const questions = getValues("questions");
 
@@ -46,7 +44,7 @@ export default function Sidebar() {
       },
     ]);
     dispatch({ type: "SET_CURRENT_QUESTION_ID", payload: id });
-    
+
     setTimeout(() => {
       if (sideBarRef.current) {
         if (isMobile) {
@@ -59,50 +57,50 @@ export default function Sidebar() {
   };
   return (
     <aside className="relative flex-shrink-0 border-t sm:border-t-0 sm:border-r  flex sm:flex-col">
-  
-        <Reorder.Group
-          // axis={dimensions.width >= 640 ? "y" : "x"}
-          axis='y'
-          onReorder={async (questions) => {
-            setValue(
-              "questions",
-              questions.map((question, i) => ({
-                ...question,
-                questionOrder: i,
-              }))
-            );
-            if (errors.questions) {
-              await trigger();
-            }
-          }}
-          values={questions}
-          style={{ overflowY: "scroll" }}
-          layoutScroll
-          className="p-1.5 sm:p-3 !border-none flex sm:flex-col gap-2 h-auto !overflow-y-visible"
-          ref={sideBarRef}
-        >
-          {questions
-            .sort((a, b) => a.questionOrder - b.questionOrder)
-            .map((question, i) => (
-              <SidebarItem key={question.id} question={question} questionIndex={i} />
-            ))}
-        </Reorder.Group>
-        <div
-         className="sm:flex-1 border-l sm:border-t sm:border-l-0 p-1.5 flex justify-start items-center sm:justify-center sm:items-start"
-         >
-          <Button
-            type="button"
-            variant="outline"
-            onClick={newQuetion}
-            className="w-16 h-16 sm:w-20 sm:h-20  relative hover:border-ring hover:bg-background"
-          >
-            <Plus
-              strokeWidth={3}
-              className="w-4 h-4 sm:w-5 sm:h-5  text-muted-foreground"
+      <Reorder.Group
+        axis={isMobile ? "y" : "x"}
+        // axis='y'
+        onReorder={async (questions) => {
+          setValue(
+            "questions",
+            questions.map((question, i) => ({
+              ...question,
+              questionOrder: i,
+            }))
+          );
+          if (errors.questions) {
+            await trigger();
+          }
+        }}
+        values={questions}
+        style={{ overflowY: "scroll", overflowX: isMobile ? "scroll" : "hidden" }}
+        layoutScroll
+        className="py-3 px-1.5 sm:px-2 !border-none flex sm:flex-col gap-2 h-auto !overflow-y-visible"
+        ref={sideBarRef}
+      >
+        {questions
+          .sort((a, b) => a.questionOrder - b.questionOrder)
+          .map((question, i) => (
+            <SidebarItem
+              key={question.id}
+              question={question}
+              questionIndex={i}
             />
-          </Button>
-        </div>
-  
+          ))}
+      </Reorder.Group>
+      <div className="sm:flex-1 border-l sm:border-t sm:border-l-0 p-1.5 flex justify-start items-center sm:justify-center sm:items-start">
+        <Button
+          type="button"
+          variant="outline"
+          onClick={newQuetion}
+          className="w-16 h-16 sm:w-20 sm:h-20  relative hover:border-ring hover:bg-background"
+        >
+          <Plus
+            strokeWidth={3}
+            className="w-4 h-4 sm:w-5 sm:h-5  text-muted-foreground"
+          />
+        </Button>
+      </div>
     </aside>
   );
 }

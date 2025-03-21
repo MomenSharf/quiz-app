@@ -71,7 +71,7 @@ export default function DataCard({
 
       <td className="w-full flex justify-start gap-2 p-2 pl-0">
         <div
-          className="flex flex-col rounded-md overflow-hidden cursor-pointer"
+          className="min-w-[100px] flex flex-col rounded-md overflow-hidden cursor-pointer"
           onClick={() => router.push(dataPath)}
         >
           {!isFolder ? (
@@ -93,14 +93,14 @@ export default function DataCard({
               </div>
             )
           ) : (
-            <div className="w-[80px] h-[60px] sm:w-[100px] sm:h-[75px] flex justify-center items-center object-contain rounded-md overflow-hidden min-w-16 sm:min-w-20 bg-[hsl(var(--primary)_/_10%)] ">
+            <div className="w-[100px] h-[75px] sm:w-[100px] sm:h-[75px] flex justify-center items-center object-contain rounded-md overflow-hidden min-w-16 sm:min-w-20 bg-[hsl(var(--primary)_/_10%)] ">
               <Icons.folder className="w-7 h-7 fill-primary" />
             </div>
           )}
         </div>
         <div className="flex flex-col gap-1 justify-center">
           <p
-            className="truncate  sm:max-w-60  font-medium cursor-pointer hover:text-primary transition-colors text-xs sm:text-base"
+            className="text-sm font-bold max-w-36 sm:max-w-80 md:max-w-md truncate cursor-pointer hover:text-primary"
             onClick={() => router.push(dataPath)}
             title={data.title}
           >
@@ -109,20 +109,39 @@ export default function DataCard({
           <div className="flex gap-1">
             {isFolder ? (
               <div className="flex gap-1">
-                <Badge className="bg-primary/30 hover:bg-primary/30 text-primary items-center gap-0.5">
+                <div className="flex gap-1 items-center">
+                  <div className="p-1.5 bg-muted  rounded-full">
+                    <Icons.quizzes className="w-3 h-3 fill-muted-foreground" />
+                  </div>
+                  <span className="text-xs text-muted-foreground">
+                    {data._count.quizzes}
+                  </span>
+                </div> 
+                {/* <Badge className="bg-primary/30 hover:bg-primary/30 text-primary items-center gap-0.5">
                   <Icons.quizzes className="w-3 h-3 fill-primary" />
-                  {data._count.quizzes}
-                </Badge>
-                <Badge className="bg-primary/30 hover:bg-primary/30 text-primary items-center  gap-0.5">
+                </Badge> */}
+                <div className="flex gap-1 items-center">
+                  <div className="p-1.5 bg-muted  rounded-full">
+                    <Icons.folder className="w-3 h-3 fill-muted-foreground" />
+                  </div>
+                  <span className="text-xs text-muted-foreground">
+                  {data._count.subfolders}
+                  </span>
+                </div>
+                {/* <Badge className="bg-primary/30 hover:bg-primary/30 text-primary items-center  gap-0.5">
                   <Icons.folder className="w-3 h-3 fill-primary" />
                   {data._count.subfolders}
-                </Badge>
+                </Badge> */}
               </div>
             ) : (
-              <Badge className="bg-primary/30 hover:bg-primary/30 text-primary items-center gap-0.5">
-                <Layers className="w-3 h-3 text-primary" />
-                {data._count.questions}
-              </Badge>
+              <div className="flex gap-1 items-center">
+                <div className="p-1.5 bg-muted  rounded-full">
+                  <Layers className="w-3 h-3 text-muted-foreground" />
+                </div>
+                <span className="text-xs text-muted-foreground">
+                  {data._count.questions}
+                </span>
+              </div>
             )}
           </div>
         </div>
