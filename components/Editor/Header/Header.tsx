@@ -15,6 +15,7 @@ import {
   previewPlayQuizSchema,
   quizSchema,
 } from "@/lib/validations/quizSchemas";
+import { MAX_QUIZ_TITLE_LENGTH } from "@/constants";
 
 export default function Header() {
   const [isEditingTitle, setIsEditingTitle] = useState(false);
@@ -65,6 +66,7 @@ export default function Header() {
                 className={cn("font-semibold w-36", {
                   hidden: !isEditingTitle,
                 })}
+                maxLength={MAX_QUIZ_TITLE_LENGTH}
                 {...field}
                 onBlur={(e) => {
                   field.onBlur();
