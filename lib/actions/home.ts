@@ -7,135 +7,135 @@ import { getSearchQuizzes } from "./search";
 import { getRandomItems } from "../utils";
 const TAKE = 12;
 
-export const getRecentlyPublishedQuizzes = async () => {
-  try {
-    const quizzes = await db.quiz.findMany({
-      where: { visibility: "PUBLIC" },
-      orderBy: { createdAt: "desc" },
-      take: TAKE,
-    });
+// export const getRecentlyPublishedQuizzes = async () => {
+//   try {
+//     const quizzes = await db.quiz.findMany({
+//       where: { visibility: "PUBLIC" },
+//       orderBy: { createdAt: "desc" },
+//       take: TAKE,
+//     });
 
-    if (quizzes) {
-      return quizzes;
-    } else {
-      return null;
-    }
-  } catch (error) {
-    return null;
-  }
-};
-export const getPopularQuizzes = async () => {
-  try {
-    const quizzes = await db.quiz.findMany({
-      where: { visibility: "PUBLIC" },
-      orderBy: { createdAt: "desc", playCount: "desc" },
-      take: TAKE,
-    });
+//     if (quizzes) {
+//       return quizzes;
+//     } else {
+//       return null;
+//     }
+//   } catch (error) {
+//     return null;
+//   }
+// };
+// export const getPopularQuizzes = async () => {
+//   try {
+//     const quizzes = await db.quiz.findMany({
+//       where: { visibility: "PUBLIC" },
+//       orderBy: { createdAt: "desc", playCount: "desc" },
+//       take: TAKE,
+//     });
 
-    if (quizzes) {
-      return quizzes;
-    } else {
-      return null;
-    }
-  } catch (error) {
-    return null;
-  }
-};
-export const getBestRatedQuizzes = async () => {
-  try {
-    const bestRatedQuizzes = await db.rating.groupBy({
-      by: ["quizId"],
-      _avg: {
-        rate: true,
-      },
-      orderBy: {
-        _avg: {
-          rate: "desc",
-        },
-      },
-      take: TAKE, // Get the top 10 best-rated quizzes
-    });
+//     if (quizzes) {
+//       return quizzes;
+//     } else {
+//       return null;
+//     }
+//   } catch (error) {
+//     return null;
+//   }
+// };
+// export const getBestRatedQuizzes = async () => {
+//   try {
+//     const bestRatedQuizzes = await db.rating.groupBy({
+//       by: ["quizId"],
+//       _avg: {
+//         rate: true,
+//       },
+//       orderBy: {
+//         _avg: {
+//           rate: "desc",
+//         },
+//       },
+//       take: TAKE, // Get the top 10 best-rated quizzes
+//     });
 
-    const quizzes = await db.quiz.findMany({
-      where: {
-        id: { in: bestRatedQuizzes.map((r) => r.quizId) },
-      },
-      include: {
-        ratings: {
-          select: { rate: true },
-        },
-      },
-    });
+//     const quizzes = await db.quiz.findMany({
+//       where: {
+//         id: { in: bestRatedQuizzes.map((r) => r.quizId) },
+//       },
+//       include: {
+//         ratings: {
+//           select: { rate: true },
+//         },
+//       },
+//     });
 
-    if (quizzes) {
-      return quizzes;
-    } else {
-      return null;
-    }
-  } catch (error) {
-    return null;
-  }
-};
+//     if (quizzes) {
+//       return quizzes;
+//     } else {
+//       return null;
+//     }
+//   } catch (error) {
+//     return null;
+//   }
+// };
 
-export const getHomeQuizzes = async () => {
-  try {
-    const categories: {
-      title: string;
-      args: SearchQuizessArgs;
-      route: string;
-    }[] = getRandomItems(CATEGORIES, 3).map((category) => ({
-      title: category
-        .replace(/_/g, " ")
-        .replace(/\b\w/g, (c) => c.toUpperCase()),
-      args: { category, sortOption: "popular" },
-      route: `/search?category=${category}`,
-    }));
+// export const getHomeQuizzes = async () => {
+//   try {
+//     const categories: {
+//       title: string;
+//       args: SearchQuizessArgs;
+//       route: string;
+//     }[] = getRandomItems(CATEGORIES, 3).map((category) => ({
+//       title: category
+//         .replace(/_/g, " ")
+//         .replace(/\b\w/g, (c) => c.toUpperCase()),
+//       args: { category, sortOption: "popular" },
+//       route: `/search?category=${category}`,
+//     }));
 
-    // const results = await Promise.all(
-    //   [...HOME, ...categories].map(async ({ title, args, route }) => {
-    //     const { success, quizzes } = await getSearchQuizzes(args);
-    //     if (quizzes && success && quizzes.length > 0) {
-    //       return { title, quizzes, route };
-    //     } else {
-    //       return null;
-    //     }
-    //   })
-    // );
+//     // const results = await Promise.all(
+//     //   [...HOME, ...categories].map(async ({ title, args, route }) => {
+//     //     const { success, quizzes } = await getSearchQuizzes(args);
+//     //     if (quizzes && success && quizzes.length > 0) {
+//     //       return { title, quizzes, route };
+//     //     } else {
+//     //       return null;
+//     //     }
+//     //   })
+//     // );
 
-    const results: {
-      title: string;
-      quizzes: SearchQuiz[];
-      route: string;
-    }[] = [];
+//     const results: {
+//       title: string;
+//       quizzes: SearchQuiz[];
+//       route: string;
+//     }[] = [];
 
-    const timeout = new Promise<
-      { title: string; quizzes: any; route: string }[]
-    >((resolve) => setTimeout(() => resolve(results), 4000));
+//     const timeout = new Promise<
+//       { title: string; quizzes: any; route: string }[]
+//     >((resolve) => setTimeout(() => resolve(results), 4000));
 
-    // Function to fetch quizzes one by one
-    const fetchQuizzes = async () => {
-      const results = await Promise.all(
-        [...HOME, ...categories].map(async ({ title, args, route }) => {
-          const { success, quizzes } = await getSearchQuizzes({
-            ...args,
-            pageSize: 6,
-          });
-          if (quizzes && success && quizzes.length > 0) {
-            return { title, quizzes, route };
-          } else {
-            return null;
-          }
-        })
-      );
+//     // Function to fetch quizzes one by one
+//     const fetchQuizzes = async () => {
+//       const results = await Promise.all(
+//         [...HOME, ...categories].map(async ({ title, args, route }) => {
+//           const { success, quizzes } = await getSearchQuizzes({
+//             ...args,
+//             pageSize: 6,
+//           });
+//           if (quizzes && success && quizzes.length > 0) {
+//             return { title, quizzes, route };
+//           } else {
+//             return null;
+//           }
+//         })
+//       );
 
-      return results;
-    };
+//       return results;
+//     };
 
-    return await Promise.race([fetchQuizzes(), timeout]);
-  } catch (error) {
-    return null;
-  }
-};
+//     return await Promise.race([fetchQuizzes(), timeout]);
+//   } catch (error) {
+//     return null;
+//   }
+// };
 
 
 

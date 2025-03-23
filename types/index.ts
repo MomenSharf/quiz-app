@@ -204,6 +204,8 @@ export type UnsplashImage = {
     regular: "https://images.unsplash.com/photo-123?w=1080";
   };
   alt_description: "A beautiful mountain landscape";
+  width: number
+  height: number
 };
 
 export type GiphyGif = {

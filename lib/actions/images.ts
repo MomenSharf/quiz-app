@@ -1,4 +1,5 @@
 "use server";
+import { UnsplashImage } from "@/types";
 import axios from "axios";
 
 export const fetchUnsplashImages = async ({
@@ -51,7 +52,7 @@ export const fetchUnsplashImages = async ({
     return {
       success: true,
       message: "Success loading photos",
-      photos: response.data.results,
+      photos: response.data.results as UnsplashImage[],
     };
   } catch (error: any) {
     console.error(error.message);

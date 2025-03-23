@@ -1,10 +1,4 @@
-import {
-  Copy,
-  Edit,
-  ExternalLink,
-  PenLine,
-  Trash2
-} from "lucide-react";
+import { Copy, Edit, ExternalLink, PenLine, Trash2 } from "lucide-react";
 
 import { Icons } from "@/components/icons";
 import { Button, ButtonProps, buttonVariants } from "@/components/ui/button";
@@ -18,10 +12,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { toast } from "@/components/ui/use-toast";
-import { duplicateQuiz } from "@/lib/actions/library";
+import { copyQuiz } from "@/lib/actions/quiz";
 import { cn, shareLink } from "@/lib/utils";
 import { DashboardQuiz } from "@/types";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import { useState } from "react";
 import DeleteQuizButton from "./DeleteQuizButton";
 import RenameQuiz from "./RenameQuiz";
@@ -33,7 +27,7 @@ type QuizMenuProps = ButtonProps & {
 export default function QuizMenu({ children, quiz, ...props }: QuizMenuProps) {
   const [renameDialogOpen, setRenameDialogOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [isDuplicatingQuiz, setIsDuplicatingQuiz] = useState(false);
+  const [isCopingQuiz, setCopingQuiz] = useState(false);
   const [open, setOpen] = useState(false);
 
   const router = useRouter();
@@ -96,18 +90,17 @@ export default function QuizMenu({ children, quiz, ...props }: QuizMenuProps) {
             </DropdownMenuItem>
           </DropdownMenuGroup>
           <DropdownMenuGroup>
-          
             <DropdownMenuItem
               className=" flex gap-2"
               onSelect={async (e) => {
-                setIsDuplicatingQuiz(true);
-                const { success, message } = await duplicateQuiz({
+                setCopingQuiz(true);
+                const { success, message, newQuiz } = await copyQuiz({
                   quizId: quiz.id,
-                  pathname: "library",
+                  pathname: "/library",
                 });
 
-                if (success) {
-                  toast({ description: "Quiz duplicated successfully" });
+                if (success ) {
+                  toast({ description: message });
                 } else {
                   toast({
                     description: message,
@@ -115,17 +108,17 @@ export default function QuizMenu({ children, quiz, ...props }: QuizMenuProps) {
                     variant: "destructive",
                   });
                 }
-                setIsDuplicatingQuiz(false);
+                setCopingQuiz(false);
                 setOpen(false);
               }}
-              disabled={isDuplicatingQuiz}
+              disabled={isCopingQuiz}
             >
-              {isDuplicatingQuiz ? (
+              {isCopingQuiz ? (
                 <Icons.Loader className="w-4 h-4 animate-spin stroke-gray-dark" />
               ) : (
                 <Copy className="w-5 h-5" />
               )}
-              <span className="font-semibold">Duplicate</span>
+              <span className="font-semibold">Copy</span>
             </DropdownMenuItem>
           </DropdownMenuGroup>
           <DropdownMenuGroup>

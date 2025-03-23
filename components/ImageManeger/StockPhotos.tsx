@@ -2,7 +2,7 @@ import { fetchUnsplashImages } from "@/lib/actions/images";
 import { ImageManagerTabsType, UnsplashImage } from "@/types";
 import { useInView } from "framer-motion";
 import { Search } from "lucide-react";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { Dispatch, SetStateAction, useCallback, useEffect, useRef, useState } from "react";
 // import Gallery from "react-photo-gallery";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
@@ -10,9 +10,12 @@ import { toast } from "../ui/use-toast";
 import Image from "next/image";
 import Loader from "../Layout/Loader";
 import { Icons } from "../icons";
+import { Gallery } from "react-grid-gallery";
 
 export default function StockPhotos({
   onSelectImage,
+  query,
+  setQuery
 }: {
   onSelectImage: ({
     acceptedFiles,
@@ -20,10 +23,19 @@ export default function StockPhotos({
   }: {
     acceptedFiles: File[] | string;
     from: ImageManagerTabsType;
+
   }) => void;
+  query: string, setQuery: Dispatch<SetStateAction<string>>
 }) {
-  const [query, setQuery] = useState("");
-  const [photos, setPhotos] = useState<UnsplashImage[]>([]);
+  // const [query, setQuery] = useState("");
+  const [photos, setPhotos] = useState<
+    {
+      src: string;
+      width: number;
+      height: number;
+      alt?: string;
+    }[]
+  >([]);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const [loading, setLoading] = useState(false);
@@ -47,9 +59,17 @@ export default function StockPhotos({
           page: currentPage,
         });
 
-        if (success) {
+        if (success && newPhotos) {
+          const formattedPhotos = newPhotos.map((image, index) => {
+            return {
+              src: image.urls.regular,
+              width: image.width / 10, // Adjusted for display
+              height: image.height / 10, // Adjusted for display
+              alt: image.alt_description,
+            };
+          });
           setPhotos((prev) =>
-            currentPage === 1 ? newPhotos : [...prev, ...newPhotos]
+            currentPage === 1 ? formattedPhotos : [...prev, ...formattedPhotos]
           );
           setHasMore(newPhotos.length === 12); // Assume 12 is the page size
         } else {
@@ -122,7 +142,7 @@ export default function StockPhotos({
 
       {/* Photos Grid */}
       <div className="flex-1 max-h-[415px] overflow-y-scroll">
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-1">
+        {/* <div className="grid grid-cols-2 sm:grid-cols-3 gap-1">
           {" "}
           {photos.length > 0 &&
             photos.map(({ id, urls: { regular }, alt_description }) => (
@@ -136,6 +156,7 @@ export default function StockPhotos({
                   width={800} // Replace with your desired pixel width
                   height={600} // Replace with your desired pixel height
                   priority
+                  unoptimized
                   // style={{
                   //   aspectRatio: "4 / 3", // Maintains the 4:3 aspect ratio
                   // }}
@@ -144,7 +165,15 @@ export default function StockPhotos({
                 <div className="absolute w-full h-full rounded-lg bg-muted" />
               </div>
             ))}
-        </div>
+        </div> */}
+        <Gallery
+          images={photos}
+          onClick={(_, item) => {
+            onSelectImage({ acceptedFiles: item.src, from: "stockPhotos" });
+          }}
+          enableImageSelection={false}
+        />
+
         {loading && (
           <div className="flex justify-center">
             <Icons.Loader className="w-7 h-7 stroke-primary animate-spin" />

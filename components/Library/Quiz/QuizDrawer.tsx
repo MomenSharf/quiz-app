@@ -21,13 +21,14 @@ import {
 } from "@/components/ui/drawer";
 import { shareLink } from "@/lib/utils";
 import { DashboardQuiz } from "@/types";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import { useState } from "react";
 import { useLibraryContext } from "../Context";
 import DeleteQuizButton from "./DeleteQuizButton";
 import RenameQuiz from "./RenameQuiz";
 import { toast } from "@/components/ui/use-toast";
 import { duplicateQuiz } from "@/lib/actions/library";
+import { copyQuiz } from "@/lib/actions/quiz";
 
 type QuizMenuProps = ButtonProps & {
   quiz: DashboardQuiz;
@@ -40,7 +41,7 @@ export default function QuizDrawer({
 }: QuizMenuProps) {
   const [renameDialogOpen, setRenameDialogOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [isDuplicatingQuiz, setIsDuplicatingQuiz] = useState(false);
+  const [isCopingQuiz, setCopingQuiz] = useState(false);
   const [open, setOpen] = useState(false);
 
   const router = useRouter();
@@ -117,14 +118,14 @@ export default function QuizDrawer({
                 variant="ghost"
                 className="flex gap-2 px-3 py-4 w-full justify-start text-lg"
                 onClick={async (e) => {
-                  setIsDuplicatingQuiz(true);
-                  const { success, message } = await duplicateQuiz({
+                  setCopingQuiz(true);
+                  const { success, message, newQuiz } = await copyQuiz({
                     quizId: quiz.id,
-                    pathname: "library",
+                    pathname: "/library",
                   });
 
                   if (success) {
-                    toast({ description: "Quiz duplicated successfully" });
+                    toast({ description: message });
                   } else {
                     toast({
                       description: message,
@@ -132,17 +133,17 @@ export default function QuizDrawer({
                       variant: "destructive",
                     });
                   }
-                  setIsDuplicatingQuiz(false);
+                  setCopingQuiz(false);
                   setOpen(false);
                 }}
-                disabled={isDuplicatingQuiz}
+                disabled={isCopingQuiz}
               >
-                {isDuplicatingQuiz ? (
+                {isCopingQuiz ? (
                   <Icons.Loader className="w-6 h-6 animate-spin stroke-gray-dark" />
                 ) : (
                   <Copy className="w-6 h-6" />
                 )}
-                <span className="font-semibold">Duplicate</span>
+                <span className="font-semibold">Copy</span>
               </Button>
             </div>
             <DrawerFooter className="p-1">

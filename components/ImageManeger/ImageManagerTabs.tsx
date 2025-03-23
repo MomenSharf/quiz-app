@@ -3,7 +3,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Icons } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import ImageUploader from "./ImageUploader";
-import { ReactNode } from "react";
+import { Dispatch, ReactNode, SetStateAction, useState } from "react";
 import { ImageManagerTabsType } from "@/types";
 import { IMAGE_MANAGER_TABS } from "@/constants";
 import StockPhotos from "./StockPhotos";
@@ -22,14 +22,18 @@ export default function ImageManagerTabs({
   trigger?: ReactNode;
   tabs: ImageManagerTabsType[];
 }) {
-  function TabsContentSwitcher({ tab }: { tab: ImageManagerTabsType }) {
+
+    const [query, setQuery] = useState("");
+  
+
+  function TabsContentSwitcher({ tab, query , setQuery }: { tab: ImageManagerTabsType, query: string, setQuery: Dispatch<SetStateAction<string>>}) {
     switch (tab) {
       case "upload":
         return <ImageUploader onSelectImage={onSelectImage} />;
       case "stockPhotos":
-        return <StockPhotos onSelectImage={onSelectImage}/>;
+        return <StockPhotos onSelectImage={onSelectImage} query={query} setQuery={setQuery}/>;
       case "giphyGIFS":
-        return <GiphyGIFS onSelectImage={onSelectImage}/>;
+        return <GiphyGIFS onSelectImage={onSelectImage} query={query} setQuery={setQuery}/>;
       default:
         return null;
     }
@@ -62,7 +66,7 @@ export default function ImageManagerTabs({
                 tabIndex={undefined}
               >
                 <div className="w-full min-h-[29rem] flex">
-                  <TabsContentSwitcher tab={value} />
+                  <TabsContentSwitcher tab={value} query={query} setQuery={setQuery} />
                 </div>
               </TabsContent>
             );

@@ -1,5 +1,5 @@
 import ErrorPage from "@/components/Layout/ErrorPage";
-import { newQuiz } from "@/lib/actions/library";
+import { newQuiz } from "@/lib/actions/quiz";
 import { getCurrentUser } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import React from "react";

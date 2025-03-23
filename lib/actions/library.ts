@@ -6,6 +6,7 @@ import { revalidatePath } from "next/cache";
 import { FolderPathSegment, LibrarySortOption } from "@/types";
 import { unstable_noStore as noStore } from "next/cache";
 import { redirect } from "next/navigation";
+import { MAX_QUIZ_TITLE_LENGTH } from "@/constants";
 
 // Get
 export const getLibraryQuizzes = async (
@@ -100,7 +101,7 @@ export const getLibraryFolders = async (
     };
   }
 };
-export const getDashboardFolder = async (
+export const getLibraryFolder = async (
   sortOption: LibrarySortOption,
   folderId?: string
 ) => {
@@ -214,81 +215,81 @@ export async function getFolderPath(folderId?: string): Promise<{
 }
 
 // Create
-export const newQuiz = async ({
-  folderId,
-  pathname,
-}: {
-  folderId?: string;
-  pathname?: string;
-}) => {
-  const session = await getCurrentUser();
-  if (!session) {
-    return { success: false, message: "Unauthorized: User is not logged in." };
-  }
+// export const newQuiz = async ({
+//   folderId,
+//   pathname,
+// }: {
+//   folderId?: string;
+//   pathname?: string;
+// }) => {
+//   const session = await getCurrentUser();
+//   if (!session) {
+//     return { success: false, message: "Unauthorized: User is not logged in." };
+//   }
 
-  try {
-    const quiz = await db.quiz.create({
-      data: {
-        userId: session.user.id,
-        folderId,
-        title: "My new Quiz",
-        description: "",
-        visibility: "PRIVATE",
-        categories: [],
-        questions: {
-          create: {
-            type: "UNSELECTED",
-            questionOrder: 0,
-            timeLimit: 10000,
-            points: 10,
-          },
-        },
-      },
-    });
+//   try {
+//     const quiz = await db.quiz.create({
+//       data: {
+//         userId: session.user.id,
+//         folderId,
+//         title: "My new Quiz",
+//         description: "",
+//         visibility: "PRIVATE",
+//         categories: [],
+//         questions: {
+//           create: {
+//             type: "UNSELECTED",
+//             questionOrder: 0,
+//             timeLimit: 10000,
+//             points: 10,
+//           },
+//         },
+//       },
+//     });
 
-    if (pathname) revalidatePath(pathname);
+//     if (pathname) revalidatePath(pathname);
 
-    return { success: true, quiz };
-  } catch (error) {
-    return {
-      success: false,
-      message: "Failed to create quiz. Please try again later.",
-    };
-  }
-};
-export const newFolder = async ({
-  title,
-  parentId,
-  pathname,
-}: {
-  title: string;
-  parentId?: string;
-  pathname: string;
-}) => {
-  const session = await getCurrentUser();
-  if (!session) {
-    return { success: false, message: "Unauthorized: User is not logged in." };
-  }
+//     return { success: true, quiz };
+//   } catch (error) {
+//     return {
+//       success: false,
+//       message: "Failed to create quiz. Please try again later.",
+//     };
+//   }
+// };
+// export const newFolder = async ({
+//   title,
+//   parentId,
+//   pathname,
+// }: {
+//   title: string;
+//   parentId?: string;
+//   pathname: string;
+// }) => {
+//   const session = await getCurrentUser();
+//   if (!session) {
+//     return { success: false, message: "Unauthorized: User is not logged in." };
+//   }
 
-  try {
-    const folder = await db.folder.create({
-      data: {
-        userId: session.user.id,
-        title: title || "New Folder",
-        parentId,
-      },
-    });
+//   try {
+//     const folder = await db.folder.create({
+//       data: {
+//         userId: session.user.id,
+//         title: title || "New Folder",
+//         parentId,
+//       },
+//     });
 
-    revalidatePath(pathname);
+//     revalidatePath(pathname);
 
-    return { success: true, folder: folder };
-  } catch (error) {
-    return {
-      success: false,
-      message: "Failed to create folder. Please try again later.",
-    };
-  }
-};
+//     return { success: true, folder: folder };
+//   } catch (error) {
+//     return {
+//       success: false,
+//       message: "Failed to create folder. Please try again later.",
+//     };
+//   }
+// };
 
 // duplicate
 export const duplicateQuiz = async ({
@@ -321,31 +322,6 @@ export const duplicateQuiz = async ({
       };
     }
 
-    const baseTitle = originalQuiz.title;
-
-    const copyPattern = `${baseTitle} copy`;
-
-    const similarQuizzes = await db.quiz.findMany({
-      where: {
-        title: {
-          startsWith: copyPattern,
-        },
-      },
-    });
-
-    let maxCopyNumber = 0; // Start with 2 since the first copy is (2)
-    similarQuizzes.forEach((quiz) => {
-      const match = quiz.title.match(/\((\d+)\)$/); // Match the number in parentheses at the end
-      if (match) {
-        const copyNumber = parseInt(match[1], 10);
-        if (copyNumber > maxCopyNumber) {
-          maxCopyNumber = copyNumber;
-        }
-      }
-    });
-
-    const newQuizTitle = `${copyPattern} (${maxCopyNumber + 1})`;
-
     const {
       id,
       createdAt,
@@ -365,7 +341,10 @@ export const duplicateQuiz = async ({
 
     const quiz = await db.quiz.create({
       data: {
-        title: newQuizTitle,
+        title:
+          originalQuiz.title.length <= MAX_QUIZ_TITLE_LENGTH - 7
+            ? `${originalQuiz.title.length} (Copy)`
+            : originalQuiz.title,
         visibility: "PRIVATE",
         ...data,
         questions: {

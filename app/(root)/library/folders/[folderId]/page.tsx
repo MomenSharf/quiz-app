@@ -1,6 +1,6 @@
 import ErrorPage from "@/components/Layout/ErrorPage";
 import LibraryProvider from "@/components/Library/LibraryProvider";
-import { getDashboardFolder, getFolderPath } from "@/lib/actions/library";
+import { getFolderPath, getLibraryFolder } from "@/lib/actions/library";
 
 import { getCurrentUser } from "@/lib/auth";
 import { isValidLibrarySortOption } from "@/lib/utils";
@@ -24,7 +24,7 @@ export default async function Page({
     : "recentUpdate";
 
   const [folderResult, folderPathResult] = await Promise.all([
-    getDashboardFolder(sortBy, folderId),
+    getLibraryFolder(sortBy, folderId),
     getFolderPath(folderId),
   ]);
 

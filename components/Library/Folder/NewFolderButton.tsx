@@ -26,7 +26,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { toast } from "@/components/ui/use-toast";
-import { newFolder } from "@/lib/actions/library";
+import { newFolder } from "@/lib/actions/folder";
 
 type NewFolderButtonProps = ButtonProps & {
   parentId?: string;

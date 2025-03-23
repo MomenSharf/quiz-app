@@ -59,7 +59,7 @@ export default function DeleteQuizButton({
                 <p className="text-center">
                   Are you sure you want to delete {title?.length} quizzes :
                 </p>
-                <ul className="px-10 sm:px-14 w-full max-h-[60vh] overflow-scroll">
+                <ul className="px-10 sm:px-14 w-full max-h-[60vh] overflow-y-scroll">
                   {title?.map((title, i) => {
                     return (
                       <li key={i} className="truncate max-w-[250px] text-start">

@@ -1,15 +1,13 @@
 "use server";
 import {
-  ItemSchemaType,
   questionSchemaType,
   quizSchema,
-  quizSchemaType,
+  quizSchemaType
 } from "@/lib/validations/quizSchemas";
-import { Prisma, QuestionType, Quiz, Visibility } from "@prisma/client";
-import { revalidatePath } from "next/cache";
+import { Prisma, QuestionType, Quiz } from "@prisma/client";
+import { unstable_noStore as noStore } from "next/cache";
 import { getCurrentUser } from "../auth";
 import { db } from "../db";
-import { unstable_noStore as noStore } from "next/cache";
 
 export const getEditorQuiz = async ({ quizId }: { quizId: string }) => {
   const session = await getCurrentUser();

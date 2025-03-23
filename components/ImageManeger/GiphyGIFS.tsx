@@ -1,16 +1,19 @@
-import { fetchGiphyGIFs, fetchUnsplashImages } from "@/lib/actions/images";
-import { GiphyGif, ImageManagerTabsType, UnsplashImage } from "@/types";
+import { fetchGiphyGIFs } from "@/lib/actions/images";
+import { GiphyGif, ImageManagerTabsType } from "@/types";
 import { useInView } from "framer-motion";
 import { Search } from "lucide-react";
-import { useCallback, useEffect, useRef, useState } from "react";
+import Image from "next/image";
+import { Dispatch, SetStateAction, useCallback, useEffect, useRef, useState } from "react";
+import { Icons } from "../icons";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
+import { Skeleton } from "../ui/skeleton";
 import { toast } from "../ui/use-toast";
-import Image from "next/image";
-import { Icons } from "../icons";
 
 export default function GiphyGIFS({
   onSelectImage,
+  query,
+  setQuery
 }: {
   onSelectImage: ({
     acceptedFiles,
@@ -19,8 +22,9 @@ export default function GiphyGIFS({
     acceptedFiles: File[] | string;
     from: ImageManagerTabsType;
   }) => void;
+  query: string, setQuery: Dispatch<SetStateAction<string>>
 }) {
-  const [query, setQuery] = useState("");
+  // const [query, setQuery] = useState("");
   const [gifs, setGifs] = useState<GiphyGif[]>([]);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
@@ -46,6 +50,7 @@ export default function GiphyGIFS({
         });
 
         if (success) {
+          
           setGifs((prev) =>
             currentPage === 1 ? newGifs : [...prev, ...newGifs]
           );
@@ -146,8 +151,9 @@ export default function GiphyGIFS({
                     onClick={() =>
                       onSelectImage({ acceptedFiles: url, from: "giphyGIFS" })
                     }
+                    unoptimized
                   />
-                  <div className="absolute w-full h-full rounded-lg bg-muted" />
+                  <Skeleton className="absolute w-full h-full rounded-lg bg-muted" />
                 </div>
               )
             )}
