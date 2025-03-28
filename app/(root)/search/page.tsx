@@ -87,7 +87,7 @@ export default async function Page(props: {
         ) : (
           <div className="w-full h-full flex flex-col justify-center items-center">
             <Image
-              src="/assets/images/no-results.png "
+              src="/assets/images/no-results.png"
               alt="no result"
               width={100}
               height={100}
