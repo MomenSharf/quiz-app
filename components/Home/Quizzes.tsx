@@ -56,6 +56,7 @@ export default function Quizzes({ args }: { args: HomeQuizzesArgs[] }) {
       if (order < quizzes.length) setOrder((prev) => prev + 1);
     };
     fetchQuizzes();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [order]);
   return (
     <div className="flex flex-col gap-3">

@@ -63,6 +63,7 @@ export default function FillInTheBlanks({
       setBlanks(shuffleArray([...question.items.filter((e) => e.isBlank)]));
       setUserChoices([]);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [quizMode]);
 
   return (

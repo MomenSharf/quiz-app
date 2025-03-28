@@ -75,6 +75,7 @@ export default function QuizResult() {
     const progress =
       quizMode === "ended" ? (userScore / maximumScore) * 100 : 0;
     setProgress(progress);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [quizMode, totalPoints, userPoints]);
 
   return (

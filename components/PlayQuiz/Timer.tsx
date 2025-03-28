@@ -72,6 +72,7 @@ export default function Timer({
         clearInterval(intervalIdRef.current);
       }
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, quizMode, remainingTime, timeLimit]); // Ensure remainingTime is included as a dependency
 
   function start() {

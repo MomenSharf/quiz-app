@@ -1,11 +1,11 @@
 "use client";
-import { copyQuiz as copyQuizServer } from "@/lib/actions/quizDetails";
 import React, { useState } from "react";
 import { toast } from "../ui/use-toast";
 import { useRouter } from "next/navigation";
 import { Button } from "../ui/button";
 import { Icons } from "../icons";
 import { Copy } from "lucide-react";
+import { copyQuiz as copyQuizServer } from "@/lib/actions/quiz";
 
 export default function CopyButton({ quizId }: { quizId: string }) {
   const [isCopyingQuiz, setIsCopiyngQuiz] = useState(false);
@@ -14,7 +14,10 @@ export default function CopyButton({ quizId }: { quizId: string }) {
 
   const copyQuiz = async () => {
     setIsCopiyngQuiz(true);
-    const { success, message, newQuiz } = await copyQuizServer(quizId);
+    const { success, message, newQuiz } = await copyQuizServer({
+      quizId,
+      pathname: "/quiz",
+    });
     if (!success || !newQuiz) {
       toast({ variant: "destructive", description: message });
     } else {

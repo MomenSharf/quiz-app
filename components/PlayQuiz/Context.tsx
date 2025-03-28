@@ -173,7 +173,7 @@ export const PlayQuizProvider = ({
         });
       }
     },
-    [quizProgress.quiz.id]
+    [mode, quizProgress.quiz.id]
   );
 
   useEffect(() => {

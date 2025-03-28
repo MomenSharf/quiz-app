@@ -38,6 +38,7 @@ export default function RateDialog() {
         setOpen(true);
       }, 2000);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [quiz, session.data]);
 
   const rateQuiz = async () => {

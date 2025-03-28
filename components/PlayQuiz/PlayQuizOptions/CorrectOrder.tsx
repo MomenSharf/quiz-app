@@ -142,7 +142,7 @@ export default function CorrectOrder({
     ) {
       setItems(shuffleArray([...question.items]));
     }
-  }, [quizMode]);
+  }, [currentQuestion, playQuizQuestions, question.items, quizMode]);
 
   const isShaking =
     quizMode === "answered" &&
