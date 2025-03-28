@@ -1,8 +1,7 @@
 # app
 
-- make all  < Image /> unoptimized
-- make /imges/categories images more smaller size in mb
 - solve catch data when user nevigate between pages
+- make all laoding state wht useTransition
 
 ## home
 

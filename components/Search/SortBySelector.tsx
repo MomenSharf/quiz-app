@@ -8,12 +8,13 @@ import {
 } from "@/components/ui/select";
 import { SEARCH_SORT_OPTIONS_WITH_LABEL } from "@/constants";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useTransition } from "react";
 
 export default function SortBySelector() {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const { replace } = useRouter();
+  const [isPending, startTransition] = useTransition();
 
   const [sortBy, setSortBy] = useState(searchParams.get("sortBy") || undefined);
 
@@ -24,7 +25,9 @@ export default function SortBySelector() {
     } else {
       params.delete("sortBy");
     }
-    replace(`${pathname}?${params.toString()}`);
+    startTransition(() => {
+      replace(`${pathname}?${params.toString()}`);
+    });
   }
 
   useEffect(() => {
@@ -33,8 +36,8 @@ export default function SortBySelector() {
 
   return (
     <Select defaultValue={sortBy || "bestMatch"} onValueChange={handleSearch}>
-      <SelectTrigger className="w-[110px] sm:w-[160px]">
-        <SelectValue placeholder="Sort by" />
+      <SelectTrigger className="w-[110px] sm:w-[160px]" disabled={isPending}>
+        {isPending ? "loading..." : <SelectValue placeholder="Sort by" />}
       </SelectTrigger>
       <SelectContent>
         {[

@@ -4,10 +4,11 @@ import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import { Search } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
+import { Icons } from "../icons";
 
 export default function SearchInput() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -20,6 +21,8 @@ export default function SearchInput() {
 
   const searchParams = useSearchParams();
   const { replace, push } = useRouter();
+  const [isPending, startTransition] = useTransition();
+
   const pathname = usePathname();
 
   const handleSearch = (term: string) => {
@@ -31,7 +34,9 @@ export default function SearchInput() {
       } else {
         params.delete("query");
       }
-      replace(`${pathname}?${params.toString()}`);
+      startTransition(() => {
+        replace(`${pathname}?${params.toString()}`);
+      });
     }
   };
 
@@ -99,8 +104,13 @@ export default function SearchInput() {
             searchInputRef.current?.focus();
           }
         }}
+        disabled={isPending}
       >
-        <Search className="w-4 h-4 text-gray-medium" />
+        {isPending ? (
+          <Icons.Loader className="w-4 h-4 animate-spin stroke-gray-medium" />
+        ) : (
+          <Search className="w-4 h-4 text-gray-medium" />
+        )}
       </Button>
     </div>
   );

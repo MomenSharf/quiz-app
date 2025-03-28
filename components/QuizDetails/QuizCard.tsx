@@ -1,4 +1,3 @@
-import { copyQuiz as copyQuizServer } from "@/lib/actions/quizDetails";
 import { calculateQuizRatings, cn, formatToMinSec } from "@/lib/utils";
 import { QuizDetailsWithIsBookmark } from "@/types";
 import {
@@ -52,6 +51,8 @@ export default function QuizCard({
             aspectRatio: "4 / 3", // Maintains the 4:3 aspect ratio
           }}
           className="rounded-xl"
+          unoptimized
+
         />
       </div>{" "}
       <div className="lg:col-span-2 flex flex-col gap-3 justify-between">

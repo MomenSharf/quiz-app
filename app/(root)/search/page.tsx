@@ -51,7 +51,7 @@ export default async function Page(props: {
       {query && (
         <h1 className="font-semibold max-w-full truncate">
           Showing results for {`'${query}'`}
-        </h1> 
+        </h1>
       )}
       <div className="flex gap-3 justify-end sm:gap-3">
         {session && page !== "bookmarks" && (

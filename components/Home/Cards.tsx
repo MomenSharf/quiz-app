@@ -40,9 +40,11 @@ export default function Cards() {
               <Button className="self-start mt-auto rounded-xl" size="sm">
                 Play with AI{" "}
               </Button>
-              <span className="text text-xs text-primary hidden sm:block">{"( Soon... )"}</span>
             </div>
             <Icons.aiStars className="absolute w-6 h-6 sm:w-10 sm:h-10 fill-primary right-3 bottom-3" />
+            <span className="text-xxs text-primary absolute top-1 sm:top-3 right-3">
+              {"( Soon... )"}
+            </span>
           </div>
         </div>
       </div>

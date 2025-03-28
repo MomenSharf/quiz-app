@@ -22,7 +22,7 @@ export const getSearchQuizzes = async ({
   category,
   isBookmarked,
 }: SearchQuizessArgs) => {
-  await fakeLongTimePromise(3000)
+  await fakeLongTimePromise(300)
   const session = await getCurrentUser();
   const sessionUserId = session?.user?.id;
 

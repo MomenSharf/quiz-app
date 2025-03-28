@@ -8,12 +8,14 @@ import {
 } from "@/components/ui/select";
 import { CATEGORY_OPTIONS_LIST } from "@/constants";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useTransition } from "react";
 
 export default function CategorySelector() {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const { replace } = useRouter();
+  const [isPending, startTransition] = useTransition();
+
   const [category, setCategory] = useState(
     searchParams.get("category") || undefined
   );
@@ -25,7 +27,9 @@ export default function CategorySelector() {
     } else {
       params.delete("category");
     }
-    replace(`${pathname}?${params.toString()}`);
+    startTransition(() => {
+      replace(`${pathname}?${params.toString()}`);
+    });
   }
 
   useEffect(() => {
@@ -33,9 +37,12 @@ export default function CategorySelector() {
   }, [searchParams]);
 
   return (
-    <Select defaultValue={category || 'allCategories'} onValueChange={handleSearch}>
-      <SelectTrigger className="w-[110px] sm:w-[160px]">
-        <SelectValue placeholder="Category" />
+    <Select
+      defaultValue={category || "allCategories"}
+      onValueChange={handleSearch}
+    >
+      <SelectTrigger className="w-[110px] sm:w-[160px]" disabled={isPending}>
+        {isPending ? "loading..." : <SelectValue placeholder="Category" />}
       </SelectTrigger>
       <SelectContent>
         {[

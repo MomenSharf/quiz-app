@@ -92,10 +92,14 @@ const config = withUt({
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
+        
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+      },
+      fontSize: {
+        xxs: ['8px', '12px'], // Font size 10px with line height 14px
       },
     },
   },

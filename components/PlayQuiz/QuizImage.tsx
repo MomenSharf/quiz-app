@@ -18,6 +18,7 @@ export default function QuizImage({ imageUrl }: { imageUrl: string }) {
           }}
           className="rounded-lg"
           onError={() => setUrl('/assets/images/image-not-found.png')}
+          unoptimized
         />
     </div>
   );

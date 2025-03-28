@@ -152,6 +152,7 @@ export default function GiphyGIFS({
                       onSelectImage({ acceptedFiles: url, from: "giphyGIFS" })
                     }
                     unoptimized
+                    
                   />
                   <Skeleton className="absolute w-full h-full rounded-lg bg-muted" />
                 </div>

@@ -5,14 +5,15 @@ import { toast } from "@/components/ui/use-toast";
 import { newQuiz } from "@/lib/actions/quiz";
 import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useTransition } from "react";
 
 export default function NewQuizButton({
   folderId,
   className,
   ...props
 }: ButtonProps & { folderId?: string }) {
-  const [loading, setLoading] = useState(false);
+  const [isPending, startTransition] = useTransition();
+
   const router = useRouter();
   const createQuiz = async ({
     folderId,
@@ -21,7 +22,6 @@ export default function NewQuizButton({
     folderId?: string;
     pathname: string;
   }) => {
-    setLoading(true);
     const { quiz, success, message } = await newQuiz({ folderId, pathname });
     if (success && quiz) {
       toast({ description: "Quiz created successfully" });
@@ -33,7 +33,6 @@ export default function NewQuizButton({
         variant: "destructive",
       });
     }
-    setLoading(false);
   };
   return (
     <Button
@@ -42,13 +41,15 @@ export default function NewQuizButton({
         "rounded-xl items-center gap-1 border border-transparent text-xs",
         className
       )}
-      disabled={loading}
+      disabled={isPending}
       onClick={() => {
-        createQuiz({ pathname: "/library", folderId });
+        startTransition(() => {
+          createQuiz({ pathname: "/library", folderId });
+        });
       }}
       {...props}
     >
-      {loading ? (
+      {isPending ? (
         <Loader />
       ) : (
         <Icons.plus className="w-4 h-4 bg-transparent fill-primary" />

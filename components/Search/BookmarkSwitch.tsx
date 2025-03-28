@@ -1,8 +1,10 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useTransition } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Switch } from "../ui/switch";
+import Loader from "../Layout/Loader";
+import { Icons } from "../icons";
 
 export default function BookmarkSwitch({
   isBookmarked,
@@ -12,6 +14,7 @@ export default function BookmarkSwitch({
   const [checked, setChecked] = useState(isBookmarked);
   const router = useRouter();
   const searchParams = useSearchParams();
+  const [isPending, startTransition] = useTransition();
 
   useEffect(() => {
     setChecked(searchParams.get("isBookmarked") === "true");
@@ -31,13 +34,16 @@ export default function BookmarkSwitch({
       params.delete("isBookmarked");
     }
 
-    router.replace(`?${params.toString()}`, { scroll: false });
+    startTransition(() => {
+      router.replace(`?${params.toString()}`, { scroll: false });
+    });
   };
 
   return (
     <div className="flex items-center gap-2 mr-auto">
       <span className="text-sm font-semibold">Bookmarks</span>
-      <Switch checked={checked} onCheckedChange={handleCheckedChange} />
+      {isPending && <Icons.Loader className="w-5 h-5 animate-spin stroke-muted-foreground" />}
+      <Switch checked={checked} onCheckedChange={handleCheckedChange}  disabled={isPending}/>
     </div>
   );
 }

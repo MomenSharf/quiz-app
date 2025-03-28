@@ -86,6 +86,7 @@ export default function DataCard({
                   aspectRatio: "4 / 3",
                 }}
                 className="rounded-md"
+                unoptimized
               />
             ) : (
               <div className="w-[100px] h-[75px] sm:w-[100px] sm:h-[75px] flex justify-center items-center object-contain rounded-md overflow-hidden min-w-16 sm:min-w-20 bg-[hsl(var(--primary)_/_10%)] ">

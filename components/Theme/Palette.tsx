@@ -21,7 +21,7 @@ export default function Palette() {
   return (
     <div className=" relative flex justify-center items-center sm:py-3 min-w-10">
       <DropdownMenu open={open} onOpenChange={setOpen}>
-        <DropdownMenuTrigger className="rounded-full overflow-hidden border border-primary">
+        <DropdownMenuTrigger className="rounded-full overflow-hidden border border-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
           <Image
             src="/assets/images/gradient-themes.gif"
             alt="change theme"
