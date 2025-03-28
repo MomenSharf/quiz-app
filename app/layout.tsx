@@ -7,7 +7,7 @@ import { Toaster } from "@/components/ui/toaster";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "QuizzesUp - Test Your Knowledge",
+  title: "QuizzesUp",
   description:
     "QuizzesUp is an interactive quiz platform where users can test their knowledge, create quizzes, and compete with friends.",
   keywords: [
@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     siteName: "QuizzesUp",
     images: [
       {
-        url: "/images/quiz-banner.png",
+        url: "/assets/images/quiz-banner.webp",
         width: 1200,
         height: 630,
         alt: "QuizzesUp - Test Your Knowledge",
@@ -40,13 +40,13 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "QuizzesUp - Test Your Knowledge",
     description: "Join QuizzesUp and challenge yourself with exciting quizzes!",
-    images: ["/images/quiz-banner.png"],
+    images: ["/assets/images/quiz-banner.webp"],
   },
-  metadataBase: new URL("https://quizzesup.com"),
+  metadataBase: new URL("https://quizzesup.vercel.app"),
   robots: "index, follow",
   icons: {
-    icon: "/favicon.ico",
-    apple: "/apple-touch-icon.png",
+    icon: "./favicon.ico",
+    apple: "/assets/images/apple-touch-icon.webp",
   },
 };
 export default function RootLayout({
