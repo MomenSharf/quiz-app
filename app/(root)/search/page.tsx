@@ -75,7 +75,7 @@ export default async function Page(props: {
         </div>
       </div>
       <div className="w-full h-full">
-        {quizzes && quizzes.length > 0 ? (
+        {searchQuizzes && searchQuizzes.length > 0 ? (
           <QuizzesPanelsContainer
             quizzes={searchQuizzes}
             query={query}
