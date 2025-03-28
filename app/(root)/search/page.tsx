@@ -8,7 +8,9 @@ import SortBySelector from "@/components/Search/SortBySelector";
 import { getSearchQuizzes } from "@/lib/actions/search";
 import { getCurrentUser } from "@/lib/auth";
 import { isValidCategoryOption, isValidSearchSortOption } from "@/lib/utils";
+import { SearchQuiz } from "@/types";
 import Image from "next/image";
+import fakeSearchQuizzes from "@/fake-data/search-quizzes.json";
 
 export default async function Page(props: {
   searchParams?: Promise<{
@@ -32,8 +34,9 @@ export default async function Page(props: {
     ? searchParams?.category
     : undefined;
   const page = searchParams?.page;
-
   const isBookmarked = searchParams?.isBookmarked === "true";
+
+  let searchQuizzes: SearchQuiz[] = [];
 
   const { success, message, quizzes } = await getSearchQuizzes({
     query,
@@ -44,6 +47,12 @@ export default async function Page(props: {
 
   if (!success || !quizzes) {
     return <ErrorPage message={message} />;
+  }
+
+  if (process.env.NEXT_PUBLIC_USE_FAKE_DATA === "true") {
+    searchQuizzes = fakeSearchQuizzes as unknown as SearchQuiz[];
+  } else {
+    searchQuizzes = quizzes;
   }
 
   return (
@@ -65,7 +74,7 @@ export default async function Page(props: {
       <div className="w-full h-full">
         {quizzes.length > 0 ? (
           <QuizzesPanelsContainer
-            quizzes={quizzes}
+            quizzes={searchQuizzes}
             query={query}
             category={category}
             sortOption={sortOption}

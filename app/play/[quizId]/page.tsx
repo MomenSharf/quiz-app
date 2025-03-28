@@ -9,6 +9,7 @@ import { Rating } from "@prisma/client";
 import { JsonValue } from "@prisma/client/runtime/library";
 import { notFound, redirect } from "next/navigation";
 
+import fakeQuizProgress from "@/fake-data/fake-quiz-progress.json";
 export default async function Page(props: {
   params: { quizId: string };
   searchParams?: Promise<{
@@ -16,6 +17,17 @@ export default async function Page(props: {
   }>;
 }) {
   const session = await getCurrentUser();
+
+  if (process.env.NEXT_PUBLIC_USE_FAKE_DATA === "true") {
+    return (
+      <div className="min-h-screen main-background">
+        <Provider
+          quizProgress={fakeQuizProgress as unknown as PlayQuizType}
+          mode="preview"
+        />
+      </div>
+    );
+  }
 
   if (!session) {
     return redirect("/login");
@@ -58,8 +70,6 @@ export default async function Page(props: {
       </div>
     );
   }
-
-  quizProgress.playQuizQuestions;
 
   return (
     <div className="min-h-screen main-background">

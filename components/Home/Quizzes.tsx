@@ -4,6 +4,7 @@ import { HomeQuizzesArgs, SearchQuiz } from "@/types";
 import { useEffect, useState } from "react";
 import QuizzesCardsScroller from "../Quiz/QuizzesCardsScroller";
 import QuizzesCardsScrollerSkeleton from "../Quiz/QuizzesCardsScrollerSkeleton";
+import fakeQuizzesData from "@/fake-data/home-page-quizzes.json"; // Import JSON file
 
 export default function Quizzes({ args }: { args: HomeQuizzesArgs[] }) {
   type gg =
@@ -28,9 +29,6 @@ export default function Quizzes({ args }: { args: HomeQuizzesArgs[] }) {
 
   useEffect(() => {
     const fetchQuizzes = async () => {
-      console.log(order);
-      console.log(quizzes[order === 0 ? 0 : order - 1]);
-
       if (!quizzes[order]) {
         return;
       }
@@ -38,6 +36,7 @@ export default function Quizzes({ args }: { args: HomeQuizzesArgs[] }) {
       const { success, quizzes: searchQuizzes } = await getSearchQuizzes(
         searchArgs
       );
+
       setQuizzes((prev) => {
         const ll = prev.map((quiz) => {
           if (!quiz) return null;
@@ -55,8 +54,15 @@ export default function Quizzes({ args }: { args: HomeQuizzesArgs[] }) {
       });
       if (order < quizzes.length) setOrder((prev) => prev + 1);
     };
-    fetchQuizzes();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    if (order + 1 === quizzes.length) console.log(quizzes);
+
+    if (process.env.NEXT_PUBLIC_USE_FAKE_DATA === "true") {      
+      setQuizzes(fakeQuizzesData as gg[]);
+    } else {
+      fetchQuizzes();
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [order]);
   return (
     <div className="flex flex-col gap-3">

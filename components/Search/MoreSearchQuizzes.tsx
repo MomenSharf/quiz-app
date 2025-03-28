@@ -64,22 +64,29 @@ export default function MoreSearchQuizzes({
   );
 
   useEffect(() => {
-    if (inView && hasMore && !loading && query && query.trim()) {
+    if (
+      inView &&
+      hasMore &&
+      !loading &&
+      query &&
+      query.trim() &&
+      process.env.NEXT_PUBLIC_USE_FAKE_DATA !== "true"
+    ) {
       // console.log('in');
       // setHasMore(prev => true)
-    
-      
+
       fetchQizzes(query, page + 1);
       setPage((prev) => prev + 1);
     }
   }, [inView, hasMore, loading, query, page, fetchQizzes]);
+  console.log(quizzes);
+
+
 
   return (
     <div className="flex flex-col gap-1">
       <QuizzesPanelsTable quizzes={quizzes} />
-      {loading && (
-       <QuizzesPanelsTableSkeleton />
-      )}
+      {loading && <QuizzesPanelsTableSkeleton />}
       <div ref={ref} className="w-full h-1" />
     </div>
   );

@@ -1,0 +1,363 @@
+{
+  "id": "cm8stq7ve0003s7so8p8nxu2f",
+  "userId": "cm728fijd0000y3kbis3jhpwg",
+  "quizId": "users-101-quiz-12",
+  "currentQuestion": 0,
+  "isCompleted": false,
+  "startedAt": "2025-03-28T13:34:13.820Z",
+  "completedAt": null,
+  "lastUpdated": "2025-03-28T13:34:13.831Z",
+  "playQuizQuestions": [],
+  "quiz": {
+    "id": "users-101-quiz-12",
+    "title": "Physics and Computer Science",
+    "createdAt": "2021-12-08T02:30:51.470Z",
+    "updatedAt": "2025-03-28T13:34:14.086Z",
+    "categories": [
+      "PHYSICS",
+      "COMPUTER_SCIENCE"
+    ],
+    "description": "Explore the connection between the laws of physics and modern computing.",
+    "visibility": "PUBLIC",
+    "folderId": null,
+    "userId": "users-101",
+    "imageUrl": "/assets/images/categories/PHYSICS.jpg",
+    "playCount": 15100,
+    "completionCount": 0,
+    "questions": [
+      {
+        "id": "users-101-quiz-12-question-1",
+        "type": "PICK_ANSWER",
+        "question": "Which programming language is primarily used for web development?",
+        "correctAnswer": null,
+        "quizId": "users-101-quiz-12",
+        "questionOrder": 0,
+        "timeLimit": 45000,
+        "points": 12,
+        "imageUrl": "/assets/images/categories/PICK_ANSWER.jpg",
+        "items": [
+          {
+            "id": "users-101-quiz-12-question-1-item-1",
+            "text": "JavaScript",
+            "match": null,
+            "isCorrect": true,
+            "order": null,
+            "isBlank": null,
+            "questionId": "users-101-quiz-12-question-1",
+            "imageUrl": null
+          },
+          {
+            "id": "users-101-quiz-12-question-1-item-2",
+            "text": "Python",
+            "match": null,
+            "isCorrect": false,
+            "order": null,
+            "isBlank": null,
+            "questionId": "users-101-quiz-12-question-1",
+            "imageUrl": null
+          },
+          {
+            "id": "users-101-quiz-12-question-1-item-3",
+            "text": "C++",
+            "match": null,
+            "isCorrect": false,
+            "order": null,
+            "isBlank": null,
+            "questionId": "users-101-quiz-12-question-1",
+            "imageUrl": null
+          },
+          {
+            "id": "users-101-quiz-12-question-1-item-4",
+            "text": "Java",
+            "match": null,
+            "isCorrect": false,
+            "order": null,
+            "isBlank": null,
+            "questionId": "users-101-quiz-12-question-1",
+            "imageUrl": null
+          }
+        ]
+      },
+      {
+        "id": "users-101-quiz-12-question-2",
+        "type": "PICK_ANSWER",
+        "question": "What does 'HTML' stand for?",
+        "correctAnswer": null,
+        "quizId": "users-101-quiz-12",
+        "questionOrder": 1,
+        "timeLimit": 30000,
+        "points": 10,
+        "imageUrl": "/assets/images/categories/PICK_ANSWER.jpg",
+        "items": [
+          {
+            "id": "users-101-quiz-12-question-2-item-1",
+            "text": "HyperText Markup Language",
+            "match": null,
+            "isCorrect": true,
+            "order": null,
+            "isBlank": null,
+            "questionId": "users-101-quiz-12-question-2",
+            "imageUrl": null
+          },
+          {
+            "id": "users-101-quiz-12-question-2-item-2",
+            "text": "HighText Machine Language",
+            "match": null,
+            "isCorrect": false,
+            "order": null,
+            "isBlank": null,
+            "questionId": "users-101-quiz-12-question-2",
+            "imageUrl": null
+          },
+          {
+            "id": "users-101-quiz-12-question-2-item-3",
+            "text": "HyperText Marketing Language",
+            "match": null,
+            "isCorrect": false,
+            "order": null,
+            "isBlank": null,
+            "questionId": "users-101-quiz-12-question-2",
+            "imageUrl": null
+          },
+          {
+            "id": "users-101-quiz-12-question-2-item-4",
+            "text": "HighText Markup Language",
+            "match": null,
+            "isCorrect": false,
+            "order": null,
+            "isBlank": null,
+            "questionId": "users-101-quiz-12-question-2",
+            "imageUrl": null
+          }
+        ]
+      },
+      {
+        "id": "users-101-quiz-12-question-3",
+        "type": "MATCHING_PAIRS",
+        "question": "Match the operating systems with their developers",
+        "correctAnswer": null,
+        "quizId": "users-101-quiz-12",
+        "questionOrder": 2,
+        "timeLimit": 10000,
+        "points": 7,
+        "imageUrl": "/assets/images/categories/MATCHING_PAIRS.jpg",
+        "items": [
+          {
+            "id": "users-101-quiz-12-question-3-item-1",
+            "text": "Windows",
+            "match": "Microsoft",
+            "isCorrect": null,
+            "order": null,
+            "isBlank": null,
+            "questionId": "users-101-quiz-12-question-3",
+            "imageUrl": null
+          },
+          {
+            "id": "users-101-quiz-12-question-3-item-2",
+            "text": "MacOS",
+            "match": "Apple",
+            "isCorrect": null,
+            "order": null,
+            "isBlank": null,
+            "questionId": "users-101-quiz-12-question-3",
+            "imageUrl": null
+          },
+          {
+            "id": "users-101-quiz-12-question-3-item-3",
+            "text": "Linux",
+            "match": "Linus Torvalds",
+            "isCorrect": null,
+            "order": null,
+            "isBlank": null,
+            "questionId": "users-101-quiz-12-question-3",
+            "imageUrl": null
+          }
+        ]
+      },
+      {
+        "id": "users-101-quiz-12-question-4",
+        "type": "ORDER",
+        "question": "Order these programming languages from oldest to most recent.",
+        "correctAnswer": null,
+        "quizId": "users-101-quiz-12",
+        "questionOrder": 3,
+        "timeLimit": 45000,
+        "points": 12,
+        "imageUrl": "/assets/images/categories/ORDER.jpg",
+        "items": [
+          {
+            "id": "users-101-quiz-12-question-4-item-1",
+            "text": "C",
+            "match": null,
+            "isCorrect": null,
+            "order": 1,
+            "isBlank": null,
+            "questionId": "users-101-quiz-12-question-4",
+            "imageUrl": null
+          },
+          {
+            "id": "users-101-quiz-12-question-4-item-2",
+            "text": "C++",
+            "match": null,
+            "isCorrect": null,
+            "order": 2,
+            "isBlank": null,
+            "questionId": "users-101-quiz-12-question-4",
+            "imageUrl": null
+          },
+          {
+            "id": "users-101-quiz-12-question-4-item-3",
+            "text": "Java",
+            "match": null,
+            "isCorrect": null,
+            "order": 3,
+            "isBlank": null,
+            "questionId": "users-101-quiz-12-question-4",
+            "imageUrl": null
+          },
+          {
+            "id": "users-101-quiz-12-question-4-item-4",
+            "text": "Python",
+            "match": null,
+            "isCorrect": null,
+            "order": 4,
+            "isBlank": null,
+            "questionId": "users-101-quiz-12-question-4",
+            "imageUrl": null
+          }
+        ]
+      },
+      {
+        "id": "users-101-quiz-12-question-5",
+        "type": "ORDER",
+        "question": "Put these computer algorithms in the order they were developed.",
+        "correctAnswer": null,
+        "quizId": "users-101-quiz-12",
+        "questionOrder": 4,
+        "timeLimit": 30000,
+        "points": 10,
+        "imageUrl": "/assets/images/categories/ORDER.jpg",
+        "items": [
+          {
+            "id": "users-101-quiz-12-question-5-item-1",
+            "text": "Merge Sort",
+            "match": null,
+            "isCorrect": null,
+            "order": 1,
+            "isBlank": null,
+            "questionId": "users-101-quiz-12-question-5",
+            "imageUrl": null
+          },
+          {
+            "id": "users-101-quiz-12-question-5-item-2",
+            "text": "Quick Sort",
+            "match": null,
+            "isCorrect": null,
+            "order": 2,
+            "isBlank": null,
+            "questionId": "users-101-quiz-12-question-5",
+            "imageUrl": null
+          },
+          {
+            "id": "users-101-quiz-12-question-5-item-3",
+            "text": "Bubble Sort",
+            "match": null,
+            "isCorrect": null,
+            "order": 3,
+            "isBlank": null,
+            "questionId": "users-101-quiz-12-question-5",
+            "imageUrl": null
+          },
+          {
+            "id": "users-101-quiz-12-question-5-item-4",
+            "text": "Insertion Sort",
+            "match": null,
+            "isCorrect": null,
+            "order": 4,
+            "isBlank": null,
+            "questionId": "users-101-quiz-12-question-5",
+            "imageUrl": null
+          }
+        ]
+      },
+      {
+        "id": "users-101-quiz-12-question-6",
+        "type": "ORDER",
+        "question": "Arrange these computer hardware components in order of the data flow.",
+        "correctAnswer": null,
+        "quizId": "users-101-quiz-12",
+        "questionOrder": 5,
+        "timeLimit": 60000,
+        "points": 14,
+        "imageUrl": "/assets/images/categories/ORDER.jpg",
+        "items": [
+          {
+            "id": "users-101-quiz-12-question-6-item-1",
+            "text": "CPU",
+            "match": null,
+            "isCorrect": null,
+            "order": 1,
+            "isBlank": null,
+            "questionId": "users-101-quiz-12-question-6",
+            "imageUrl": null
+          },
+          {
+            "id": "users-101-quiz-12-question-6-item-2",
+            "text": "Memory",
+            "match": null,
+            "isCorrect": null,
+            "order": 2,
+            "isBlank": null,
+            "questionId": "users-101-quiz-12-question-6",
+            "imageUrl": null
+          },
+          {
+            "id": "users-101-quiz-12-question-6-item-3",
+            "text": "Storage",
+            "match": null,
+            "isCorrect": null,
+            "order": 3,
+            "isBlank": null,
+            "questionId": "users-101-quiz-12-question-6",
+            "imageUrl": null
+          },
+          {
+            "id": "users-101-quiz-12-question-6-item-4",
+            "text": "Input Devices",
+            "match": null,
+            "isCorrect": null,
+            "order": 4,
+            "isBlank": null,
+            "questionId": "users-101-quiz-12-question-6",
+            "imageUrl": null
+          }
+        ]
+      },
+      {
+        "id": "users-101-quiz-12-question-7",
+        "type": "SHORT_ANSWER",
+        "question": "What does CPU stand for?",
+        "correctAnswer": "Central Processing Unit",
+        "quizId": "users-101-quiz-12",
+        "questionOrder": 6,
+        "timeLimit": 15000,
+        "points": 10,
+        "imageUrl": "/assets/images/categories/SHORT_ANSWER.jpg",
+        "items": []
+      },
+      {
+        "id": "users-101-quiz-12-question-8",
+        "type": "SHORT_ANSWER",
+        "question": "What programming language is commonly used for web development?",
+        "correctAnswer": "JavaScript",
+        "quizId": "users-101-quiz-12",
+        "questionOrder": 7,
+        "timeLimit": 10000,
+        "points": 10,
+        "imageUrl": "/assets/images/categories/SHORT_ANSWER.jpg",
+        "items": []
+      }
+    ],
+    "ratings": []
+  }
+}

@@ -3,16 +3,21 @@ import EditorProvider from "@/components/Editor/EditorProvider";
 import ErrorPage from "@/components/Layout/ErrorPage";
 import { getEditorQuiz } from "@/lib/actions/editor";
 import { getCurrentUser } from "@/lib/auth";
-import { intQuiz } from "@/lib/utils";
-import { notFound, redirect } from "next/navigation";
-import React from "react";
-
+import { redirect } from "next/navigation";
+import fakeEditorQuiz from "@/fake-data/editor-quiz.json";
+import { EditorQuiz } from "@/types";
 export default async function Page({
   params: { quizId },
 }: {
   params: { quizId: string };
 }) {
   const session = await getCurrentUser();
+
+  if (process.env.NEXT_PUBLIC_USE_FAKE_DATA === "true") {
+    return (
+      <EditorProvider initialQuiz={fakeEditorQuiz as unknown as EditorQuiz} />
+    );
+  }
 
   if (!session) {
     return redirect("/login");
