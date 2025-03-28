@@ -45,14 +45,17 @@ export default async function Page(props: {
     isBookmarked,
   });
 
-  if (!success || !quizzes) {
+  if (
+    (!success || !quizzes) &&
+    process.env.NEXT_PUBLIC_USE_FAKE_DATA !== "true"
+  ) {
     return <ErrorPage message={message} />;
   }
 
   if (process.env.NEXT_PUBLIC_USE_FAKE_DATA === "true") {
     searchQuizzes = fakeSearchQuizzes as unknown as SearchQuiz[];
   } else {
-    searchQuizzes = quizzes;
+    searchQuizzes = quizzes ? quizzes : [];
   }
 
   return (
@@ -72,7 +75,7 @@ export default async function Page(props: {
         </div>
       </div>
       <div className="w-full h-full">
-        {quizzes.length > 0 ? (
+        {quizzes && quizzes.length > 0 ? (
           <QuizzesPanelsContainer
             quizzes={searchQuizzes}
             query={query}
