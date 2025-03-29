@@ -36,7 +36,7 @@ export default function Cards() {
             <p className="justify-self-start text-xs sm:text-sm">
               Play Exciting Quizzes Powered by AI!
             </p>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 h-full">
               <Button className="self-start mt-auto rounded-xl" size="sm">
                 Play with AI{" "}
               </Button>

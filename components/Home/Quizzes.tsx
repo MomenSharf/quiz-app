@@ -7,7 +7,7 @@ import QuizzesCardsScrollerSkeleton from "../Quiz/QuizzesCardsScrollerSkeleton";
 import fakeQuizzesData from "@/fake-data/home-page-quizzes.json"; // Import JSON file
 
 export default function Quizzes({ args }: { args: HomeQuizzesArgs[] }) {
-  type gg =
+  type HomeQuizzesState =
     | (HomeQuizzesArgs & {
         quizzes: SearchQuiz[] | null;
         order: number;
@@ -15,7 +15,7 @@ export default function Quizzes({ args }: { args: HomeQuizzesArgs[] }) {
       })
     | null;
 
-  const [quizzes, setQuizzes] = useState<gg[]>(() => {
+  const [quizzes, setQuizzes] = useState<HomeQuizzesState[]>(() => {
     return args.map((args, i) => {
       return {
         ...args,
@@ -38,7 +38,7 @@ export default function Quizzes({ args }: { args: HomeQuizzesArgs[] }) {
       );
 
       setQuizzes((prev) => {
-        const ll = prev.map((quiz) => {
+        return prev.map((quiz) => {
           if (!quiz) return null;
           if (quiz.order === order && success && searchQuizzes) {
             return {
@@ -49,15 +49,12 @@ export default function Quizzes({ args }: { args: HomeQuizzesArgs[] }) {
           }
           return quiz;
         });
-
-        return ll;
       });
       if (order < quizzes.length) setOrder((prev) => prev + 1);
     };
-    if (order + 1 === quizzes.length) console.log(quizzes);
 
-    if (process.env.NEXT_PUBLIC_USE_FAKE_DATA === "true") {      
-      setQuizzes(fakeQuizzesData as gg[]);
+    if (process.env.NEXT_PUBLIC_USE_FAKE_DATA === "true") {
+      setQuizzes(fakeQuizzesData as HomeQuizzesState[]);
     } else {
       fetchQuizzes();
     }

@@ -10,7 +10,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Trash2 } from "lucide-react";
-import { HTMLProps, useState } from "react";
+import { HTMLProps, useState, useTransition } from "react";
 import { useLibraryContext } from "../Context";
 import { deleteFolder } from "@/lib/actions/library";
 import { toast } from "@/components/ui/use-toast";
@@ -30,7 +30,24 @@ export default function DeleteFolderButton({
   open: boolean;
   setOpen: (e: boolean) => void;
 }) {
-  const [loading, setLoading] = useState(false);
+  const [isPending, startTransition] = useTransition();
+
+  const deleteF = async () => {
+    const { success, message } = await deleteFolder({
+      folderId,
+      pathname: "library",
+    });
+
+    if (success) {
+      toast({ description: "folder deleted successfully" });
+    } else {
+      toast({
+        description: message,
+        title: "error",
+        variant: "destructive",
+      });
+    }
+  };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -45,31 +62,15 @@ export default function DeleteFolderButton({
           </DialogClose>
           <Button
             variant="destructive"
-            disabled={loading}
-            onClick={async () => {
-              setLoading(true);
-
-              const { success, message } = await deleteFolder({
-                folderId,
-                pathname: "library",
+            disabled={isPending}
+            onClick={() => {
+              startTransition(() => {
+                deleteF();
               });
-
-              if (success) {
-                toast({ description: "folder deleted successfully" });
-              } else {
-                toast({
-                  description: message,
-                  title: "error",
-                  variant: "destructive",
-                });
-              }
-
-              setLoading(false);
-              setLoading(true);
             }}
             className="flex gap-1 items-center"
           >
-            {loading ? <Loader /> : <Trash2 className="w-4 h-4" />}
+            {isPending ? <Loader /> : <Trash2 className="w-4 h-4" />}
             Delete
           </Button>
         </div>

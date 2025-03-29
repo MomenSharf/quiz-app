@@ -5,21 +5,25 @@ import { useToast } from "@/components/ui/use-toast";
 import { cn } from "@/lib/utils";
 import { LogOut } from "lucide-react";
 import { signOut } from "next-auth/react";
-import * as React from "react";
 import { Icons } from "../icons";
+import Loader from "../Layout/Loader";
+import { useTransition } from "react";
 
 type SignOutProps = ButtonProps & {
   text?: string;
   iconClassName?: string;
 };
 
-export default function SignOut({ text, iconClassName, ...props }: SignOutProps) {
+export default function SignOut({
+  text,
+  iconClassName,
+  className,
+  ...props
+}: SignOutProps) {
   const { toast } = useToast();
-  const [isLoading, setIsLoading] = React.useState<boolean>(false);
+  const [isPending, startTransition] = useTransition();
 
   const loginWithGoogle = async () => {
-    setIsLoading(true);
-
     try {
       await signOut();
     } catch (error) {
@@ -29,18 +33,24 @@ export default function SignOut({ text, iconClassName, ...props }: SignOutProps)
         variant: "destructive",
       });
     } finally {
-      setIsLoading(false);
     }
   };
 
   return (
-    <Button disabled={isLoading} onClick={loginWithGoogle} {...props}>
-      {isLoading ? (
-        <Icons.Loader className={cn("animate-spin mr-1 w-4 h-4 stroke-primary-foreground", iconClassName)} />
+    <Button
+      disabled={isPending}
+      onClick={() => {
+        startTransition(() => {
+          loginWithGoogle();
+        });
+      }}
+      className={cn("gap-1", className)}
+      {...props}
+    >
+      {isPending ? (
+        <Loader className={cn("text-destructive", iconClassName)} />
       ) : (
-        <LogOut
-          className={cn("mr-2 h-4 w-4 text-destructive", iconClassName)}
-        />
+        <LogOut className={cn("h-4 w-4 text-destructive", iconClassName)} />
       )}
       {text ? text : "Sign out"}
     </Button>

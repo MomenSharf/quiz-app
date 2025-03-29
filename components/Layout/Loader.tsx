@@ -1,9 +1,16 @@
-import React from 'react'
-import { Icons } from '../icons'
-import { cn } from '@/lib/utils'
+import React from "react";
+import { Icons } from "../icons";
+import { cn } from "@/lib/utils";
+import { LoaderCircle, LucideProps } from "lucide-react";
 
-export default function Loader({className}: {className?: string}) {
+export default function Loader({
+  className,
+  strokeWidth
+}: LucideProps) {
   return (
-    <Icons.Loader  className={cn("w-4 h-4 animate-spin stroke-primary-foreground", className)} />
-  )
+    <LoaderCircle
+      className={cn("w-4 h-4 animate-spin", className)}
+      strokeWidth={strokeWidth}
+    />
+  );
 }

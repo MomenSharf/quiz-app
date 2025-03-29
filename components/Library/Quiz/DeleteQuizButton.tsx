@@ -10,7 +10,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Trash2 } from "lucide-react";
-import { HTMLProps, useState } from "react";
+import { HTMLProps, useState, useTransition } from "react";
 import { useLibraryContext } from "../Context";
 import { deleteQuizzes } from "@/lib/actions/library";
 import { toast } from "@/components/ui/use-toast";
@@ -30,7 +30,8 @@ export default function DeleteQuizButton({
   open: boolean;
   setOpen: (e: boolean) => void;
 }) {
-  const [loading, setLoading] = useState(false);
+  const [isPending, startTransition] = useTransition();
+
   const { dispatch, quizzes } = useLibraryContext();
   const title =
     ids.length === 1
@@ -40,6 +41,29 @@ export default function DeleteQuizButton({
           .filter((quiz) => ids.includes(quiz.id))
           .map((quiz) => quiz.title)
       : "";
+
+  const deleteQuiz = async () => {
+    const { success, message } = await deleteQuizzes({
+      quizzesIds: ids,
+      pathname: "libraty",
+    });
+
+    if (success) {
+      toast({
+        description: `${
+          ids.length === 1 ? "Quiz" : "Quizzes"
+        } deleted successfully`,
+      });
+    } else {
+      toast({
+        description: message,
+        title: "error",
+        variant: "destructive",
+      });
+    }
+    setOpen(false);
+    dispatch({ type: "SET_SELECTED_QUIZZES_IDS", payload: [] });
+  };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -78,34 +102,15 @@ export default function DeleteQuizButton({
           </DialogClose>
           <Button
             variant="destructive"
-            disabled={loading}
-            onClick={async () => {
-              setLoading(true);
-              const { success, message } = await deleteQuizzes({
-                quizzesIds: ids,
-                pathname: "libraty",
+            disabled={isPending}
+            onClick={() => {
+              startTransition(() => {
+                deleteQuiz();
               });
-
-              if (success) {
-                toast({
-                  description: `${
-                    ids.length === 1 ? "Quiz" : "Quizzes"
-                  } deleted successfully`,
-                });
-              } else {
-                toast({
-                  description: message,
-                  title: "error",
-                  variant: "destructive",
-                });
-              }
-              setOpen(false);
-              setLoading(false);
-              dispatch({ type: "SET_SELECTED_QUIZZES_IDS", payload: [] });
             }}
             className="flex gap-1 items-center"
           >
-            {loading ? <Loader /> : <Trash2 className="w-4 h-4" />}
+            {isPending ? <Loader /> : <Trash2 className="w-4 h-4" />}
             Delete
           </Button>
         </div>

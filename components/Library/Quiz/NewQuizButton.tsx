@@ -5,7 +5,7 @@ import { toast } from "@/components/ui/use-toast";
 import { newQuiz } from "@/lib/actions/quiz";
 import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
-import { useState, useTransition } from "react";
+import { useTransition } from "react";
 
 export default function NewQuizButton({
   folderId,

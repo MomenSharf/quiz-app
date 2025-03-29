@@ -3,7 +3,7 @@ import { GiphyGif, ImageManagerTabsType } from "@/types";
 import { useInView } from "framer-motion";
 import { Search } from "lucide-react";
 import Image from "next/image";
-import { Dispatch, SetStateAction, useCallback, useEffect, useRef, useState } from "react";
+import { Dispatch, SetStateAction, useCallback, useEffect, useRef, useState, useTransition } from "react";
 import { Icons } from "../icons";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
@@ -29,6 +29,8 @@ export default function GiphyGIFS({
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const [loading, setLoading] = useState(false);
+    const [isPending, startTransition] = useTransition();
+  
 
   const searcInputRef = useRef<HTMLInputElement>(null);
   const ref = useRef(null);

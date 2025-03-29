@@ -34,7 +34,6 @@ export default async function Page({
 
   const isCurrentUser = quizDetails.user.id === session?.user.id;
 
-  if (process.env.NEXT_PUBLIC_USE_FAKE_DATA === "true")
     return (
       <QuizDetails
         quiz={quizDetails}

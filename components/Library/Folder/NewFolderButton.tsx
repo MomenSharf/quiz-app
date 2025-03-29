@@ -27,6 +27,8 @@ import {
 } from "@/components/ui/form";
 import { toast } from "@/components/ui/use-toast";
 import { newFolder } from "@/lib/actions/folder";
+import Loader from "@/components/Layout/Loader";
+import { Plus } from "lucide-react";
 
 type NewFolderButtonProps = ButtonProps & {
   parentId?: string;
@@ -38,8 +40,6 @@ export default function NewFolderButton({
   ...props
 }: NewFolderButtonProps) {
   const [open, setOpen] = useState(false);
-
-  
 
   const form = useForm<folderSchemaType>({
     resolver: zodResolver(folderSchema),
@@ -75,7 +75,7 @@ export default function NewFolderButton({
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px] rounded-xl">
         <DialogHeader>
-        <DialogTitle>Create New Folder</DialogTitle>
+          <DialogTitle>Create New Folder</DialogTitle>
           <DialogDescription>
             Enter a title for the new folder
           </DialogDescription>
@@ -115,9 +115,7 @@ export default function NewFolderButton({
                 className="flex gap-1"
                 disabled={form.formState.isSubmitting}
               >
-                {form.formState.isSubmitting && (
-                  <Icons.Loader className="w-4 h-4 animate-spin stroke-primary-foreground" />
-                )}
+                {form.formState.isSubmitting ? <Loader /> : <Plus className="w-4 h-4"/>}
                 Create
               </Button>
             </DialogFooter>

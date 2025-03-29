@@ -6,19 +6,17 @@ import {
   DialogDescription,
   DialogFooter,
   DialogHeader,
-  DialogTitle,
-  DialogTrigger,
+  DialogTitle
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/use-toast";
 import { cn } from "@/lib/utils";
 import { folderSchema, folderSchemaType } from "@/lib/validations/quizSchemas";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Plus } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { HTMLProps, ReactNode, useRef, useState } from "react";
+import { Edit2 } from "lucide-react";
 import { useForm } from "react-hook-form";
 
+import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -26,12 +24,9 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
-import { Icons } from "@/components/icons";
-import { Button, ButtonProps, buttonVariants } from "@/components/ui/button";
-import { useLibraryContext } from "../Context";
-import Loader from "@/components/Layout/Loader";
-import { renameFolder } from "@/lib/actions/library";
 import { MAX_FOLDER_TITLE_LENGTH } from "@/constants";
+import { renameFolder } from "@/lib/actions/library";
+import Loader from "@/components/Layout/Loader";
 
 export default function RenameFolder({
   folderId,
@@ -117,8 +112,10 @@ export default function RenameFolder({
                 className="flex gap-2"
                 disabled={form.formState.isSubmitting}
               >
-                {form.formState.isSubmitting && (
-                  <Icons.Loader className="w-4 h-5 stroke-primary-foreground animate-spin" />
+                {form.formState.isSubmitting ? (
+                  <Loader />
+                ) : (
+                  <Edit2 className="w-4 h-4" />
                 )}
                 Rename
               </Button>

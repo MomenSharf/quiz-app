@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
+import { Sheet, SheetContent } from "@/components/ui/sheet";
+import { useUploadThing } from "@/lib/uploadthing";
 import "cropperjs/dist/cropper.css";
 import {
   FlipHorizontal2,
@@ -13,9 +14,7 @@ import {
 } from "lucide-react";
 import { createRef, useEffect, useRef, useState } from "react";
 import Cropper, { ReactCropperElement } from "react-cropper";
-import { useUploadThing } from "@/lib/uploadthing";
 import { toast } from "sonner";
-import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { ClientUploadedFileData } from "uploadthing/types";
 
 export default function ImageEditor({
@@ -103,22 +102,17 @@ export default function ImageEditor({
     cropper.reset(); // Reset the cropper to its initial state
   };
 
-  const imageDropQuality = async () => {
-    if (files) {
-      if (Array.isArray(files) && files[0]) {
-        if (files[0].size > 1000000) {
-          return 0.3;
-        } else if (files[0].size > 500000) {
-          return 0.5;
-        } else {
-          return 0.7;
-        }
-      } else if (typeof files === "string") {
-        return 0.7; // Default quality for URLs
-      }
-    }
-    return 0.3; // Default quality if no files
-  };
+  const imageDropQuality: number = files
+    ? Array.isArray(files) && files[0]
+      ? files[0].size > 1_000_000
+        ? 0.3
+        : files[0].size > 500_000
+        ? 0.5
+        : 0.7
+      : typeof files === "string"
+      ? 0.7
+      : 0.3
+    : 0.3;
 
   const { startUpload } = useUploadThing("imageUploader");
 

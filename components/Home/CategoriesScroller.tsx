@@ -23,7 +23,7 @@ export default function CategoriesScroller() {
               <Link
                 className={cn(
                   buttonVariants({ variant: "outline" }),
-                  "rounded-xl min-w-20 min-h-20  sm:min-w-20 sm:min-h-20 flex flex-col gap-1 hover:border-primary hover:scale-[1.05] transition-all duration-200"
+                  "rounded-xl min-w-20 min-h-20 sm:min-w-20 sm:min-h-20 flex flex-col gap-1 hover:border-primary hover:scale-[1.05] transition-all duration-200"
                 )}
                 href={`/search?category=${value}`}
               >

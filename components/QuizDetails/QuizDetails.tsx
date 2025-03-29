@@ -30,17 +30,19 @@ export default function QuizDetails({
       )}
       <Questions questions={quiz.questions} showAnswers={showAnswers} />
       {quiz.categories[0] && (
-        <Quizzes
-          args={[
-            {
-              route: "",
-              title: "Simmelre Quizzes",
-              args: {
-                category: quiz.categories[0] as Category,
+        <div className="overflow-hidden max-w-full">
+          <Quizzes
+            args={[
+              {
+                route: "",
+                title: "Simmelre Quizzes",
+                args: {
+                  category: quiz.categories[0] as Category,
+                },
               },
-            },
-          ]}
-        />
+            ]}
+          />
+        </div>
       )}
     </div>
   );

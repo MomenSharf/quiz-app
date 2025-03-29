@@ -16,9 +16,10 @@ import { copyQuiz } from "@/lib/actions/quiz";
 import { cn, shareLink } from "@/lib/utils";
 import { DashboardQuiz } from "@/types";
 import { redirect, useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import DeleteQuizButton from "./DeleteQuizButton";
 import RenameQuiz from "./RenameQuiz";
+import Loader from "@/components/Layout/Loader";
 
 type QuizMenuProps = ButtonProps & {
   quiz: DashboardQuiz;
@@ -27,10 +28,29 @@ type QuizMenuProps = ButtonProps & {
 export default function QuizMenu({ children, quiz, ...props }: QuizMenuProps) {
   const [renameDialogOpen, setRenameDialogOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [isCopingQuiz, setCopingQuiz] = useState(false);
+  const [isPending, startTransition] = useTransition();
+
   const [open, setOpen] = useState(false);
 
   const router = useRouter();
+
+  const copyQ = async () => {
+    const { success, message } = await copyQuiz({
+      quizId: quiz.id,
+      pathname: "/library",
+    });
+
+    if (success) {
+      toast({ description: message });
+    } else {
+      toast({
+        description: message,
+        title: "error",
+        variant: "destructive",
+      });
+    }
+    setOpen(false);
+  };
 
   return (
     <>
@@ -92,29 +112,15 @@ export default function QuizMenu({ children, quiz, ...props }: QuizMenuProps) {
           <DropdownMenuGroup>
             <DropdownMenuItem
               className=" flex gap-2"
-              onSelect={async (e) => {
-                setCopingQuiz(true);
-                const { success, message, newQuiz } = await copyQuiz({
-                  quizId: quiz.id,
-                  pathname: "/library",
+              onSelect={() => {
+                startTransition(() => {
+                  copyQ();
                 });
-
-                if (success ) {
-                  toast({ description: message });
-                } else {
-                  toast({
-                    description: message,
-                    title: "error",
-                    variant: "destructive",
-                  });
-                }
-                setCopingQuiz(false);
-                setOpen(false);
               }}
-              disabled={isCopingQuiz}
+              disabled={isPending}
             >
-              {isCopingQuiz ? (
-                <Icons.Loader className="w-4 h-4 animate-spin stroke-gray-dark" />
+              {isPending ? (
+                <Loader className="w-5 h-5"/>
               ) : (
                 <Copy className="w-5 h-5" />
               )}

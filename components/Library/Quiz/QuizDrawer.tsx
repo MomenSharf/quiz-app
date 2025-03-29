@@ -22,13 +22,14 @@ import {
 import { shareLink } from "@/lib/utils";
 import { DashboardQuiz } from "@/types";
 import { redirect, useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import { useLibraryContext } from "../Context";
 import DeleteQuizButton from "./DeleteQuizButton";
 import RenameQuiz from "./RenameQuiz";
 import { toast } from "@/components/ui/use-toast";
 import { duplicateQuiz } from "@/lib/actions/library";
 import { copyQuiz } from "@/lib/actions/quiz";
+import Loader from "@/components/Layout/Loader";
 
 type QuizMenuProps = ButtonProps & {
   quiz: DashboardQuiz;
@@ -41,10 +42,29 @@ export default function QuizDrawer({
 }: QuizMenuProps) {
   const [renameDialogOpen, setRenameDialogOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [isCopingQuiz, setCopingQuiz] = useState(false);
+  const [isPending, startTransition] = useTransition();
+  
   const [open, setOpen] = useState(false);
 
   const router = useRouter();
+
+  const copyQ = async () => {
+    const { success, message } = await copyQuiz({
+      quizId: quiz.id,
+      pathname: "/library",
+    });
+
+    if (success) {
+      toast({ description: message });
+    } else {
+      toast({
+        description: message,
+        title: "error",
+        variant: "destructive",
+      });
+    }
+    setOpen(false);
+  };
 
   return (
     <>
@@ -62,15 +82,8 @@ export default function QuizDrawer({
           </div>
           <div className="w-full">
             <DrawerHeader>
-              <DrawerTitle className="truncate">
-                {quiz.title} Lorem ipsum dolor sit amet consectetur adipisicing
-                elit. Consequuntur perferendis veritatis unde aperiam
-                voluptatibus, at ducimus voluptate dignissimos officiis?
-                Doloremque fugiat beatae error in vero. Dolore dignissimos sint
-                accusamus! Dolor.
-              </DrawerTitle>
+              <DrawerTitle className="truncate">{quiz.title}</DrawerTitle>
             </DrawerHeader>
-
             <div className="flex flex-col w-full px-1">
               <Button
                 variant="ghost"
@@ -117,29 +130,15 @@ export default function QuizDrawer({
               <Button
                 variant="ghost"
                 className="flex gap-2 px-3 py-4 w-full justify-start text-lg"
-                onClick={async (e) => {
-                  setCopingQuiz(true);
-                  const { success, message, newQuiz } = await copyQuiz({
-                    quizId: quiz.id,
-                    pathname: "/library",
+                onClick={() => {
+                  startTransition(() => {
+                    copyQ();
                   });
-
-                  if (success) {
-                    toast({ description: message });
-                  } else {
-                    toast({
-                      description: message,
-                      title: "error",
-                      variant: "destructive",
-                    });
-                  }
-                  setCopingQuiz(false);
-                  setOpen(false);
                 }}
-                disabled={isCopingQuiz}
+                disabled={isPending}
               >
-                {isCopingQuiz ? (
-                  <Icons.Loader className="w-6 h-6 animate-spin stroke-gray-dark" />
+                {isPending ? (
+                  <Loader className="w-6 h-6" />
                 ) : (
                   <Copy className="w-6 h-6" />
                 )}
