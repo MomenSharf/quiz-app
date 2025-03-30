@@ -1,7 +1,6 @@
 # app
 
 - solve catch data when user nevigate between pages
-- make favicon for webside
 
 ## home
 

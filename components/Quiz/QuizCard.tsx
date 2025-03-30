@@ -16,7 +16,7 @@ import You from "./You";
 import { MotionDiv } from "@/hooks/useMotion";
 import { Skeleton } from "../ui/skeleton";
 
-export default function QuizzesCard({
+export default function QuizCard({
   quiz,
   index,
 }: {
@@ -28,11 +28,11 @@ export default function QuizzesCard({
     0
   );
 
-  const { averageRating, totalRatings } = calculateQuizRatings(quiz.ratings);
+  const { averageRating } = calculateQuizRatings(quiz.ratings);
   return (
     <MotionDiv
-      initial={{ opacity: 0, x: 50 }}
-      whileInView={{ opacity: 1, x: 0 }}
+      initial={{ opacity: 0, }}
+      whileInView={{ opacity: 1 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
       viewport={{ once: true }} // Ensures it animates only once
       className="min-w-44 w-44 sm:min-w-52 sm:w-52 bg-card rounded-xl flex flex-col"

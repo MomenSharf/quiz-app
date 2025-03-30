@@ -17,7 +17,7 @@ export default async function Page({
   const session = await getCurrentUser();
 
   if (!session) {
-    return redirect("/login");
+    return redirect('/login?callbackUrl=/library');
   }
 
   const sortBy = isValidLibrarySortOption(searchParams.sortBy)
@@ -50,7 +50,6 @@ export default async function Page({
     return <ErrorPage message={message} />;
   }
 
-  revalidatePath("/library");
 
   return (
     <div className="flex w-full h-full">

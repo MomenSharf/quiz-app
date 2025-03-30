@@ -5,7 +5,7 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
-  directUrl =  env("DIRECT_URL")
+  directUrl =  env("DATABASE_URL_UNPOOLED")
 }
 
 model User {
@@ -15,6 +15,7 @@ model User {
   emailVerified DateTime?
   username      String?   @unique
   imageUrl      String?
+  image String?
   avatarColor   String? // hex color
   createdAt     DateTime        @default(now())
   updatedAt     DateTime        @updatedAt

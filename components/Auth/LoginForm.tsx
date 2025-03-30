@@ -25,7 +25,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { LoginSchema } from "@/lib/validations/authSchemas";
 
-export default function LoginForm() {
+export default function LoginForm({ callbackUrl }: { callbackUrl: string }) {
   const [showPassword, setShowPassword] = useState(false);
 
   const router = useRouter();
@@ -49,13 +49,12 @@ export default function LoginForm() {
           "Login successful! Welcome back! We're glad to see you again—let's dive in",
       });
 
-      router.push("/");
+      router.push(callbackUrl);
     }
     if (res?.error) {
-      
       toast({
         title: "Error",
-        description: res.error ,
+        description: res.error,
         variant: "destructive",
       });
     }
@@ -67,7 +66,7 @@ export default function LoginForm() {
   return (
     <CardWrapper
       title="Login"
-      headerHref="/register"
+      headerHref={`/register?callbackUrl=${callbackUrl}`}
       headerLabel="Don't have an account? "
       headerHrefLabel="register"
       isSignWithGoogleOption

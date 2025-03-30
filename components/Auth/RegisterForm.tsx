@@ -23,7 +23,7 @@ import { toast } from "../ui/use-toast";
 import CardWrapper from "./CardWrapper";
 import { RegisterSchema } from "@/lib/validations/authSchemas";
 
-export default function RegisterForm() {
+export default function RegisterForm({ callbackUrl }: { callbackUrl: string }) {
   const [showPassword, setShowPassword] = useState(false);
 
   const router = useRouter();
@@ -44,7 +44,7 @@ export default function RegisterForm() {
       if (success) {
         toast({ description: message });
 
-        router.push("/login");
+        router.push(`/login?callbackUrl=${callbackUrl}`);
       } else {
         toast({
           title: "Error",
@@ -67,7 +67,7 @@ export default function RegisterForm() {
   return (
     <CardWrapper
       title="Register"
-      headerHref="/login"
+      headerHref={`/login?callbackUrl=${callbackUrl}`}
       headerLabel="Already have an account"
       headerHrefLabel="Login"
       isSignWithGoogleOption

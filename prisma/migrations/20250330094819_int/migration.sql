@@ -12,6 +12,7 @@ CREATE TABLE "User" (
     "emailVerified" TIMESTAMP(3),
     "username" TEXT,
     "imageUrl" TEXT,
+    "image" TEXT,
     "avatarColor" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,

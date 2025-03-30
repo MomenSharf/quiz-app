@@ -2,7 +2,7 @@ import { signIn } from "next-auth/react";
 import Logo from "../Layout/Logo";
 import { Button } from "../ui/button";
 import { toast } from "../ui/use-toast";
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import Link from "next/link";
 import { Icons } from "../icons";
 
@@ -22,21 +22,19 @@ export default function CardWrapper({
   headerHrefLabel,
   isSignWithGoogleOption = false,
 }: CardWrapperProps) {
-  const [isloginWithGoogle, setloginWithGoogle] = useState(false);
+  const [isPendiug, startTransition] = useTransition();
 
   const loginWithGoogle = async () => {
-    setloginWithGoogle(true);
-
     try {
-      signIn("google");
+      await signIn("google");
     } catch (error) {
+      console.log(error);
+      
       toast({
         title: "Error",
         description: "There was an error logging in with Google",
         variant: "destructive",
       });
-    } finally {
-      setloginWithGoogle(false);
     }
   };
   return (
@@ -48,15 +46,17 @@ export default function CardWrapper({
       <div className="bg-card p-4 flex flex-col justify-center rounded-xl">
         <h1 className="font-bold text-2xl text-center">{title}</h1>
 
-        {headerLabel && headerHrefLabel && headerHref && <p className="font-semibold text-xs text-center flex gap-1 justify-center">
-          {headerLabel}
-          <Link
-            href={headerHref}
-            className="font-bold text-primary hover:underline"
-          >
-            {headerHrefLabel}
-          </Link>
-        </p>}
+        {headerLabel && headerHrefLabel && headerHref && (
+          <p className="font-semibold text-xs text-center flex gap-1 justify-center">
+            {headerLabel}
+            <Link
+              href={headerHref}
+              className="font-bold text-primary hover:underline"
+            >
+              {headerHrefLabel}
+            </Link>
+          </p>
+        )}
 
         {children}
         {isSignWithGoogleOption && (
@@ -71,9 +71,14 @@ export default function CardWrapper({
                 size="icon"
                 variant="outline"
                 className="px-4 py-8 w-full gap-2"
-                onClick={loginWithGoogle}
+                disabled={isPendiug}
+                onClick={() => {
+                  startTransition(() => {
+                    loginWithGoogle();
+                  });
+                }}
               >
-                {isloginWithGoogle ? (
+                {isPendiug ? (
                   <Icons.Loader className="w-7 h-7 animate-spin stroke-muted-foreground" />
                 ) : (
                   <Icons.google className="w-8 h-8" />

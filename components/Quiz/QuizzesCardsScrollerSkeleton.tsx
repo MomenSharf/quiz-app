@@ -1,13 +1,7 @@
-import React from "react";
-import UseScrollerContainer from "../Shared/UseScrollerContainer";
-import { SearchQuiz } from "@/types";
-import QuizzesCard from "./QuizCard";
-import Link from "next/link";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
+import UseScrollerContainer from "../Shared/UseScrollerContainer";
 import { buttonVariants } from "../ui/button";
-import { MotionDiv } from "@/hooks/useMotion";
-import { Skeleton } from "../ui/skeleton";
-import { motion } from "framer-motion";
 import QuizzesCardSkeleton from "./QuizCardSkeleton";
 
 export default function QuizzesCardsScrollerSkeleton({

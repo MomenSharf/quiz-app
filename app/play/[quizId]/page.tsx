@@ -10,7 +10,7 @@ import { JsonValue } from "@prisma/client/runtime/library";
 import { notFound, redirect } from "next/navigation";
 
 import fakeQuizProgress from "@/fake-data/fake-quiz-progress.json";
-export default async function Page(props: {
+export default async function page(props: {
   params: { quizId: string };
   searchParams?: Promise<{
     mode?: string;
@@ -28,14 +28,14 @@ export default async function Page(props: {
       </div>
     );
   }
-
-  if (!session) {
-    return redirect("/login");
-  }
-
   const quizId = props.params.quizId;
   const searchParams = await props.searchParams;
   const mode = searchParams?.mode === "preview" ? "preview" : "play";
+
+  if (!session) {
+    return redirect(`/login?callbackUrl=/play/${quizId}?mode=${mode}`);
+  }
+
 
   if (mode === "preview") {
     const { success, quiz, message } = await getPreviewQuiz(quizId);

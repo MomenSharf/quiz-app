@@ -53,7 +53,7 @@ export default function SideBar({
             <SheetClose  asChild>
 
               <Link
-                href="/register"
+                  href="/register?callbackUrl=/"
                 className={cn(buttonVariants({ size: "sm" }), 'w-full')}
                 >
                 SIGN UP NEW

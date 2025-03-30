@@ -1,7 +1,7 @@
 import React from "react";
 import UseScrollerContainer from "../Shared/UseScrollerContainer";
 import { SearchQuiz } from "@/types";
-import QuizzesCard from "./QuizCard";
+import QuizCard from "./QuizCard";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "../ui/button";
@@ -32,7 +32,7 @@ export default function QuizzesCardsScroller({
       <UseScrollerContainer scrollBy={300}  className="flex gap-3 overflow-x-scroll">
         
         {quizzes.map((quiz, i) => (
-          <QuizzesCard key={quiz.id} quiz={quiz} index={i} />
+          <QuizCard key={quiz.id} quiz={quiz} index={i} />
         ))}
       </UseScrollerContainer>
     </div>

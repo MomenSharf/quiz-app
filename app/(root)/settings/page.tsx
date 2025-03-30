@@ -14,7 +14,7 @@ export default async function Page() {
   }
 
   if (!session) {
-    return redirect("/login");
+    return redirect('/login?callbackUrl=/settings');
   }
 
   const { success, user, message } = await getSettingsUser();

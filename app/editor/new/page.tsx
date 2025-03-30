@@ -8,7 +8,7 @@ export default async function page() {
   const session = await getCurrentUser();
 
   if (!session) {
-    return redirect("/login");
+    return redirect('/login?callbackUrl=/editor/new');
   }
 
   const {success, message, quiz} = await newQuiz({})

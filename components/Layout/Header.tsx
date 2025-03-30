@@ -20,9 +20,12 @@ export default async function Header() {
             user={session ? session.user : null}
             isLoggedIn={!!session?.user}
           />
-          <Link href="/" className="flex jc items-center">
+          <Link href="/" className="flex items-center">
             <Logo />
           </Link>
+          {process.env.NEXT_PUBLIC_USE_FAKE_DATA === "true" && (
+            <div className="flex items-center text-xs font-bold">FAKE_DATA_VERSION</div>
+          )}
         </div>
         <div className="flex gap-1 items-center">
           <Palette />
@@ -35,7 +38,7 @@ export default async function Header() {
             ) : (
               <>
                 <Link
-                  href="/login"
+                  href="/register?callbackUrl=/"
                   className={cn(
                     buttonVariants({ size: "sm" }),
                     "text-xs rounded-full px-5"

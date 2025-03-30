@@ -20,7 +20,8 @@ export default async function Page({
   }
 
   if (!session) {
-    return redirect("/login");
+    return redirect(`/login?callbackUrl=/editor/${quizId}`);
+
   }
 
   const { success, initialQuiz, message } = await getEditorQuiz({
