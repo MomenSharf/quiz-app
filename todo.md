@@ -4,6 +4,10 @@
 
 ## home
 
+## auth
+
+- facus in  email input in login and register pages
+
 ## /search
 
 ## library

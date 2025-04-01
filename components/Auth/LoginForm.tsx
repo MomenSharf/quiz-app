@@ -13,7 +13,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
 import { z } from "zod";
 import { Button } from "../ui/button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { register } from "@/lib/actions/auth/register";
 import { Icons } from "../icons";
 import { cn } from "@/lib/utils";
@@ -59,6 +59,10 @@ export default function LoginForm({ callbackUrl }: { callbackUrl: string }) {
       });
     }
   };
+
+  useEffect(() => {
+    form.setFocus('email')
+  }, [form])
 
   const togglePasswordVisibility = () => {
     setShowPassword((prevState) => !prevState);
