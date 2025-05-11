@@ -7,7 +7,7 @@ import { UserAvatar } from "../User/UserAvatar";
 import SearchInput from "./SearchInput";
 import Logo from "./Logo";
 import Palette from "../Theme/Palette";
-import SideBar from "./Sidebar";
+import MobileSidebar from "./MobileSidebar";
 
 export default async function Header() {
   const session = await getCurrentUser();
@@ -16,20 +16,21 @@ export default async function Header() {
     <header className="z-20 w-full px-2 py-1 flex bg-card shadow-sm">
       <div className=" w-full flex items-center justify-between  gap-1">
         <div className="flex gap-1">
-          <SideBar
+          <MobileSidebar
             user={session ? session.user : null}
             isLoggedIn={!!session?.user}
           />
-          <Link href="/" className="flex items-center">
+          {/* <Link href="/" className="flex items-center">
             <Logo />
-          </Link>
+          </Link> */}
           {process.env.NEXT_PUBLIC_USE_FAKE_DATA === "true" && (
             <div className="flex items-center text-xs font-bold">FAKE_DATA_VERSION</div>
           )}
         </div>
         <div className="flex gap-1 items-center">
-          <Palette />
           <SearchInput />
+          <Palette />
+
           <div className="hidden sm:block">
             {session?.user ? (
               <>
@@ -49,6 +50,7 @@ export default async function Header() {
               </>
             )}
           </div>
+          
         </div>
       </div>
     </header>

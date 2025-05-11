@@ -4,7 +4,7 @@ import { Prisma } from "@prisma/client";
 
 export type QuestionType = (typeof QUESTION_TYPES)[number];
 
-export type Category =
+export type Category = 
   | "SCIENCE"
   | "MATH"
   | "HISTORY"

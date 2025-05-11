@@ -7,7 +7,7 @@ import { isValidLibrarySortOption } from "@/lib/utils";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
-export const revalidate = 60
+export const dynamic = "force-dynamic"; 
 
 export default async function Page({
   searchParams,

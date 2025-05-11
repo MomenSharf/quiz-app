@@ -6,6 +6,9 @@ import { redirect } from "next/navigation";
 import React from "react";
 import fakeSettings from "@/fake-data/fake-settings.json";
 import { SettingsUser } from "@/types";
+
+export const dynamic = "force-dynamic";
+
 export default async function Page() {
   const session = await getCurrentUser();
 
@@ -14,7 +17,7 @@ export default async function Page() {
   }
 
   if (!session) {
-    return redirect('/login?callbackUrl=/settings');
+    return redirect("/login?callbackUrl=/settings");
   }
 
   const { success, user, message } = await getSettingsUser();

@@ -1,10 +1,11 @@
 import ErrorPage from "@/components/Layout/ErrorPage";
 import LibraryProvider from "@/components/Library/LibraryProvider";
 import { getFolderPath, getLibraryFolder } from "@/lib/actions/library";
-
 import { getCurrentUser } from "@/lib/auth";
 import { isValidLibrarySortOption } from "@/lib/utils";
 import { redirect } from "next/navigation";
+
+export const dynamic = "force-dynamic";
 
 export default async function Page({
   params: { folderId },

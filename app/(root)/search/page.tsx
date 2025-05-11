@@ -12,6 +12,8 @@ import { SearchQuiz } from "@/types";
 import Image from "next/image";
 import fakeSearchQuizzes from "@/fake-data/search-quizzes.json";
 
+export const dynamic = "force-dynamic"; 
+
 export default async function Page(props: {
   searchParams?: Promise<{
     query?: string;

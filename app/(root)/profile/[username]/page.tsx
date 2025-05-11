@@ -6,6 +6,8 @@ import { notFound, redirect } from "next/navigation";
 import fakeProfile from "@/fake-data/fake-profile.json";
 import { UserProfile } from "@/types";
 
+export const dynamic = "force-dynamic"; 
+
 export default async function Page({
   params: { username },
 }: {

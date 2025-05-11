@@ -12,7 +12,7 @@
 
 ## library
 
-## editor
+## editord
 
 ## image tabs
 

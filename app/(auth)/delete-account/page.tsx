@@ -1,6 +1,4 @@
 import DeleteAccount from "@/components/Auth/DeleteAccount";
-import ForgotPassword from "@/components/Auth/forgotPasswordForm";
-import NewPasswordForm from "@/components/Auth/NewPasswordForm";
 import { TokenHasExpired } from "@/lib/actions/auth/token-expires";
 import { getCurrentUser } from "@/lib/auth";
 import { redirect } from "next/navigation";

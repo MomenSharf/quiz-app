@@ -43,6 +43,11 @@ export default function SearchInput() {
   useEffect(() => {
     if (searchParams.has("query")) {
       setIsSearchOpen(true);
+    } else {
+      setIsSearchOpen(false);
+      if (searchInputRef && searchInputRef.current) {
+        searchInputRef.current.value = "";
+      }
     }
   }, [searchParams]);
 
@@ -78,7 +83,9 @@ export default function SearchInput() {
                 pathname !== "/search" &&
                 pathname !== "/bookmarks"
               ) {
-                push(`/search?query=${e.currentTarget?.value}`);
+                startTransition(() => {
+                  push(`/search?query=${e.currentTarget?.value}`);
+                });
               }
             }
           }}
@@ -95,7 +102,9 @@ export default function SearchInput() {
         onClick={() => {
           if (isSearchOpen && pathname !== "/search") {
             if (searchInputRef && searchInputRef.current?.value !== "") {
-              push(`/search?query=${searchInputRef.current?.value}`);
+              startTransition(() => {
+                push(`/search?query=${searchInputRef.current?.value}`);
+              });
             } else {
               setIsSearchOpen(false);
             }

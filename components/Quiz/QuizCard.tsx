@@ -31,38 +31,29 @@ export default function QuizCard({
   const { averageRating } = calculateQuizRatings(quiz.ratings);
   return (
     <MotionDiv
-      initial={{ opacity: 0, }}
+      initial={{ opacity: 0 }}
       whileInView={{ opacity: 1 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
       viewport={{ once: true }} // Ensures it animates only once
       className="min-w-44 w-44 sm:min-w-52 sm:w-52 bg-card rounded-xl flex flex-col"
     >
-      <div className="group relative flex flex-col w-full rounded-xl  rounded-bl-none rounded-br-none overflow-hidden">
-        <Image
-          src={quiz.imageUrl || "/assets/images/hero.webp"}
-          alt="question Image"
-          width={800} // Replace with your desired pixel width
-          height={600} // Replace with your desired pixel height
-          priority
-          style={{
-            aspectRatio: "4 / 3", // Maintains the 4:3 aspect ratio
-          }}
-          className="rounded-xl rounded-bl-none rounded-br-none z-[2]"
-          unoptimized
-        />
-        <Skeleton className="absolute h-[132px] sm:h-[156px] w-full" />
-        <div className="absolute opacity-0 group-hover:opacity-100 transition-opacity w-full h-full flex justify-center items-center bg-black/30">
-          <Link
-            href={`play/${quiz.id}`}
-            className={cn(
-              buttonVariants({ size: "lg" }),
-              "px-10 rounded-full hover:bg-primary hover:scale-[1.05] transition-transform text-lg border-2 border-white"
-            )}
-          >
-            Play
-          </Link>
+      <Link href={`quiz/${quiz.id}`}>
+        <div className="group relative flex flex-col w-full rounded-xl  rounded-bl-none rounded-br-none overflow-hidden">
+          <Image
+            src={quiz.imageUrl || "/assets/images/hero.webp"}
+            alt="question Image"
+            width={800} // Replace with your desired pixel width
+            height={600} // Replace with your desired pixel height
+            priority
+            style={{
+              aspectRatio: "4 / 3", // Maintains the 4:3 aspect ratio
+            }}
+            className="rounded-xl rounded-bl-none rounded-br-none z-[2]"
+            unoptimized
+          />
+          <Skeleton className="absolute h-[132px] sm:h-[156px] w-full" />
         </div>
-      </div>
+      </Link>
       <div className="p-2 pb-4 flex flex-col gap-2">
         <div className="flex items-center gap-1">
           <Link href={`/profile/${quiz.user.username}`}>

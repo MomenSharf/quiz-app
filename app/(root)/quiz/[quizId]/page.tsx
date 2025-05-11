@@ -1,10 +1,12 @@
 import ErrorPage from "@/components/Layout/ErrorPage";
 import QuizDetails from "@/components/QuizDetails/QuizDetails";
+import fakeQuizDetails from "@/fake-data/quiz-details.json";
 import { getQuizDetails } from "@/lib/actions/quizDetails";
 import { getCurrentUser } from "@/lib/auth";
-import { revalidatePath } from "next/cache";
-import fakeQuizDetails from "@/fake-data/quiz-details.json";
 import { QuizDetailsWithIsBookmark } from "@/types";
+
+export const dynamic = "force-dynamic";
+
 export default async function Page({
   params: { quizId },
   searchParams,
@@ -34,12 +36,12 @@ export default async function Page({
 
   const isCurrentUser = quizDetails.user.id === session?.user.id;
 
-    return (
-      <QuizDetails
-        quiz={quizDetails}
-        pathname="/quiz"
-        isCurrentUser={isCurrentUser}
-        showAnswers={showAnswers}
-      />
-    );
+  return (
+    <QuizDetails
+      quiz={quizDetails}
+      pathname="/quiz"
+      isCurrentUser={isCurrentUser}
+      showAnswers={showAnswers}
+    />
+  );
 }

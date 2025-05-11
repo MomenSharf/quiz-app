@@ -17,11 +17,10 @@ export default function QuizzesCardsScroller({
   route: string;
 }) {
   return (
-    <div
-      className="flex flex-col gap-1"
-    >
+    <div className="flex flex-col gap-1">
       <div className="flex justify-between gap-3">
-        <h2>{title}</h2>
+        <h2 className="font-bold text-lg">{title}</h2>
+
         <Link
           href={route}
           className={cn(buttonVariants({ size: "sm", variant: "link" }))}
@@ -29,8 +28,10 @@ export default function QuizzesCardsScroller({
           See more
         </Link>
       </div>
-      <UseScrollerContainer scrollBy={300}  className="flex gap-3 overflow-x-scroll">
-        
+      <UseScrollerContainer
+        scrollBy={300}
+        className="flex gap-3 overflow-x-scroll"
+      >
         {quizzes.map((quiz, i) => (
           <QuizCard key={quiz.id} quiz={quiz} index={i} />
         ))}

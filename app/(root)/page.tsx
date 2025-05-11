@@ -3,10 +3,10 @@ import CategoriesScroller from "@/components/Home/CategoriesScroller";
 import Quizzes from "@/components/Home/Quizzes";
 import { getHomeQuizzesArgs } from "@/lib/utils";
 
-export default async function Home() {
- 
+export const dynamic = "force-dynamic"; 
 
-  const args = getHomeQuizzesArgs()
+export default async function Home() {
+  const args = getHomeQuizzesArgs();
 
   return (
     <div className="flex flex-col">
@@ -14,7 +14,6 @@ export default async function Home() {
         <Cards />
         <CategoriesScroller />
         <Quizzes args={args} />
-        
       </div>
     </div>
   );
