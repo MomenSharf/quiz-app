@@ -41,7 +41,7 @@ export default function Settings() {
         name="description"
         render={({ field }) => (
           <FormItem className="space-y-1 flex w-full flex-col">
-            <FormLabel className="text-inherit">Descrption</FormLabel>
+            <FormLabel className="text-inherit text-lg">Descrption</FormLabel>
             <FormControl>
               <div className="bg-card rounded-tl-md rounded-bl-md">
                 <Textarea
@@ -62,7 +62,7 @@ export default function Settings() {
         )}
       />
       <div className="flex flex-col gap-1">
-        <h4>Thumbnail image</h4>
+        <h4 className="text-lg font-bold">Thumbnail image</h4>
         <>
           <ImageManagerTabs
             tabs={["upload", "stockPhotos", "giphyGIFS"]}

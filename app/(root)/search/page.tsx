@@ -12,7 +12,7 @@ import { SearchQuiz } from "@/types";
 import Image from "next/image";
 import fakeSearchQuizzes from "@/fake-data/search-quizzes.json";
 
-export const dynamic = "force-dynamic"; 
+export const dynamic = "force-dynamic";
 
 export default async function Page(props: {
   searchParams?: Promise<{
@@ -63,9 +63,9 @@ export default async function Page(props: {
   return (
     <div className="w-full h-full flex flex-col gap-3 p-2 sm:p-3">
       {query && (
-        <h1 className="font-semibold max-w-full truncate">
+        <h3 className="text-sm font-bold">
           Showing results for {`'${query}'`}
-        </h1>
+        </h3>
       )}
       <div className="flex gap-3 justify-end sm:gap-3">
         {session && page !== "bookmarks" && (

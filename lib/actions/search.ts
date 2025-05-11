@@ -62,12 +62,12 @@ export const getSearchQuizzes = async ({
                   mode: "insensitive",
                 },
               },
-              {
-                description: {
-                  contains: query,
-                  mode: "insensitive",
-                },
-              },
+              // {
+              //   description: {
+              //     contains: query,
+              //     mode: "insensitive",
+              //   },
+              // },
             ]
           : undefined,
       },

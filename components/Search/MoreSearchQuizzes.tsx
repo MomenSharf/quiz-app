@@ -72,8 +72,6 @@ export default function MoreSearchQuizzes({
       query.trim() &&
       process.env.NEXT_PUBLIC_USE_FAKE_DATA !== "true"
     ) {
-      // console.log('in');
-      // setHasMore(prev => true)
 
       fetchQizzes(query, page + 1);
       setPage((prev) => prev + 1);

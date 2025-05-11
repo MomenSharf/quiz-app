@@ -43,13 +43,10 @@ export default function SearchInput() {
   useEffect(() => {
     if (searchParams.has("query")) {
       setIsSearchOpen(true);
-    } else {
+    } else if (pathname !== '/search') {
       setIsSearchOpen(false);
-      if (searchInputRef && searchInputRef.current) {
-        searchInputRef.current.value = "";
-      }
     }
-  }, [searchParams]);
+  }, [pathname, searchParams]);
 
   const handleSearchWidthDebounce = useDebouncedCallback(handleSearch, 500);
 

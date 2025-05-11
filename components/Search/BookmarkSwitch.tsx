@@ -42,8 +42,8 @@ export default function BookmarkSwitch({
   return (
     <div className="flex items-center gap-2 mr-auto">
       <span className="text-sm font-semibold">Bookmarks</span>
-      {isPending && <Icons.Loader className="w-5 h-5 animate-spin stroke-muted-foreground" />}
       <Switch checked={checked} onCheckedChange={handleCheckedChange}  disabled={isPending}/>
+      {isPending && <Icons.Loader className="w-5 h-5 animate-spin stroke-muted-foreground" />}
     </div>
   );
 }
