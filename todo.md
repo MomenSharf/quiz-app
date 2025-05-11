@@ -21,3 +21,7 @@
 ## play
 
 - make soundOn by localStorage
+- remove tooltip from the trigger
+- fix fill in the blanks when user change the question
+- add hints
+- make if the answer is right and the time out the answer is correct

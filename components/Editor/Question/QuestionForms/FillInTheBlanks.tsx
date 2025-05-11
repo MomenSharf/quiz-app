@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { FieldError } from "react-hook-form";
 import { useEditorContext } from "../../Context";
 import ErrorSpan from "./QuestionFormsElements/ErrorSpan";
+import { toast } from "@/components/ui/use-toast";
 
 export default function FillInTheBlanks({
   questionIndex,
@@ -56,6 +57,7 @@ export default function FillInTheBlanks({
     } else {
       setValue(`questions.${questionIndex}.items`, []);
     }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [questionIndex, watchQuestion]);
 
@@ -65,6 +67,13 @@ export default function FillInTheBlanks({
       `questions.${questionIndex}.items`,
       question.items.map((e, i) => {
         if (index === i) {
+          if (e.text.length > 20) {
+            toast({
+              variant: "destructive",
+              description: `The word "${e.text}" is too long (more than 20 letters)`,
+            });
+            return e;
+          }
           return {
             ...e,
             isBlank: e.isBlank ? false : true,

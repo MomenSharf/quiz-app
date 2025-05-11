@@ -16,14 +16,10 @@ export default function Sidebar() {
         onMouseEnter={() => setStat("expanded")}
         onMouseLeave={() => setStat("collapsed")}
         data-state={state}
-        className="group bg-[var(--navbar)] py-2 z-10 h-full w-14 data-[state=expanded]:w-[13rem] data-[state=expanded]:shadow-xl transition-width duration-200 hide-scrollbar flex flex-col justify-between overflow-y-auto no-scrollbar"
+        className="group bg-[var(--navbar)] z-10 h-full w-14 data-[state=expanded]:w-[13rem] data-[state=expanded]:shadow-xl transition-width duration-200 hide-scrollbar flex flex-col justify-between overflow-y-auto no-scrollbar"
       >
-        <div className="flex flex-col gap-20 h-full px-2 relative">
-          <Link href="/" className="relative flex items-center w-fit mx-2 my-3">
-            <span className="absolute bg-white w-[95%] h-[95%] rounded-full -z-[2] left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2" />
-            <Logo />
-          </Link>
-          <ul className="flex flex-col">
+          
+          <ul className="flex flex-col px-2 pt-10">
             {DESKTOP_SIDEBAR_ITEMS.map((item) => {
               const isCurrentRoute =
                 pathname === item.route && pathname.startsWith(item.route);
@@ -54,7 +50,7 @@ export default function Sidebar() {
               );
             })}
           </ul>
-        </div>
+        
       </nav>
     </div>
   );

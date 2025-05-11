@@ -1,3 +1,6 @@
+import { Icons } from "@/components/icons";
+import ImageManagerTabs from "@/components/ImageManeger/ImageManagerTabs";
+import { Button } from "@/components/ui/button";
 import {
   FormControl,
   FormField,
@@ -8,10 +11,6 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import { useEditorContext } from "../Context";
-import ImageManagerTabs from "@/components/ImageManeger/ImageManagerTabs";
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Icons } from "@/components/icons";
 
 export default function QuestionInput({
   questionIndex,
@@ -29,9 +28,10 @@ export default function QuestionInput({
 
   const hasImageUrl =
     getValues(`questions.${questionIndex}.imageUrl`) !== undefined;
+  const type =
+    getValues(`questions.${questionIndex}.type`) !== undefined;
 
-  const questionType = getValues(`questions.${questionIndex}.type`);
-
+  
   return (
     <FormField
       control={control}
@@ -43,7 +43,7 @@ export default function QuestionInput({
             <div className="flex">
               <Textarea
                 className={cn(
-                  "resize-none font-bold focus:z-10 text-md min-h-16 h-16",
+                  "resize-none font-bold focus:z-10 text-md min-h-20 h-16",
                   {
                     "rounded-tr-none rounded-br-none": !hasImageUrl,
                   },
@@ -54,6 +54,7 @@ export default function QuestionInput({
                   }
                 )}
                 placeholder="Type your Question..."
+                maxLength={300}
                 {...field}
                 value={getValues(`questions.${questionIndex}.question`)}
               />

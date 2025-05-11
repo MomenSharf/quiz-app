@@ -3,22 +3,22 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
-  directUrl =  env("DIRECT_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  // directUrl = env("DIRECT_URL")
 }
 
 model User {
-  id            String    @id @default(cuid()) 
-  name          String?  
-  email         String    @unique
+  id            String          @id @default(cuid())
+  name          String?
+  email         String          @unique
   emailVerified DateTime?
-  username      String?   @unique
+  username      String?         @unique
   imageUrl      String?
-  image String?
+  image         String?
   avatarColor   String? // hex color
   createdAt     DateTime        @default(now())
-  updatedAt     DateTime        @updatedAt
+  updatedAt     DateTime        @default(now()) @updatedAt
   password      String?
   accounts      Account[]
   Authenticator Authenticator[]
@@ -49,7 +49,7 @@ model Quiz {
   id              String         @id @default(cuid())
   title           String
   createdAt       DateTime       @default(now())
-  updatedAt       DateTime       @updatedAt
+  updatedAt       DateTime       @default(now()) @updatedAt
   categories      String[]
   description     String
   visibility      Visibility     @default(PUBLIC)
@@ -62,11 +62,12 @@ model Quiz {
   QuizProgress    QuizProgress[] // this just for when the user play quiz to save the progress
   bookmarks       Bookmark[]
   imageUrl        String?
-  playCount       Int            @default(0) 
-  completionCount Int            @default(0) 
+  playCount       Int            @default(0)
+  completionCount Int            @default(0)
 
-  @@index([title, createdAt]) 
+  @@index([title, createdAt])
 }
+
 model Rating {
   id        String   @id @default(cuid())
   quiz      Quiz     @relation(fields: [quizId], references: [id], onDelete: Cascade)
@@ -103,7 +104,6 @@ model Item {
   Question   Question? @relation(fields: [questionId], references: [id], onDelete: Cascade)
   imageUrl   String?
 }
-
 
 model Bookmark {
   id     String @id @default(cuid())

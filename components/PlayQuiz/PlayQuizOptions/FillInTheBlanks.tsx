@@ -135,11 +135,7 @@ export default function FillInTheBlanks({
                 }}
               >
                 <span className="max-w-20 truncate" title={item.text}>
-                  {item.text} Lorem ipsum, dolor sit amet consectetur
-                  adipisicing elit. Placeat ullam error in. Autem quaerat fugiat
-                  accusantium soluta quibusdam, fugit voluptatibus? Similique
-                  assumenda esse vitae explicabo pariatur natus quibusdam,
-                  officia ducimus?
+                  {item.text}
                 </span>
               </Button>
             );

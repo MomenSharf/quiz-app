@@ -6,7 +6,7 @@ import {
   SheetContent,
   SheetFooter,
   SheetHeader,
-  SheetTrigger
+  SheetTrigger,
 } from "@/components/ui/sheet";
 import { DESKTOP_SIDEBAR_ITEMS } from "@/constants";
 import { cn } from "@/lib/utils";
@@ -21,10 +21,7 @@ type MobileSideBarProps = {
   isLoggedIn: boolean;
 };
 
-export default function SideBar({
-  user,
-  isLoggedIn,
-}: MobileSideBarProps) {
+export default function SideBar({ user, isLoggedIn }: MobileSideBarProps) {
   const pathname = usePathname();
 
   return (
@@ -41,7 +38,7 @@ export default function SideBar({
         <SheetHeader className="bg-[#252834]">
           {user ? (
             <div className="flex gap-3 p-5 items-center">
-              <UserAvatarImage user={user}/>
+              <UserAvatarImage user={user} />
               <div className="flex flex-col text-start max-w-32">
                 <p className="font-semibold truncate">{user.name}</p>
                 <p className="font-semibold truncate">{user.email}</p>
@@ -49,16 +46,22 @@ export default function SideBar({
             </div>
           ) : (
             <div className="text-xs mt-10 w-full p-3">
-
-            <SheetClose  asChild>
-
-              <Link
-                  href="/register?callbackUrl=/"
-                className={cn(buttonVariants({ size: "sm" }), 'w-full')}
-                >
-                SIGN UP NEW
-              </Link>
-            </SheetClose>
+              <SheetClose  asChild>
+                <div className="flex gap-2">
+                  <Link
+                    href="/login?callbackUrl=/"
+                    className={cn(buttonVariants({ size: "sm" }), "w-full")}
+                  >
+                    Login
+                  </Link>
+                  <Link
+                    href="/register?callbackUrl=/"
+                    className={cn(buttonVariants({ size: "sm" }), "w-full")}
+                  >
+                    Sign Up
+                  </Link>
+                </div>
+              </SheetClose>
             </div>
           )}
         </SheetHeader>
@@ -107,7 +110,13 @@ export default function SideBar({
           })}
         </div>
         <SheetFooter className="flex justify-center p-2">
-          {isLoggedIn && <SignOut className="w-full hover:bg-destructive hover:text-white group" variant="ghost" iconClassName="group-hover:text-white" />}
+          {isLoggedIn && (
+            <SignOut
+              className="w-full hover:bg-destructive hover:text-white group"
+              variant="ghost"
+              iconClassName="group-hover:text-white"
+            />
+          )}
         </SheetFooter>
       </SheetContent>
     </Sheet>

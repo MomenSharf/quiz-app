@@ -6,6 +6,9 @@ import { getCurrentUser } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import fakeEditorQuiz from "@/fake-data/editor-quiz.json";
 import { EditorQuiz } from "@/types";
+
+export const dynamic = "force-dynamic";
+
 export default async function Page({
   params: { quizId },
 }: {
@@ -21,7 +24,6 @@ export default async function Page({
 
   if (!session) {
     return redirect(`/login?callbackUrl=/editor/${quizId}`);
-
   }
 
   const { success, initialQuiz, message } = await getEditorQuiz({

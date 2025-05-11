@@ -13,18 +13,22 @@ export default async function Header() {
   const session = await getCurrentUser();
 
   return (
-    <header className="z-20 w-full px-2 py-1 flex bg-card shadow-sm">
+    <header className="z-20 w-full p-2 flex bg-card shadow-sm">
       <div className=" w-full flex items-center justify-between  gap-1">
         <div className="flex gap-1">
           <MobileSidebar
             user={session ? session.user : null}
             isLoggedIn={!!session?.user}
           />
-          {/* <Link href="/" className="flex items-center">
+
+          <Link href="/" className="relative flex items-center w-fit mx-2">
+            <span className="absolute bg-white w-[90%] h-[90%] rounded-full -z-[2] left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2" />
             <Logo />
-          </Link> */}
+          </Link>
           {process.env.NEXT_PUBLIC_USE_FAKE_DATA === "true" && (
-            <div className="flex items-center text-xs font-bold">FAKE_DATA_VERSION</div>
+            <div className="flex items-center text-xs font-bold">
+              FAKE_DATA_VERSION
+            </div>
           )}
         </div>
         <div className="flex gap-1 items-center">
@@ -37,7 +41,16 @@ export default async function Header() {
                 <UserAvatar user={session.user} className="w-8 h-8" />
               </>
             ) : (
-              <>
+              <div className="flex gap-1">
+                <Link
+                  href="/login?callbackUrl=/"
+                  className={cn(
+                    buttonVariants({ size: "sm" }),
+                    "text-xs rounded-full px-5"
+                  )}
+                >
+                  Login
+                </Link>
                 <Link
                   href="/register?callbackUrl=/"
                   className={cn(
@@ -45,12 +58,11 @@ export default async function Header() {
                     "text-xs rounded-full px-5"
                   )}
                 >
-                  SIGN UP NEW
+                  Sign Up
                 </Link>
-              </>
+              </div>
             )}
           </div>
-          
         </div>
       </div>
     </header>

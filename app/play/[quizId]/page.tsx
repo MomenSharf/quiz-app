@@ -2,14 +2,15 @@ import ErrorPage from "@/components/Layout/ErrorPage";
 import Provider from "@/components/PlayQuiz/Provider";
 import { getPlayQuiz, getPreviewQuiz } from "@/lib/actions/playQuiz";
 import { getCurrentUser } from "@/lib/auth";
-import { intQuiz } from "@/lib/utils";
-import { quizSchema } from "@/lib/validations/quizSchemas";
-import { PlayQuizMode, PlayQuizType } from "@/types";
+import { PlayQuizType } from "@/types";
 import { Rating } from "@prisma/client";
 import { JsonValue } from "@prisma/client/runtime/library";
-import { notFound, redirect } from "next/navigation";
+import { redirect } from "next/navigation";
 
 import fakeQuizProgress from "@/fake-data/fake-quiz-progress.json";
+
+export const dynamic = "force-dynamic";
+
 export default async function page(props: {
   params: { quizId: string };
   searchParams?: Promise<{
