@@ -1,8 +1,13 @@
 "use client";
 import { cn } from "@/lib/utils";
 import { ThemeState } from "@/types/theme";
-import { createContext, ReactNode, useContext, useReducer } from "react";
-
+import {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useReducer,
+} from "react";
 
 type ThemeActions =
   | { type: "SET_THEME"; payload: ThemeState | null }
@@ -46,13 +51,25 @@ const initialState: ThemeState = {
   mode: "light",
 };
 
+const getInitialState = () => {
+  const localData = localStorage.getItem("ThemeStat");
+  return localData ? JSON.parse(localData) : initialState;
+};
+
 export const ThemeContextProvider = ({ children }: { children: ReactNode }) => {
-  const [state, dispatch] = useReducer(ThemeReducer, initialState);
+  const [state, dispatch] = useReducer(ThemeReducer, {}, getInitialState);
+
+  // Save to localStorage when state changes
+  useEffect(() => {
+    localStorage.setItem("ThemeStat", JSON.stringify(state));
+  }, [state]);
 
   return (
     <ThemeContext.Provider value={{ state, dispatch }}>
-      <body data-theme-color={state.theme} className={cn(state.mode,'min-h-screen')}>
-     
+      <body
+        data-theme-color={state.theme}
+        className={cn(state.mode, "min-h-screen")}
+      >
         {children}
       </body>
     </ThemeContext.Provider>
@@ -60,11 +77,11 @@ export const ThemeContextProvider = ({ children }: { children: ReactNode }) => {
 };
 
 export const useTheme = () => {
-  const context = useContext(ThemeContext)
+  const context = useContext(ThemeContext);
 
-  if(!context) {
-    throw Error('useThemeContext must be used inside ThemeContextProvider')
+  if (!context) {
+    throw Error("useThemeContext must be used inside ThemeContextProvider");
   }
 
-  return context
-}
+  return context;
+};

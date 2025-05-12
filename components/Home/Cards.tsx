@@ -9,7 +9,7 @@ export default function Cards() {
     <div className="w-full flex flex-col gap-3 items-center h-full">
       <div className="w-full grid grid-cols-2 gap-3">
         <div className="bg-card rounded-xl overflow-hidden flex">
-          <div className="relative w-full bg-primary/80 flex flex-col gap-1 p-3 sm:p-5 ">
+          <div className="relative w-full bg-primary/80 flex flex-col gap-2 p-3 sm:p-5 ">
             <h4 className="text-sm sm:text-lg font-bold text-white">
               Start Your Journey
             </h4>
@@ -29,7 +29,7 @@ export default function Cards() {
           </div>
         </div>
         <div className="bg-card rounded-xl overflow-hidden flex">
-          <div className="relative w-full flex flex-col   gap-1 p-3 sm:p-5">
+          <div className="relative w-full flex flex-col   gap-2 p-3 sm:p-5">
             <h4 className="text-sm sm:text-lg font-bold">
               Test Your Knowledge
             </h4>

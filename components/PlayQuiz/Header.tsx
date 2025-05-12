@@ -5,6 +5,7 @@ import { PlayQuizQuestion, usePlayQuizContext } from "./Context";
 import Settings from "./Settings";
 import ProgressBar from "./ProgressBar";
 import { useRouter } from "next/navigation";
+import Palette from "../Theme/Palette";
 
 
 export default function Header() {
@@ -18,6 +19,7 @@ export default function Header() {
       </Button>
 
       <ProgressBar />
+      <Palette  />
       <Button variant="ghost" size="icon" className="p-1 rounded-full">
         <Settings />
       </Button>

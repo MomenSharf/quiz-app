@@ -136,6 +136,11 @@ export const DESKTOP_SIDEBAR_ITEMS = [
     icon: Icons.library, // Replace with actual SVG icon component or path
   },
   {
+    route: "/search",
+    label: "Search",
+    icon: Icons.search, // Replace with actual SVG icon component or path
+  },
+  {
     route: "/settings",
     label: "Settings",
     icon: Icons.settings, // Replace with actual SVG icon component or path

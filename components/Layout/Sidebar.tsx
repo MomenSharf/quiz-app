@@ -36,8 +36,7 @@ export default function Sidebar() {
                           "w-5 h-5 text-primary-foreground fill-primary-foreground group-hover/item:fill-primary",
                           {
                             "fill-primary": isCurrentRoute,
-                            "fill-[var(--navbar)] group-hover/item:stroke-primary group-hover/item:fill-[var(--navbar-item-active)]":
-                              item.label === "Search",
+                           
                           }
                         )}
                       />
