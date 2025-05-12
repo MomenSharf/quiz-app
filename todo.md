@@ -1,6 +1,7 @@
 # app
 
 - solve catch data when user nevigate between pages
+fix the main area
 
 ## home
 

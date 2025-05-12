@@ -64,7 +64,8 @@ export default async function Page(props: {
     <div className="w-full h-full flex flex-col gap-3 p-2 sm:p-3">
       {query && (
         <h3 className="text-sm font-bold">
-          Showing results for {`'${query}'`}
+          Showing results for{" "}
+          {`'${query}' ${page === "bookmarks" ? "on your Bookmarks" : ""}`}
         </h3>
       )}
       <div className="flex gap-3 justify-end sm:gap-3">

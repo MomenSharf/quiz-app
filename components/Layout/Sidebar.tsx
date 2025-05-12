@@ -11,7 +11,7 @@ export default function Sidebar() {
   const [state, setStat] = useState<"collapsed" | "expanded">("collapsed");
 
   return (
-    <div className="hidden sm:flex flex-col w-14 z-30">
+    <div className="hidden sm:flex fixed h-full flex-col w-14 z-20">
       <nav
         onMouseEnter={() => setStat("expanded")}
         onMouseLeave={() => setStat("collapsed")}
@@ -19,7 +19,7 @@ export default function Sidebar() {
         className="group bg-[var(--navbar)] z-10 h-full w-14 data-[state=expanded]:w-[13rem] data-[state=expanded]:shadow-xl transition-width duration-200 hide-scrollbar flex flex-col justify-between overflow-y-auto no-scrollbar"
       >
           
-          <ul className="flex flex-col px-2 pt-10">
+          <ul className="flex flex-col px-2 pt-32">
             {DESKTOP_SIDEBAR_ITEMS.map((item) => {
               const isCurrentRoute =
                 pathname === item.route && pathname.startsWith(item.route);

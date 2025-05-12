@@ -13,7 +13,7 @@ export default async function Header() {
   const session = await getCurrentUser();
 
   return (
-    <header className="z-20 w-full p-2 flex bg-card shadow-sm">
+    <header className="fixed h-14 z-30 w-full p-2 flex bg-card shadow-sm">
       <div className=" w-full flex items-center justify-between  gap-1">
         <div className="flex gap-1">
           <MobileSidebar
