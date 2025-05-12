@@ -52,8 +52,12 @@ const initialState: ThemeState = {
 };
 
 const getInitialState = () => {
-  const localData = localStorage.getItem("ThemeStat");
-  return localData ? JSON.parse(localData) : initialState;
+  if (localStorage) {
+    const localData = localStorage.getItem("ThemeStat");
+    return localData ? JSON.parse(localData) : initialState;
+  } else {
+    return initialState;
+  }
 };
 
 export const ThemeContextProvider = ({ children }: { children: ReactNode }) => {
@@ -61,7 +65,7 @@ export const ThemeContextProvider = ({ children }: { children: ReactNode }) => {
 
   // Save to localStorage when state changes
   useEffect(() => {
-    localStorage.setItem("ThemeStat", JSON.stringify(state));
+    if (localStorage) localStorage.setItem("ThemeStat", JSON.stringify(state));
   }, [state]);
 
   return (
