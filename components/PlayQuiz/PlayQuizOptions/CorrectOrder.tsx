@@ -69,10 +69,7 @@ function CorrectOrderItem({
         )}
       >
         <span className="truncate max-w-full">
-          {item.text} Lorem ipsum dolor sit amet consectetur adipisicing elit.
-          Illum sapiente accusamus asperiores tempore possimus reprehenderit
-          neque maxime! Rem iste qui sunt repellat, similique blanditiis ab iure
-          atque veritatis, fugiat ad!
+          {item.text} 
         </span>
       </div>
 
