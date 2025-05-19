@@ -18,7 +18,7 @@ export default function QuizDetails({
   console.log(quiz);
 
   return (
-    <div className="container flex flex-col gap-5 p-3 items-center w-full ">
+    <div className="container flex flex-col gap-5 p-3 items-center w-full">
       <QuizCard quiz={quiz} pathname={pathname} isCurrentUser={isCurrentUser} />
       {quiz.questions.length > 0 && (
         <div className="w-full flex justify-between">

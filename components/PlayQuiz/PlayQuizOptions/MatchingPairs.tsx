@@ -1,22 +1,14 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+import { Button, buttonVariants } from "@/components/ui/button";
+import { cn, shuffleArray } from "@/lib/utils";
+import { Reorder, useDragControls, useMotionValue } from "framer-motion";
 import React, {
   useCallback,
   useEffect,
-  useMemo,
   useRef,
-  useState,
+  useState
 } from "react";
 import { Item, PlayQuizQuestion, usePlayQuizContext } from "../Context";
-import { Reorder, useDragControls, useMotionValue } from "framer-motion";
-import { cn, shuffleArray } from "@/lib/utils";
-import { FormControl, FormField, FormItem } from "@/components/ui/form";
-import { Button, buttonVariants } from "@/components/ui/button";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { GripVertical } from "lucide-react";
 import { ReorderIcon } from "./Icon";
 
 function MatchingPairsItem({

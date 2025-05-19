@@ -1,20 +1,13 @@
-'use client';
+"use client";
 
 import { cn } from "@/lib/utils";
 import { ThemeState } from "@/types/theme";
-import {
-  createContext,
-  ReactNode,
-  useContext,
-  useEffect,
-  useReducer,
-  useState,
-} from "react";
+import { createContext, ReactNode, useContext, useReducer } from "react";
 
 type ThemeActions =
   | { type: "SET_THEME"; payload: ThemeState }
   | { type: "SET_MODE"; payload: ThemeState }
-  | { type: "TOGGLED_MODE" }; // ❌ no payload needed here
+  | { type: "TOGGLED_MODE" };
 
 interface ThemeContextType {
   state: ThemeState;
@@ -53,34 +46,7 @@ const initialState: ThemeState = {
 };
 
 export const ThemeContextProvider = ({ children }: { children: ReactNode }) => {
-  const [hydrated, setHydrated] = useState(false);
   const [state, dispatch] = useReducer(ThemeReducer, initialState);
-
-  // Load from localStorage on mount
-  useEffect(() => {
-    const localData = localStorage.getItem("ThemeStat");
-    if (localData) {
-      try {
-        const parsed = JSON.parse(localData);
-        if (parsed.theme && parsed.mode) {
-          dispatch({ type: "SET_THEME", payload: parsed });
-          dispatch({ type: "SET_MODE", payload: parsed });
-        }
-      } catch (err) {
-        console.error("Failed to parse theme from localStorage", err);
-      }
-    }
-    setHydrated(true);
-  }, []);
-
-  // Save to localStorage when state changes
-  useEffect(() => {
-    if (hydrated) {
-      localStorage.setItem("ThemeStat", JSON.stringify(state));
-    }
-  }, [state, hydrated]);
-
-  if (!hydrated) return null; 
 
   return (
     <ThemeContext.Provider value={{ state, dispatch }}>

@@ -28,6 +28,7 @@ export default function Palette() {
             width={25}
             height={25}
             className="rounded-full"
+            unoptimized
           />
         </DropdownMenuTrigger>
         <DropdownMenuContent className="relative -left-5 top-8 sm:-left-10 sm:bottom-1d6">

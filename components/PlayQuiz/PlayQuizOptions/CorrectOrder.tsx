@@ -1,21 +1,13 @@
+import { Button, buttonVariants } from "@/components/ui/button";
+import { cn, shuffleArray } from "@/lib/utils";
+import { Reorder, useDragControls, useMotionValue } from "framer-motion";
 import React, {
   useCallback,
   useEffect,
-  useMemo,
   useRef,
-  useState,
+  useState
 } from "react";
 import { Item, PlayQuizQuestion, usePlayQuizContext } from "../Context";
-import { Reorder, useDragControls, useMotionValue } from "framer-motion";
-import { cn, shuffleArray } from "@/lib/utils";
-import { FormControl, FormField, FormItem } from "@/components/ui/form";
-import { Button, buttonVariants } from "@/components/ui/button";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { GripVertical } from "lucide-react";
 import { ReorderIcon } from "./Icon";
 
 function CorrectOrderItem({
@@ -83,23 +75,19 @@ function CorrectOrderItem({
           atque veritatis, fugiat ad!
         </span>
       </div>
-      <Tooltip delayDuration={100}>
-        <TooltipTrigger asChild>
-          <Button
-            type="button"
-            size="icon"
-            variant="outline"
-            className="rounded-tl-none rounded-bl-none border-none"
-          >
-            <ReorderIcon
-              dragControls={dragControls}
-              ref={iRef}
-              className="fill-accent-foreground w-3 h-4"
-            />
-          </Button>
-        </TooltipTrigger>
-        <TooltipContent className="text-xs">Reorder</TooltipContent>
-      </Tooltip>
+
+      <Button
+        type="button"
+        size="icon"
+        variant="outline"
+        className="rounded-tl-none rounded-bl-none border-none"
+      >
+        <ReorderIcon
+          dragControls={dragControls}
+          ref={iRef}
+          className="fill-accent-foreground w-3 h-4"
+        />
+      </Button>
     </Reorder.Item>
   );
 }
